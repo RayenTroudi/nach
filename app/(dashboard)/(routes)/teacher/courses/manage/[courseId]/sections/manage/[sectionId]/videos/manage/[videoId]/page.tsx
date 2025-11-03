@@ -1,0 +1,88 @@
+"use server";
+import { scnToast } from "@/components/ui/use-toast";
+import { getVideoById } from "@/lib/actions/video.action";
+import React from "react";
+import { StepBack } from "../../../_components";
+import {
+  VideoAccessForm,
+  VideoTitleForm,
+  VideoVisibilityForm,
+} from "./_components";
+import VideoUploadForm from "./_components/VideoUploadForm";
+import { Banner, CourseStepHeader } from "@/components/shared";
+import { TVideo } from "@/types/models.types";
+
+const VideIdPage = async ({ params }: { params: { videoId: string } }) => {
+  let video: TVideo = {} as TVideo;
+  try {
+    video = await getVideoById(params.videoId);
+  } catch (error: any) {
+    scnToast({
+      variant: "destructive",
+      title: "Error",
+      description: error.message,
+    });
+  }
+
+  return (
+    <>
+      {video.isPublished ? (
+        <Banner
+          label="This video is now available for all enrolled students."
+          variant={"success"}
+        />
+      ) : (
+        <Banner
+          label="This video is currently in draft mode. It will only become visible when you publish it."
+          variant={"warning"}
+        />
+      )}
+      <div className="p-6">
+        <div className="w-full flex justify-between items-center p-4 border-b border-input">
+          <div className="flex items-center gap-4">
+            <StepBack />
+            <div className="flex flex-col gap-2">
+              <h2 className="text-lg md:text-3xl font-bold text-slate-950 dark:text-slate-200 ">
+                Manage your{" "}
+                <span className="text-[#FF782D]">{video?.title}</span> Video
+              </h2>
+              <p className="text-md md:text-lg font-semibold text-slate-400">
+                <span className="text-[#FF782D]">
+                  {video?.sectionId?.course?.title}{" "}
+                  <span className="text-slate-400">/</span>{" "}
+                  {video?.sectionId?.title}
+                </span>{" "}
+                Section
+              </p>
+            </div>
+          </div>
+        </div>
+        <div className="flex flex-col mt-6 gap-4  w-full lg:w-[800px] mx-auto">
+          <div className="grid grid-cols-1 gap-2">
+            <CourseStepHeader
+              icon="/icons/eye.svg"
+              alt="message"
+              bgColor="bg-[#FF782D]/30"
+              title="Accessability & Visibility Settings"
+            />
+            <VideoAccessForm video={video} />
+            <VideoVisibilityForm video={video} />
+          </div>
+          <div className="grid grid-cols-1 gap-4">
+            <CourseStepHeader
+              icon="/icons/customize.svg"
+              alt="customize"
+              bgColor="bg-[#FF782D]/30"
+              title="Customize your video"
+            />
+            <VideoTitleForm video={video} />
+            <VideoUploadForm video={video} />
+            {/* <SectionThumbnailForm section={section} /> */}
+          </div>
+        </div>
+      </div>
+    </>
+  );
+};
+
+export default VideIdPage;

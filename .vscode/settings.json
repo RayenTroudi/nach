@@ -1,0 +1,16 @@
+{
+  "editor.cursorSmoothCaretAnimation": "on",
+  "editor.smoothScrolling": true,
+  "workbench.list.smoothScrolling": true,
+  "terminal.integrated.smoothScrolling": true,
+  "cSpell.words": [
+    "Acternity",
+    "codellama",
+    "Lucide",
+    "OCTO",
+    "plaiceholder",
+    "Roadmaps",
+    "Signout",
+    "Welearn"
+  ]
+}

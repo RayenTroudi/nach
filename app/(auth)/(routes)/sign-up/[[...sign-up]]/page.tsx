@@ -17,6 +17,8 @@ const SignUpPage = () => {
           colorBackground: mode === "dark" ? "#0f172a" : "#f8fafc",
         },
       }}
+      redirectUrl="/"
+      signInUrl="/sign-in"
     />
   );
 };

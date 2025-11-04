@@ -12,7 +12,6 @@ import {
   SubmitForReviewButton,
   ExamForm,
   PublishCourseButton,
-  KeywordsForm,
 } from "./_components";
 import { CircleDollarSign, File, ListChecks } from "lucide-react";
 import { CourseStatusEnum } from "@/lib/models/course.model";
@@ -104,9 +103,6 @@ const CourseIdPage = async ({ params }: { params: { courseId: string } }) => {
           !course?.isPublished ? (
             <PublishCourseButton course={course} />
           ) : null}
-        </div>
-        <div className="w-full my-4">
-          <KeywordsForm course={course} />
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-2  gap-6 mt-16">
           {/* Customize your course */}

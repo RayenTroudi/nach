@@ -8,4 +8,3 @@ export { default as ExamForm } from "./ExamForm";
 export { default as SubmitForReviewButton } from "./SubmitForReviewButton";
 export { default as SectionList } from "./SectionList";
 export { default as PublishCourseButton } from "./PublishCourseButton";
-export { default as KeywordsForm } from "./KeywordsForm";

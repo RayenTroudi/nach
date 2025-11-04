@@ -34,7 +34,6 @@ import Exam from "../models/exam.model";
 import { addCourseCommentParams } from "@/types";
 import Reply from "../models/reply.model";
 import Video from "../models/video.model";
-import Quiz from "../models/Quiz.model";
 import { CourseState } from "@/app/(landing-page)/courses/[keywords]/_components/course-validator";
 import { TCourse } from "@/types/models.types";
 import { deleteCourseExam } from "./exam.action";
@@ -61,7 +60,6 @@ export const getCourseById = async (params: GetCourseByIdParams) => {
     Exam.find();
     Comment.find();
     Reply.find();
-    Quiz.find();
     MuxData.find();
     let course = await Course.findById(params.courseId)
       .populate("instructor")
@@ -84,7 +82,6 @@ export const getCourseById = async (params: GetCourseByIdParams) => {
         populate: [
           { path: "videos", populate: { path: "muxData" } },
           { path: "attachments" },
-          { path: "quiz", populate: { path: "passedUsers" } },
         ],
         options: { sort: { position: 1 } },
       })

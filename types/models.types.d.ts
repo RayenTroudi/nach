@@ -103,34 +103,7 @@ export type TSection = {
   sectionThumbnail?: string;
   position?: number;
   course: TCourse;
-  quiz?: TQuiz;
   isPublished?: boolean;
-  createdAt: Date;
-};
-
-export type TQuiz = {
-  _id: string;
-  title: string;
-  questions: TQuestion[];
-  sectionId: TSection;
-  passedUsers?: TUser[];
-  time: number;
-  createdAt: Date;
-};
-
-export type TQuestion = {
-  _id: string;
-  title: string;
-  options: TQuestionOption[];
-  correctAnswer: string;
-  quizId: TQuiz;
-  createdAt: Date;
-};
-
-export type TQuestionOption = {
-  _id: string;
-  title: string;
-  questionId: TQuestion;
   createdAt: Date;
 };
 

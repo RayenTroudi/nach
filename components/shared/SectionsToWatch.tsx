@@ -8,7 +8,6 @@ import {
 import { Badge } from "@/components/ui/badge";
 import {
   TAttachment,
-  TQuiz,
   TSection,
   TUserProgress,
   TUserCourseVideoCompleted,
@@ -58,8 +57,6 @@ import { Button } from "../ui/button";
 import { cn } from "@/lib/utils";
 
 interface Props {
-  solvedQuizzes: TQuiz[];
-  isAllQuizzesSolved: boolean | number;
   isCourseOwner?: boolean;
   courseId: string;
   courseTitle: string;
@@ -74,8 +71,6 @@ interface Props {
 }
 
 const SectionsToWatch = ({
-  solvedQuizzes,
-  isAllQuizzesSolved,
   isCourseOwner,
   courseId,
   courseTitle,
@@ -199,33 +194,10 @@ const SectionsToWatch = ({
                     )}
                   </DropdownMenuShortcut>
                 </DropdownMenuItem>
-                <DropdownMenuItem className="pointer-events-none font-normal text-xs">
-                  <p
-                    className={`${
-                      typeof isAllQuizzesSolved === "boolean"
-                        ? "text-green-600"
-                        : ""
-                    }`}
-                  >
-                    {typeof isAllQuizzesSolved === "boolean"
-                      ? "All Quizzes Solved"
-                      : `${isAllQuizzesSolved} Unsolved Quiz(s)`}
-                  </p>
-                  <DropdownMenuShortcut>
-                    {typeof isAllQuizzesSolved === "boolean" ? (
-                      <CheckCircle size={20} className="text-green-600" />
-                    ) : (
-                      <FileQuestion size={20} />
-                    )}
-                  </DropdownMenuShortcut>
-                </DropdownMenuItem>
 
                 <Button
                   className="rounded-none w-full mt-4"
-                  disabled={
-                    !userProgress?.isCompleted ||
-                    typeof isAllQuizzesSolved !== "boolean"
-                  }
+                  disabled={!userProgress?.isCompleted}
                   onClick={() => router.push(`/certificate/${courseId}`)}
                 >
                   Get Certificate
@@ -373,33 +345,6 @@ const SectionsToWatch = ({
                       </Link>
                     )
                   )}
-                </div>
-              ) : null}
-
-              {section?.quiz ? (
-                <div className="flex flex-col items-start gap-x-1 w-full ml-2">
-                  <p className="text-[#FF782D] font-bold">Quiz & Assignments</p>
-                  <Link
-                    href={`/my-learning/${courseId}/play-quiz/${section?.quiz?._id}`}
-                    className="w-full flex items-center gap-x-2 hover:bg-slate-200/80 dark:hover:bg-slate-950/80 duration-300 ease-in-out cursor-pointer p-2"
-                  >
-                    {solvedQuizzes.some((q) => q._id === section?.quiz?._id) ? (
-                      <CheckCircle size={18} className="text-green-600" />
-                    ) : (
-                      <FileQuestion size={18} />
-                    )}
-
-                    <p
-                      className={cn(
-                        "text-[13px] font-bold  pl-2 border-l-2",
-                        solvedQuizzes.some((q) => q._id === section?.quiz?._id)
-                          ? "!text-green-600"
-                          : "text-slate-500 dark:text-slate-300"
-                      )}
-                    >
-                      {section?.quiz?.title}
-                    </p>
-                  </Link>
                 </div>
               ) : null}
             </AccordionContent>

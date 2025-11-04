@@ -17,20 +17,10 @@ import { PencilLineIcon } from "lucide-react";
 import { updateCourse } from "@/lib/actions/course.action";
 import { usePathname, useRouter } from "next/navigation";
 import { Spinner } from "@/components/shared";
-
+import { Textarea } from "@/components/ui/textarea";
 import { scnToast } from "@/components/ui/use-toast";
 import { TCourse } from "@/types/models.types";
 import { useTheme } from "@/contexts/ThemeProvider";
-import Preview from "@/components/shared/editor/Preview";
-import { Skeleton } from "@/components/ui/skeleton";
-import dynamic from "next/dynamic";
-
-const DynamicEditor = dynamic(
-  () => import("@/components/shared/editor/Editor"),
-  {
-    loading: () => <Skeleton className="w-full h-[300px]" />,
-  }
-);
 
 const formSchema = z.object({
   description: z.string().min(50, {
@@ -115,7 +105,9 @@ const DescriptionForm = ({ course }: Props) => {
                   )}
                 </Button>
               </div>
-              <Preview data={course.description ?? ""} />
+              <p className="text-slate-700 dark:text-slate-300 whitespace-pre-wrap">
+                {course.description ?? ""}
+              </p>
             </div>
           ) : (
             <Spinner />
@@ -130,10 +122,10 @@ const DescriptionForm = ({ course }: Props) => {
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <DynamicEditor
-                      onChange={field.onChange}
-                      onBlur={field.onBlur}
-                      initialValue={course?.description ?? ""}
+                    <Textarea
+                      {...field}
+                      placeholder="Enter course description..."
+                      className="min-h-[300px] resize-none"
                     />
                   </FormControl>
                   <FormMessage />

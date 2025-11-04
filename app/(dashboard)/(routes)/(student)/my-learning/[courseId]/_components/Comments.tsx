@@ -34,7 +34,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Preview, Seperator, Spinner } from "@/components/shared";
+import { Seperator, Spinner } from "@/components/shared";
 import { createComment, deleteCommentById } from "@/lib/actions/comment.action";
 import { usePathname, useRouter } from "next/navigation";
 import { scnToast } from "@/components/ui/use-toast";
@@ -54,15 +54,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
-import { Skeleton } from "@/components/ui/skeleton";
-import dynamic from "next/dynamic";
-
-const DynamicEditor = dynamic(
-  () => import("@/components/shared/editor/Editor"),
-  {
-    loading: () => <Skeleton className="w-full h-[300px]" />,
-  }
-);
+import { Textarea } from "@/components/ui/textarea";
 
 const formSchema = z.object({
   title: z.string().min(10).max(100),
@@ -238,11 +230,10 @@ const Comments = ({ course, user }: Props) => {
                         More details about the question
                       </FormLabel>
                       <FormControl>
-                        <DynamicEditor
-                          onBlur={field.onBlur}
-                          onChange={field.onChange}
-                          initialValue=""
-                          defaultHeight={400}
+                        <Textarea
+                          {...field}
+                          placeholder="Enter more details..."
+                          className="min-h-[300px] resize-none"
                         />
                       </FormControl>
                       <FormMessage />
@@ -536,9 +527,9 @@ const Comments = ({ course, user }: Props) => {
                                                         </HoverCard>
                                                       </AccordionTrigger>
                                                       <AccordionContent>
-                                                        <Preview
-                                                          data={reply.content!}
-                                                        />
+                                                        <p className="text-slate-700 dark:text-slate-300 whitespace-pre-wrap">
+                                                          {reply.content!}
+                                                        </p>
                                                       </AccordionContent>
                                                     </AccordionItem>
                                                   )
@@ -602,7 +593,9 @@ const Comments = ({ course, user }: Props) => {
                           </HoverCard>
                         </AccordionTrigger>
                         <AccordionContent>
-                          <Preview data={comment?.content} />
+                          <p className="text-slate-700 dark:text-slate-300 whitespace-pre-wrap">
+                            {comment?.content}
+                          </p>
                         </AccordionContent>
                       </AccordionItem>
                     ))}

@@ -4,7 +4,6 @@ import { getSectionById } from "@/lib/actions/section.action";
 import React from "react";
 import {
   AttachmentForm,
-  QuizForm,
   SectionThumbnailForm,
   SectionTitleForm,
   SectionVisibilityForm,
@@ -83,7 +82,6 @@ const CoursesSectionIdPage = async ({
 
           <VideoForm section={section} />
           <AttachmentForm section={section} />
-          <QuizForm section={section} />
         </div>
       </div>
     </>

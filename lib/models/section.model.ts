@@ -2,13 +2,12 @@ import { model, models, Schema, Document } from "mongoose";
 
 export interface ISection extends Document {
   title: string;
-  videos?: Schema.Types.ObjectId[];
-  attachments?: Schema.Types.ObjectId[];
-  sectionThumbnail?: string;
-  position?: number;
+  videos: Schema.Types.ObjectId[];
+  attachments: Schema.Types.ObjectId[];
   course: Schema.Types.ObjectId;
-  quiz?: Schema.Types.ObjectId;
-  isPublished?: boolean;
+  sectionThumbnail?: string;
+  position: number;
+  isPublished: boolean;
 }
 
 export const SectionSchema = new Schema(
@@ -21,7 +20,6 @@ export const SectionSchema = new Schema(
     sectionThumbnail: { type: String, default: "" },
     position: { type: Number, default: 1 },
     course: { type: Schema.Types.ObjectId, ref: "Course" },
-    quiz: { type: Schema.Types.ObjectId, ref: "Quiz", default: null },
     isPublished: { type: Boolean, default: false },
   },
   { timestamps: true }

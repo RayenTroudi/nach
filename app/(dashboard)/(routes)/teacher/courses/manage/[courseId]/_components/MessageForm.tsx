@@ -22,17 +22,6 @@ import { ShowMoreLess, Spinner } from "@/components/shared";
 import { IUser } from "@/lib/models/user.model";
 import { scnToast } from "@/components/ui/use-toast";
 import { TCourse } from "@/types/models.types";
-import Editor from "@/components/shared/editor/Editor";
-import Preview from "@/components/shared/editor/Preview";
-import dynamic from "next/dynamic";
-import { Skeleton } from "@/components/ui/skeleton";
-
-const DynamicEditor = dynamic(
-  () => import("@/components/shared/editor/Editor"),
-  {
-    loading: () => <Skeleton className="w-full h-[300px]" />,
-  }
-);
 
 const formSchema = z.object({
   message: z.string().min(100, {
@@ -133,14 +122,12 @@ const MessageForm = ({ course, type }: Props) => {
               <PencilLineIcon size={15} className="text-slate-600" />
             </Button>
           </div>
-          <div className="break-words">
-            <Preview
-              data={
-                type === "welcome"
-                  ? course?.welcomeMessage ?? ""
-                  : course?.congratsMessage ?? ""
-              }
-            />
+          <div className="break-words whitespace-pre-wrap">
+            <p className="text-slate-700 dark:text-slate-300">
+              {type === "welcome"
+                ? course?.welcomeMessage ?? ""
+                : course?.congratsMessage ?? ""}
+            </p>
           </div>
         </div>
       ) : (
@@ -152,14 +139,10 @@ const MessageForm = ({ course, type }: Props) => {
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <DynamicEditor
-                      onChange={field.onChange}
-                      onBlur={field.onBlur}
-                      initialValue={
-                        type === "welcome"
-                          ? course?.welcomeMessage ?? ""
-                          : course?.congratsMessage ?? ""
-                      }
+                    <Textarea
+                      {...field}
+                      placeholder="Enter your message here..."
+                      className="min-h-[300px] resize-none"
                     />
                   </FormControl>
                   <FormMessage />

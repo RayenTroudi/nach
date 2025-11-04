@@ -1,5 +1,5 @@
 "use client";
-import { TCourse, TQuiz, TUserProgress, TUser } from "@/types/models.types";
+import { TCourse, TUserProgress, TUser } from "@/types/models.types";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
@@ -14,15 +14,7 @@ interface Props {
 
 const CourseCommunity = ({ user, course, userProgress }: Props) => {
   const isOwner = user._id === course.instructor._id;
-  const allQuizzes: TQuiz[] = course.sections
-    ?.map((section) => (section.quiz !== null ? section.quiz : null))
-    .filter((quiz) => quiz !== null) as TQuiz[];
 
-  const solvedQuizzes = allQuizzes.filter(
-    (quiz) =>
-      quiz?.passedUsers?.some((passedUser) => passedUser._id === user!._id) ??
-      []
-  );
   return (
     <Tabs defaultValue="q&a" className="w-full flex-1 ">
       <TabsList className="border-t border-b  w-full h-[80px] flex justify-start items-center  rounded-none  bg-transparent shadow-lg p-0 ">
@@ -50,11 +42,7 @@ const CourseCommunity = ({ user, course, userProgress }: Props) => {
           course={course}
           feedbacks={course.feedbacks}
           user={user}
-          isAllowed={
-            (solvedQuizzes.length === allQuizzes.length &&
-              userProgress.isCompleted) ??
-            false
-          }
+          isAllowed={userProgress.isCompleted ?? false}
         />
       </TabsContent>
     </Tabs>

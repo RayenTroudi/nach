@@ -1,14 +1,6 @@
 "use client";
 
 import React from "react";
-import dynamic from "next/dynamic";
-
-const DynamicEditor = dynamic(
-  () => import("@/components/shared/editor/Editor"),
-  {
-    loading: () => <Skeleton className="w-full h-[300px]" />,
-  }
-);
 import {
   Form,
   FormControl,
@@ -26,8 +18,8 @@ import { Button } from "@/components/ui/button";
 import { TComment, TCourse, TUser } from "@/types/models.types";
 import { scnToast } from "@/components/ui/use-toast";
 import { replyToComment } from "@/lib/actions/reply.action";
-import { Skeleton } from "@/components/ui/skeleton";
 import { Spinner } from "@/components/shared";
+import { Textarea } from "@/components/ui/textarea";
 
 const formSchema = z.object({
   title: z.string().min(10).max(100),
@@ -128,11 +120,10 @@ const ReplyForm = ({ course, user, comment, setReplyTo }: Props) => {
             <FormItem>
               <FormLabel htmlFor="editor">Detailed Answer</FormLabel>
               <FormControl>
-                <DynamicEditor
-                  onBlur={field.onBlur}
-                  onChange={field.onChange}
-                  initialValue=""
-                  defaultHeight={400}
+                <Textarea
+                  {...field}
+                  placeholder="Enter your answer..."
+                  className="min-h-[300px] resize-none"
                 />
               </FormControl>
               <FormMessage />

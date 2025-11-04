@@ -193,12 +193,6 @@ export interface ToggleAttachmentParams {
   path: string;
 }
 
-export interface RegisterQuizToSectionParams {
-  sectionId: string;
-  quizId: string;
-  path: string;
-}
-
 // Video Params
 export interface CreateVideoParams {
   sectionId: string;
@@ -245,40 +239,6 @@ export interface RemoveExamParams {
   courseId: string;
   instructorId: string;
   examId: string;
-  path: string;
-}
-
-// Quiz Params
-export interface CreateQuizParams {
-  title: string;
-  sectionId: string;
-  time: number;
-  path: string;
-}
-export interface PushQuestionToQuizParams {
-  quizId: string;
-  questionId: string;
-  path: string;
-}
-
-// Question Params
-export interface CreateQuestionParams {
-  title: string;
-  correctAnswer: string;
-  quizId: string;
-  path: string;
-}
-
-export interface ToggleOptionToQuestionParams {
-  questionId: string;
-  optionId: string;
-  path: string;
-}
-
-// Question Option Params
-export interface CreateQuestionOptionParams {
-  title: string;
-  questionId: string;
   path: string;
 }
 

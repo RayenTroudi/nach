@@ -6,7 +6,6 @@ import { ClerkProvider } from "@clerk/nextjs";
 import ToasterProvider from "@/components/providers/ToasterProvider";
 import { Toaster } from "@/components/ui/toaster";
 import { ThemeProvider } from "@/contexts/ThemeProvider";
-import { QuizProvider } from "@/contexts/QuizProvider";
 import { CartProvider } from "@/contexts/CartContext";
 import { WishlistProvider } from "@/contexts/WishlistContext";
 import { PageLoaderProvider } from "@/contexts/PageLoaderProvider";
@@ -48,25 +47,23 @@ export default function RootLayout({
       }}
     >
       <ThemeProvider>
-        <QuizProvider>
-          <PageLoaderProvider>
-            <html lang="en" className="dark">
-              <body
-                className={
-                  inter.className +
-                  "relative scroll-smooth	tracking-widest overflow-x-hidden bg-slate-100/30 dark:bg-slate-950 text-slate-800 dark:text-slate-100 bg-dot-slate-950/5 dark:bg-dot-slate-50/5"
-                }
-              >
-                <ToasterProvider />
-                <CartProvider>
-                  <WishlistProvider>{children}</WishlistProvider>
-                </CartProvider>
+        <PageLoaderProvider>
+          <html lang="en" className="dark">
+            <body
+              className={
+                inter.className +
+                "relative scroll-smooth	tracking-widest overflow-x-hidden bg-slate-100/30 dark:bg-slate-950 text-slate-800 dark:text-slate-100 bg-dot-slate-950/5 dark:bg-dot-slate-50/5"
+              }
+            >
+              <ToasterProvider />
+              <CartProvider>
+                <WishlistProvider>{children}</WishlistProvider>
+              </CartProvider>
 
-                <Toaster />
-              </body>
-            </html>
-          </PageLoaderProvider>
-        </QuizProvider>
+              <Toaster />
+            </body>
+          </html>
+        </PageLoaderProvider>
       </ThemeProvider>
     </ClerkProvider>
   );

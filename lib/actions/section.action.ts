@@ -1,7 +1,6 @@
 "use server";
 import {
   CreateSectionParams,
-  RegisterQuizToSectionParams,
   ReorderSectionParams,
   ToggleAttachmentParams,
   ToggleVideoParams,
@@ -15,13 +14,9 @@ import { connectToDatabase } from "../mongoose";
 import Video from "../models/video.model";
 import { deleteSectionVideos, deleteVideosSection } from "./video.action";
 import Attachment from "../models/attachment.model";
-import Quiz from "../models/Quiz.model";
-import Question from "../models/question.model";
-import QuestionOption from "../models/question-option.model";
 import path from "path";
 import { TSection } from "@/types/models.types";
 import { deleteSectionAttachments } from "./attachment.action";
-import { deleteSectionQuiz } from "./quiz.action";
 
 export const getSectionById = async (sectionId: string) => {
   try {
@@ -30,9 +25,6 @@ export const getSectionById = async (sectionId: string) => {
     if (!mongoose.isValidObjectId(sectionId)) throw new Error("Invalid ID");
     Video.find();
     Attachment.find();
-    Quiz.find();
-    Question.find();
-    QuestionOption.find();
 
     const section = await Section.findById(sectionId)
       .populate({
@@ -46,19 +38,6 @@ export const getSectionById = async (sectionId: string) => {
       .populate({
         path: "videos",
         options: { sort: { position: 1 } },
-      })
-      .populate({
-        path: "quiz",
-        populate: [
-          {
-            path: "questions",
-            populate: [
-              {
-                path: "options",
-              },
-            ],
-          },
-        ],
       });
     if (!section) throw new Error("Section not found");
     return JSON.parse(JSON.stringify(section));
@@ -213,7 +192,6 @@ export const deleteCourseSections = async (courseId: string) => {
     allSections.forEach(async (section: TSection) => {
       await deleteSectionVideos(section._id);
       await deleteSectionAttachments(section._id);
-      await deleteSectionQuiz(section._id);
     });
   } catch (error: any) {
     console.log("DELETE COURSE SECTIONS ERROR: ", error.message);
@@ -273,30 +251,6 @@ export const pullAttachmentFromSection = async (
     return JSON.parse(JSON.stringify(updatedSection));
   } catch (error: any) {
     console.log("PULL ATTACHMENT FROM SECTION ERROR: ", error.message);
-    throw new Error(error.message);
-  }
-};
-
-export const registerQuizToSection = async (
-  params: RegisterQuizToSectionParams
-) => {
-  try {
-    await connectToDatabase();
-    const { sectionId, quizId, path } = params;
-    if (!mongoose.isValidObjectId(sectionId)) throw new Error("Invalid ID");
-    if (!mongoose.isValidObjectId(quizId)) throw new Error("Invalid ID");
-
-    const updatedSection = await Section.findByIdAndUpdate(
-      { _id: sectionId },
-      {
-        quiz: quizId,
-      }
-    );
-
-    revalidatePath(path);
-    return JSON.parse(JSON.stringify(updatedSection));
-  } catch (error: any) {
-    console.log("REGISTER QUIZ TO SECTION ERROR: ", error.message);
     throw new Error(error.message);
   }
 };

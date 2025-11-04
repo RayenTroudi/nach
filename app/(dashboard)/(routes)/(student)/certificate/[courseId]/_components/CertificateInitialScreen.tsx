@@ -1,7 +1,7 @@
 "use client";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
-import { TCourse, TQuiz, TUser, TUserProgress } from "@/types/models.types";
+import { TCourse, TUser, TUserProgress } from "@/types/models.types";
 import React, { useRef } from "react";
 import Certificate from "./Certificate";
 import { Course } from "@/components/shared";
@@ -20,16 +20,6 @@ type Props = {
 const CertificateInitialScreen = ({ user, course, userProgress }: Props) => {
   const router = useRouter();
   const certificateRef = useRef<HTMLDivElement>(null);
-
-  const allQuizzes: TQuiz[] = course.sections
-    ?.map((section) => (section.quiz !== null ? section.quiz : null))
-    .filter((quiz) => quiz !== null) as TQuiz[];
-
-  const solvedQuizzes = allQuizzes.filter(
-    (quiz) =>
-      quiz?.passedUsers?.some((passedUser) => passedUser._id === user!._id) ??
-      []
-  );
 
   const onDownloadCertificate = async () => {
     const canvas = await html2canvas(certificateRef.current!);
@@ -74,8 +64,7 @@ const CertificateInitialScreen = ({ user, course, userProgress }: Props) => {
           showWishlistHeart={false}
           className="!pointer-events-none !rounded-none"
         />
-        {allQuizzes.length === solvedQuizzes.length &&
-        userProgress.isCompleted ? (
+        {userProgress.isCompleted ? (
           <Button
             onClick={onDownloadCertificate}
             className="rounded-none bg-black text-white dark:bg-white dark:text-black flex items-center justify-center gap-2"
@@ -85,8 +74,7 @@ const CertificateInitialScreen = ({ user, course, userProgress }: Props) => {
           </Button>
         ) : null}
       </div>
-      {allQuizzes.length === solvedQuizzes.length &&
-      userProgress.isCompleted ? (
+      {userProgress.isCompleted ? (
         <Certificate
           user={user}
           course={course}
@@ -95,8 +83,8 @@ const CertificateInitialScreen = ({ user, course, userProgress }: Props) => {
       ) : (
         <div className="h-calc(100vh-80px)  flex-1   flex items-center pt-20 flex-col gap-y-10">
           <h1 className="text-center  font-bold text-3xl">
-            You need to complete all the lectures and solve all the quizzes in
-            order to download the certificate
+            You need to complete all the lectures in order to download the
+            certificate
           </h1>
           <p className="w-[90%] text-slate-500 text-xl font-light text-center mx-auto">
             Once you have completed the course, you can download the certificate

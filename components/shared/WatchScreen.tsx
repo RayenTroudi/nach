@@ -4,7 +4,6 @@ import { usePathname, useRouter } from "next/navigation";
 
 import {
   TCourse,
-  TQuiz,
   TSection,
   TUserProgress,
   TUser,
@@ -49,16 +48,6 @@ const WatchScreen = ({
   );
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const allQuizzes: TQuiz[] = course.sections
-    ?.map((section) => (section.quiz !== null ? section.quiz : null))
-    .filter((quiz) => quiz !== null) as TQuiz[];
-
-  const solvedQuizzes = allQuizzes.filter(
-    (quiz) =>
-      quiz?.passedUsers?.some((passedUser) => passedUser._id === user!._id) ??
-      []
-  );
-
   const onChangeVideoToWatchHandler = (video: TVideo) => {
     setIsLoading(true);
     setVideoToWatch(video);
@@ -93,11 +82,6 @@ const WatchScreen = ({
             ) : null}
             {course!.sections!.length ? (
               <SectionsToWatch
-                isAllQuizzesSolved={
-                  solvedQuizzes.length === allQuizzes.length ||
-                  allQuizzes.length - solvedQuizzes.length
-                }
-                solvedQuizzes={solvedQuizzes}
                 isCourseOwner={isCourseOwner}
                 courseId={course!._id!}
                 courseTitle={course!.title!}

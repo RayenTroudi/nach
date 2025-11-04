@@ -49,7 +49,7 @@ const CourseIdPage = async ({ params }: { params: { courseId: string } }) => {
 
   return (
     <ProtectedRoute user={user}>
-      <div className="flex flex-col ">
+      <div className="flex flex-col gap-y-28 pb-2">
         <WatchScreen
           user={user}
           course={course}

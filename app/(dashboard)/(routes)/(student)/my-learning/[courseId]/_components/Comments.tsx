@@ -57,8 +57,7 @@ import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
 
 const formSchema = z.object({
-  title: z.string().min(10).max(100),
-  content: z.string().optional(),
+  content: z.string().min(3).max(500),
 });
 
 interface Props {
@@ -80,7 +79,6 @@ const Comments = ({ course, user }: Props) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      title: "",
       content: "",
     },
   });
@@ -109,7 +107,7 @@ const Comments = ({ course, user }: Props) => {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       const comment = await createComment({
-        title: values.title,
+        title: values.content?.substring(0, 100) || "Question",
         content: values.content,
         userId: user._id,
         courseId: course._id,
@@ -117,7 +115,7 @@ const Comments = ({ course, user }: Props) => {
       });
       setIsSendingEmail(true);
 
-      await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/comment`, {
+      await fetch(`/api/comment`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -183,78 +181,55 @@ const Comments = ({ course, user }: Props) => {
   return (
     <>
       {isAsking ? (
-        <Card className="w-full lg:w-1/2 lg:mx-auto">
-          <CardHeader className="flex flex-col gap-y-2">
-            <CardTitle className="text-center">
-              Ask Any Question To Your Instructor
+        <Card className="w-full max-w-3xl mx-auto border-slate-200 dark:border-slate-800 shadow-lg">
+          <CardHeader className="space-y-3 pb-6">
+            <CardTitle className="text-2xl font-bold text-center bg-gradient-to-r from-[#FF782D] to-orange-600 bg-clip-text text-transparent">
+              Ask Your Question
             </CardTitle>
-            <Separator />
+            <p className="text-sm text-center text-slate-600 dark:text-slate-400">
+              Your instructor will be notified and respond as soon as possible
+            </p>
+            <Separator className="bg-gradient-to-r from-transparent via-slate-200 dark:via-slate-700 to-transparent" />
           </CardHeader>
-          <CardContent>
+          <CardContent className="pb-6">
             <Form {...form}>
               <form
                 onSubmit={form.handleSubmit(onSubmit)}
-                className="space-y-8"
+                className="space-y-6"
               >
-                <FormField
-                  control={form.control}
-                  name="title"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>
-                        Question Title{" "}
-                        <span className="text-destructive text-lg font-bold">
-                          *
-                        </span>
-                      </FormLabel>
-
-                      <FormControl>
-                        <Input
-                          className="dark:bg-[#222f3e] dark:text-slate-50"
-                          placeholder="How do i center a div?"
-                          {...field}
-                        />
-                      </FormControl>
-
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
                 <FormField
                   control={form.control}
                   name="content"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel htmlFor="editor">
+                      <FormLabel htmlFor="editor" className="text-sm font-semibold text-slate-700 dark:text-slate-300">
                         More details about the question
                       </FormLabel>
                       <FormControl>
                         <Textarea
                           {...field}
                           placeholder="Enter more details..."
-                          className="min-h-[300px] resize-none"
+                          className="min-h-[100px] resize-y border-slate-300 dark:border-slate-700 focus-visible:ring-[#FF782D] focus-visible:ring-offset-0 rounded-lg"
                         />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
-                <div className="w-full  flex justify-end items-center gap-x-2">
+                <div className="flex items-center justify-end gap-x-3 pt-2">
                   <Button
-                    size={"sm"}
                     type="button"
+                    variant="ghost"
                     disabled={isSubmitting}
                     onClick={() => setIsAsking(false)}
+                    className="h-11 px-6 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors duration-200"
                   >
                     Cancel
                   </Button>
                   <Button
-                    size={"sm"}
                     type="submit"
-                    className=" w-[108px] bg-[#FF782D] hover:bg-[#FF782D] hover:opacity-90 transition-all duration-300 ease-in-out text-slate-50"
+                    className="bg-[#FF782D] hover:bg-orange-600 text-white font-medium px-6 h-11 rounded-lg shadow-sm hover:shadow-md transition-all duration-200 min-w-[140px]"
                     disabled={
-                      !isValid ||
                       isSubmitting ||
                       deletedCommentId !== null ||
                       isSendingEmail
@@ -272,47 +247,47 @@ const Comments = ({ course, user }: Props) => {
           </CardContent>
         </Card>
       ) : (
-        <div className="w-[90%] mx-auto flex flex-col gap-y-6 pt-6">
-          <h1 className="text-center md:text-start text-2xl md:text-3xl lg:text-4xl line-clamp-1  font-bold">
-            All Students Comments & Questions
-          </h1>
+        <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col gap-y-8 pt-6">
+          <div className="flex flex-col gap-y-2">
+            <h1 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-slate-100">
+              Questions & Discussions
+            </h1>
+            <p className="text-slate-600 dark:text-slate-400">
+              Ask questions and get help from your instructor and fellow students
+            </p>
+          </div>
 
-          <Separator className="h-[2px]" />
+          <Separator className="bg-slate-200 dark:bg-slate-800" />
 
           {course?.comments?.length ? (
-            <Card className="w-full border-none">
-              <CardHeader className="">
-                <div className="w-full flex gap-x-4 items-center">
-                  <div className="h-full relative w-full ">
+            <Card className="w-full border-slate-200 dark:border-slate-800 shadow-sm">
+              <CardHeader className="pb-6">
+                <div className="flex flex-col sm:flex-row gap-4 items-stretch sm:items-center">
+                  <div className="relative flex-1">
                     <Input
-                      className="w-full h-[45px]  bg-slate-200/50 dark:bg-slate-900 pl-12 rounded-sm"
-                      placeholder="Search For Questions  ..."
+                      className="w-full h-11 bg-slate-50 dark:bg-slate-900 border-slate-300 dark:border-slate-700 pl-10 rounded-lg focus-visible:ring-[#FF782D] focus-visible:ring-offset-0"
+                      placeholder="Search questions..."
                       onChange={(e) => setSearchTerm(e.target.value)}
                     />
                     <Image
                       src="/icons/search.svg"
-                      width={20}
-                      height={20}
+                      width={18}
+                      height={18}
                       alt="search"
-                      className="absolute top-1/2 transform -translate-y-1/2 left-4"
+                      className="absolute top-1/2 transform -translate-y-1/2 left-3 opacity-50"
                     />
                   </div>
                   <Button
                     onClick={() => setIsAsking(true)}
-                    size={"sm"}
-                    className="h-[45px] rounded-sm flex items-center justify-center gap-x-2 bg-[#FF782D] hover:bg-[#FF782D] hover:opacity-90"
+                    className="h-11 px-6 rounded-lg bg-[#FF782D] hover:bg-orange-600 text-white font-medium shadow-sm hover:shadow-md transition-all duration-200 flex items-center gap-x-2"
                   >
-                    <p className="text-slate-50 font-bold hidden md:block">
-                      Ask Question
-                    </p>
-                    <MessageCircleQuestion
-                      size={20}
-                      className="text-slate-50"
-                    />
+                    <span className="hidden sm:inline">Ask Question</span>
+                    <span className="sm:hidden">Ask</span>
+                    <MessageCircleQuestion size={18} />
                   </Button>
                 </div>
               </CardHeader>
-              <CardContent className="w-full flex  flex-col gap-y-2">
+              <CardContent className="w-full flex flex-col gap-y-2 pt-0">
                 {replyTo ? (
                   <Card className="w-full lg:w-1/2 lg:mx-auto">
                     <CardHeader className="flex flex-col gap-y-2">
@@ -331,29 +306,25 @@ const Comments = ({ course, user }: Props) => {
                     </CardContent>
                   </Card>
                 ) : (
-                  <Accordion type="single" collapsible className="w-full ">
+                  <Accordion type="single" collapsible className="w-full space-y-3">
                     {filteredComments.map((comment: TComment) => (
                       <AccordionItem
                         value={comment._id}
                         key={comment._id}
-                        className={`relative border-none rounded-sm w-full h-full hover:bg-slate-200/50 dark:hover:bg-slate-900/50 transition-all duration-300 ease-in-out hover:underline-offset-0 px-2`}
+                        className="relative border border-slate-200 dark:border-slate-800 rounded-lg bg-white dark:bg-slate-900 hover:shadow-md transition-all duration-200 px-4 overflow-hidden"
                       >
                         {comment?.user?._id === user._id ? (
                           <Button
                             disabled={deletedCommentId !== null}
                             onClick={() => onDeleteCommentHandler(comment._id)}
-                            className="bg-transparent   group hover:bg-transparent absolute top-1/2 right-8 transform -translate-y-1/2 hover:text-destructive transition-all duration-300 ease-in-out"
+                            variant="ghost"
+                            size="icon"
+                            className="absolute top-4 right-12 hover:text-destructive hover:bg-destructive/10 transition-colors duration-200 rounded-lg"
                           >
                             {deletedCommentId === comment._id ? (
-                              <Spinner
-                                size={20}
-                                className="text-slate-950 dark:text-slate-50"
-                              />
+                              <Spinner size={18} />
                             ) : (
-                              <Trash
-                                size={20}
-                                className="text-slate-950 dark:text-slate-50 group-hover:text-destructive transition-all duration-300 ease-in-out"
-                              />
+                              <Trash size={18} />
                             )}
                           </Button>
                         ) : null}
@@ -361,147 +332,98 @@ const Comments = ({ course, user }: Props) => {
                           <Button
                             disabled={false}
                             onClick={() => setReplyTo(comment)}
-                            className={` hidden md:block bg-transparent group hover:bg-transparent absolute top-1/2 right-8 transform -translate-y-1/2 hover:text-destructive transition-all duration-300 ease-in-out`}
+                            variant="ghost"
+                            size="icon"
+                            className="hidden md:flex absolute top-4 right-12 hover:text-[#FF782D] hover:bg-orange-100 dark:hover:bg-orange-950/30 transition-colors duration-200 rounded-lg"
                           >
-                            <MessageCircleReply
-                              size={20}
-                              className="text-slate-950 dark:text-slate-50 group-hover:text-[#ff782d] transition-all duration-300 ease-in-out"
-                            />
+                            <MessageCircleReply size={18} />
                           </Button>
                         ) : null}
 
-                        <AccordionTrigger
-                          className={`w-full hover:no-underline  `}
-                        >
+                        <AccordionTrigger className="w-full hover:no-underline py-4">
                           <HoverCard>
                             <HoverCardTrigger asChild>
-                              <div className="flex items-start md:items-center gap-x-4">
+                              <div className="flex items-start gap-x-4 w-full">
                                 <Image
                                   src={comment.user?.picture!}
-                                  width={50}
-                                  height={50}
-                                  alt="avatar "
-                                  className=" object-cover rounded-full "
+                                  width={48}
+                                  height={48}
+                                  alt="avatar"
+                                  className="object-cover rounded-full ring-2 ring-slate-200 dark:ring-slate-800"
                                 />
-                                <div className="flex flex-col items-start gap-y-1 ">
-                                  <div className="flex items-center gap-x-2">
-                                    <h2 className="block lg:hidden text-sm  lg:text-lg font-bold">
-                                      {comment.title.length > 20
-                                        ? `${comment.title.slice(0, 21)} ...`
-                                        : comment.title}{" "}
-                                    </h2>
-                                    <h2 className="hidden lg:block text-sm  lg:text-lg font-bold">
-                                      {comment.title.length > 100
-                                        ? comment.title.slice(0, 101)
-                                        : comment.title}{" "}
+                                <div className="flex flex-col items-start gap-y-2 flex-1 min-w-0">
+                                  <div className="flex items-center gap-x-2 flex-wrap">
+                                    <h2 className="text-base font-semibold text-slate-900 dark:text-slate-100 line-clamp-1">
+                                      {comment.title}
                                     </h2>
 
-                                    {comment.user._id ===
-                                    course.instructor._id ? (
-                                      <div className=" w-fit px-4 py-1 text-[11px] font-bold rounded-full bg-blue-700/20 text-center text-blue-700">
+                                    {comment.user._id === course.instructor._id ? (
+                                      <span className="px-3 py-0.5 text-xs font-medium rounded-full bg-[#FF782D]/10 text-[#FF782D] border border-[#FF782D]/20">
                                         Instructor
-                                      </div>
+                                      </span>
                                     ) : null}
                                   </div>
 
-                                  <div className="flex flex-col gap-y-1 items-start  sm:flex-row sm:items-center sm:gap-x-2">
-                                    <p className="text-xs text-[#FF782D] hover:underline cursor-pointer underline-offset-2">
-                                      <span>{comment.user?.username}</span>
+                                  <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-slate-600 dark:text-slate-400">
+                                    <p className="font-medium text-slate-700 dark:text-slate-300 hover:text-[#FF782D] cursor-pointer transition-colors">
+                                      {comment.user?.username}
                                     </p>
 
-                                    <span className="text-slate-950 dark:text-slate-50 hidden sm:block">
-                                      ·
-                                    </span>
+                                    <span>·</span>
 
-                                    <div className="flex items-center gap-x-2">
-                                      <p className="text-xs dark:text-slate-50">
-                                        {getTimeAgo(comment.createdAt)}
-                                      </p>
+                                    <p className="text-xs">
+                                      {getTimeAgo(comment.createdAt)}
+                                    </p>
 
-                                      <span
-                                        className={`text-slate-950 dark:text-slate-50 ${
-                                          comment?.replies?.length
-                                            ? "block"
-                                            : "hidden"
-                                        } `}
-                                      >
-                                        ·
-                                      </span>
+                                    {comment?.replies?.length ? (
+                                      <>
+                                        <p className="text-xs font-medium px-2.5 py-0.5 bg-slate-100 dark:bg-slate-800 rounded-full">
+                                          {comment?.replies?.length} {comment?.replies?.length === 1 ? 'answer' : 'answers'}
+                                        </p>
+                                        <Dialog>
+                                          <DialogTrigger asChild>
+                                            <Button
+                                              variant="ghost"
+                                              size="sm"
+                                              className="h-7 px-3 text-xs font-medium hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg"
+                                            >
+                                              View
+                                            </Button>
+                                          </DialogTrigger>
+                                          <DialogContent className="w-full max-h-[480px] overflow-y-auto">
+                                            <DialogHeader>
+                                              <DialogTitle className="w-full break-words">
+                                                <span className="w-full text-[#ff782d] break-words">
+                                                  {comment.title.slice(0, 30)}
+                                                  ...
+                                                </span>{" "}
+                                                &apos;s answers
+                                              </DialogTitle>
+                                              <Separator />
+                                            </DialogHeader>
 
-                                      {comment?.replies?.length ? (
-                                        <>
-                                          <Dialog>
-                                            <DialogTrigger asChild className="">
-                                              <Button
-                                                variant={"link"}
-                                                className="p-0 text-xs dark:text-slate-50  "
-                                              >
-                                                {comment?.replies?.length}{" "}
-                                                answer(s)
-                                              </Button>
-                                            </DialogTrigger>
-                                            <DialogContent className="w-full max-h-[480px] overflow-y-auto">
-                                              <DialogHeader>
-                                                <DialogTitle className="w-full break-words">
-                                                  <span className="w-full text-[#ff782d] break-words">
-                                                    {comment.title.slice(0, 30)}
-                                                    ...
-                                                  </span>{" "}
-                                                  &apos;s answers
-                                                </DialogTitle>
-                                                <Separator />
-                                              </DialogHeader>
-
-                                              <Accordion
-                                                type="single"
-                                                collapsible
-                                                className="w-full"
-                                              >
-                                                {comment?.replies?.map(
-                                                  (reply: TReply) => (
-                                                    <AccordionItem
-                                                      key={reply._id}
-                                                      value={reply._id}
-                                                      className="group hover:bg-slate-200/50 hover:dark:bg-slate-900/50 rounded-non border-none px-2 rounded-sm"
-                                                    >
-                                                      <AccordionTrigger
-                                                        className={`group-hover:no-underline  w-full
+                                            <Accordion
+                                              type="single"
+                                              collapsible
+                                              className="w-full"
+                                            >
+                                              {comment?.replies?.map(
+                                                (reply: TReply) => (
+                                                  <AccordionItem
+                                                    key={reply._id}
+                                                    value={reply._id}
+                                                    className="group hover:bg-slate-200/50 hover:dark:bg-slate-900/50 rounded-non border-none px-2 rounded-sm"
+                                                  >
+                                                    <AccordionTrigger
+                                                      className={`group-hover:no-underline  w-full
                                                     
                                                   `}
-                                                      >
-                                                        <HoverCard>
-                                                          <HoverCardTrigger
-                                                            asChild
-                                                          >
-                                                            <div className="flex items-center gap-x-4">
-                                                              <Image
-                                                                src={
-                                                                  reply.owner
-                                                                    .picture!
-                                                                }
-                                                                width={50}
-                                                                height={50}
-                                                                alt="avatar"
-                                                                className="object-cover rounded-md"
-                                                              />
-                                                              <div className="w-full h-full flex flex-col items-start justify-between gap-y-1">
-                                                                <p className="text-md font-semibold">
-                                                                  {reply.title.slice(
-                                                                    0,
-                                                                    20
-                                                                  )}
-                                                                  ...
-                                                                </p>
-                                                                <p className="w-fit text-md font-semibold text-xs  text-[#ff782d]">
-                                                                  {
-                                                                    reply.owner
-                                                                      .username
-                                                                  }
-                                                                </p>
-                                                              </div>
-                                                            </div>
-                                                          </HoverCardTrigger>
-                                                          <HoverCardContent className="w-full flex items-center gap-x-2">
+                                                    >
+                                                      <HoverCard>
+                                                        <HoverCardTrigger
+                                                          asChild
+                                                        >
+                                                          <div className="flex items-center gap-x-4">
                                                             <Image
                                                               src={
                                                                 reply.owner
@@ -514,7 +436,11 @@ const Comments = ({ course, user }: Props) => {
                                                             />
                                                             <div className="w-full h-full flex flex-col items-start justify-between gap-y-1">
                                                               <p className="text-md font-semibold">
-                                                                {reply.title}
+                                                                {reply.title.slice(
+                                                                  0,
+                                                                  20
+                                                                )}
+                                                                ...
                                                               </p>
                                                               <p className="w-fit text-md font-semibold text-xs  text-[#ff782d]">
                                                                 {
@@ -523,42 +449,65 @@ const Comments = ({ course, user }: Props) => {
                                                                 }
                                                               </p>
                                                             </div>
-                                                          </HoverCardContent>
-                                                        </HoverCard>
-                                                      </AccordionTrigger>
-                                                      <AccordionContent>
-                                                        <p className="text-slate-700 dark:text-slate-300 whitespace-pre-wrap">
-                                                          {reply.content!}
-                                                        </p>
-                                                      </AccordionContent>
-                                                    </AccordionItem>
-                                                  )
-                                                )}
-                                              </Accordion>
-                                            </DialogContent>
-                                          </Dialog>
-                                        </>
-                                      ) : null}
+                                                          </div>
+                                                        </HoverCardTrigger>
+                                                        <HoverCardContent className="w-full flex items-center gap-x-2">
+                                                          <Image
+                                                            src={
+                                                              reply.owner
+                                                                .picture!
+                                                            }
+                                                            width={50}
+                                                            height={50}
+                                                            alt="avatar"
+                                                            className="object-cover rounded-md"
+                                                          />
+                                                          <div className="w-full h-full flex flex-col items-start justify-between gap-y-1">
+                                                            <p className="text-md font-semibold">
+                                                              {reply.title}
+                                                            </p>
+                                                            <p className="w-fit text-md font-semibold text-xs  text-[#ff782d]">
+                                                              {
+                                                                reply.owner
+                                                                  .username
+                                                              }
+                                                            </p>
+                                                          </div>
+                                                        </HoverCardContent>
+                                                      </HoverCard>
+                                                    </AccordionTrigger>
+                                                    <AccordionContent>
+                                                      <p className="text-slate-700 dark:text-slate-300 whitespace-pre-wrap">
+                                                        {reply.content!}
+                                                      </p>
+                                                    </AccordionContent>
+                                                  </AccordionItem>
+                                                )
+                                              )}
+                                            </Accordion>
+                                          </DialogContent>
+                                        </Dialog>
+                                      </>
+                                    ) : null}
 
-                                      <span
-                                        className={`text-slate-950 dark:text-slate-50 md:hidden ${
-                                          user._id !== comment?.user?._id
-                                            ? "block"
-                                            : "hidden"
-                                        } `}
+                                    <span
+                                      className={`text-slate-950 dark:text-slate-50 md:hidden ${
+                                        user._id !== comment?.user?._id
+                                          ? "block"
+                                          : "hidden"
+                                      } `}
+                                    >
+                                      ·
+                                    </span>
+
+                                    {user._id !== comment?.user?._id ? (
+                                      <p
+                                        className="block md:hidden text-xs dark:text-slate-50 hover:underline cursor-pointer underline-offset-2"
+                                        onClick={() => setReplyTo(comment)}
                                       >
-                                        ·
-                                      </span>
-
-                                      {user._id !== comment?.user?._id ? (
-                                        <p
-                                          className="block md:hidden text-xs dark:text-slate-50 hover:underline cursor-pointer underline-offset-2"
-                                          onClick={() => setReplyTo(comment)}
-                                        >
-                                          Reply
-                                        </p>
-                                      ) : null}
-                                    </div>
+                                        Reply
+                                      </p>
+                                    ) : null}
                                   </div>
                                 </div>
                               </div>
@@ -592,10 +541,12 @@ const Comments = ({ course, user }: Props) => {
                             </HoverCardContent>
                           </HoverCard>
                         </AccordionTrigger>
-                        <AccordionContent>
-                          <p className="text-slate-700 dark:text-slate-300 whitespace-pre-wrap">
-                            {comment?.content}
-                          </p>
+                        <AccordionContent className="pt-4 pb-2">
+                          <div className="ml-16 pl-4 border-l-2 border-slate-200 dark:border-slate-800">
+                            <p className="text-slate-700 dark:text-slate-300 whitespace-pre-wrap text-sm leading-relaxed">
+                              {comment?.content}
+                            </p>
+                          </div>
                         </AccordionContent>
                       </AccordionItem>
                     ))}
@@ -604,17 +555,20 @@ const Comments = ({ course, user }: Props) => {
               </CardContent>
             </Card>
           ) : (
-            <div className="w-full flex flex-col items-center justify-center gap-y-2">
-              <NoQuestions className="" />
-              <div className="flex flex-col gap-y-2 ">
-                <p className="font-bold text-lg md:text-xl">
-                  No Question Has Been Asked .
+            <div className="w-full flex flex-col items-center justify-center gap-y-8 py-20">
+              <NoQuestions className="w-32 h-60" />
+              <div className="flex flex-col gap-y-4 items-center text-center max-w-md">
+                <h3 className="font-bold text-2xl md:text-3xl text-slate-900 dark:text-slate-100">
+                  No Questions Yet
+                </h3>
+                <p className="text-slate-600 dark:text-slate-400 text-sm md:text-base">
+                  Be the first to ask a question about this course! Your instructor is ready to help.
                 </p>
                 <Button
                   onClick={() => setIsAsking(true)}
-                  className="bg-[#FF782D] hover:bg-[#FF782D] hover:opacity-90 transition-all duration-300 ease-in-out rounded-sm w-full font-bold text-slate-50 text-sm"
+                  className="bg-[#FF782D] hover:bg-orange-600 transition-all duration-200 rounded-lg px-8 h-12 font-semibold text-white shadow-sm hover:shadow-md"
                 >
-                  Ask a question
+                  Ask Your First Question
                 </Button>
               </div>
             </div>

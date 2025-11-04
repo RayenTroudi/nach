@@ -75,20 +75,9 @@ export const teacherRoutes = [
 ];
 export const adminRoutes = [
   {
-    icon: Home,
-
-    label: "Pending Courses",
-    href: "/admin/dashboard",
-  },
-  {
     icon: Table,
     label: "Categories",
     href: "/admin/categories",
-  },
-  {
-    icon: CircleDollarSign,
-    label: "Transactions History",
-    href: "/admin/transactions-history",
   },
 
   {

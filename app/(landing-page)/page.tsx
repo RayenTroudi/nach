@@ -83,7 +83,7 @@ const LandingPage = async () => {
                   </h3>{" "}
                 </div>
                 <p className="text-slate-800 dark:text-slate-400 text-[15px]">
-                  Whether you're pursuing education, career opportunities, or a new life in Germany, we provide comprehensive guidance every step of the way. From language mastery to cultural integration.
+                  Whether you&apos;re pursuing education, career opportunities, or a new life in Germany, we provide comprehensive guidance every step of the way. From language mastery to cultural integration.
                 </p>
               </div>
               <div className="flex flex-col gap-6">
@@ -107,7 +107,7 @@ const LandingPage = async () => {
         </div>
         <div className="flex flex-col gap-y-2 w-full md:justify-end md:items-end md:gap-4 md:flex-row">
           <Button className="z-10 border border-[#FF782D] text-[#FF782D] bg-transparent rounded-sm hover:bg-transparent ">
-            I'm Ready to Move
+            I&apos;m Ready to Move
           </Button>
           <Button className="z-10 bg-[#FF782D] text-white rounded-sm hover:bg-[#FF782D]">
             Become a Guide

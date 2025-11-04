@@ -78,14 +78,6 @@ interface Props {
   };
 }
 
-interface IGeneratedQuiz {
-  questions: {
-    title: string;
-    options: string[];
-    correctAnswer: string;
-  }[];
-}
-
 const QuizForm = ({ section }: Props) => {
   const { setIsLoading } = usePageLoader();
   const pathname = usePathname();
@@ -355,7 +347,7 @@ const QuizForm = ({ section }: Props) => {
           </Form>
         ) : null}
 
-        {!generatedQuiz && !section.quiz ? (
+        {!section.quiz ? (
           <div className="relative flex flex-col gap-y-2">
             <p className="font-semibold text-slate-600 dark:text-slate-300  ">
               Quiz time ({quizTime} min)

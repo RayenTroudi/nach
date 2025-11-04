@@ -29,16 +29,22 @@ import CourseChatRoom from "../models/course-chat-room.model";
 import ChatRoomMessage from "../models/chat-room-message.model";
 import { TagType } from "../utils";
 import { redirect } from "next/navigation";
-import WithdrawTransaction from "../models/withdraw-transaction";
+// WithdrawTransaction model removed - Stripe-related
 
 export const createUser = async (params: CreateUserParams) => {
   try {
-    connectToDatabase();
-
+    await connectToDatabase();
+    
+    console.log("Creating user with params:", params);
+    
     const user = await User.create(params);
+    
+    console.log("User created successfully:", user);
+    
     return JSON.parse(JSON.stringify(user));
-  } catch (error) {
-    console.log(error);
+  } catch (error: any) {
+    console.error("Error in createUser:", error.message);
+    throw new Error(`Failed to create user: ${error.message}`);
   }
 };
 
@@ -87,7 +93,7 @@ export const getUserByMongoDbId = async (_id: string) => {
     connectToDatabase();
     if (!mongoose.isValidObjectId(_id)) throw new Error("Invalid ID");
 
-    await WithdrawTransaction.find();
+    // Removed WithdrawTransaction.find() - Stripe-related
     const user = await User.findById(_id)
       .populate({
         path: "createdCourses",
@@ -98,11 +104,7 @@ export const getUserByMongoDbId = async (_id: string) => {
         ],
         options: { sort: { createdAt: -1 } },
       })
-      .populate({
-        path: "withdrawTransactions",
-        model: "WithdrawTransaction",
-        options: { sort: { createdAt: -1 } },
-      })
+      // Removed withdrawTransactions populate - Stripe-related
       .populate({
         path: "enrolledCourses",
         populate: [
@@ -122,7 +124,7 @@ export const getUserByClerkId = async (params: GetUserByClerkIdParams) => {
   try {
     connectToDatabase();
 
-    await WithdrawTransaction.find();
+    // Removed WithdrawTransaction.find() - Stripe-related
     await CourseChatRoom.find();
     await ChatRoomMessage.find();
     const user = await User.findOne({ clerkId: params.clerkId })
@@ -138,11 +140,7 @@ export const getUserByClerkId = async (params: GetUserByClerkIdParams) => {
         ],
         options: { sort: { createdAt: -1 } },
       })
-      .populate({
-        path: "withdrawTransactions",
-        model: "WithdrawTransaction",
-        options: { sort: { createdAt: -1 } },
-      })
+      // Removed withdrawTransactions populate - Stripe-related
       .populate({
         path: "enrolledCourses",
         model: "Course",
@@ -385,34 +383,9 @@ export const depositToUserWallet = async (userId: string, amount: number) => {
   }
 };
 
-export const withdrawEarnings = async (
-  userId: string,
-  stripeId: string,
-  transactionId: string
-) => {
-  try {
-    await connectToDatabase();
-
-    const user = await User.findOneAndUpdate(
-      {
-        _id: userId,
-        stripeId,
-      },
-      {
-        wallet: 0,
-        $push: { withdrawTransactions: transactionId },
-      },
-      { new: true }
-    );
-
-    if (!user) throw new Error("User under this stripe account not found");
-
-    return JSON.parse(JSON.stringify(user));
-  } catch (error: any) {
-    console.log("Error in withdrawEarnings: ", error.message);
-    throw new Error(error.message);
-  }
-};
+// Stripe-related functions removed - using Flouci payment gateway instead
+// export const withdrawEarnings = async (...)
+// export const connectUserToStripe = async (...)
 
 export const getAllUsers = async () => {
   try {
@@ -499,27 +472,6 @@ export const updateUserDetails = async (params: UpdateUserParams) => {
     return JSON.parse(JSON.stringify(user));
   } catch (error: any) {
     console.error("Error updating user details:", error);
-    throw new Error(error.message);
-  }
-};
-
-export const connectUserToStripe = async (params: {
-  stripeId: string;
-  userId: string;
-}) => {
-  try {
-    await connectToDatabase();
-
-    const { stripeId, userId } = params;
-    const user = await User.findByIdAndUpdate(
-      userId,
-      { stripeId },
-      { new: true }
-    );
-
-    return JSON.parse(JSON.stringify(user));
-  } catch (error: any) {
-    console.error("Error connecting user to stripe:", error);
     throw new Error(error.message);
   }
 };

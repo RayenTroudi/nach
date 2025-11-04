@@ -19,6 +19,15 @@ const MonthlyRevenueBarChart: React.FC<Props> = ({ courses }) => {
   const [datasets, setDatasets] = useState<any[]>([]);
   const [totalMaxRevenue, setTotalMaxRevenue] = useState(0);
 
+  const backgroundColors = [
+    "rgba(255, 99, 132, 0.5)",
+    "rgba(54, 162, 235, 0.5)",
+    "rgba(255, 206, 86, 0.5)",
+    "rgba(75, 192, 192, 0.5)",
+    "rgba(153, 102, 255, 0.5)",
+    "rgba(255, 159, 64, 0.5)",
+  ];
+
   useEffect(() => {
     const fetchPurchaseData = async () => {
       const currentYear = new Date().getFullYear();
@@ -61,16 +70,7 @@ const MonthlyRevenueBarChart: React.FC<Props> = ({ courses }) => {
     };
 
     fetchPurchaseData();
-  }, [courses]);
-
-  const backgroundColors = [
-    "rgba(255, 99, 132, 0.5)",
-    "rgba(54, 162, 235, 0.5)",
-    "rgba(255, 206, 86, 0.5)",
-    "rgba(75, 192, 192, 0.5)",
-    "rgba(153, 102, 255, 0.5)",
-    "rgba(255, 159, 64, 0.5)",
-  ];
+  }, [courses, backgroundColors]);
 
   const months = [
     "January",

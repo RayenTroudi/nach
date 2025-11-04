@@ -10,26 +10,26 @@ import { useCart } from "@/contexts/CartContext";
 import CourseCard from "./_components/CourseCard";
 import { Separator } from "@/components/ui/separator";
 import { CreditCard } from "lucide-react";
-import PurchaseClient from "./multipurchase/_components/PurchaseClient";
 import { Dialog, DialogTrigger, DialogContent } from "@/components/ui/dialog";
 import axios from "axios";
+import { useRouter } from "next/navigation";
+import { scnToast } from "@/components/ui/use-toast";
+import { Spinner } from "@/components/shared";
 
 const CartPage = () => {
   const { cartItems } = useCart();
+  const router = useRouter();
   const [showDialog, setShowDialog] = useState(false);
-  const [clientSecret, setClientSecret] = useState<string | null>(null);
-  const [courses, setCourses] = useState<TCourse[]>([]);
-  const [currency, setCurrency] = useState<string>("USD");
-  const [flouciSession, setFlouciSession] = useState<string | null>(null);
+  const [isPurchasing, setIsPurchasing] = useState(false);
   const [courseIds, setCourseIds] = useState<string[]>([]);
 
   useEffect(() => {
     const ids = cartItems.map((item) => item._id);
     setCourseIds(ids);
-    setCourses(cartItems);
   }, [cartItems]);
 
   const total = cartItems.reduce((acc, item) => acc + (item.price || 0), 0);
+  const totalInDinar = total * 3.3;
 
   const handleCheckout = async () => {
     if (courseIds.length === 0) {
@@ -38,26 +38,27 @@ const CartPage = () => {
     }
 
     try {
-      const { data } = await axios.post("/api/payment_stripe", {
-        amount: total,
-        courseIds,
-      });
-      setClientSecret(data.clientSecret);
+      setIsPurchasing(true);
+      const {
+        data: { data },
+      } = await axios.post(
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/payment_flouci`,
+        {
+          amount: totalInDinar.toFixed(2),
+          courseIds,
+        }
+      );
 
-      const flouciResponse = await axios.post("/api/payment_flouci", {
-        amount: total.toFixed(2),
-        courseIds,
-      });
-      const flouciData = flouciResponse.data;
-      if (flouciData.data) {
-        setFlouciSession(flouciData.data.payment_link);
-      } else {
-        console.error("No payment link returned from Flouci");
-      }
-
-      setShowDialog(true);
-    } catch (error) {
+      router.push(data.link);
+    } catch (error: any) {
       console.error("Error during checkout:", error);
+      scnToast({
+        variant: "destructive",
+        title: "Error",
+        description: error.message || "Failed to process checkout",
+      });
+    } finally {
+      setIsPurchasing(false);
     }
   };
 
@@ -86,28 +87,20 @@ const CartPage = () => {
                   Cart
                 </h2>
 
-                <Dialog>
-                  <DialogTrigger asChild>
-                    <Button
-                      className="bg-primaryColor hover:bg-primaryColor flex items-center justify-center gap-x-2 text-slate-50 font-bold"
-                      onClick={handleCheckout}
-                    >
+                <Button
+                  className="bg-primaryColor hover:bg-primaryColor flex items-center justify-center gap-x-2 text-slate-50 font-bold"
+                  onClick={handleCheckout}
+                  disabled={isPurchasing}
+                >
+                  {isPurchasing ? (
+                    <Spinner size={20} />
+                  ) : (
+                    <>
                       <CreditCard size={20} />
-                      <span>Checkout</span>
-                    </Button>
-                  </DialogTrigger>
-                  {showDialog && clientSecret && (
-                    <DialogContent className="sm:max-w-[425px] md:max-w-[625px] p-6 bg-slate-100 dark:bg-slate-950">
-                      <PurchaseClient
-                        courses={courses}
-                        clientSecret={clientSecret}
-                        currency={currency}
-                        flouciSession={flouciSession}
-                        courseIds={courseIds}
-                      />
-                    </DialogContent>
+                      <span>Checkout with Flouci</span>
+                    </>
                   )}
-                </Dialog>
+                </Button>
               </div>
               <Separator />
               <div className="w-full flex flex-col gap-y-6 p-2">

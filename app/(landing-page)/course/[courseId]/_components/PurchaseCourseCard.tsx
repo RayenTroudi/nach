@@ -13,16 +13,13 @@ import axios from "axios";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import CheckoutForm from "./CheckoutForm";
 import { useUser } from "@clerk/nextjs";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { SignedIn, SignedOut } from "@clerk/nextjs";
 import Link from "next/link";
 import { TCourse, TSection, TVideo } from "@/types/models.types";
 import { scnToast } from "@/components/ui/use-toast";
-import Video from "next-video";
 import { useCart } from "@/contexts/CartContext";
 import { useWishlist } from "@/contexts/WishlistContext";
 
@@ -30,14 +27,12 @@ import { VidSyncPlayer } from "vidsync";
 
 interface Props {
   course: TCourse;
-  clientSecret: string;
   isEnrolled: boolean;
   isCourseOwner: boolean;
 }
 
 const PurchaseCourseCard = ({
   course,
-  clientSecret,
   isEnrolled,
   isCourseOwner,
 }: Props) => {
@@ -48,9 +43,6 @@ const PurchaseCourseCard = ({
   const [videoToPreview, setVideoToPreview] = useState<TVideo | null>(null);
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [currencies, setCurrencies] = useState<{ label: string; value: any }[]>(
-    []
-  );
   const [isPurchasing, setIsPurchasing] = useState<boolean>(false);
   const [isFilled, setIsFilled] = useState(() =>
     wishlist.some((item: TCourse) => item._id === course._id)
@@ -135,23 +127,6 @@ const PurchaseCourseCard = ({
       });
     }
   };
-
-  useEffect(() => {
-    const fetchCurrencies = async () => {
-      const { data } = await axios.get(
-        "https://openexchangerates.org/api/currencies.json"
-      );
-
-      const currenciesArray = Object.entries(data).map(([label, value]) => ({
-        label: `${label} - ${(value as string).toUpperCase()}`,
-        value: label.toLowerCase() as string,
-      }));
-
-      setCurrencies(currenciesArray);
-    };
-
-    fetchCurrencies();
-  }, []);
 
   return (
     <div className="w-full lg:w-[350px] min-h-[400px] lg:fixed lg:top-24 lg:right-24 flex flex-col gap-y-4 shadow-xl  z-50 p-2 lg:bg-slate-50 lg:dark:bg-slate-900 rounded-md">
@@ -449,73 +424,45 @@ const PurchaseCourseCard = ({
                       </div>
                       <Separator />
 
-                      <Tabs defaultValue="account" className="w-full">
-                        <TabsList className="grid w-full grid-cols-2 h-fit">
-                          <TabsTrigger
-                            value="stripe"
-                            className="flex items-center gap-x-2"
-                          >
-                            <Image
-                              src={"/icons/stripe.svg"}
-                              width={30}
-                              height={30}
-                              alt="stripe"
-                              className="object-cover rounded-none"
-                            />
-                            <p className="font-bold text-lg">Stripe</p>
-                          </TabsTrigger>
-                          <TabsTrigger
-                            value="flouci"
-                            className="flex items-center gap-x-2"
-                          >
-                            <Image
-                              src={"/icons/tunisia-flag.svg"}
-                              width={30}
-                              height={30}
-                              alt="flouci"
-                              className="object-cover rounded-none"
-                            />
-                            <p className="relative font-bold text-lg">
-                              Flouci
-                              <span className="text-xs text-slate-500 absolute -top-1 -right-4 font-semibold">
-                                TN
-                              </span>
-                            </p>
-                          </TabsTrigger>
-                        </TabsList>
-                        <TabsContent value="stripe">
-                          <CheckoutForm
-                            clientSecret={clientSecret}
-                            courses={[course]}
-                            currency={transformCurrencyToSymbol(
-                              course!.currency!.toUpperCase()
-                            )}
+                      <div className="flex flex-col gap-y-2 mt-4">
+                        <div className="flex items-center gap-x-2 justify-center mb-2">
+                          <Image
+                            src={"/icons/tunisia-flag.svg"}
+                            width={30}
+                            height={30}
+                            alt="flouci"
+                            className="object-cover rounded-none"
                           />
-                        </TabsContent>
-                        <TabsContent value="flouci">
-                          <Button
-                            name="flouci"
-                            onClick={() => handlePurchaseWithFlouci()}
-                            className="w-full bg-slate-950 dark:bg-slate-200 dark:hover:opacity-90 transition-all duration-300 ease-in-out  mt-2 rounded-sm text-md font-bold flex items-center justify-center"
-                          >
-                            {isPurchasing ? (
-                              <Spinner className="text-[#FF782D]" />
-                            ) : (
-                              <div className="flex items-center gap-x-2">
-                                <p>Purchase -</p>
-                                <p> {priceInDinar.toFixed(2)} DT </p>
-                                <Image
-                                  src={"/images/dinar.png"}
-                                  width={20}
-                                  height={20}
-                                  alt="dinar"
-                                  className="object-cover"
-                                />
-                              </div>
-                            )}
-                          </Button>
-                        </TabsContent>
-                      </Tabs>
+                          <p className="relative font-bold text-lg">
+                            Pay with Flouci
+                            <span className="text-xs text-slate-500 absolute -top-1 -right-4 font-semibold">
+                              TN
+                            </span>
+                          </p>
+                        </div>
+                        <Button
+                          name="flouci"
+                          onClick={() => handlePurchaseWithFlouci()}
+                          disabled={isPurchasing}
+                          className="w-full bg-slate-950 dark:bg-slate-200 dark:hover:opacity-90 transition-all duration-300 ease-in-out rounded-sm text-md font-bold flex items-center justify-center"
+                        >
+                          {isPurchasing ? (
+                            <Spinner className="text-[#FF782D]" />
+                          ) : (
+                            <div className="flex items-center gap-x-2">
+                              <p>Purchase -</p>
+                              <p> {priceInDinar.toFixed(2)} DT </p>
+                              <Image
+                                src={"/images/dinar.png"}
+                                width={20}
+                                height={20}
+                                alt="dinar"
+                                className="object-cover"
+                              />
+                            </div>
+                          )}
+                        </Button>
+                      </div>
                     </DialogContent>
                   </Dialog>
                 </>

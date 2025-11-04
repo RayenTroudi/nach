@@ -47,22 +47,47 @@ export async function POST(req: Request) {
     const eventType = evt.type;
     console.log("EVENT TYPE", eventType);
 
+    // Handle session and email events (return success without processing)
+    if (
+      eventType === "session.created" ||
+      eventType === "session.ended" ||
+      eventType === "email.created"
+    ) {
+      return NextResponse.json({ message: "OK", event: eventType });
+    }
+
     if (eventType === "user.created") {
       const { id, email_addresses, image_url, first_name, last_name } =
         evt.data;
-      // Do something with the user created event:  Create a new user in our database*
-      const mongoUser = {
+      
+      console.log("Creating user in MongoDB:", {
         clerkId: id,
+        email: email_addresses[0].email_address,
         firstName: first_name,
         lastName: last_name,
-        username: `${first_name} ${last_name ? ` ${last_name}` : ""}`,
+      });
+
+      // Create a new user in our database
+      const mongoUser = {
+        clerkId: id,
+        firstName: first_name || "User",
+        lastName: last_name || "",
+        username: `${first_name || "User"}${last_name ? ` ${last_name}` : ""}`,
         email: email_addresses[0].email_address,
-        picture: image_url,
+        picture: image_url || "",
       };
 
-      const user = await createUser(mongoUser);
-
-      return NextResponse.json({ message: "OK", user });
+      try {
+        const user = await createUser(mongoUser);
+        console.log("User created successfully in MongoDB:", user);
+        return NextResponse.json({ message: "OK", user });
+      } catch (error: any) {
+        console.error("Error creating user in MongoDB:", error);
+        return NextResponse.json(
+          { message: "Error creating user", error: error.message },
+          { status: 500 }
+        );
+      }
     }
 
     if (eventType === "user.updated") {

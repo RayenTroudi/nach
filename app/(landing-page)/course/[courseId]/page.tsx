@@ -1,7 +1,6 @@
 "use server";
 import { getCourseById } from "@/lib/actions";
 
-import Stripe from "stripe";
 import { alreadyEnrolled, getUserByClerkId } from "@/lib/actions/user.action";
 import { isCourseOwner } from "@/lib/actions/course.action";
 import { TCourse } from "@/types/models.types";
@@ -21,11 +20,8 @@ const PurchaseCoursePage = async ({
 }) => {
   const { userId } = auth();
 
-  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY! as string);
-
   let user: TUser = {} as TUser;
   let course: TCourse = {} as TCourse;
-  let paymentIntent: any = null;
   let isEnrolled: boolean = false;
   let isOwner: boolean = false;
 
@@ -37,17 +33,6 @@ const PurchaseCoursePage = async ({
     }
 
     course = await getCourseById({ courseId: params.courseId });
-
-    paymentIntent = await stripe.paymentIntents.create({
-      amount: course.price! * 100,
-      currency: "USD",
-      metadata: {
-        courseId: course._id,
-      },
-    });
-
-    if (!paymentIntent || !paymentIntent?.client_secret)
-      throw new Error("PURCHASE PAGE : Stripe failed to create payment intent");
   } catch (error: any) {
     console.log("ERROR FROM PURCHASE COURSE PAGE : ", error.message);
   }
@@ -63,7 +48,6 @@ const PurchaseCoursePage = async ({
         <>
           <PurchaseCourseCard
             course={course}
-            clientSecret={paymentIntent?.client_secret}
             isEnrolled={isEnrolled}
             isCourseOwner={isOwner}
           />

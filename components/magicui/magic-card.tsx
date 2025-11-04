@@ -48,6 +48,41 @@ const MagicContainer = ({ children, className }: MagicContainerProps) => {
   const containerSize = useRef<{ w: number; h: number }>({ w: 0, h: 0 });
   const [boxes, setBoxes] = useState<Array<HTMLElement>>([]);
 
+  const init = () => {
+    if (containerRef.current) {
+      containerSize.current.w = containerRef.current.offsetWidth;
+      containerSize.current.h = containerRef.current.offsetHeight;
+    }
+  };
+
+  const onMouseMove = () => {
+    if (containerRef.current) {
+      const rect = containerRef.current.getBoundingClientRect();
+      const { w, h } = containerSize.current;
+      const x = mousePosition.x - rect.left;
+      const y = mousePosition.y - rect.top;
+      const inside = x < w && x > 0 && y < h && y > 0;
+
+      if (inside) {
+        mouse.current.x = x;
+        mouse.current.y = y;
+        boxes.forEach((box) => {
+          const boxX =
+            -(box.getBoundingClientRect().left - rect.left) + mouse.current.x;
+          const boxY =
+            -(box.getBoundingClientRect().top - rect.top) + mouse.current.y;
+          box.style.setProperty("--mouse-x", `${boxX}px`);
+          box.style.setProperty("--mouse-y", `${boxY}px`);
+          box.style.setProperty("--opacity", `1`);
+        });
+      } else {
+        boxes.forEach((box) => {
+          box.style.setProperty("--opacity", `0`);
+        });
+      }
+    }
+  };
+
   useEffect(() => {
     init();
     containerRef.current &&
@@ -67,41 +102,8 @@ const MagicContainer = ({ children, className }: MagicContainerProps) => {
 
   useEffect(() => {
     onMouseMove();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mousePosition]);
-
-  const init = () => {
-    if (containerRef.current) {
-      containerSize.current.w = containerRef.current.offsetWidth;
-      containerSize.current.h = containerRef.current.offsetHeight;
-    }
-  };
-
-  const onMouseMove = () => {
-    if (containerRef.current) {
-      const rect = containerRef.current.getBoundingClientRect();
-      const { w, h } = containerSize.current;
-      const x = mousePosition.x - rect.left;
-      const y = mousePosition.y - rect.top;
-      const inside = x < w && x > 0 && y < h && y > 0;
-
-      mouse.current.x = x;
-      mouse.current.y = y;
-      boxes.forEach((box) => {
-        const boxX =
-          -(box.getBoundingClientRect().left - rect.left) + mouse.current.x;
-        const boxY =
-          -(box.getBoundingClientRect().top - rect.top) + mouse.current.y;
-        box.style.setProperty("--mouse-x", `${boxX}px`);
-        box.style.setProperty("--mouse-y", `${boxY}px`);
-
-        if (inside) {
-          box.style.setProperty("--opacity", `1`);
-        } else {
-          box.style.setProperty("--opacity", `0`);
-        }
-      });
-    }
-  };
 
   return (
     <div className={cn("h-full w-full", className)} ref={containerRef}>

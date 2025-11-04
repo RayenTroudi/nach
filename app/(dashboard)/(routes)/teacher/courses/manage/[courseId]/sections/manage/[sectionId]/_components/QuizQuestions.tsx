@@ -553,6 +553,7 @@ const QuizQuestions = ({ question }: Props) => {
             placeholder="e.g Your Option"
             className="font-bold flex-1 w-full bg-transparent border-none outline-none p-0 h-full text-[#49BBBD]"
             value={newOptionTitle}
+            onChange={() => {}} // Read-only field requires onChange handler
             readOnly
           />
         ) : (

@@ -8,7 +8,7 @@ const UserProgressBar = ({ progress }: Props) => {
     // <Progress value={progress} className=" rounded-none w-full bg-input" />
     <div
       className="radial-progress"
-      style={{ "--value": 90 }}
+      style={{ "--value": 90 } as React.CSSProperties}
       role="progressbar"
     >
       90%

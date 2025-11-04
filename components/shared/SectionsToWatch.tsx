@@ -154,9 +154,11 @@ const SectionsToWatch = ({
                   height="45"
                   viewBox="0 0 250 250"
                   className="circular-progress"
-                  style={{
-                    "--progress": userProgress?.progress || 0,
-                  }}
+                  style={
+                    {
+                      "--progress": userProgress?.progress || 0,
+                    } as React.CSSProperties
+                  }
                 >
                   <circle className="bg"></circle>
                   <circle className="fg"></circle>

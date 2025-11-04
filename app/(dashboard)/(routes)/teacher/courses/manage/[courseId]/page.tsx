@@ -1,4 +1,4 @@
-import { Banner, CourseStepHeader, StatusAlert } from "@/components/shared";
+import { Banner, CourseStepHeader } from "@/components/shared";
 import { getCourseById } from "@/lib/actions/course.action";
 import { auth } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
@@ -9,7 +9,6 @@ import {
   CategoryForm,
   MessageForm,
   PricingForm,
-  SubmitForReviewButton,
   ExamForm,
   PublishCourseButton,
 } from "./_components";
@@ -53,8 +52,10 @@ const CourseIdPage = async ({ params }: { params: { courseId: string } }) => {
     (course?.sections ?? []).filter(
       (section: TSection) =>
         section?.isPublished &&
-        section?.videos?.some((video: TVideo) => video?.isPublished)
-    ).length >= 3,
+        section?.videos &&
+        section.videos.length > 0 &&
+        section.videos.some((video: TVideo) => video?.isPublished)
+    ).length >= 1,
     course?.exam,
   ];
 
@@ -67,10 +68,13 @@ const CourseIdPage = async ({ params }: { params: { courseId: string } }) => {
       {course.isPublished ? (
         <Banner
           variant="success"
-          label="Your course now is published and available for all students.  Thank you for your contribution."
+          label="Your course is now published and available for all students. Thank you for your contribution."
         />
       ) : (
-        <StatusAlert status={course.status!} />
+        <Banner
+          variant="warning"
+          label="This course is in draft mode. Complete all required fields and click 'Publish Course' to make it available to students."
+        />
       )}
 
       <div className="p-6">
@@ -93,14 +97,7 @@ const CourseIdPage = async ({ params }: { params: { courseId: string } }) => {
               )
             </p>
           </div>
-          {completedFields === requiredFields.length &&
-          course?.status !== CourseStatusEnum.Pending &&
-          course?.status !== CourseStatusEnum.Approved ? (
-            <SubmitForReviewButton course={course} />
-          ) : null}
-          {completedFields === requiredFields.length &&
-          course?.status === CourseStatusEnum.Approved &&
-          !course?.isPublished ? (
+          {completedFields === requiredFields.length && !course?.isPublished ? (
             <PublishCourseButton course={course} />
           ) : null}
         </div>

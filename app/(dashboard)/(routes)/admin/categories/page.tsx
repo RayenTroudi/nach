@@ -1,4 +1,7 @@
 "use client";
+
+export const dynamic = 'force-dynamic';
+
 import { LeftSideBar, Spinner } from "@/components/shared";
 import { getAllCategories } from "@/lib/actions";
 import { ICategory } from "@/lib/models/category.model";
@@ -36,7 +39,8 @@ import {
 } from "@/lib/actions/category.action";
 import { Ban, CircleDashed, PencilLine, PlusCircle, Trash } from "lucide-react";
 import Loading from "./loading";
-import NoResult from "@/components/shared/animations/NoResult";
+import dynamicImport from "next/dynamic";
+const NoResult = dynamicImport(() => import("@/components/shared/animations/NoResult"), { ssr: false });
 
 const formSchema = z.object({
   name: z.string().max(20, {

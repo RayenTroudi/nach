@@ -1,7 +1,11 @@
 "use client";
+
+export const dynamic = 'force-dynamic';
+
+import dynamicImport from "next/dynamic";
 import Course from "@/components/shared/Course";
 import LeftSideBar from "@/components/shared/LeftSideBar";
-import EmptyWishList from "@/components/shared/animations/EmptyWishlist";
+const EmptyWishList = dynamicImport(() => import("@/components/shared/animations/EmptyWishlist"), { ssr: false });
 import { Button } from "@/components/ui/button";
 import { useWishlist } from "@/contexts/WishlistContext";
 import Link from "next/link";

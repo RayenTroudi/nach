@@ -1,8 +1,11 @@
 "use client";
 
+export const dynamic = 'force-dynamic';
+
 import React, { useState, useEffect } from "react";
+import dynamicImport from "next/dynamic";
 import { LeftSideBar } from "@/components/shared";
-import EmptyCartAnimation from "@/components/shared/animations/EmptyCart";
+const EmptyCartAnimation = dynamicImport(() => import("@/components/shared/animations/EmptyCart"), { ssr: false });
 import { Button } from "@/components/ui/button";
 import { TCourse } from "@/types/models.types";
 import Link from "next/link";

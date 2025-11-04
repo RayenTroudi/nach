@@ -8,7 +8,11 @@ export async function POST(req: Request) {
   // You can find this in the Clerk Dashboard -> Webhooks -> choose the webhook
   const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET;
 
+  console.log("🔔 Webhook received!");
+  console.log("📝 WEBHOOK_SECRET exists:", !!WEBHOOK_SECRET);
+
   if (!WEBHOOK_SECRET) {
+    console.error("❌ WEBHOOK_SECRET is missing!");
     throw new Error(
       "Please add WEBHOOK_SECRET from Clerk Dashboard to .env or .env.local"
     );
@@ -20,8 +24,15 @@ export async function POST(req: Request) {
   const svixTimestamp = headerPayload.get("svix-timestamp");
   const svixSignature = headerPayload.get("svix-signature");
 
+  console.log("📨 Svix Headers:", {
+    id: svixId ? "✅" : "❌",
+    timestamp: svixTimestamp ? "✅" : "❌",
+    signature: svixSignature ? "✅" : "❌",
+  });
+
   // If there are no headers, error out
   if (!svixId || !svixTimestamp || !svixSignature) {
+    console.error("❌ Missing svix headers!");
     return new Response("Error occured -- no svix headers", {
       status: 400,
     });
@@ -45,7 +56,9 @@ export async function POST(req: Request) {
     }) as WebhookEvent;
 
     const eventType = evt.type;
-    console.log("EVENT TYPE", eventType);
+    console.log("✅ Webhook verified successfully!");
+    console.log("📋 Event Type:", eventType);
+    console.log("👤 User Data:", JSON.stringify(evt.data, null, 2));
 
     // Handle session and email events (return success without processing)
     if (
@@ -57,32 +70,32 @@ export async function POST(req: Request) {
     }
 
     if (eventType === "user.created") {
-      const { id, email_addresses, image_url, first_name, last_name } =
+      const { id, email_addresses, image_url, first_name, last_name, username } =
         evt.data;
       
-      console.log("Creating user in MongoDB:", {
-        clerkId: id,
-        email: email_addresses[0].email_address,
-        firstName: first_name,
-        lastName: last_name,
-      });
+      console.log("🆕 Creating user in MongoDB...");
+      console.log("📧 Email:", email_addresses[0]?.email_address);
+      console.log("👤 Name:", first_name, last_name);
+      console.log("🔑 Clerk ID:", id);
 
       // Create a new user in our database
       const mongoUser = {
         clerkId: id,
-        firstName: first_name || "User",
+        firstName: first_name || username || "User",
         lastName: last_name || "",
-        username: `${first_name || "User"}${last_name ? ` ${last_name}` : ""}`,
+        username: username || `${first_name || "User"}${last_name ? ` ${last_name}` : ""}`,
         email: email_addresses[0].email_address,
         picture: image_url || "",
       };
 
+      console.log("💾 Saving user:", mongoUser);
+
       try {
         const user = await createUser(mongoUser);
-        console.log("User created successfully in MongoDB:", user);
+        console.log("✅ User created successfully in MongoDB:", user);
         return NextResponse.json({ message: "OK", user });
       } catch (error: any) {
-        console.error("Error creating user in MongoDB:", error);
+        console.error("❌ Error creating user in MongoDB:", error);
         return NextResponse.json(
           { message: "Error creating user", error: error.message },
           { status: 500 }

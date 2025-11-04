@@ -58,10 +58,9 @@ const Navbar = ({ isUserAdmin }: { isUserAdmin: boolean }) => {
                 orientation="vertical"
                 className="h-[20px] hidden lg:block"
               />
-              {/* Only admins can become instructors */}
+              {/* Admins can access instructor features */}
               <Link href="/teacher/courses" className="hidden lg:block">
                 <p className="text-slate-950 dark:text-slate-200 font-bold text-[14px] cursor-pointer  relative">
-                  Become an{" "}
                   <span className="primary-color hover:border-b-2 hover:border-[#FF782D] ease-in-out duration-100">
                     Instructor
                   </span>

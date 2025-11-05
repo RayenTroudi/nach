@@ -81,7 +81,7 @@ export default function FinalCTASection() {
               <Button
                 size="lg"
                 variant="outline"
-                className="w-full sm:w-auto h-14 px-10 text-lg font-semibold border-2 border-white text-white hover:bg-white/10"
+                className="w-full sm:w-auto h-14 px-10 text-lg font-semibold border-2 border-brand-red-500 text-brand-red-500 hover:bg-brand-red-500 hover:text-white"
               >
                 Browse All Courses
               </Button>

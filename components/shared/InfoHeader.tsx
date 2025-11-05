@@ -29,7 +29,7 @@ const InfoHeader = ({
         ) : null}
       </div>
       {buttonText ? (
-        <Button className="rounded-full border border-slate-950 dark:border-slate-400 bg-transparent text-slate-950 dark:text-slate-200 font-semibold hover:bg-[#ff782d] hover:text-slate-200 hover:border-[#ff782d] duration-100">
+        <Button className="rounded-full border border-slate-950 dark:border-slate-400 bg-transparent text-slate-950 dark:text-slate-200 font-semibold hover:bg-brand-red-500 hover:text-slate-200 hover:border-brand-red-500 duration-100">
           {buttonText}
         </Button>
       ) : (

@@ -28,7 +28,7 @@ const Message = ({ loggedInUser, message, isLastMessage }: Props) => {
         >
           <HoverCard>
             <HoverCardTrigger asChild className="cursor-pointer">
-              <div className=" max-w-[600px] p-2 bg-[#FF782D]/90 rounded-t-lg rounded-bl-lg text-slate-50 ">
+              <div className=" max-w-[600px] p-2 bg-brand-red-500/90 rounded-t-lg rounded-bl-lg text-slate-50 ">
                 {message.content}{" "}
               </div>
             </HoverCardTrigger>

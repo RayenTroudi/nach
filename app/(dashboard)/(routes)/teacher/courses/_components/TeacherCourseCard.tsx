@@ -321,7 +321,7 @@ const TeacherCourseCard = ({
                             <AlertDialogCancel>No</AlertDialogCancel>
                             <AlertDialogAction
                               onClick={unpublishCourseHandler}
-                              className="bg-[#FF782D] opacity-95 text-slate-200 hover:bg-[#FF782D] hover:opacity-100 duration-300 ease-in-out"
+                              className="bg-brand-red-500 opacity-95 text-slate-200 hover:bg-brand-red-600 hover:opacity-100 duration-300 ease-in-out"
                             >
                               Yes
                             </AlertDialogAction>
@@ -372,7 +372,7 @@ const TeacherCourseCard = ({
                               <AlertDialogCancel>No</AlertDialogCancel>
                               <AlertDialogAction
                                 onClick={deleteCourseHandler}
-                                className="bg-[#FF782D] opacity-95 text-slate-200 hover:bg-[#FF782D] hover:opacity-100 duration-300 ease-in-out"
+                                className="bg-brand-red-500 opacity-95 text-slate-200 hover:bg-brand-red-600 hover:opacity-100 duration-300 ease-in-out"
                               >
                                 Yes
                               </AlertDialogAction>

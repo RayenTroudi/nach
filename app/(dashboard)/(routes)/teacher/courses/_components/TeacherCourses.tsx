@@ -69,7 +69,7 @@ const TeacherCourses: React.FC<Props> = ({ instructor }) => {
           courses
         </h1>
         <Link href="/teacher/courses/manage">
-          <Button className="w-fit md:w-[200px] bg-[#FF782D] hover:bg-[#FF782D] opacity-80 hover:opacity-100 transition duration-300 ease-in-out">
+          <Button className="w-fit md:w-[200px] bg-brand-red-500 hover:bg-brand-red-600 opacity-80 hover:opacity-100 transition duration-300 ease-in-out">
             <PlusCircle size={22} className="md:hidden dark:text-slate-50" />
             <p className="hidden md:block dark:text-slate-50">New Course</p>
           </Button>

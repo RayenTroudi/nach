@@ -35,7 +35,7 @@ export const CommentEmail = ({ user, course, comment, mode }: Props) => {
         theme: {
           extend: {
             colors: {
-              brand: "#FF782D",
+              brand: "#DD0000",
             },
           },
         },
@@ -105,11 +105,11 @@ export const CommentEmail = ({ user, course, comment, mode }: Props) => {
                     mode === "dark" ? "text-slate-50" : "text-slate-950"
                   } text-[14px]`}
                 >
-                  <span className="text-[#FF782D]  font-bold">
+                  <span className="text-brand-red-500 font-bold">
                     {user.username}
                   </span>{" "}
                   has commented on your
-                  <span className="text-[#FF782D] font-bold ">
+                  <span className="text-brand-red-500 font-bold ">
                     {" "}
                     {course.title}{" "}
                   </span>

@@ -31,7 +31,7 @@ const Lesson = ({
       } rounded-md shadow-sm border w-full lg:w-[380px] max-h-[255px]  hover:scale-110 ease-in-out duration-300`}
     >
       <div className="flex items-center justify-between">
-        <div className="flex items-center justify-center bg-[#FF782D] rounded-full h-10 w-10">
+        <div className="flex items-center justify-center bg-brand-red-500 rounded-full h-10 w-10">
           <Image
             src="/icons/hat.svg"
             alt="Course Icon"

@@ -77,7 +77,7 @@ const CartPage = () => {
                 No Courses In Your Cart.
               </h1>
               <Link href={"/"} className="w-full md:w-1/2 md:mx-auto">
-                <Button className="w-full bg-[#FF782D] rounded-sm font-bold text-slate-50 mt-2 hover:opacity-90 hover:bg-[#FF782D] duration-300 transition-all ease-in-out">
+                <Button className="w-full bg-brand-red-500 rounded-sm font-bold text-slate-50 mt-2 hover:opacity-90 hover:bg-brand-red-600 duration-300 transition-all ease-in-out">
                   Start Browsing
                 </Button>
               </Link>
@@ -91,7 +91,7 @@ const CartPage = () => {
                 </h2>
 
                 <Button
-                  className="bg-primaryColor hover:bg-primaryColor flex items-center justify-center gap-x-2 text-slate-50 font-bold"
+                  className="bg-brand-red-500 hover:bg-brand-red-600 flex items-center justify-center gap-x-2 text-slate-50 font-bold"
                   onClick={handleCheckout}
                   disabled={isPurchasing}
                 >

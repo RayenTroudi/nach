@@ -185,7 +185,7 @@ const CategoriesPage = () => {
                   <Button
                     type="submit"
                     size="sm"
-                    className="bg-[#FF782D] hover:bg-[#FF782D]"
+                    className="bg-brand-red-500 hover:bg-brand-red-600"
                     disabled={
                       !isValid ||
                       isSubmitting ||
@@ -218,7 +218,7 @@ const CategoriesPage = () => {
             </div>
           ) : (
             <div className="w-full flex flex-col items-center justify-center md:gap-x-2 md:flex-row  md:justify-start text-sm font-semibold">
-              <p className="text-[#FF782D] text-lg font-bold">
+              <p className="text-brand-red-500 text-lg font-bold">
                 {row.original.courses.length}
               </p>
               <p className="text-slate-400">courses</p>
@@ -272,7 +272,7 @@ const CategoriesPage = () => {
                 Categories
               </h1>
               <AlertDialog>
-                <AlertDialogTrigger className="flex items-center gap-x-2 bg-[#FF782D] text-slate-50 font-semibold px-4 py-2 rounded-md cursor-pointer">
+                <AlertDialogTrigger className="flex items-center gap-x-2 bg-brand-red-500 text-slate-50 font-semibold px-4 py-2 rounded-md cursor-pointer">
                   <PlusCircle
                     size={20}
                     className="flex-shrink-0 text-slate-50"
@@ -307,7 +307,7 @@ const CategoriesPage = () => {
                       <div className="w-full flex justify-end items-center gap-2">
                         <AlertDialogAction
                           type="submit"
-                          className="bg-[#FF782D] hover:bg-[#FF782D] text-slate-50"
+                          className="bg-brand-red-500 hover:bg-brand-red-600 text-slate-50"
                         >
                           Add
                         </AlertDialogAction>
@@ -325,7 +325,7 @@ const CategoriesPage = () => {
             <NoResult className="h-[300px] lg:h-[500px]" />
 
             <AlertDialog>
-              <AlertDialogTrigger className="w-full md:w-1/2  flex items-center justify-center gap-x-2 bg-[#FF782D] text-slate-50 font-semibold px-4 py-2 rounded-md cursor-pointer">
+              <AlertDialogTrigger className="w-full md:w-1/2  flex items-center justify-center gap-x-2 bg-brand-red-500 hover:bg-brand-red-600 text-slate-50 font-semibold px-4 py-2 rounded-md cursor-pointer">
                 <PlusCircle size={20} className="flex-shrink-0 text-slate-50" />
                 <p className="">New category</p>
               </AlertDialogTrigger>
@@ -357,7 +357,7 @@ const CategoriesPage = () => {
                     <div className="w-full flex justify-end items-center gap-2">
                       <AlertDialogAction
                         type="submit"
-                        className="bg-[#FF782D] hover:bg-[#FF782D] text-slate-50"
+                        className="bg-brand-red-500 hover:bg-brand-red-600 text-slate-50"
                       >
                         Add
                       </AlertDialogAction>

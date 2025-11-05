@@ -91,7 +91,7 @@ const MessageInput = ({ user, selectedChatRoom }: Props) => {
         <Button
           type="submit"
           size={"lg"}
-          className="h-full rounded-none bg-[#FF782D] hover:bg-[#FF782D]  opacity-90 hover:opacity-100 duration-300 transition-all ease-in-out "
+          className="h-full rounded-none bg-brand-red-500 hover:bg-brand-red-600 opacity-90 hover:opacity-100 duration-300 transition-all ease-in-out "
           disabled={isSubmitting}
         >
           {isSubmitting ? (

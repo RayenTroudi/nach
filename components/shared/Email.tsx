@@ -35,7 +35,7 @@ export const Email = ({
         theme: {
           extend: {
             colors: {
-              brand: "#FF782D",
+              brand: "#DD0000",
             },
           },
         },

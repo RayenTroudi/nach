@@ -33,7 +33,7 @@ const config = withUt({
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
-        primaryColor: "#FF782D",
+        primaryColor: "#DD0000",
         // Brand Colors - German Theme
         brand: {
           red: {

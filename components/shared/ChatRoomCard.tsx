@@ -44,7 +44,7 @@ const ChatRoomCard = ({
       }}
     >
       {chatRoomUnreadMessages.length && !selectedChatRoom ? (
-        <div className="absolute text-xs bg-[#FF782D] w-5 h-5 rounded-full flex items-center justify-center text-slate-50 right-2 top-2">
+        <div className="absolute text-xs bg-brand-red-500 w-5 h-5 rounded-full flex items-center justify-center text-slate-50 right-2 top-2">
           {" "}
           {chatRoomUnreadMessages.length}{" "}
         </div>

@@ -157,7 +157,7 @@ body,
 }
 
 ::-webkit-progress-value {
-  background-color: #ff782d;
+  background-color: #DD0000;
   border-radius: 4px;
   -webkit-border-radius: 4px;
   -moz-border-radius: 4px;
@@ -175,9 +175,9 @@ body,
 }
 
 *::-webkit-scrollbar-thumb {
-  background-color: #ff762d8b;
+  background-color: #dd00008b;
   border-radius: 14px;
-  border: 3px solid #ff782d;
+  border: 3px solid #DD0000;
 }
 
 .ql-container {
@@ -198,7 +198,7 @@ body,
 }
 .react-multi-carousel-dot.react-multi-carousel-dot--active button {
   border: none;
-  background: #ff782d !important;
+  background: #DD0000 !important;
 }
 
 .circular-progress {
@@ -228,7 +228,7 @@ body,
   transform-origin: var(--half-size) var(--half-size);
   stroke-dasharray: var(--dash) calc(var(--circumference) - var(--dash));
   transition: stroke-dasharray 0.3s linear 0s;
-  stroke: #ff782d;
+  stroke: #DD0000;
 }
 @import "~@uploadthing/react/styles.css";
 

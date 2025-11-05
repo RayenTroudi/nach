@@ -40,7 +40,7 @@ export const ReplyToCommentEmail = ({
         theme: {
           extend: {
             colors: {
-              brand: "#FF782D",
+              brand: "#DD0000",
             },
           },
         },

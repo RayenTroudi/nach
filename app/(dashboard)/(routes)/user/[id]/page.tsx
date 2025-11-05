@@ -39,7 +39,7 @@ const SocialButton = ({
   url: string;
 }) => (
   <Link
-    className="inline-flex items-center justify-center w-full bg-slate-100 dark:bg-slate-900 text-[#ff782d] border border-[#ff782d] py-2 px-4 rounded-sm uppercase font-bold text-sm hover:bg-slate-200/50 dark:hover:bg-slate-950 transition duration-300 ease-in-out"
+    className="inline-flex items-center justify-center w-full bg-slate-100 dark:bg-slate-900 text-brand-red-500 border border-brand-red-500 py-2 px-4 rounded-sm uppercase font-bold text-sm hover:bg-slate-200/50 dark:hover:bg-slate-950 transition duration-300 ease-in-out"
     href={url || ""}
   >
     {icon}

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Bar } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -62,7 +62,7 @@ const BestSellerCourseChart = ({ courses }: { courses: any[] }) => {
     fetchCategories();
   }, []);
 
-  const processChartData = (category: string) => {
+  const processChartData = useCallback((category: string) => {
     const filteredCourses = courses.filter(
       (course) => course.category.name === category
     );
@@ -91,13 +91,13 @@ const BestSellerCourseChart = ({ courses }: { courses: any[] }) => {
       ],
       fullTitles: top5Courses.map((course) => course.title),
     };
-  };
+  }, [courses]);
 
   useEffect(() => {
     if (selectedCategory) {
       setChartData(processChartData(selectedCategory));
     }
-  }, [selectedCategory, courses]);
+  }, [selectedCategory, processChartData]);
 
   const options = {
     responsive: true,

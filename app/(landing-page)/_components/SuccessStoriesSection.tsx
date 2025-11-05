@@ -57,7 +57,7 @@ export default function SuccessStoriesSection() {
             </span>
           </h2>
           <p className="text-xl text-slate-600 dark:text-slate-300 max-w-3xl mx-auto">
-            Join thousands of students and professionals who've successfully moved to Germany with our guidance
+            Join thousands of students and professionals who&apos;ve successfully moved to Germany with our guidance
           </p>
         </motion.div>
 
@@ -93,7 +93,7 @@ export default function SuccessStoriesSection() {
 
                     {/* Quote Text */}
                     <p className="text-slate-700 dark:text-slate-300 leading-relaxed italic">
-                      "{story.quote}"
+                      &quot;{story.quote}&quot;
                     </p>
 
                     {/* Author Info */}

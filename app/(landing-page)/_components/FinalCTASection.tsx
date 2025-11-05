@@ -41,7 +41,7 @@ export default function FinalCTASection() {
 
           {/* Description */}
           <p className="text-xl text-slate-300 max-w-3xl mx-auto">
-            Join 2,500+ students and professionals who've successfully moved to Germany with our expert guidance. Your dream is closer than you think.
+            Join 2,500+ students and professionals who&apos;ve successfully moved to Germany with our expert guidance. Your dream is closer than you think.
           </p>
 
           {/* Benefits */}

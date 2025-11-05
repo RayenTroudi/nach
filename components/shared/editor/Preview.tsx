@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import Prism from "prismjs";
 import parse from "html-react-parser";
 
@@ -37,7 +37,7 @@ interface Props {
 const Preview = ({ data }: Props) => {
   const [copied, setCopied] = useState<boolean>(false);
 
-  const onCopyToClipboardHandler = () => {
+  const onCopyToClipboardHandler = useCallback(() => {
     navigator.clipboard.writeText(data.toString());
     scnToast({
       title: "Copied to clipboard",
@@ -47,7 +47,8 @@ const Preview = ({ data }: Props) => {
     setTimeout(() => {
       setCopied(false);
     }, 2000);
-  };
+  }, [data]);
+  
   useEffect(() => {
     Prism.highlightAll();
   }, []);

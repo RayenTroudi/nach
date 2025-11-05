@@ -42,7 +42,7 @@ const Messages = ({ roomId, messages, loggedInUser }: Props) => {
     return () => {
       pusherClient.unsubscribe(roomId);
     };
-  }, []);
+  }, [roomId]);
 
   useEffect(() => router.refresh(), [router, roomId]);
 

@@ -69,7 +69,7 @@ export default function PathwaysSection() {
             </span>
           </h2>
           <p className="text-xl text-slate-600 dark:text-slate-300 max-w-3xl mx-auto">
-            Whether you're pursuing education, career opportunities, or a new life in Germany, we have a tailored pathway for your journey.
+            Whether you&apos;re pursuing education, career opportunities, or a new life in Germany, we have a tailored pathway for your journey.
           </p>
         </motion.div>
 

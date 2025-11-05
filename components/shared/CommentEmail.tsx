@@ -43,7 +43,7 @@ export const CommentEmail = ({ user, course, comment, mode }: Props) => {
     >
       <Html>
         <Head>
-          <title>Welearn Platform</title>
+          <title>GermanPath Platform</title>
         </Head>
 
         <Body className={`w-full `}>

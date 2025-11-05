@@ -14,7 +14,7 @@ import ClerkLogo from "@/components/shared/ClerkLogo";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Welearn",
+  title: "GermanPath",
   description: `
     Our e-learning platform is a comprehensive, AI-powered solution designed to revolutionize the way you learn. It offers a wide range of courses across various disciplines, allowing users to learn at their own pace, anytime, anywhere.
 

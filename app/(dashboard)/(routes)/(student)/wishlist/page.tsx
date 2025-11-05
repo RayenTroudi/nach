@@ -37,7 +37,7 @@ const WishlistPage = () => {
               No Courses In Your WishList.
             </h1>
             <Link href="/" className="w-full md:w-1/2 md:mx-auto">
-              <Button className="w-full bg-[#FF782D] rounded-sm font-bold text-slate-50 mt-2 hover:opacity-90 hover:bg-[#FF782D] duration-300 transition-all ease-in-out">
+              <Button className="w-full bg-brand-red-500 rounded-sm font-bold text-slate-50 mt-2 hover:opacity-90 hover:bg-brand-red-600 duration-300 transition-all ease-in-out">
                 Start Browsing
               </Button>
             </Link>

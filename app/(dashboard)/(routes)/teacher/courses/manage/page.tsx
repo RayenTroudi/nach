@@ -100,7 +100,7 @@ const CreateCoursePage = () => {
             />
             <div className="w-full flex justify-between items-center">
               <p className="text-[13px] text-slate-400 font-bold">
-                <span className="text-[#FF782D]">{courseTitle.length}</span>/ 5
+                <span className="text-brand-red-500">{courseTitle.length}</span>/ 5
                 letters
               </p>
 
@@ -144,7 +144,7 @@ const CreateCoursePage = () => {
                 type="submit"
                 disabled={!courseCategory || showCongratsAnimation}
                 onClick={() => onCreateCourseHandler()}
-                className="bg-[#FF782D] opacity-80 hover:bg-[#FF782D] hover:opacity-100 text-slate-50"
+                className="bg-brand-red-500 opacity-80 hover:bg-brand-red-600 hover:opacity-100 text-slate-50"
               >
                 Create Now
               </Button>

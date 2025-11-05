@@ -38,7 +38,7 @@ const CourseCardFooter = ({
           )}
         </div>
       </div>
-      <p className="text-[15px] text-slate-950 dark:text-slate-200 font-semibold group-hover:text-[#FF782D]">
+      <p className="text-[15px] text-slate-950 dark:text-slate-200 font-semibold group-hover:text-brand-red-500">
         View More
       </p>
     </div>

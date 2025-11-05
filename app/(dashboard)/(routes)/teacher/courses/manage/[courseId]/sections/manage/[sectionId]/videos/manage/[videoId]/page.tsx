@@ -44,10 +44,10 @@ const VideIdPage = async ({ params }: { params: { videoId: string } }) => {
             <div className="flex flex-col gap-2">
               <h2 className="text-lg md:text-3xl font-bold text-slate-950 dark:text-slate-200 ">
                 Manage your{" "}
-                <span className="text-[#FF782D]">{video?.title}</span> Video
+                <span className="text-brand-red-500">{video?.title}</span> Video
               </h2>
               <p className="text-md md:text-lg font-semibold text-slate-400">
-                <span className="text-[#FF782D]">
+                <span className="text-brand-red-500">
                   {video?.sectionId?.course?.title}{" "}
                   <span className="text-slate-400">/</span>{" "}
                   {video?.sectionId?.title}
@@ -62,7 +62,7 @@ const VideIdPage = async ({ params }: { params: { videoId: string } }) => {
             <CourseStepHeader
               icon="/icons/eye.svg"
               alt="message"
-              bgColor="bg-[#FF782D]/30"
+              bgColor="bg-brand-red-500/30"
               title="Accessability & Visibility Settings"
             />
             <VideoAccessForm video={video} />
@@ -72,7 +72,7 @@ const VideIdPage = async ({ params }: { params: { videoId: string } }) => {
             <CourseStepHeader
               icon="/icons/customize.svg"
               alt="customize"
-              bgColor="bg-[#FF782D]/30"
+              bgColor="bg-brand-red-500/30"
               title="Customize your video"
             />
             <VideoTitleForm video={video} />

@@ -20,7 +20,7 @@ const PendingCourse = ({ course }: Props) => {
           href={`/admin/dashboard/courses/explore/${course._id}`}
           className="group relative w-full h-full rounded-md flex gap-4 flex-col lg:flex-row hover:bg-input/50 transition ease-in-out duration-300"
         >
-          <p className="absolute top-1/3 left-1/2  hidden  lg:group-hover:block font-bold text-[22px] text-[#FF782D] transition ease-in-out duration-300">
+          <p className="absolute top-1/3 left-1/2  hidden  lg:group-hover:block font-bold text-[22px] text-brand-red-500 transition ease-in-out duration-300">
             Explore Course
           </p>
           <div className="w-full h-[200px] lg:w-[400px] lg:h-full relative border-input">

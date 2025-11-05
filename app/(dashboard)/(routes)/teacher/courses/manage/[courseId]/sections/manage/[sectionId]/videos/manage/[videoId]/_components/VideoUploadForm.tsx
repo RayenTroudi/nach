@@ -100,7 +100,7 @@ const VideoUploadForm = ({ video }: Props) => {
       ) : (
         <>
           {videoUrl ? (
-            <VidSyncPlayer src={video.videoUrl!} primaryColor="#FF782D" />
+            <VidSyncPlayer src={video.videoUrl!} primaryColor="#DD0000" />
           ) : (
             <>
               {isSaving ? (
@@ -122,7 +122,7 @@ const VideoUploadForm = ({ video }: Props) => {
             </Button>
             <Button
               size="sm"
-              className="bg-[#FF782D] hover:bg-[#FF782D] dark:text-slate-50"
+              className="bg-brand-red-500 hover:bg-brand-red-600 dark:text-slate-50"
               disabled={isSaving || !videoUrl || videoUrl === video.videoUrl}
               onClick={() => onSubmit({ videoUrl: videoUrl!.toString() })}
             >

@@ -210,7 +210,7 @@ const SectionForm = ({ course }: Props) => {
               <div className="pt-4 flex gap-x-2 justify-end">
                 <Button
                   size="sm"
-                  className="bg-[#FF782D] hover:bg-[#FF782D]"
+                  className="bg-brand-red-500 hover:bg-brand-red-600"
                   disabled={!isValid || isSubmitting}
                 >
                   {isSubmitting ? (

@@ -1,5 +1,4 @@
 import {
-  BadgeDollarSignIcon,
   BarChart2,
   CircleDollarSign,
   GraduationCap,
@@ -59,11 +58,6 @@ export const teacherRoutes = [
 
     label: "Chat Rooms",
     href: "/teacher/chat-rooms",
-  },
-  {
-    icon: BadgeDollarSignIcon,
-    label: "Withdraw Transaction",
-    href: "/teacher/withdraw",
   },
 
   {

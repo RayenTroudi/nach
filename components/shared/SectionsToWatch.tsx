@@ -324,7 +324,7 @@ const SectionsToWatch = ({
               </div>
               {section?.attachments?.length ? (
                 <div className="flex flex-col items-start gap-x-1 w-full ml-2">
-                  <p className="text-[#FF782D] font-bold">
+                  <p className="text-brand-red-500 font-bold">
                     Attachments & Resources
                   </p>
                   {section?.attachments?.map(

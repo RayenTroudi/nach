@@ -264,7 +264,7 @@ const ReviewBanner = ({ course }: Props) => {
                 <div className="w-full  flex items-center justify-between">
                   <p className="text-sm font-bold text-slate-400">
                     {" "}
-                    <span className="text-[#FF782D]">
+                    <span className="text-brand-red-500">
                       {form.getValues().reason.length}
                     </span>{" "}
                     / 50

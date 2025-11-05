@@ -143,7 +143,7 @@ const VideoAccessForm = ({ video }: Props) => {
                 <Button
                   type="submit"
                   size="sm"
-                  className="bg-[#FF782D] hover:bg-[#FF782D] dark:text-slate-50"
+                  className="bg-brand-red-500 hover:bg-brand-red-600 dark:text-slate-50"
                   disabled={
                     !isValid ||
                     isSubmitting ||

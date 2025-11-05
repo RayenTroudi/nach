@@ -181,7 +181,7 @@ const CategoryForm = ({ course }: Props) => {
               <Button
                 type="submit"
                 size="sm"
-                className="bg-[#FF782D] hover:bg-[#FF782D]"
+                className="bg-brand-red-500 hover:bg-brand-red-600"
                 disabled={
                   !isValid ||
                   isSubmitting ||

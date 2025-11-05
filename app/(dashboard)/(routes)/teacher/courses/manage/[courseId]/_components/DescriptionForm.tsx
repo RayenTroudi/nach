@@ -151,7 +151,7 @@ const DescriptionForm = ({ course }: Props) => {
                 <Button
                   type="submit"
                   size="sm"
-                  className="bg-[#FF782D] hover:bg-[#FF782D] text-slate-50"
+                  className="bg-brand-red-500 hover:bg-brand-red-600 text-slate-50"
                   disabled={
                     !isValid || isSubmitting
                     // course?.description === form.getValues().description

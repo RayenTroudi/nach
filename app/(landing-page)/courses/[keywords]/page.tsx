@@ -345,7 +345,7 @@ const Page = ({ params }: props) => {
             All Courses
           </h1>
           <p className="pl-2 text-md lg:text-lg text-slate-500 font-semibold">
-            <span className="text-[#ff782d]">{courses.length} Courses</span>{" "}
+            <span className="text-brand-red-500">{courses.length} Courses</span>{" "}
             match your desire
           </p>
         </div>

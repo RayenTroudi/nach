@@ -133,7 +133,7 @@ const ThumbnailForm = ({ course }: Props) => {
             </Button>
             <Button
               size="sm"
-              className="bg-[#FF782D] hover:bg-[#FF782D]"
+              className="bg-brand-red-500 hover:bg-brand-red-600"
               disabled={isSaving || !imageUrl || imageUrl === course.thumbnail}
               onClick={() => onSubmit({ thumbnail: imageUrl! })}
             >

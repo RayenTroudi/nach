@@ -252,7 +252,7 @@ const KeywordsForm = ({ course }: Props) => {
             <div
               className={`
                         relative mt-5 cursor-pointer w-fit py-2 px-4 bg-slate-50 text-slate-950  capitalize font-bold rounded-full 
-                              hover:text-[#FF782D]  hover:from-purple-600  hover:to-orange-500 transition-all ease-in-out
+                              hover:text-brand-red-500  hover:from-purple-600  hover:to-red-500 transition-all ease-in-out
                               ${
                                 courseTags.find(
                                   (courseTag) =>

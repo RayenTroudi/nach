@@ -52,10 +52,10 @@ const Courses = ({ enrolledCourses, enrolledCoursesCategories }: Props) => {
             key={category._id}
             className={`
               w-full sm:w-[120px] h-[30px] px-2 flex items-center justify-center text-slate-950 dark:text-slate-50 font-semibold text-sm rounded-md border border-input bg-transparent cursor-pointer
-              duration-300 ease-in-out transition-all hover:bg-[#FF782D] dark:hover:bg-[#FF782D] hover:text-slate-50
+              duration-300 ease-in-out transition-all hover:bg-brand-red-500 dark:hover:bg-brand-red-500 hover:text-slate-50
               ${
                 selectedCategory?._id === category._id
-                  ? "bg-[#FF782D] dark:bg-[#FF782D] text-slate-50"
+                  ? "bg-brand-red-500 dark:bg-brand-red-500 text-slate-50"
                   : ""
               }
             `}

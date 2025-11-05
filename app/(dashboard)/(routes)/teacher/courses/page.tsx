@@ -31,7 +31,7 @@ const TeacherCoursesPage = async () => {
             <div className="flex flex-col justify-center items-center gap-y-3">
               <h1 className="text-3xl font-bold text-slate-950 dark:text-slate-200 text-center">
                 Hey{" "}
-                <span className="text-[#FF782D]"> {instructor.username} </span>
+                <span className="text-brand-red-500"> {instructor.username} </span>
               </h1>
               <p className="text-md lg:text-lg text-slate-700 dark:text-slate-300 text-center">
                 Start creating your courses now and share your knowledge with
@@ -45,7 +45,7 @@ const TeacherCoursesPage = async () => {
               href="/teacher/courses/manage"
               className="w-full flex items-center justify-center"
             >
-              <Button className="w-full  md:w-[400px] flex items-center gap-x-2 h-[48px] bg-[#FF782D] font-semibold hover:bg-[#FF782D] opacity-90 hover:opacity-100 text-slate-50">
+              <Button className="w-full  md:w-[400px] flex items-center gap-x-2 h-[48px] bg-brand-red-500 font-semibold hover:bg-brand-red-600 opacity-90 hover:opacity-100 text-slate-50">
                 <PlusCircle size={20} className="text-slate-50" />
                 <p className="">Create New Course Now </p>
               </Button>

@@ -219,7 +219,7 @@ const PricingForm = ({ course }: Props) => {
           <Button
             type="button"
             size="sm"
-            className="bg-[#FF782D] hover:bg-[#FF782D]"
+            className="bg-brand-red-500 hover:bg-brand-red-600"
             onClick={() => onSubmit(form.getValues())}
             disabled={
               !isValid ||

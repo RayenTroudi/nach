@@ -49,10 +49,10 @@ const CoursesSectionIdPage = async ({
             <div className="flex flex-col gap-2">
               <h2 className="text-lg md:text-3xl font-bold text-slate-950 dark:text-slate-200">
                 Manage your{" "}
-                <span className="text-[#FF782D]">{section?.title}</span> Section
+                <span className="text-brand-red-500">{section?.title}</span> Section
               </h2>
               <p className="text-md md:text-lg font-semibold text-slate-400">
-                <span className="text-[#FF782D]">{section?.course?.title}</span>{" "}
+                <span className="text-brand-red-500">{section?.course?.title}</span>{" "}
                 Course
               </p>
             </div>
@@ -63,7 +63,7 @@ const CoursesSectionIdPage = async ({
             <CourseStepHeader
               icon="/icons/eye.svg"
               alt="message"
-              bgColor="bg-[#FF782D]/30"
+              bgColor="bg-brand-red-500/30"
               title="Manage Visibility Settings"
             />
 
@@ -73,7 +73,7 @@ const CoursesSectionIdPage = async ({
             <CourseStepHeader
               icon="/icons/customize.svg"
               alt="message"
-              bgColor="bg-[#FF782D]/30"
+              bgColor="bg-brand-red-500/30"
               title="Manage your section"
             />
             <SectionTitleForm section={section} />

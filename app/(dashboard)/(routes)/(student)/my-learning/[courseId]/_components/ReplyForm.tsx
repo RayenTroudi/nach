@@ -142,7 +142,7 @@ const ReplyForm = ({ course, user, comment, setReplyTo }: Props) => {
           <Button
             size={"sm"}
             type="submit"
-            className="w-[120px] bg-[#FF782D] hover:bg-[#FF782D] hover:opacity-90 transition-all duration-300 ease-in-out text-slate-50"
+            className="w-[120px] bg-brand-red-500 hover:bg-brand-red-600 hover:opacity-90 transition-all duration-300 ease-in-out text-slate-50"
             disabled={!isValid || isSubmitting}
           >
             {isSubmitting ? (

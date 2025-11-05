@@ -82,11 +82,11 @@ const CourseIdPage = async ({ params }: { params: { courseId: string } }) => {
           <div className="flex flex-col gap-2">
             <h2 className="text-3xl font-bold text-slate-950 dark:text-slate-200">
               Manage your{" "}
-              <span className="text-[#FF782D]">{course?.title}</span> course
+              <span className="text-brand-red-500">{course?.title}</span> course
             </h2>
             <p className="text-slate-400">
               Completed fields (
-              <span className="text-sm font-bold text-[#FF782D]">
+              <span className="text-sm font-bold text-brand-red-500">
                 {completedFields}
               </span>
               /
@@ -108,7 +108,7 @@ const CourseIdPage = async ({ params }: { params: { courseId: string } }) => {
               <CourseStepHeader
                 icon="/icons/customize.svg"
                 alt="customize"
-                bgColor="bg-[#FF782D]/30"
+                bgColor="bg-brand-red-500/30"
                 title="Customize your course"
               />
               <Accordion type="single" collapsible className="w-full ">
@@ -172,7 +172,7 @@ const CourseIdPage = async ({ params }: { params: { courseId: string } }) => {
               <CourseStepHeader
                 icon="/icons/messages.svg"
                 alt="message"
-                bgColor="bg-[#FF782D]/30"
+                bgColor="bg-brand-red-500/30"
                 title="Customize your course Messages"
               />
               <Accordion type="single" collapsible className="w-full">
@@ -209,9 +209,9 @@ const CourseIdPage = async ({ params }: { params: { courseId: string } }) => {
           <div className="flex flex-col gap-4">
             <div className="flex flex-col gap-4">
               <CourseStepHeader
-                icon={<ListChecks color="#FF782D" />}
+                icon={<ListChecks color="#DD0000" />}
                 alt="message"
-                bgColor="bg-[#FF782D]/30"
+                bgColor="bg-brand-red-500/30"
                 title="Customize your course Sections"
               />
               <Accordion type="single" collapsible className="w-full">
@@ -233,9 +233,9 @@ const CourseIdPage = async ({ params }: { params: { courseId: string } }) => {
 
             <div className="flex flex-col gap-4">
               <CourseStepHeader
-                icon={<CircleDollarSign color="#FF782D" />}
+                icon={<CircleDollarSign color="#DD0000" />}
                 alt="pricing"
-                bgColor="bg-[#FF782D]/30"
+                bgColor="bg-brand-red-500/30"
                 title="Customize your course Pricing"
               />
               <Accordion type="single" collapsible className="w-full">
@@ -257,9 +257,9 @@ const CourseIdPage = async ({ params }: { params: { courseId: string } }) => {
 
             <div className="flex flex-col gap-4">
               <CourseStepHeader
-                icon={<File color="#FF782D" />}
+                icon={<File color="#DD0000" />}
                 alt="Certificate's Exam"
-                bgColor="bg-[#FF782D]/30"
+                bgColor="bg-brand-red-500/30"
                 title="Certificate's Exam"
               />
               <Accordion type="single" collapsible className="w-full">

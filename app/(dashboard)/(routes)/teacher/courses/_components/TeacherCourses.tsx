@@ -65,7 +65,7 @@ const TeacherCourses: React.FC<Props> = ({ instructor }) => {
     <div className="flex flex-col gap-4 items-start w-full">
       <div className="flex items-center justify-between py-2 mb-5 border-b border-input w-full">
         <h1 className="text-xl md:text-3xl text-slate-950 dark:text-slate-200 font-bold">
-          <span className="text-[#FF782D]">{instructor.username}&apos;s</span>{" "}
+          <span className="text-brand-red-500">{instructor.username}&apos;s</span>{" "}
           courses
         </h1>
         <Link href="/teacher/courses/manage">

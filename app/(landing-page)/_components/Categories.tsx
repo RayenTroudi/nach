@@ -77,7 +77,7 @@ const Categories = ({ categories }: Props) => {
             <div className="w-full md:[80%] mx-auto flex justify-center md:justify-between items-center">
               <div className="flex gap-x-2 items-center justify-center md:justify-between w-full">
                 <Button
-                  className="hidden md:flex items-center justify-center rounded-md bg-[#ff782d] opacity-90 hover:opacity-100 hover:bg-[#ff782d] text-slate-50"
+                  className="hidden md:flex items-center justify-center rounded-md bg-brand-red-500 opacity-90 hover:opacity-100 hover:bg-brand-red-600 text-slate-50"
                   onClick={(e: any) =>
                     e.stopPropagation() || instanceRef.current?.prev()
                   }
@@ -100,7 +100,7 @@ const Categories = ({ categories }: Props) => {
                         }}
                         className={`border border-input bg-transparent size-3 p-0 rounded-full ${
                           currentSlide === idx
-                            ? "bg-[#ff782d] text-slate-50"
+                            ? "bg-brand-red-500 text-slate-50"
                             : ""
                         }`}
                       ></Button>
@@ -109,7 +109,7 @@ const Categories = ({ categories }: Props) => {
                 </div>
 
                 <Button
-                  className="hidden md:flex items-center justify-center  rounded-md bg-[#ff782d] opacity-90 hover:opacity-100 hover:bg-[#ff782d] text-slate-50"
+                  className="hidden md:flex items-center justify-center  rounded-md bg-brand-red-500 opacity-90 hover:opacity-100 hover:bg-brand-red-600 text-slate-50"
                   onClick={(e: any) =>
                     e.stopPropagation() || instanceRef.current?.next()
                   }

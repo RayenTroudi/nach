@@ -124,7 +124,7 @@ const ClientCourse = ({
               {course.keywords.map((keyword, key) => (
                 <div
                   key={key}
-                  className="relative mt-2 text-xs w-fit px-3 py-1 flex items-center justify-center bg-black rounded-md text-[#ff782d]  uppercase"
+                  className="relative mt-2 text-xs w-fit px-3 py-1 flex items-center justify-center bg-black rounded-md text-brand-red-500  uppercase"
                 >
                   {keyword}
                 </div>

@@ -40,7 +40,7 @@ const PurchasePageHeader = ({ course }: Props) => {
               <div
                 key={key}
                 className="relative mt-2 md:mt-0 text-sm w-fit px-6 py-1 flex items-center justify-center bg-gradient-to-r from-slate-100 to-teal-100
-                                rounded-md text-[#ff782d]  uppercase
+                                rounded-md text-brand-red-500  uppercase
                               "
               >
                 {keyword}
@@ -77,7 +77,7 @@ const PurchasePageHeader = ({ course }: Props) => {
               className="flex flex-row items-center gap-x-2 group w-full"
             >
               <AnimatedTooltip items={[course.instructor]} />
-              <p className="font-semibold group-hover:text-[#FF782D] transition-all duration-300 ease-in-out">
+              <p className="font-semibold group-hover:text-brand-red-500 transition-all duration-300 ease-in-out">
                 {" "}
                 {course.instructor.username}{" "}
               </p>

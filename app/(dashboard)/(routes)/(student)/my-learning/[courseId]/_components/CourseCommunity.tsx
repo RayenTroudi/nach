@@ -22,7 +22,7 @@ const CourseCommunity = ({ user, course, userProgress }: Props) => {
           <TabsTrigger
             id="comments"
             value="q&a"
-            className="text-base font-semibold rounded-md px-6 h-full flex items-center justify-center gap-2 data-[state=active]:bg-white data-[state=active]:dark:bg-slate-800 data-[state=active]:shadow-sm data-[state=active]:text-[#FF782D] text-slate-600 dark:text-slate-400 transition-all duration-200"
+            className="text-base font-semibold rounded-md px-6 h-full flex items-center justify-center gap-2 data-[state=active]:bg-white data-[state=active]:dark:bg-slate-800 data-[state=active]:shadow-sm data-[state=active]:text-brand-red-500 text-slate-600 dark:text-slate-400 transition-all duration-200"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -42,7 +42,7 @@ const CourseCommunity = ({ user, course, userProgress }: Props) => {
           <TabsTrigger
             id="feedbacks"
             value="feedbacks"
-            className="text-base font-semibold rounded-md px-6 h-full flex items-center justify-center gap-2 data-[state=active]:bg-white data-[state=active]:dark:bg-slate-800 data-[state=active]:shadow-sm data-[state=active]:text-[#FF782D] text-slate-600 dark:text-slate-400 transition-all duration-200"
+            className="text-base font-semibold rounded-md px-6 h-full flex items-center justify-center gap-2 data-[state=active]:bg-white data-[state=active]:dark:bg-slate-800 data-[state=active]:shadow-sm data-[state=active]:text-brand-red-500 text-slate-600 dark:text-slate-400 transition-all duration-200"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"

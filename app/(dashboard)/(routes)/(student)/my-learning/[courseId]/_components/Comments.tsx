@@ -183,7 +183,7 @@ const Comments = ({ course, user }: Props) => {
       {isAsking ? (
         <Card className="w-full max-w-3xl mx-auto border-slate-200 dark:border-slate-800 shadow-lg">
           <CardHeader className="space-y-3 pb-6">
-            <CardTitle className="text-2xl font-bold text-center bg-gradient-to-r from-[#FF782D] to-orange-600 bg-clip-text text-transparent">
+            <CardTitle className="text-2xl font-bold text-center bg-gradient-to-r from-brand-red-500 to-red-600 bg-clip-text text-transparent">
               Ask Your Question
             </CardTitle>
             <p className="text-sm text-center text-slate-600 dark:text-slate-400">
@@ -209,7 +209,7 @@ const Comments = ({ course, user }: Props) => {
                         <Textarea
                           {...field}
                           placeholder="Enter more details..."
-                          className="min-h-[100px] resize-y border-slate-300 dark:border-slate-700 focus-visible:ring-[#FF782D] focus-visible:ring-offset-0 rounded-lg"
+                          className="min-h-[100px] resize-y border-slate-300 dark:border-slate-700 focus-visible:ring-brand-red-500 focus-visible:ring-offset-0 rounded-lg"
                         />
                       </FormControl>
                       <FormMessage />
@@ -228,7 +228,7 @@ const Comments = ({ course, user }: Props) => {
                   </Button>
                   <Button
                     type="submit"
-                    className="bg-[#FF782D] hover:bg-orange-600 text-white font-medium px-6 h-11 rounded-lg shadow-sm hover:shadow-md transition-all duration-200 min-w-[140px]"
+                    className="bg-brand-red-500 hover:bg-red-600 text-white font-medium px-6 h-11 rounded-lg shadow-sm hover:shadow-md transition-all duration-200 min-w-[140px]"
                     disabled={
                       isSubmitting ||
                       deletedCommentId !== null ||
@@ -265,7 +265,7 @@ const Comments = ({ course, user }: Props) => {
                 <div className="flex flex-col sm:flex-row gap-4 items-stretch sm:items-center">
                   <div className="relative flex-1">
                     <Input
-                      className="w-full h-11 bg-slate-50 dark:bg-slate-900 border-slate-300 dark:border-slate-700 pl-10 rounded-lg focus-visible:ring-[#FF782D] focus-visible:ring-offset-0"
+                      className="w-full h-11 bg-slate-50 dark:bg-slate-900 border-slate-300 dark:border-slate-700 pl-10 rounded-lg focus-visible:ring-brand-red-500 focus-visible:ring-offset-0"
                       placeholder="Search questions..."
                       onChange={(e) => setSearchTerm(e.target.value)}
                     />
@@ -279,7 +279,7 @@ const Comments = ({ course, user }: Props) => {
                   </div>
                   <Button
                     onClick={() => setIsAsking(true)}
-                    className="h-11 px-6 rounded-lg bg-[#FF782D] hover:bg-orange-600 text-white font-medium shadow-sm hover:shadow-md transition-all duration-200 flex items-center gap-x-2"
+                    className="h-11 px-6 rounded-lg bg-brand-red-500 hover:bg-red-600 text-white font-medium shadow-sm hover:shadow-md transition-all duration-200 flex items-center gap-x-2"
                   >
                     <span className="hidden sm:inline">Ask Question</span>
                     <span className="sm:hidden">Ask</span>
@@ -334,7 +334,7 @@ const Comments = ({ course, user }: Props) => {
                             onClick={() => setReplyTo(comment)}
                             variant="ghost"
                             size="icon"
-                            className="hidden md:flex absolute top-4 right-12 hover:text-[#FF782D] hover:bg-orange-100 dark:hover:bg-orange-950/30 transition-colors duration-200 rounded-lg"
+                            className="hidden md:flex absolute top-4 right-12 hover:text-brand-red-500 hover:bg-red-100 dark:hover:bg-red-950/30 transition-colors duration-200 rounded-lg"
                           >
                             <MessageCircleReply size={18} />
                           </Button>
@@ -358,14 +358,14 @@ const Comments = ({ course, user }: Props) => {
                                     </h2>
 
                                     {comment.user._id === course.instructor._id ? (
-                                      <span className="px-3 py-0.5 text-xs font-medium rounded-full bg-[#FF782D]/10 text-[#FF782D] border border-[#FF782D]/20">
+                                      <span className="px-3 py-0.5 text-xs font-medium rounded-full bg-brand-red-500/10 text-brand-red-500 border border-brand-red-500/20">
                                         Instructor
                                       </span>
                                     ) : null}
                                   </div>
 
                                   <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-slate-600 dark:text-slate-400">
-                                    <p className="font-medium text-slate-700 dark:text-slate-300 hover:text-[#FF782D] cursor-pointer transition-colors">
+                                    <p className="font-medium text-slate-700 dark:text-slate-300 hover:text-brand-red-500 cursor-pointer transition-colors">
                                       {comment.user?.username}
                                     </p>
 
@@ -393,7 +393,7 @@ const Comments = ({ course, user }: Props) => {
                                           <DialogContent className="w-full max-h-[480px] overflow-y-auto">
                                             <DialogHeader>
                                               <DialogTitle className="w-full break-words">
-                                                <span className="w-full text-[#ff782d] break-words">
+                                                <span className="w-full text-brand-red-500 break-words">
                                                   {comment.title.slice(0, 30)}
                                                   ...
                                                 </span>{" "}
@@ -442,7 +442,7 @@ const Comments = ({ course, user }: Props) => {
                                                                 )}
                                                                 ...
                                                               </p>
-                                                              <p className="w-fit text-md font-semibold text-xs  text-[#ff782d]">
+                                                              <p className="w-fit text-md font-semibold text-xs  text-brand-red-500">
                                                                 {
                                                                   reply.owner
                                                                     .username
@@ -466,7 +466,7 @@ const Comments = ({ course, user }: Props) => {
                                                             <p className="text-md font-semibold">
                                                               {reply.title}
                                                             </p>
-                                                            <p className="w-fit text-md font-semibold text-xs  text-[#ff782d]">
+                                                            <p className="w-fit text-md font-semibold text-xs  text-brand-red-500">
                                                               {
                                                                 reply.owner
                                                                   .username
@@ -528,7 +528,7 @@ const Comments = ({ course, user }: Props) => {
                                   </h2>
 
                                   <div className="flex items-center gap-x-2">
-                                    <p className="text-xs text-[#FF782D]">
+                                    <p className="text-xs text-brand-red-500">
                                       {comment.user?.username}
                                     </p>
                                     ·
@@ -566,7 +566,7 @@ const Comments = ({ course, user }: Props) => {
                 </p>
                 <Button
                   onClick={() => setIsAsking(true)}
-                  className="bg-[#FF782D] hover:bg-orange-600 transition-all duration-200 rounded-lg px-8 h-12 font-semibold text-white shadow-sm hover:shadow-md"
+                  className="bg-brand-red-500 hover:bg-red-600 transition-all duration-200 rounded-lg px-8 h-12 font-semibold text-white shadow-sm hover:shadow-md"
                 >
                   Ask Your First Question
                 </Button>

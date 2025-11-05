@@ -54,7 +54,7 @@ const PublishCourseButton = ({ course }: Props) => {
       {showConfettiAnimation ? <ConfettiAnimation /> : null}
       <Button
         disabled={showConfettiAnimation}
-        className="w-full md:w-fit bg-[#FF782D] opacity-80 hover:bg-[#FF782D] hover:opacity-100 text-white"
+        className="w-full md:w-fit bg-brand-red-500 opacity-80 hover:bg-brand-red-600 hover:opacity-100 text-white"
         onClick={onPublishCourseHandler}
       >
         Publish Now

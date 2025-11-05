@@ -75,7 +75,7 @@ const FeedbackForm = ({
         <Button
           onClick={() => {}}
           className={cn(
-            ` bg-[#FF782D] hover:bg-[#FF782D]  px-4 py-2  hover:opacity-90 transition-all duration-300 ease-in-out rounded-sm  font-bold text-slate-50 text-sm`,
+            ` bg-brand-red-500 hover:bg-brand-red-600  px-4 py-2  hover:opacity-90 transition-all duration-300 ease-in-out rounded-sm  font-bold text-slate-50 text-sm`,
             buttonClassName
           )}
         >

@@ -15,7 +15,7 @@ const Loading = () => {
           </h2>
           <p className="text-slate-400">
             Completed fields (
-            <span className="text-sm font-bold text-[#FF782D]">{2}</span>/
+            <span className="text-sm font-bold text-brand-red-500">{2}</span>/
             <span className="text-sm font-bold"> {11} </span>)
           </p>
         </div>
@@ -28,7 +28,7 @@ const Loading = () => {
             <CourseStepHeader
               icon="/icons/customize.svg"
               alt="customize"
-              bgColor="bg-[#FF782D]/30"
+              bgColor="bg-brand-red-500/30"
               title="Customize your course"
             />
             <Skeleton className="w-full h-[100px]" />
@@ -37,7 +37,7 @@ const Loading = () => {
             <CourseStepHeader
               icon="/icons/messages.svg"
               alt="message"
-              bgColor="bg-[#FF782D]/30"
+              bgColor="bg-brand-red-500/30"
               title="Customize your course Messages"
             />
             <Skeleton className="w-full h-[100px]" />
@@ -48,7 +48,7 @@ const Loading = () => {
         <div className="flex flex-col gap-4">
           <div className="flex flex-col gap-4">
             <CourseStepHeader
-              icon={<ListChecks color="#FF782D" />}
+              icon={<ListChecks color="#DD0000" />}
               alt="message"
               bgColor="bg-[#FF782D]/30"
               title="Customize your course Sections"
@@ -58,7 +58,7 @@ const Loading = () => {
 
           <div className="flex flex-col gap-4">
             <CourseStepHeader
-              icon={<CircleDollarSign color="#FF782D" />}
+              icon={<CircleDollarSign color="#DD0000" />}
               alt="pricing"
               bgColor="bg-[#FF782D]/30"
               title="Customize your course Pricing"
@@ -68,7 +68,7 @@ const Loading = () => {
 
           <div className="flex flex-col gap-4">
             <CourseStepHeader
-              icon={<File color="#FF782D" />}
+              icon={<File color="#DD0000" />}
               alt="Certificate's Exam"
               bgColor="bg-[#FF782D]/30"
               title="Certificate's Exam"

@@ -116,16 +116,11 @@ export default function HowItWorksSection() {
               >
                 <Card className="h-full border-2 border-slate-200 dark:border-brand-red-500/40 hover:border-brand-red-300 dark:hover:border-brand-red-400 hover:shadow-card-hover transition-all duration-300 bg-white dark:bg-slate-950/80 backdrop-blur-sm">
                   <div className="p-8 space-y-6">
-                    {/* Number Badge */}
+                    {/* Icon Badge (replaces number) */}
                     <div className="relative flex justify-center">
-                      <div className={`inline-flex items-center justify-center w-20 h-20 rounded-2xl ${colors.badge} text-white font-bold text-2xl shadow-lg relative z-10`}>
-                        {step.number}
+                      <div className={`inline-flex items-center justify-center w-20 h-20 rounded-2xl ${colors.badge} text-white shadow-lg relative z-10`}>
+                        <step.icon className="h-10 w-10" />
                       </div>
-                    </div>
-
-                    {/* Icon */}
-                    <div className={`inline-flex p-3 rounded-xl ${colors.iconBg} dark:border`}>
-                      <step.icon className={`h-6 w-6 ${colors.iconColor}`} />
                     </div>
 
                     {/* Content */}

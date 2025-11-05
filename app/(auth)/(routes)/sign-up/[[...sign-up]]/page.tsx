@@ -12,7 +12,7 @@ const SignUpPage = () => {
         baseTheme: mode === "dark" ? dark : undefined,
 
         variables: {
-          colorPrimary: "#FF782D",
+          colorPrimary: "#DD0000",
 
           colorBackground: mode === "dark" ? "#0f172a" : "#f8fafc",
         },

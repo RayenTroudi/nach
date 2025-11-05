@@ -231,3 +231,35 @@ body,
   stroke: #ff782d;
 }
 @import "~@uploadthing/react/styles.css";
+
+/* Hide Clerk "Secured by Clerk" watermark - Comprehensive */
+.cl-footer,
+.cl-footerAction,
+.cl-footerActionText,
+.cl-footerActionLink,
+.cl-footerPages,
+.cl-internal-b3fm6y,
+.cl-footerPagesLink,
+[data-localization-key="signIn.start.subtitle"],
+[data-localization-key="signUp.start.subtitle"],
+.cl-card > div:last-child,
+.cl-main > div:last-child {
+  display: none !important;
+  visibility: hidden !important;
+  height: 0 !important;
+  opacity: 0 !important;
+}
+
+/* Clerk custom styling for GermanPath brand */
+.cl-card {
+  border-radius: 0.75rem !important;
+}
+
+.cl-formButtonPrimary {
+  background-color: #DD0000 !important;
+  border-radius: 0.5rem !important;
+}
+
+.cl-formButtonPrimary:hover {
+  background-color: #B80000 !important;
+}

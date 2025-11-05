@@ -9,6 +9,7 @@ import { ThemeProvider } from "@/contexts/ThemeProvider";
 import { CartProvider } from "@/contexts/CartContext";
 import { WishlistProvider } from "@/contexts/WishlistContext";
 import { PageLoaderProvider } from "@/contexts/PageLoaderProvider";
+import ClerkLogo from "@/components/shared/ClerkLogo";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -39,10 +40,38 @@ export default function RootLayout({
       appearance={{
         variables: {
           colorPrimary: "#DD0000",
+          colorText: "#0f172a",
+          colorBackground: "#ffffff",
+          colorInputBackground: "#ffffff",
+          colorInputText: "#0f172a",
+          colorTextSecondary: "#64748b",
+          colorDanger: "#DC2626",
+          colorSuccess: "#2D5D3F",
+          colorWarning: "#FFCE00",
+          colorShimmer: "#f1f5f9",
+          fontFamily: "Inter, sans-serif",
+          borderRadius: "0.5rem",
+        },
+        elements: {
+          card: "shadow-lg border border-slate-200 dark:border-slate-700",
+          headerTitle: "text-slate-900 dark:text-slate-100 font-bold",
+          headerSubtitle: "text-slate-600 dark:text-slate-400",
+          socialButtonsBlockButton: "border-slate-300 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-800",
+          formButtonPrimary: "bg-brand-red-500 hover:bg-brand-red-600 text-white shadow-button hover:shadow-button-hover rounded-button",
+          footerActionLink: "text-brand-red-500 hover:text-brand-red-600",
+          identityPreviewText: "text-slate-900 dark:text-slate-100",
+          identityPreviewEditButton: "text-brand-red-500 hover:text-brand-red-600",
+          formFieldInput: "border-slate-300 dark:border-slate-600 focus:border-brand-red-500 focus:ring-brand-red-500",
+          formFieldLabel: "text-slate-700 dark:text-slate-300",
+          dividerLine: "bg-slate-300 dark:bg-slate-600",
+          dividerText: "text-slate-500 dark:text-slate-400",
+          footer: "hidden",
+          logoBox: "hidden",
+          logoImage: "hidden",
         },
         layout: {
-          logoPlacement: "inside",
-          logoImageUrl: "/images/logo.png",
+          logoPlacement: "none",
+          shimmer: true,
         },
       }}
     >

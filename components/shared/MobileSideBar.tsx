@@ -78,8 +78,8 @@ const MobileSideBar = ({
                 <Link
                   href="/teacher/courses"
                   className={`group w-full px-2 py-6 rounded-sm flex items-center justify-start gap-4 h-[30px] hover:bg-brand-red-500 duration-300 ease-in-out ${
-                    pathname === routes.route ||
-                    pathname.startsWith(routes.route)
+                    pathname === "/teacher/courses" ||
+                    pathname.startsWith("/teacher/courses")
                       ? "bg-brand-red-500"
                       : ""
                   }`}
@@ -116,8 +116,8 @@ const MobileSideBar = ({
                     <Link
                       href="/admin/dashboard"
                       className={`group w-full px-2 py-6 rounded-sm flex items-center justify-start gap-4 h-[30px] hover:bg-brand-red-500 duration-300 ease-in-out ${
-                        pathname === subroutes.route ||
-                        pathname.startsWith(subroutes.route)
+                        pathname === "/admin/dashboard" ||
+                        pathname.startsWith("/admin")
                           ? "bg-brand-red-500"
                           : ""
                       }`}

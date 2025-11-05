@@ -21,7 +21,7 @@ const MobileLeftSidebarItem = ({ icon: Icon, label, href }: Props) => {
     <Link
       href={href}
       className={`group w-full px-2 py-6 rounded-sm flex items-center justify-start gap-4 h-[30px] hover:bg-brand-red-500 duration-300 ease-in-out ${
-        pathname === routes.route || pathname.startsWith(routes.route)
+        pathname === href || pathname.startsWith(`${href}/`)
           ? "bg-brand-red-500"
           : ""
       }`}

@@ -36,7 +36,7 @@ const Footer = () => {
                     className="bg-transparent w-full h-full text-slate-950 dark:text-slate-50 border-none rounded-none focus:bg-transparent"
                   />
 
-                  <Button className="rounded-none mt-1 w-full bg-[#FF782D] hover:bg-[#FF782D] px-6 py-3 text-sm font-bold uppercase tracking-wide text-slate-50 transition-none hover:opacity-90 sm:mt-0 sm:w-auto sm:shrink-0">
+                  <Button className="rounded-button mt-1 w-full bg-brand-red-500 hover:bg-brand-red-600 px-6 py-3 text-sm font-bold uppercase tracking-wide text-white shadow-button hover:shadow-button-hover transition-all duration-300 sm:mt-0 sm:w-auto sm:shrink-0">
                     Sign Up
                   </Button>
                 </div>

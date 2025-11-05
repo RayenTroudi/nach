@@ -216,7 +216,7 @@ const PurchaseCourseCard = ({
               <div className="flex items-center justify-center space-x-4  rounded-md">
                 <Button
                   name="add-to-cart"
-                  className="bg-[#FF782D] w-full text-lg font-bold text-slate-50 hover:bg-[#FF782D] hover:opacity-90 duration-300 ease-in-out rounded-sm"
+                  className="bg-brand-red-500 w-full text-lg font-bold text-white hover:bg-brand-red-600 hover:shadow-button-hover duration-300 ease-in-out rounded-button shadow-button"
                   onClick={handleAddToCart}
                 >
                   {isInCart ? "Remove from cart" : "Add to cart"}
@@ -243,7 +243,7 @@ const PurchaseCourseCard = ({
                   <Link href={`/my-learning/${course._id}`}>
                     <Button
                       name="watch-course"
-                      className="w-full bg-[#ff782d] hover:bg-[#ff782d] hover:opacity-90 text-slate-50 transition-all duration-300 ease-in-out rounded-sm text-md font-bold"
+                      className="w-full bg-brand-red-500 hover:bg-brand-red-600 hover:shadow-button-hover text-white transition-all duration-300 ease-in-out rounded-button shadow-button text-md font-bold"
                     >
                       Watch your course
                     </Button>
@@ -295,7 +295,7 @@ const PurchaseCourseCard = ({
                             </h2>
                             <div className="hidden md:flex gap-x-2 items-center w-full  ">
                               <p className="font-bold text-[12px] text-slate-500 flex gap-x-1 items-end">
-                                <span className="text-[#FF782D] text-sm flex items-center gap-x-1">
+                                <span className="text-brand-red-500 text-sm flex items-center gap-x-1">
                                   <AlignCenterVertical size={12} />
                                   <span>{course!.sections!.length}</span>
                                 </span>{" "}
@@ -308,7 +308,7 @@ const PurchaseCourseCard = ({
                               />
 
                               <p className="font-bold text-[12px] text-slate-500 flex gap-x-1 items-end">
-                                <span className="text-[#FF782D] text-sm flex items-center gap-x-1">
+                                <span className="text-brand-red-500 text-sm flex items-center gap-x-1">
                                   <LucideVideo size={12} />
                                   <span>{allVideos.length}</span>
                                 </span>{" "}
@@ -366,7 +366,7 @@ const PurchaseCourseCard = ({
                         </div>
                         <div className="flex md:hidden gap-x-2 items-center w-full flex-wrap ">
                           <p className="font-bold text-[12px] text-slate-500 flex gap-x-1 items-end">
-                            <span className="text-[#FF782D] text-sm flex items-center gap-x-1">
+                            <span className="text-brand-red-500 text-sm flex items-center gap-x-1">
                               <AlignCenterVertical size={12} />
                               <span>{course.sections!.length}</span>
                             </span>{" "}
@@ -379,7 +379,7 @@ const PurchaseCourseCard = ({
                           />
 
                           <p className="font-bold text-[12px] text-slate-500 flex gap-x-1 items-end">
-                            <span className="text-[#FF782D] text-sm flex items-center gap-x-1">
+                            <span className="text-brand-red-500 text-sm flex items-center gap-x-1">
                               <LucideVideo size={12} />
                               <span>{allVideos.length}</span>
                             </span>{" "}
@@ -447,7 +447,7 @@ const PurchaseCourseCard = ({
                           className="w-full bg-slate-950 dark:bg-slate-200 dark:hover:opacity-90 transition-all duration-300 ease-in-out rounded-sm text-md font-bold flex items-center justify-center"
                         >
                           {isPurchasing ? (
-                            <Spinner className="text-[#FF782D]" />
+                            <Spinner className="text-brand-red-500" />
                           ) : (
                             <div className="flex items-center gap-x-2">
                               <p>Purchase -</p>
@@ -474,7 +474,7 @@ const PurchaseCourseCard = ({
                 <Link href="/sign-up">
                   <Button
                     name="sign-up"
-                    className="contrast-100 hover:opacity-90  w-full h-[40px]  bg-[#0071DC]/10 text-[#FF782D] dark:bg-slate-900 md:dark:bg-slate-950 font-medium hover:bg-[#0071DC]/10 transition-all duration-300 ease-in-out"
+                    className="contrast-100 hover:opacity-90 w-full h-[40px] bg-slate-100 dark:bg-slate-800 text-brand-red-500 font-medium hover:bg-slate-200 dark:hover:bg-slate-700 transition-all duration-300 ease-in-out rounded-button"
                   >
                     Sign Up
                   </Button>
@@ -483,7 +483,7 @@ const PurchaseCourseCard = ({
                 <Link href="/sign-in">
                   <Button
                     name="Login"
-                    className="contrast-100 bg-[#FF782D] text-white w-full h-[40px] hover:bg-[#FF782D] hover:opacity-90 transition-all duration-300 ease-in-out"
+                    className="contrast-100 bg-brand-red-500 text-white w-full h-[40px] hover:bg-brand-red-600 hover:shadow-button-hover transition-all duration-300 ease-in-out rounded-button shadow-button"
                   >
                     Login
                   </Button>

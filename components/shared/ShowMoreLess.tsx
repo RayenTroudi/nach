@@ -18,7 +18,7 @@ const ShowMoreLess = ({ text }: { text: string }) => {
           <div className="w-full flex justify-end">
             <div
               onClick={() => setShow((curr) => !curr)}
-              className="cursor-pointer text-slate-950 dark:text-slate-200 text-[13px] font-semibold hover:text-[#FF782D] dark:hover:text-[#FF782D] bg-transparent hover:bg-transparent hover:underline underline-offset-2 duration-300 ease-in-out"
+              className="cursor-pointer text-slate-950 dark:text-slate-200 text-[13px] font-semibold hover:text-brand-red-500 dark:hover:text-brand-red-500 bg-transparent hover:bg-transparent hover:underline underline-offset-2 duration-300 ease-in-out"
             >
               {show ? "Show less" : "Show more"}
             </div>

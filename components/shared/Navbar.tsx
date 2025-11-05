@@ -34,7 +34,7 @@ const Navbar = ({ isUserAdmin }: { isUserAdmin: boolean }) => {
         <div className="flex items-center gap-x-2">
           <Link
             href="/"
-            className="text-slate-950 dark:text-slate-200 font-bold text-sm hover:text-[#FF782D] ease-in-out duration-100"
+            className="text-slate-950 dark:text-slate-200 font-bold text-sm hover:text-brand-red-500 ease-in-out duration-100"
           >
             Student
           </Link>
@@ -50,7 +50,7 @@ const Navbar = ({ isUserAdmin }: { isUserAdmin: boolean }) => {
             <>
               <Link
                 href="/admin/dashboard/"
-                className="font-bold text-sm text-[#FF782D] ease-in-out duration-100 hidden lg:block"
+                className="font-bold text-sm text-brand-red-500 ease-in-out duration-100 hidden lg:block"
               >
                 Admin
               </Link>
@@ -61,7 +61,7 @@ const Navbar = ({ isUserAdmin }: { isUserAdmin: boolean }) => {
               {/* Admins can access instructor features */}
               <Link href="/teacher/courses" className="hidden lg:block">
                 <p className="text-slate-950 dark:text-slate-200 font-bold text-[14px] cursor-pointer  relative">
-                  <span className="primary-color hover:border-b-2 hover:border-[#FF782D] ease-in-out duration-100">
+                  <span className="primary-color hover:border-b-2 hover:border-brand-red-500 ease-in-out duration-100">
                     Instructor
                   </span>
                 </p>

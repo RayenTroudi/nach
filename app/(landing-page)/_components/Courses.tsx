@@ -10,7 +10,7 @@ import { useKeenSlider } from "keen-slider/react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 interface Props {
-  clerkId: string;
+  clerkId?: string;
   courses: TCourse[];
 }
 
@@ -70,13 +70,13 @@ const Courses = ({ clerkId, courses }: Props) => {
             <div className="w-full md:[80%] mx-auto flex justify-center md:justify-between items-center">
               <div className="flex gap-x-2 items-center justify-center md:justify-between w-full">
                 <Button
-                  className="hidden md:flex items-center justify-center rounded-md bg-[#ff782d] opacity-90 hover:opacity-100 hover:bg-[#ff782d] text-slate-50"
+                  className="hidden md:flex items-center justify-center rounded-md bg-brand-red-500 opacity-90 hover:opacity-100 hover:bg-brand-red-600 text-white shadow-button hover:shadow-button-hover transition-all duration-300"
                   onClick={(e: any) =>
                     e.stopPropagation() || instanceRef.current?.prev()
                   }
                   disabled={currentSlide === 0}
                 >
-                  <ChevronLeft size={35} className="flex-shrink-0  " />
+                  <ChevronLeft size={35} className="flex-shrink-0" />
                 </Button>
 
                 <div className="flex items-center gap-x-2">
@@ -91,10 +91,10 @@ const Courses = ({ clerkId, courses }: Props) => {
                         onClick={() => {
                           instanceRef.current?.moveToIdx(idx);
                         }}
-                        className={`border border-input bg-transparent size-3 p-0 rounded-full ${
+                        className={`border border-slate-300 dark:border-slate-600 bg-transparent size-3 p-0 rounded-full transition-all duration-300 ${
                           currentSlide === idx
-                            ? "bg-[#ff782d] text-slate-50"
-                            : ""
+                            ? "bg-brand-red-500 border-brand-red-500 dark:border-brand-red-500"
+                            : "hover:bg-slate-200 dark:hover:bg-slate-700"
                         }`}
                       ></Button>
                     );
@@ -102,7 +102,7 @@ const Courses = ({ clerkId, courses }: Props) => {
                 </div>
 
                 <Button
-                  className="hidden md:flex items-center justify-center rounded-md bg-[#ff782d] opacity-90 hover:opacity-100 hover:bg-[#ff782d] text-slate-50"
+                  className="hidden md:flex items-center justify-center rounded-md bg-brand-red-500 opacity-90 hover:opacity-100 hover:bg-brand-red-600 text-white shadow-button hover:shadow-button-hover transition-all duration-300"
                   onClick={(e: any) =>
                     e.stopPropagation() || instanceRef.current?.next()
                   }
@@ -113,7 +113,7 @@ const Courses = ({ clerkId, courses }: Props) => {
                 >
                   <ChevronRight
                     size={35}
-                    className="flex-shrink-0  cursor-pointer"
+                    className="flex-shrink-0 cursor-pointer"
                   />
                 </Button>
               </div>

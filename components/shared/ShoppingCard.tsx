@@ -29,7 +29,7 @@ const ShoppingCard: React.FC = () => {
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className="flex-shrink-0 relative w-[20px] h-[20px] md:w-[35px] md:h-[35px] hover:bg-[#FF782D]/10 rounded-full flex items-center justify-center cursor-pointer enabled:border-none">
+      <DropdownMenuTrigger className="flex-shrink-0 relative w-[20px] h-[20px] md:w-[35px] md:h-[35px] hover:bg-brand-red-500/10 rounded-full flex items-center justify-center cursor-pointer enabled:border-none">
         <Image
           src={
             mode === "dark" ? "/icons/shopping-dark.svg" : "/icons/shopping.svg"
@@ -38,7 +38,7 @@ const ShoppingCard: React.FC = () => {
           width={20}
           height={20}
         />
-        <span className="absolute top-0 -right-2 w-[18px] h-[18px] bg-[#FF782D] flex items-center justify-center text-[10px] text-slate-200 font-bold rounded-full">
+        <span className="absolute top-0 -right-2 w-[18px] h-[18px] bg-brand-red-500 flex items-center justify-center text-[10px] text-white font-bold rounded-full">
           {cartItems.length}
         </span>
       </DropdownMenuTrigger>
@@ -120,7 +120,7 @@ const ShoppingCard: React.FC = () => {
         ) : (
           <>
             <EmptyCartAnimation className="h-[200px]" />
-            <Button className="text-slate-50 w-full bg-[#FF782D] hover:bg-[#FF782D] opacity-90 hover:opacity-100 transition-all duration-300 ease-in-out">
+            <Button className="text-white w-full bg-brand-red-500 hover:bg-brand-red-600 shadow-button hover:shadow-button-hover transition-all duration-300 ease-in-out rounded-button">
               Start by adding some
             </Button>
           </>

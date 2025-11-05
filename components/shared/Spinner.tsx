@@ -11,7 +11,7 @@ const Spinner = ({
   return (
     <Loader2
       size={size}
-      className={`animate-spin ${!className ? "text-[#FF782D]" : className}`}
+      className={`animate-spin ${!className ? "text-brand-red-500" : className}`}
     />
   );
 };

@@ -38,7 +38,7 @@ export default function RootLayout({
     <ClerkProvider
       appearance={{
         variables: {
-          colorPrimary: "#FF782D",
+          colorPrimary: "#DD0000",
         },
         layout: {
           logoPlacement: "inside",

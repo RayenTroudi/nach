@@ -77,10 +77,10 @@ const MobileSideBar = ({
               pathname.includes("/section")) ? (
                 <Link
                   href="/teacher/courses"
-                  className={`group w-full px-2 py-6 rounded-sm flex items-center justify-start gap-4 h-[30px] hover:bg-[#FF782D] duration-300 ease-in-out ${
-                    pathname === "/teacher/courses" ||
-                    pathname.startsWith(`/teacher/courses/`)
-                      ? "bg-[#FF782D]"
+                  className={`group w-full px-2 py-6 rounded-sm flex items-center justify-start gap-4 h-[30px] hover:bg-brand-red-500 duration-300 ease-in-out ${
+                    pathname === routes.route ||
+                    pathname.startsWith(routes.route)
+                      ? "bg-brand-red-500"
                       : ""
                   }`}
                 >
@@ -115,10 +115,10 @@ const MobileSideBar = ({
                   {!pathname.startsWith("/admin") ? (
                     <Link
                       href="/admin/dashboard"
-                      className={`group w-full px-2 py-6 rounded-sm flex items-center justify-start gap-4 h-[30px] hover:bg-[#FF782D] duration-300 ease-in-out ${
-                        pathname === "/admin/dashboard" ||
-                        pathname.startsWith(`/admin/dashboard/`)
-                          ? "bg-[#FF782D]"
+                      className={`group w-full px-2 py-6 rounded-sm flex items-center justify-start gap-4 h-[30px] hover:bg-brand-red-500 duration-300 ease-in-out ${
+                        pathname === subroutes.route ||
+                        pathname.startsWith(subroutes.route)
+                          ? "bg-brand-red-500"
                           : ""
                       }`}
                     >

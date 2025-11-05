@@ -34,6 +34,57 @@ const config = withUt({
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         primaryColor: "#FF782D",
+        // Brand Colors - German Theme
+        brand: {
+          red: {
+            50: '#FEE2E2',
+            100: '#FECACA',
+            200: '#FCA5A5',
+            300: '#F87171',
+            400: '#EF4444',
+            500: '#DD0000', // Primary German Red
+            600: '#B30000',
+            700: '#8B0000',
+            800: '#660000',
+            900: '#440000',
+          },
+          gold: {
+            50: '#FFFBEB',
+            100: '#FEF3C7',
+            200: '#FDE68A',
+            300: '#FCD34D',
+            400: '#FBBF24',
+            500: '#FFCE00', // German Gold
+            600: '#D4A800',
+            700: '#A88300',
+            800: '#7C5F00',
+            900: '#503C00',
+          },
+          blue: {
+            50: '#EFF6FF',
+            100: '#DBEAFE',
+            200: '#BFDBFE',
+            300: '#93C5FD',
+            400: '#60A5FA',
+            500: '#003366', // Berlin Blue
+            600: '#002952',
+            700: '#001F3D',
+            800: '#001529',
+            900: '#000B14',
+          },
+          green: {
+            50: '#F0FDF4',
+            100: '#DCFCE7',
+            200: '#BBF7D0',
+            300: '#86EFAC',
+            400: '#4ADE80',
+            500: '#2D5D3F', // Rhine Green
+            600: '#254B32',
+            700: '#1D3926',
+            800: '#152719',
+            900: '#0D150D',
+          },
+        },
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
@@ -67,6 +118,18 @@ const config = withUt({
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
+        card: '12px',
+        button: '8px',
+      },
+      boxShadow: {
+        'card': '0 2px 8px rgba(0,0,0,0.06)',
+        'card-hover': '0 12px 24px rgba(0,0,0,0.12)',
+        'button': '0 4px 12px rgba(221, 0, 0, 0.3)',
+        'button-hover': '0 6px 20px rgba(221, 0, 0, 0.4)',
+      },
+      fontFamily: {
+        sans: ['Inter', 'system-ui', 'sans-serif'],
+        display: ['Inter', 'system-ui', 'sans-serif'],
       },
       keyframes: {
         "shine-pulse": {

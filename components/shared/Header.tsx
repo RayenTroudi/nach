@@ -54,7 +54,7 @@ const Header = async () => {
             <Link href="/sign-up">
               <Button
                 name="Sign up"
-                className="contrast-100 hover:opacity-90 transition-all duration-300 ease-in-out w-[100px] h-[40px] bg-[#0071DC]/10 text-[#FF782D] dark:bg-slate-900 font-medium hover:bg-[#0071DC]/10 "
+                className="contrast-100 hover:opacity-90 transition-all duration-300 ease-in-out w-[100px] h-[40px] bg-slate-100 dark:bg-slate-800 text-brand-red-500 font-medium hover:bg-slate-200 dark:hover:bg-slate-700 rounded-button"
               >
                 Sign Up
               </Button>
@@ -63,7 +63,7 @@ const Header = async () => {
             <Link href="/sign-in">
               <Button
                 name="Sign In"
-                className="contrast-100 hover:opacity-90 transition-all duration-300 ease-in-out bg-[#FF782D] text-white w-[100px] h-[40px] hover:bg-[#FF782D]"
+                className="contrast-100 hover:opacity-90 transition-all duration-300 ease-in-out bg-brand-red-500 text-white w-[100px] h-[40px] hover:bg-brand-red-600 shadow-button hover:shadow-button-hover rounded-button"
               >
                 Login
               </Button>

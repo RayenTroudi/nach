@@ -20,9 +20,9 @@ const MobileLeftSidebarItem = ({ icon: Icon, label, href }: Props) => {
   return (
     <Link
       href={href}
-      className={`group w-full px-2 py-6 rounded-sm flex items-center justify-start gap-4 h-[30px] hover:bg-[#FF782D] duration-300 ease-in-out ${
-        pathname === href || pathname.startsWith(`${href}/`)
-          ? "bg-[#FF782D]"
+      className={`group w-full px-2 py-6 rounded-sm flex items-center justify-start gap-4 h-[30px] hover:bg-brand-red-500 duration-300 ease-in-out ${
+        pathname === routes.route || pathname.startsWith(routes.route)
+          ? "bg-brand-red-500"
           : ""
       }`}
       onMouseEnter={() => console.log("Hovered")}

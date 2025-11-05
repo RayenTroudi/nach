@@ -47,8 +47,8 @@ const SignoutButton = ({ isSheetOpen = true }: { isSheetOpen?: boolean }) => {
           ? "h-[30px] px-2 py-6 justify-center lg:justify-start"
           : "px-4 py-2"
       } ${
-        isLoading ? "bg-[#FF782D] " : ""
-      } w-full text-[#FF782D] flex items-center gap-x-2 bg-[#0071DC]/10  font-semibold  rounded-md hover:bg-[#FF782D] hover:text-slate-50 cursor-pointer duration-300 ease-in-out`}
+        isLoading ? "bg-brand-red-500" : ""
+      } w-full text-brand-red-500 flex items-center gap-x-2 bg-slate-100 dark:bg-slate-800 font-semibold rounded-md hover:bg-brand-red-500 hover:text-white cursor-pointer duration-300 ease-in-out`}
       onClick={onSignOutHandler}
     >
       <Button className=" ">

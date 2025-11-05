@@ -18,8 +18,8 @@ const SideBarItem = ({ icon: Icon, label, href }: Props) => {
   return (
     <Link
       href={href}
-      className={`group w-full px-2 py-6 rounded-sm flex items-center justify-center lg:justify-start gap-4 h-[30px] hover:bg-[#FF782D] duration-300 ease-in-out ${
-        isActive ? "bg-[#FF782D]" : ""
+      className={`group w-full px-2 py-6 rounded-sm flex items-center justify-center lg:justify-start gap-4 h-[30px] hover:bg-brand-red-500 duration-300 ease-in-out ${
+        isActive ? "bg-brand-red-500" : ""
       }`}
     >
       <Icon

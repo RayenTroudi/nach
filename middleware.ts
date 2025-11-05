@@ -12,6 +12,10 @@ export default authMiddleware({
     "/api/webhooks",
     "/courses/(.*)",
     "/course/(.*)",
+    "/about",
+    "/blog",
+    "/blog/(.*)",
+    "/interests",
   ],
   ignoredRoutes: ["/api/webhooks"],
 });

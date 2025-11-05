@@ -13,8 +13,8 @@ const ThemeContext = React.createContext<ThemeContextProps | undefined>(
 const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
   const [mode, setMode] = useState<string>(() =>
     typeof window !== "undefined"
-      ? window.localStorage.getItem("theme") || "dark"
-      : "dark"
+      ? window.localStorage.getItem("theme") || "light"
+      : "light"
   );
 
   const themeChangeHandler = () => {

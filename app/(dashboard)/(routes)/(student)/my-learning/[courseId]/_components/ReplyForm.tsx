@@ -56,7 +56,7 @@ const ReplyForm = ({ course, user, comment, setReplyTo }: Props) => {
         path: pathname,
       });
 
-      await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/reply`, {
+      await fetch("/api/reply", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

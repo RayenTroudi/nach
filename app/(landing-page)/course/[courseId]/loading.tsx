@@ -65,20 +65,20 @@ const Loading = () => {
                     />
                   ))}
 
-                  <p className="flex items-center gap-x-1">
+                  <div className="flex items-center gap-x-1">
                     <Skeleton className="w-[30px] h-[30px] rounded-full" />
                     <Skeleton className="w-[75px] h-[10px] " />
-                  </p>
+                  </div>
                 </div>
 
                 <Separator
                   className="h-[20px] hidden md:block"
                   orientation="vertical"
                 />
-                <p className="flex items-center gap-x-1">
+                <div className="flex items-center gap-x-1">
                   <Skeleton className="w-[30px] h-[30px] rounded-full" />
                   <Skeleton className="w-[75px] h-[10px] " />
-                </p>
+                </div>
               </div>
               <div className="text-slate-500 flex gap-x-1 items-center">
                 <Skeleton className="w-[250px] h-[15px]" />

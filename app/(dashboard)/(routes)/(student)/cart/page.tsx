@@ -45,7 +45,7 @@ const CartPage = () => {
       const {
         data: { data },
       } = await axios.post(
-        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/payment_flouci`,
+        "/api/payment_flouci",
         {
           amount: totalInDinar.toFixed(2),
           courseIds,

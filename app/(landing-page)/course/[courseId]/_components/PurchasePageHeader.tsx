@@ -73,7 +73,7 @@ const PurchasePageHeader = ({ course }: Props) => {
           </div>
           {course.instructor && (
             <Link
-              href={`${process.env.NEXT_PUBLIC_SERVER_URL}/user/${course.instructor._id}`}
+              href={`/user/${course.instructor._id}`}
               className="flex flex-row items-center gap-x-2 group w-full"
             >
               <AnimatedTooltip items={[course.instructor]} />

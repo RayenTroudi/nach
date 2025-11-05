@@ -54,6 +54,8 @@ export const getCourseById = async (params: GetCourseByIdParams) => {
     if (!mongoose.isValidObjectId(params.courseId))
       throw new Error("Invalid ID");
 
+    console.log("🔍 Fetching course with ID:", params.courseId);
+
     Feedback.find();
     Section.find();
     Video.find();
@@ -99,6 +101,10 @@ export const getCourseById = async (params: GetCourseByIdParams) => {
         ],
         options: { sort: { createdAt: -1 } },
       });
+
+    console.log("📋 Course fetched:", course ? "✅ Found" : "❌ Not found");
+    console.log("📋 Course title:", course?.title);
+    console.log("📋 Course price:", course?.price);
 
     if (!course) throw new Error("Course not found");
     return JSON.parse(JSON.stringify(course));

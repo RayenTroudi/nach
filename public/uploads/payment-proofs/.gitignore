@@ -1,0 +1,4 @@
+# Ignore all payment proof files but keep this directory in git
+*
+!.gitignore
+!.gitkeep

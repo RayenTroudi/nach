@@ -22,6 +22,7 @@ import { TCourse, TSection, TVideo } from "@/types/models.types";
 import { scnToast } from "@/components/ui/use-toast";
 import { useCart } from "@/contexts/CartContext";
 import { useWishlist } from "@/contexts/WishlistContext";
+import BankTransferUpload from "./BankTransferUpload";
 
 import { VidSyncPlayer } from "vidsync";
 
@@ -37,13 +38,34 @@ const PurchaseCourseCard = ({
   isCourseOwner,
 }: Props) => {
   const router = useRouter();
+  
+  // Add null check for course
+  if (!course || !course._id) {
+    return (
+      <div className="w-full h-[400px] flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-xl font-semibold mb-2">Course not found</p>
+          <p className="text-slate-600 dark:text-slate-400">
+            The course you're looking for doesn't exist or has been removed.
+          </p>
+          <Button
+            onClick={() => router.push("/courses")}
+            className="mt-4 bg-brand-red-500 hover:bg-brand-red-600"
+          >
+            Browse Courses
+          </Button>
+        </div>
+      </div>
+    );
+  }
+  
   const priceInDinar = course.price! * 3.3;
   const { addToCart, removeFromCart, cartItems } = useCart();
   const { wishlist, addToWishlist, removeFromWishlist } = useWishlist();
   const [videoToPreview, setVideoToPreview] = useState<TVideo | null>(null);
+  const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [isPurchasing, setIsPurchasing] = useState<boolean>(false);
   const [isFilled, setIsFilled] = useState(() =>
     wishlist.some((item: TCourse) => item._id === course._id)
   );
@@ -80,31 +102,6 @@ const PurchaseCourseCard = ({
     }, 1000);
   };
 
-  const handlePurchaseWithFlouci = async () => {
-    try {
-      setIsPurchasing(true);
-      const {
-        data: { data },
-      } = await axios.post(
-        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/payment_flouci`,
-        {
-          amount: priceInDinar.toFixed(2),
-          courseIds: [course._id],
-        }
-      );
-
-      router.push(data.link);
-    } catch (error: any) {
-      console.log("ERROR FLOUCI : ", error.message);
-      scnToast({
-        variant: "destructive",
-        title: "Error",
-        description: error.message,
-      });
-    } finally {
-      setIsPurchasing(false);
-    }
-  };
   const handleAddToCart = () => {
     if (user === null) {
       return router.push("/sign-in");
@@ -157,8 +154,9 @@ const PurchaseCourseCard = ({
             src={course.thumbnail!}
             alt="course-thumbnail"
             width={100}
-            height={100}
+            height={67}
             className="rounded-sm"
+            style={{ width: 'auto', height: 'auto', maxWidth: '100px' }}
           />
           {course!.price! > 0 ? (
             <div className="flex gap-x-1 items-center ">
@@ -269,7 +267,7 @@ const PurchaseCourseCard = ({
                 </Link>
               ) : (
                 <>
-                  <Dialog>
+                  <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                     <DialogTrigger asChild className="">
                       <Button
                         name="buy-now"
@@ -278,190 +276,64 @@ const PurchaseCourseCard = ({
                         Buy now
                       </Button>
                     </DialogTrigger>
-                    <DialogContent className=" sm:max-w-[425px] md:max-w-[625px] p-6 bg-slate-100 dark:bg-slate-950">
-                      <div className="flex flex-col gap-y-2">
-                        <div className="flex  gap-x-3">
+                    <DialogContent className="sm:max-w-[425px] md:max-w-[700px] p-6 bg-slate-100 dark:bg-slate-950 max-h-[90vh] overflow-y-auto">
+                      <div className="flex flex-col gap-y-4">
+                        <h2 className="text-2xl font-bold">Complete Your Purchase</h2>
+                        
+                        <div className="flex gap-x-3 p-4 bg-white dark:bg-slate-900 rounded-lg">
                           <Image
                             src={course.thumbnail!}
                             alt="course-thumbnail"
-                            width={120}
-                            height={150}
-                            className="rounded-sm w-[120px]  lg:w-[150px]  object-cover"
+                            width={100}
+                            height={75}
+                            className="rounded-sm object-cover"
                           />
-                          <div className="flex flex-1 flex-col gap-y-2 justify-between ">
-                            <h2 className="text-sm md:text-xl font-bold">
-                              {" "}
-                              {course.title}{" "}
-                            </h2>
-                            <div className="hidden md:flex gap-x-2 items-center w-full  ">
-                              <p className="font-bold text-[12px] text-slate-500 flex gap-x-1 items-end">
-                                <span className="text-brand-red-500 text-sm flex items-center gap-x-1">
-                                  <AlignCenterVertical size={12} />
-                                  <span>{course!.sections!.length}</span>
-                                </span>{" "}
-                                sections
-                              </p>
-
-                              <Separator
-                                orientation="vertical"
-                                className="h-[17px] w-[2px]"
-                              />
-
-                              <p className="font-bold text-[12px] text-slate-500 flex gap-x-1 items-end">
-                                <span className="text-brand-red-500 text-sm flex items-center gap-x-1">
-                                  <LucideVideo size={12} />
-                                  <span>{allVideos.length}</span>
-                                </span>{" "}
-                                videos
-                              </p>
-                              <Separator
-                                orientation="vertical"
-                                className="h-[17px] w-[2px]"
-                              />
-                              <p className="flex items-center gap-x-1 font-bold text-[12px] text-slate-500 ">
-                                <Image
-                                  src={"/icons/level.svg"}
-                                  width={12}
-                                  height={12}
-                                  alt="level"
-                                  className="object-cover"
-                                />
-                                <span>
-                                  {" "}
-                                  {course!.level![0].toUpperCase()}
-                                  {course!.level!.slice(1)}
-                                </span>
-                              </p>
-                              <Separator
-                                orientation="vertical"
-                                className="h-[17px] w-[2px]"
-                              />
-                              <p className="flex items-center gap-x-1 font-bold text-[12px] text-slate-500 ">
-                                <Image
-                                  src={"/icons/language.svg"}
-                                  width={12}
-                                  height={12}
-                                  alt="level"
-                                  className="object-cover"
-                                />
-                                <span>
-                                  {course!.language![0].toUpperCase()}
-                                  {course!.language!.slice(1)}
-                                </span>
-                              </p>
-                            </div>
-                            <div className="flex gap-x-2 items-center">
+                          <div className="flex flex-1 flex-col gap-y-1">
+                            <h3 className="text-sm md:text-base font-semibold">
+                              {course.title}
+                            </h3>
+                            <div className="flex items-center gap-x-2">
                               <Image
                                 src={course.instructor.picture || "/images/default_profile.avif"}
-                                width={25}
-                                height={25}
+                                width={20}
+                                height={20}
                                 alt="instructor"
                                 className="rounded-full object-cover"
                               />
-                              <p className="flex items-center gap-x-2 text-[12px] font-bold text-slate-700 dark:text-slate-400">
+                              <p className="text-xs text-slate-600 dark:text-slate-400">
                                 {course.instructor.username}
                               </p>
                             </div>
-                          </div>
-                        </div>
-                        <div className="flex md:hidden gap-x-2 items-center w-full flex-wrap ">
-                          <p className="font-bold text-[12px] text-slate-500 flex gap-x-1 items-end">
-                            <span className="text-brand-red-500 text-sm flex items-center gap-x-1">
-                              <AlignCenterVertical size={12} />
-                              <span>{course.sections!.length}</span>
-                            </span>{" "}
-                            sections
-                          </p>
-
-                          <Separator
-                            orientation="vertical"
-                            className="h-[17px] w-[2px]"
-                          />
-
-                          <p className="font-bold text-[12px] text-slate-500 flex gap-x-1 items-end">
-                            <span className="text-brand-red-500 text-sm flex items-center gap-x-1">
-                              <LucideVideo size={12} />
-                              <span>{allVideos.length}</span>
-                            </span>{" "}
-                            videos
-                          </p>
-                          <Separator
-                            orientation="vertical"
-                            className="h-[17px] w-[2px]"
-                          />
-                          <p className="flex items-center gap-x-1 font-bold text-[12px] text-slate-500 ">
-                            <Image
-                              src={"/icons/level.svg"}
-                              width={12}
-                              height={12}
-                              alt="level"
-                              className="object-cover"
-                            />
-                            <span>
-                              {" "}
-                              {course!.level![0].toUpperCase()}
-                              {course!.level!.slice(1)}
-                            </span>
-                          </p>
-                          <Separator
-                            orientation="vertical"
-                            className="h-[17px] w-[2px]"
-                          />
-                          <p className="flex items-center gap-x-1 font-bold text-[12px] text-slate-500 ">
-                            <Image
-                              src={"/icons/language.svg"}
-                              width={12}
-                              height={12}
-                              alt="level"
-                              className="object-cover"
-                            />
-                            <span>
-                              {course!.language![0].toUpperCase()}
-                              {course!.language!.slice(1)}
-                            </span>
-                          </p>
-                        </div>
-                      </div>
-                      <Separator />
-
-                      <div className="flex flex-col gap-y-2 mt-4">
-                        <div className="flex items-center gap-x-2 justify-center mb-2">
-                          <Image
-                            src={"/icons/tunisia-flag.svg"}
-                            width={30}
-                            height={30}
-                            alt="flouci"
-                            className="object-cover rounded-none"
-                          />
-                          <p className="relative font-bold text-lg">
-                            Pay with Flouci
-                            <span className="text-xs text-slate-500 absolute -top-1 -right-4 font-semibold">
-                              TN
-                            </span>
-                          </p>
-                        </div>
-                        <Button
-                          name="flouci"
-                          onClick={() => handlePurchaseWithFlouci()}
-                          disabled={isPurchasing}
-                          className="w-full bg-slate-950 dark:bg-slate-200 dark:hover:opacity-90 transition-all duration-300 ease-in-out rounded-sm text-md font-bold flex items-center justify-center"
-                        >
-                          {isPurchasing ? (
-                            <Spinner className="text-brand-red-500" />
-                          ) : (
-                            <div className="flex items-center gap-x-2">
-                              <p>Purchase -</p>
-                              <p> {priceInDinar.toFixed(2)} DT </p>
+                            <div className="flex items-center gap-x-2 mt-1">
+                              <p className="text-xl font-bold text-brand-red-500">
+                                {priceInDinar.toFixed(2)} DT
+                              </p>
                               <Image
-                                src={"/images/dinar.png"}
-                                width={20}
-                                height={20}
-                                alt="dinar"
-                                className="object-cover"
+                                src={"/icons/tunisia-flag.svg"}
+                                width={24}
+                                height={24}
+                                alt="tunisia"
+                                className="object-cover rounded-none"
                               />
                             </div>
-                          )}
-                        </Button>
+                          </div>
+                        </div>
+
+                        <Separator />
+
+                        <BankTransferUpload
+                          courseIds={[course._id]}
+                          amount={priceInDinar}
+                          onSuccess={() => {
+                            setIsDialogOpen(false);
+                            scnToast({
+                              variant: "success",
+                              title: "Upload Successful",
+                              description: "Your payment proof has been submitted. You'll receive an email once it's reviewed.",
+                            });
+                            router.refresh();
+                          }}
+                        />
                       </div>
                     </DialogContent>
                   </Dialog>
@@ -492,7 +364,101 @@ const PurchaseCourseCard = ({
             </SignedOut>
           </div>
         ) : (
-          <></>
+          <div className="w-full flex flex-col gap-y-2 mt-5">
+            {/* FREE COURSE LOGIC */}
+            <SignedIn>
+              {!isCourseOwner && !isEnrolled ? (
+                <Button
+                  name="enroll-free"
+                  onClick={async () => {
+                    try {
+                      setIsLoading(true);
+                      const response = await axios.post(
+                        "/api/enroll-free",
+                        {
+                          courseId: course._id,
+                        }
+                      );
+                      
+                      if (response.data.success) {
+                        scnToast({
+                          variant: "success",
+                          title: "Enrolled Successfully",
+                          description: "You have been enrolled in this free course!",
+                        });
+                        router.push(`/my-learning/${course._id}`);
+                        router.refresh();
+                      }
+                    } catch (error: any) {
+                      console.error("Enrollment error:", error);
+                      scnToast({
+                        variant: "destructive",
+                        title: "Enrollment Failed",
+                        description: error.response?.data?.message || "Failed to enroll in the course",
+                      });
+                    } finally {
+                      setIsLoading(false);
+                    }
+                  }}
+                  disabled={isLoading}
+                  className="w-full bg-brand-red-500 hover:bg-brand-red-600 hover:shadow-button-hover text-white transition-all duration-300 ease-in-out rounded-button shadow-button text-md font-bold"
+                >
+                  {isLoading ? <Spinner className="text-white" /> : "Enroll For Free"}
+                </Button>
+              ) : isCourseOwner ? (
+                <div className="w-full flex flex-col gap-y-1">
+                  <Link href={`/my-learning/${course._id}`}>
+                    <Button
+                      name="watch-course"
+                      className="w-full bg-brand-red-500 hover:bg-brand-red-600 hover:shadow-button-hover text-white transition-all duration-300 ease-in-out rounded-button shadow-button text-md font-bold"
+                    >
+                      Watch your course
+                    </Button>
+                  </Link>
+
+                  <Link href={`/teacher/courses/manage/${course._id}`}>
+                    <Button
+                      name="manage-course"
+                      className="w-full bg-slate-950 dark:bg-slate-200 dark:hover:opacity-90 transition-all duration-300 ease-in-out rounded-sm text-md font-bold"
+                    >
+                      Manage your course
+                    </Button>
+                  </Link>
+                </div>
+              ) : isEnrolled ? (
+                <Link href={`/my-learning/${course._id}`}>
+                  <Button
+                    name="continue_learning"
+                    className="w-full bg-slate-950 dark:bg-slate-200 dark:hover:opacity-90 transition-all duration-300 ease-in-out rounded-sm text-md font-bold"
+                  >
+                    Continue Learning
+                  </Button>
+                </Link>
+              ) : null}
+            </SignedIn>
+            <SignedOut>
+              <Separator className="h-[3px] mt-2 mb-2" />
+              <div className="w-full flex flex-col gap-y-2">
+                <Link href="/sign-up">
+                  <Button
+                    name="sign-up"
+                    className="contrast-100 hover:opacity-90 w-full h-[40px] bg-slate-100 dark:bg-slate-800 text-brand-red-500 font-medium hover:bg-slate-200 dark:hover:bg-slate-700 transition-all duration-300 ease-in-out rounded-button"
+                  >
+                    Sign Up to Enroll
+                  </Button>
+                </Link>
+
+                <Link href="/sign-in">
+                  <Button
+                    name="Login"
+                    className="contrast-100 bg-brand-red-500 text-white w-full h-[40px] hover:bg-brand-red-600 hover:shadow-button-hover transition-all duration-300 ease-in-out rounded-button shadow-button"
+                  >
+                    Login
+                  </Button>
+                </Link>
+              </div>
+            </SignedOut>
+          </div>
         )}
       </div>
     </div>

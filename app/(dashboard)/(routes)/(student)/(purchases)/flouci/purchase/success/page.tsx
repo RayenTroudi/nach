@@ -65,7 +65,7 @@ const FlouciPurchaseSuccessPage = () => {
         const {
           data: { success, result },
         } = await axios.post(
-          `${process.env.NEXT_PUBLIC_SERVER_URL}/api/payment_flouci/verify_payment`,
+          "/api/payment_flouci/verify_payment",
           { paymentId }
         );
 

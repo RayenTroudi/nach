@@ -59,8 +59,6 @@ export default function RootLayout({
           socialButtonsBlockButton: "border-slate-300 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-800",
           formButtonPrimary: "bg-brand-red-500 hover:bg-brand-red-600 text-white shadow-button hover:shadow-button-hover rounded-button",
           footerActionLink: "text-brand-red-500 hover:text-brand-red-600",
-          identityPreviewText: "text-slate-900 dark:text-slate-100",
-          identityPreviewEditButton: "text-brand-red-500 hover:text-brand-red-600",
           formFieldInput: "border-slate-300 dark:border-slate-600 focus:border-brand-red-500 focus:ring-brand-red-500",
           formFieldLabel: "text-slate-700 dark:text-slate-300",
           dividerLine: "bg-slate-300 dark:bg-slate-600",

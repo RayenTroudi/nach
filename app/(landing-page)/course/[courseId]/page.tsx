@@ -20,19 +20,29 @@ const PurchaseCoursePage = async ({
 }) => {
   const { userId } = auth();
 
-  let user: TUser = {} as TUser;
-  let course: TCourse = {} as TCourse;
+  let user: TUser | null = null;
+  let course: TCourse | null = null;
   let isEnrolled: boolean = false;
   let isOwner: boolean = false;
 
   try {
-    if (userId) {
-      user = await getUserByClerkId({ clerkId: userId! });
-      isOwner = await isCourseOwner(params.courseId, user._id);
-      isEnrolled = await alreadyEnrolled(params.courseId, user._id);
-    }
-
+    // First, get the course
     course = await getCourseById({ courseId: params.courseId });
+    
+    // Then, if user is logged in, get user data
+    if (userId) {
+      try {
+        user = await getUserByClerkId({ clerkId: userId! });
+        
+        if (user && user._id) {
+          isOwner = await isCourseOwner(params.courseId, user._id);
+          isEnrolled = await alreadyEnrolled(params.courseId, user._id);
+        }
+      } catch (userError: any) {
+        console.log("ERROR FETCHING USER DATA: ", userError.message);
+        // Continue even if user fetch fails
+      }
+    }
   } catch (error: any) {
     console.log("ERROR FROM PURCHASE COURSE PAGE : ", error.message);
   }

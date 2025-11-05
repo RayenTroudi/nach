@@ -70,7 +70,7 @@ const ReviewBanner = ({ course }: Props) => {
       setIsRejecting(true);
       setIsLoading(true);
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/review`,
+        "/api/review",
         {
           method: "POST",
           headers: {
@@ -120,7 +120,7 @@ const ReviewBanner = ({ course }: Props) => {
         path: pathname,
       });
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/review`,
+        "/api/review",
         {
           method: "POST",
           headers: {

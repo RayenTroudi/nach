@@ -8,6 +8,7 @@ import {
   Settings,
   ShoppingCart,
   Table,
+  FileText,
 } from "lucide-react";
 
 export const studentRoutes = [
@@ -73,7 +74,11 @@ export const adminRoutes = [
     label: "Categories",
     href: "/admin/categories",
   },
-
+  {
+    icon: FileText,
+    label: "Payment Proofs",
+    href: "/admin/payment-proofs",
+  },
   {
     icon: BarChart2,
     label: "Statistics",

@@ -28,7 +28,7 @@ const Loading = () => {
             <Skeleton className="w-24 h-5" />
             <Skeleton className="w-24 h-5" />
           </div>
-          <Button className="w-full bg-[#FF782D] text-slate-950 dark:text-slate-50 mt-4 opacity-50 cursor-not-allowed">
+          <Button className="w-full bg-brand-red-500 text-slate-950 dark:text-slate-50 mt-4 opacity-50 cursor-not-allowed">
             Checkout
           </Button>
         </div>

@@ -50,7 +50,7 @@ const Loading = () => {
             <CourseStepHeader
               icon={<ListChecks color="#DD0000" />}
               alt="message"
-              bgColor="bg-[#FF782D]/30"
+              bgColor="bg-brand-red-500/30"
               title="Customize your course Sections"
             />
             <Skeleton className="w-full h-[100px]" />
@@ -60,7 +60,7 @@ const Loading = () => {
             <CourseStepHeader
               icon={<CircleDollarSign color="#DD0000" />}
               alt="pricing"
-              bgColor="bg-[#FF782D]/30"
+              bgColor="bg-brand-red-500/30"
               title="Customize your course Pricing"
             />
             <Skeleton className="w-full h-[100px]" />
@@ -70,7 +70,7 @@ const Loading = () => {
             <CourseStepHeader
               icon={<File color="#DD0000" />}
               alt="Certificate's Exam"
-              bgColor="bg-[#FF782D]/30"
+              bgColor="bg-brand-red-500/30"
               title="Certificate's Exam"
             />
             <Skeleton className="w-full h-[100px]" />

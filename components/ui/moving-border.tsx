@@ -47,7 +47,7 @@ export function ActernityButton({
         <MovingBorder duration={duration} rx="30%" ry="30%">
           <div
             className={cn(
-              "h-20 w-20 opacity-[0.8] bg-[radial-gradient(var(--orange-500)_40%,transparent_60%)]",
+              "h-20 w-20 opacity-[0.8] bg-[radial-gradient(var(--brand-red-500)_40%,transparent_60%)]",
               borderClassName
             )}
           />

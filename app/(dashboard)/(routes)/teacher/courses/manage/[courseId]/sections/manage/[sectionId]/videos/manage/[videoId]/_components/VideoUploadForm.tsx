@@ -95,7 +95,7 @@ const VideoUploadForm = ({ video }: Props) => {
       </div>
       {!edit && video.videoUrl ? (
         <div className="w-full h-full relative aspect-video">
-          <VidSyncPlayer src={video.videoUrl!} primaryColor="#FF782D" />
+          <VidSyncPlayer src={video.videoUrl!} primaryColor="#DD0000" />
         </div>
       ) : (
         <>

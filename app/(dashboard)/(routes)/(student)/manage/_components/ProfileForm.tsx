@@ -133,7 +133,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ user }) => {
                         placeholder="First Name"
                         disabled={isSubmitting}
                         {...field}
-                        className="flex-1 focus:border-orange-500 focus:ring-orange-500"
+                        className="flex-1 focus:border-brand-red-500 focus:ring-brand-red-500"
                       />
                     </div>
                   </FormControl>
@@ -153,7 +153,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ user }) => {
                         placeholder="Last Name"
                         disabled={isSubmitting}
                         {...field}
-                        className="flex-1 focus:border-orange-500 focus:ring-orange-500"
+                        className="flex-1 focus:border-brand-red-500 focus:ring-brand-red-500"
                       />
                     </div>
                   </FormControl>
@@ -173,7 +173,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ user }) => {
                         placeholder="Username"
                         disabled={isSubmitting}
                         {...field}
-                        className="flex-1 focus:border-orange-500 focus:ring-orange-500"
+                        className="flex-1 focus:border-brand-red-500 focus:ring-brand-red-500"
                       />
                     </div>
                   </FormControl>
@@ -194,7 +194,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ user }) => {
                         placeholder="Email"
                         disabled={isSubmitting}
                         {...field}
-                        className="flex-1 focus:border-orange-500 focus:ring-orange-500"
+                        className="flex-1 focus:border-brand-red-500 focus:ring-brand-red-500"
                       />
                     </div>
                   </FormControl>
@@ -214,7 +214,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ user }) => {
                         placeholder="Website"
                         disabled={isSubmitting}
                         {...field}
-                        className="flex-1 focus:border-orange-500 focus:ring-orange-500"
+                        className="flex-1 focus:border-brand-red-500 focus:ring-brand-red-500"
                       />
                     </div>
                   </FormControl>
@@ -234,7 +234,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ user }) => {
                         placeholder="LinkedIn"
                         disabled={isSubmitting}
                         {...field}
-                        className="flex-1 focus:border-orange-500 focus:ring-orange-500"
+                        className="flex-1 focus:border-brand-red-500 focus:ring-brand-red-500"
                       />
                     </div>
                   </FormControl>
@@ -254,7 +254,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ user }) => {
                         placeholder="YouTube"
                         disabled={isSubmitting}
                         {...field}
-                        className="flex-1 focus:border-orange-500 focus:ring-orange-500"
+                        className="flex-1 focus:border-brand-red-500 focus:ring-brand-red-500"
                       />
                     </div>
                   </FormControl>
@@ -274,7 +274,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ user }) => {
                         placeholder="Github"
                         disabled={isSubmitting}
                         {...field}
-                        className="flex-1 focus:border-orange-500 focus:ring-orange-500"
+                        className="flex-1 focus:border-brand-red-500 focus:ring-brand-red-500"
                       />
                     </div>
                   </FormControl>
@@ -295,7 +295,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ user }) => {
                       placeholder="Biography"
                       disabled={isSubmitting}
                       {...field}
-                      className="flex-1 border-gray-300 rounded-md focus:border-orange-500 focus:ring-orange-500"
+                      className="flex-1 border-gray-300 rounded-md focus:border-brand-red-500 focus:ring-brand-red-500"
                     />
                   </div>
                 </FormControl>
@@ -307,7 +307,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ user }) => {
             <Button
               type="submit"
               disabled={!isDirty && !isPictureDirty}
-              className="bg-[#FF782D] hover:bg-[#FF782D] text-slate-950 dark:text-slate-50"
+              className="bg-brand-red-500 hover:bg-brand-red-500 text-slate-950 dark:text-slate-50"
             >
               {isSubmitting ? "Submitting..." : "Update Profile"}
             </Button>

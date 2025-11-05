@@ -109,7 +109,7 @@ const CreateCoursePage = () => {
                 type="submit"
                 disabled={!courseTitle || courseTitle.length < 5}
                 onClick={() => setStep((curr) => curr + 1)}
-                className="bg-[#FF782D] opacity-80 hover:bg-[#FF782D] hover:opacity-100 text-slate-50"
+                className="bg-brand-red-500 opacity-80 hover:bg-brand-red-500 hover:opacity-100 text-slate-50"
               >
                 Continue
               </Button>

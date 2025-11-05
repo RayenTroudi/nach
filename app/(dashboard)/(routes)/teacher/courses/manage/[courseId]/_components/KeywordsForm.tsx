@@ -124,7 +124,7 @@ const KeywordsForm = ({ course }: Props) => {
   // };
 
   return (
-    <div className="w-full flex flex-col gap-y-2 p-4 bg-gradient-to-r from-purple-600  to-orange-500 dark:from-purple-600/80  dark:to-orange-500/80 rounded-md">
+    <div className="w-full flex flex-col gap-y-2 p-4 bg-gradient-to-r from-purple-600  to-brand-red-500 dark:from-purple-600/80  dark:to-brand-red-500/80 rounded-md">
       <div className="w-full flex flex-col gap-y-2 ">
         <div className="w-full flex items-center justify-between">
           {" "}
@@ -132,7 +132,7 @@ const KeywordsForm = ({ course }: Props) => {
             <p>Course Keywords</p>
             {keywordsUpdated ? (
               <Button
-                className="p-0 h-fit px-4 py-1 rounded-full bg-gradient-to-r from-orange-600  to-purple-500 border-none outline-none text-slate-50 font-bold"
+                className="p-0 h-fit px-4 py-1 rounded-full bg-gradient-to-r from-brand-red-600  to-purple-500 border-none outline-none text-slate-50 font-bold"
                 variant={"outline"}
                 onClick={onSaveSelectedKeywords}
               >
@@ -173,7 +173,7 @@ const KeywordsForm = ({ course }: Props) => {
                 : "javascript, typescript, php, frontend, fullstack..."}
               <Button
                 variant={"ghost"}
-                className="bg-gradient-to-r from-orange-600  to-purple-500 rounded-none rounded-r-md hover:from-purple-600  hover:to-orange-500 duration-1000 transition-all ease-in-out"
+                className="bg-gradient-to-r from-brand-red-600  to-purple-500 rounded-none rounded-r-md hover:from-purple-600  hover:to-brand-red-500 duration-1000 transition-all ease-in-out"
               >
                 <Image
                   src="/icons/searchAI.svg"
@@ -207,7 +207,7 @@ const KeywordsForm = ({ course }: Props) => {
                             (courseTag) =>
                               courseTag.value === tag.value.toLowerCase().trim()
                           )
-                            ? "bg-gradient-to-r from-purple-600  to-orange-500 text-slate-50 aria-selected:text-slate-50"
+                            ? "bg-gradient-to-r from-purple-600  to-brand-red-500 text-slate-50 aria-selected:text-slate-50"
                             : "dark:aria-selected:text-slate-950"
                         }
                       `}
@@ -259,7 +259,7 @@ const KeywordsForm = ({ course }: Props) => {
                                     courseTag.value ===
                                     tag.value.toLowerCase().trim()
                                 )
-                                  ? "bg-gradient-to-r from-purple-600  to-orange-500 !text-slate-50"
+                                  ? "bg-gradient-to-r from-purple-600  to-brand-red-500 !text-slate-50"
                                   : ""
                               }
                       `}
@@ -270,7 +270,7 @@ const KeywordsForm = ({ course }: Props) => {
                 (courseTag) =>
                   courseTag.value === tag.value.toLowerCase().trim()
               ) ? (
-                <span className="w-4 h-4 rounded-full absolute -right-1 -top-1 bg-gradient-to-r from-orange-600  to-purple-500"></span>
+                <span className="w-4 h-4 rounded-full absolute -right-1 -top-1 bg-gradient-to-r from-brand-red-600  to-purple-500"></span>
               ) : null}
               <p>{tag.label}</p>
             </div>

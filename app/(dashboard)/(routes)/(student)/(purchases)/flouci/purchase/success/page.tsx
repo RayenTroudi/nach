@@ -175,7 +175,7 @@ const FlouciPurchaseSuccessPage = () => {
                         height={16}
                       />
                       <span>
-                        <span className="text-[#FF782D]">
+                        <span className="text-brand-red-500">
                           {course.sections!.length}
                         </span>
                         Section(s)
@@ -190,7 +190,7 @@ const FlouciPurchaseSuccessPage = () => {
                         height={16}
                       />
                       <span>
-                        <span className="text-[#FF782D]">
+                        <span className="text-brand-red-500">
                           {course.students!.length}
                         </span>
                         Student(s)
@@ -206,7 +206,7 @@ const FlouciPurchaseSuccessPage = () => {
                       className="rounded-md object-cover"
                     />
                     <div className="text-slate-500 font-semibold flex items-center gap-x-1 text-[11px] md:text-md">
-                      <span className="text-[#FF782D] font-bold">
+                      <span className="text-brand-red-500 font-bold">
                         {course.instructor.username}
                       </span>
                       <div className="w-fit px-4 py-1 text-[11px] font-bold rounded-full bg-blue-700/20 text-center text-blue-700">

@@ -55,6 +55,13 @@ export const teacherRoutes = [
   },
 
   {
+    icon: FileText,
+
+    label: "Documents",
+    href: "/teacher/documents",
+  },
+
+  {
     icon: MessagesSquare,
 
     label: "Chat Rooms",

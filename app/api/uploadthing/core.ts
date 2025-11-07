@@ -29,6 +29,12 @@ export const ourFileRouter = {
   })
     .middleware(() => handleAuth())
     .onUploadComplete(() => {}),
+
+  documentUpload: f({ 
+    pdf: { maxFileSize: "8MB", maxFileCount: 1 }
+  })
+    .middleware(() => handleAuth())
+    .onUploadComplete(() => {}),
 } satisfies FileRouter;
 
 export type OurFileRouter = typeof ourFileRouter;

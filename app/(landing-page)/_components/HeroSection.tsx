@@ -40,11 +40,11 @@ export default function HeroSection() {
             <div className="space-y-4">
               <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold leading-tight">
                 <span className="bg-gradient-to-r from-brand-red-600 via-brand-red-500 to-brand-gold-500 bg-clip-text text-transparent">
-                  Your Gateway
+                  Nach Deutschland
                 </span>
                 <br />
                 <span className="text-slate-900 dark:text-white">
-                  to Germany
+                  Your Pathway to Germany
                 </span>
               </h1>
               <p className="text-xl md:text-2xl text-slate-600 dark:text-slate-300 max-w-2xl">

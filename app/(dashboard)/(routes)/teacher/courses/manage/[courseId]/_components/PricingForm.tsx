@@ -24,6 +24,7 @@ import { transformCurrencyToSymbol } from "@/lib/utils";
 import { IUser } from "@/lib/models/user.model";
 import { scnToast } from "@/components/ui/use-toast";
 import { TCourse } from "@/types/models.types";
+import { CourseTypeEnum } from "@/lib/enums";
 
 const formSchema = z.object({
   price: z.string(),
@@ -41,6 +42,9 @@ const PricingForm = ({ course }: Props) => {
     []
   );
   const router = useRouter();
+  
+  const isFAQCourse = course.courseType === CourseTypeEnum.Most_Frequent_Questions;
+  
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -48,6 +52,38 @@ const PricingForm = ({ course }: Props) => {
       currency: course?.currency ? course?.currency : "",
     },
   });
+
+  const { isValid, isSubmitting } = form.formState;
+
+  const onToggleEditHandler = () => {
+    setEdit((curr) => {
+      return !course?.price || !course?.currency ? false : !curr;
+    });
+  };
+
+  const currencyMeaning = currencies
+    .find((currency) => currency.value === course.currency)
+    ?.label.toUpperCase()
+    .split("-")[1] as string;
+
+  useEffect(() => {
+    if (isFAQCourse) return; // Don't fetch currencies for FAQ courses
+    
+    const fetchCurrencies = async () => {
+      const { data } = await axios.get(
+        "https://openexchangerates.org/api/currencies.json"
+      );
+
+      const currenciesArray = Object.entries(data).map(([label, value]) => ({
+        label: `${label} - ${(value as string).toUpperCase()}`,
+        value: label.toLowerCase() as string,
+      }));
+
+      setCurrencies(currenciesArray);
+    };
+
+    fetchCurrencies();
+  }, [isFAQCourse]);
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
@@ -73,35 +109,16 @@ const PricingForm = ({ course }: Props) => {
     }
   }
 
-  const { isValid, isSubmitting } = form.formState;
-
-  const onToggleEditHandler = () => {
-    setEdit((curr) => {
-      return !course?.price || !course?.currency ? false : !curr;
-    });
-  };
-
-  const currencyMeaning = currencies
-    .find((currency) => currency.value === course.currency)
-    ?.label.toUpperCase()
-    .split("-")[1] as string;
-
-  useEffect(() => {
-    const fetchCurrencies = async () => {
-      const { data } = await axios.get(
-        "https://openexchangerates.org/api/currencies.json"
-      );
-
-      const currenciesArray = Object.entries(data).map(([label, value]) => ({
-        label: `${label} - ${(value as string).toUpperCase()}`,
-        value: label.toLowerCase() as string,
-      }));
-
-      setCurrencies(currenciesArray);
-    };
-
-    fetchCurrencies();
-  }, []);
+  if (isFAQCourse) {
+    return (
+      <div className="bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+        <p className="text-sm text-blue-700 dark:text-blue-300">
+          <strong>💡 Free Content:</strong> FAQ videos are always free for students. 
+          This helps maximize reach and provides value to the community.
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-2 bg-slate-200/10 dark:bg-slate-800/10 rounded-sm">

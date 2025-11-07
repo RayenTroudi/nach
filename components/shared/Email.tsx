@@ -15,7 +15,7 @@ import {
   dracula,
   CodeInline,
 } from "@react-email/components";
-import { CourseStatusEnum } from "@/lib/models/course.model";
+import { CourseStatusEnum } from "@/lib/enums";
 import { TCourse } from "@/types/models.types";
 
 export const Email = ({

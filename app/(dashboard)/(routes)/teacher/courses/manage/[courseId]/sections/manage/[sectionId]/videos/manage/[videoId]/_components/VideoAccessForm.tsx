@@ -22,7 +22,7 @@ import { updateSection } from "@/lib/actions/section.action";
 import { usePathname, useRouter } from "next/navigation";
 import { updateVideo } from "@/lib/actions/video.action";
 import { updateCourseStatus } from "@/lib/actions";
-import { CourseStatusEnum } from "@/lib/models/course.model";
+import { CourseStatusEnum } from "@/lib/enums";
 import { Checkbox } from "@/components/ui/checkbox";
 import { TSection } from "@/types/models.types";
 

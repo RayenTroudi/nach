@@ -2,6 +2,8 @@ export { default as TitleForm } from "./TitleForm";
 export { default as DescriptionForm } from "./DescriptionForm";
 export { default as ThumbnailForm } from "./ThumbnailForm";
 export { default as CategoryForm } from "./CategoryForm";
+export { default as CourseTypeForm } from "./CourseTypeForm";
+export { default as FAQVideoForm } from "./FAQVideoForm";
 export { default as MessageForm } from "./MessageForm";
 export { default as PricingForm } from "./PricingForm";
 export { default as ExamForm } from "./ExamForm";

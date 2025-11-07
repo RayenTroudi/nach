@@ -1,6 +1,7 @@
 "use server";
 import { auth } from "@clerk/nextjs";
-import Course, { CourseStatusEnum } from "../models/course.model";
+import Course from "../models/course.model";
+import { CourseStatusEnum, CourseTypeEnum, CourseLevelEnum } from "../enums";
 import Comment from "../models/comment.model";
 import { connectToDatabase } from "../mongoose";
 import {
@@ -45,7 +46,6 @@ import {
 import CourseChatRoom from "../models/course-chat-room.model";
 import Purchase from "../models/purchase.model";
 import Feedback from "../models/feedback.model";
-import { CourseLevelEnum } from "../models/course.model";
 
 export const getCourseById = async (params: GetCourseByIdParams) => {
   try {
@@ -105,9 +105,16 @@ export const getCourseById = async (params: GetCourseByIdParams) => {
     console.log("📋 Course fetched:", course ? "✅ Found" : "❌ Not found");
     console.log("📋 Course title:", course?.title);
     console.log("📋 Course price:", course?.price);
+    console.log("📋 Course type (RAW):", course?.courseType);
+    console.log("📋 Course type (typeof):", typeof course?.courseType);
+    console.log("📋 Full course object keys:", Object.keys(course || {}).join(", "));
 
     if (!course) throw new Error("Course not found");
-    return JSON.parse(JSON.stringify(course));
+    
+    const serialized = JSON.parse(JSON.stringify(course));
+    console.log("📋 Serialized course type:", serialized?.courseType);
+    
+    return serialized;
   } catch (error: any) {
     console.log("GET COURSE BY ID ERROR FROM SERVER: ", error.message);
     throw new Error(error.message);
@@ -121,13 +128,38 @@ export const createCourse = async (params: CreateCourseParams) => {
     const { userId } = auth();
     const user = await getUserByClerkId({ clerkId: userId! });
 
-    const { courseTitle, courseCategory, path } = params;
+    const { courseTitle, courseCategory, courseType, path } = params;
 
-    const newCourse = await Course.create({
+    console.log("🎯 Creating course with type:", courseType);
+    console.log("🎯 Is FAQ Course:", courseType === CourseTypeEnum.Most_Frequent_Questions);
+    console.log("🎯 CourseTypeEnum values:", Object.values(CourseTypeEnum));
+
+    // Validate courseType
+    if (!Object.values(CourseTypeEnum).includes(courseType)) {
+      throw new Error(`Invalid course type: ${courseType}`);
+    }
+
+    const courseData: any = {
       title: courseTitle,
       category: courseCategory,
       instructor: user._id,
-    });
+      courseType: courseType, // Explicitly set courseType
+      price: 0, // Always start at 0
+    };
+
+    console.log("📦 Course data to create:", JSON.stringify(courseData, null, 2));
+
+    const newCourse = await Course.create(courseData);
+
+    // Verify the course was created with the correct type
+    const verifyC = await Course.findById(newCourse._id).lean() as any;
+    console.log("🔍 Verification - Course type in DB:", verifyC?.courseType);
+
+    console.log("✅ Course created:");
+    console.log("   - ID:", newCourse._id);
+    console.log("   - Title:", newCourse.title);
+    console.log("   - Type:", newCourse.courseType);
+    console.log("   - Price:", newCourse.price);
 
     await addNewlyCreatedCourseToUser({
       userId: user._id,

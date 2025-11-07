@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { scnToast } from "@/components/ui/use-toast";
 import { updateCourseStatus } from "@/lib/actions/course.action";
-import { CourseStatusEnum } from "@/lib/models/course.model";
+import { CourseStatusEnum } from "@/lib/enums";
 import { usePathname, useRouter } from "next/navigation";
 import React from "react";
 import toast from "react-hot-toast";

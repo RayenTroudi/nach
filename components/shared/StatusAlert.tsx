@@ -1,7 +1,7 @@
 import React from "react";
 import { Alert, AlertDescription } from "../ui/alert";
 import { ExclamationTriangleIcon, RocketIcon } from "@radix-ui/react-icons";
-import { CourseStatusEnum } from "@/lib/models/course.model";
+import { CourseStatusEnum } from "@/lib/enums";
 import Banner from "./Banner";
 
 const StatusAlert = ({ status }: { status: string }) => {

@@ -1,18 +1,8 @@
 import { Schema, models, model, Document } from "mongoose";
+import { CourseLevelEnum, CourseStatusEnum, CourseTypeEnum } from "../enums";
 
-export enum CourseLevelEnum {
-  Beginner = "beginner",
-  Intermediate = "intermediate",
-  Advanced = "advanced",
-  All_Levels = "all levels",
-}
-
-export enum CourseStatusEnum {
-  Draft = "draft",
-  Pending = "pending",
-  Approved = "approved",
-  Rejected = "rejected",
-}
+// Re-export enums for backward compatibility
+export { CourseLevelEnum, CourseStatusEnum, CourseTypeEnum };
 
 export interface ICourse extends Document {
   title: string;
@@ -27,6 +17,8 @@ export interface ICourse extends Document {
   thumbnail?: string;
   isPublished?: boolean;
   status?: CourseStatusEnum;
+  courseType?: CourseTypeEnum;
+  faqVideo?: string;
   instructor: Schema.Types.ObjectId;
   category: Schema.Types.ObjectId;
   exam?: Schema.Types.ObjectId;
@@ -61,6 +53,12 @@ export const CourseSchema = new Schema(
       enum: Object.values(CourseStatusEnum),
       default: CourseStatusEnum.Draft,
     },
+    courseType: {
+      type: String,
+      enum: Object.values(CourseTypeEnum),
+      default: CourseTypeEnum.Regular,
+    },
+    faqVideo: { type: String, default: "" },
     exam: { type: Schema.Types.ObjectId, ref: "Exam", default: null },
     instructor: { type: Schema.Types.ObjectId, ref: "User" },
     category: { type: Schema.Types.ObjectId, ref: "Category" },
@@ -81,6 +79,6 @@ export const CourseSchema = new Schema(
 
 CourseSchema.index({ title: "text" });
 
-const Course = models?.Course || model("Course", CourseSchema);
+const Course = models.Course || model<ICourse>("Course", CourseSchema);
 
 export default Course;

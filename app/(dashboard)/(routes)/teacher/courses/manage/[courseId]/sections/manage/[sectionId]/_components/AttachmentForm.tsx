@@ -42,7 +42,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { CourseStatusEnum, ICourse } from "@/lib/models/course.model";
+import { CourseStatusEnum } from "@/lib/enums";
 import { pushAttachmentToSection } from "@/lib/actions/section.action";
 import {
   createAttachment,

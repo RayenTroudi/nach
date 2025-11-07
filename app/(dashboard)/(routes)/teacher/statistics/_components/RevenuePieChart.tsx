@@ -3,11 +3,11 @@
 import React from "react";
 import { Pie } from "react-chartjs-2";
 import "chart.js/auto";
-import { ICourse } from "@/lib/models/course.model";
+import { TCourse } from "@/types/models.types";
 import { useTheme } from "@/contexts/ThemeProvider";
 
 interface Props {
-  courses: ICourse[];
+  courses: TCourse[];
 }
 
 const generateRandomColor = () => {

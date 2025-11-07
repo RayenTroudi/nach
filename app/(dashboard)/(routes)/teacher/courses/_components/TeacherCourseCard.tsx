@@ -1,6 +1,6 @@
 "use client";
 import { Badge, Star } from "@/components/shared";
-import { CourseStatusEnum } from "@/lib/models/course.model";
+import { CourseStatusEnum } from "@/lib/enums";
 import { calculateCourseRating, formatNumber } from "@/lib/utils";
 
 import Image from "next/image";

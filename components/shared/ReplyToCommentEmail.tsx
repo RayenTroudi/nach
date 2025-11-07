@@ -17,7 +17,7 @@ import {
   CodeBlock,
   dracula,
 } from "@react-email/components";
-import { CourseStatusEnum } from "@/lib/models/course.model";
+import { CourseStatusEnum } from "@/lib/enums";
 import { TComment, TCourse, TReply } from "@/types/models.types";
 import Preview from "./editor/Preview";
 

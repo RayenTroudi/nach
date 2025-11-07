@@ -20,7 +20,7 @@ import { scnToast } from "@/components/ui/use-toast";
 import { updateSection } from "@/lib/actions/section.action";
 import { usePathname, useRouter } from "next/navigation";
 import { updateCourseStatus } from "@/lib/actions";
-import { CourseStatusEnum } from "@/lib/models/course.model";
+import { CourseStatusEnum } from "@/lib/enums";
 import { TCourse } from "@/types/models.types";
 
 const formSchema = z.object({

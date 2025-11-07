@@ -32,7 +32,7 @@ import { Textarea } from "@/components/ui/textarea";
 import Image from "next/image";
 import { scnToast } from "@/components/ui/use-toast";
 import { updateCourseStatus } from "@/lib/actions";
-import { CourseStatusEnum } from "@/lib/models/course.model";
+import { CourseStatusEnum } from "@/lib/enums";
 import { usePathname, useRouter } from "next/navigation";
 import { Spinner } from "@/components/shared";
 import { readSync } from "fs";

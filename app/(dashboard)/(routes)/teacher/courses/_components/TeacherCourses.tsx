@@ -12,7 +12,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import TeacherCourseCard from "./TeacherCourseCard";
-import { CourseStatusEnum } from "@/lib/models/course.model";
+import { CourseStatusEnum } from "@/lib/enums";
 import { TCourse, TUser } from "@/types/models.types";
 import { Button } from "@/components/ui/button";
 import { PlusCircle } from "lucide-react";

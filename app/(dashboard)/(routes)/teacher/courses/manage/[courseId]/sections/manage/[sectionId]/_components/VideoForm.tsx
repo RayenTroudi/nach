@@ -26,7 +26,7 @@ import {
   deleteVideo,
   reorderVideo,
 } from "@/lib/actions/video.action";
-import { CourseStatusEnum } from "@/lib/models/course.model";
+import { CourseStatusEnum } from "@/lib/enums";
 import { TCourse, TVideo } from "@/types/models.types";
 
 const formSchema = z.object({

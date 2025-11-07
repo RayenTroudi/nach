@@ -22,7 +22,7 @@ import { usePathname, useRouter } from "next/navigation";
 import Image from "next/image";
 import { set } from "mongoose";
 import { updateCourseStatus } from "@/lib/actions";
-import { CourseStatusEnum } from "@/lib/models/course.model";
+import { CourseStatusEnum } from "@/lib/enums";
 import { TCourse } from "@/types/models.types";
 
 const formSchema = z.object({

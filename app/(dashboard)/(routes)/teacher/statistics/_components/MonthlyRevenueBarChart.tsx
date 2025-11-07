@@ -3,13 +3,13 @@
 import React, { useEffect, useState } from "react";
 import { Bar } from "react-chartjs-2";
 import "chart.js/auto";
-import { ICourse } from "@/lib/models/course.model";
+import { TCourse } from "@/types/models.types";
 import { countMonthlyPurchasesForCourse } from "@/lib/actions/course.action";
 import { TooltipItem } from "chart.js";
 import { useTheme } from "@/contexts/ThemeProvider";
 
 interface Props {
-  courses: ICourse[];
+  courses: TCourse[];
 }
 
 const MonthlyRevenueBarChart: React.FC<Props> = ({ courses }) => {

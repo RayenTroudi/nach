@@ -1,4 +1,4 @@
-import { CourseLevelEnum, CourseStatusEnum } from "@/lib/models/course.model";
+import { CourseLevelEnum, CourseStatusEnum, CourseTypeEnum } from "@/lib/enums";
 
 export type TUser = {
   _id: string;
@@ -77,6 +77,8 @@ export type TCourse = {
   thumbnail?: string;
   isPublished?: boolean;
   status?: CourseStatusEnum;
+  courseType?: CourseTypeEnum;
+  faqVideo?: string;
   instructor: TUser;
   category: TCategory;
   exam?: TExam;

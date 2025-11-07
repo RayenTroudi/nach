@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import { TComment } from "./models.types";
+import { CourseTypeEnum } from "@/lib/enums";
 // Course Params
 
 export interface GetCourseByIdParams {
@@ -9,6 +10,7 @@ export interface GetCourseByIdParams {
 export interface CreateCourseParams {
   courseTitle: string;
   courseCategory: string;
+  courseType: CourseTypeEnum;
   path: string;
 }
 

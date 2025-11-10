@@ -119,7 +119,7 @@ export default function MyPaymentProofsPage() {
           <FileText className="w-16 h-16 mx-auto mb-4 text-slate-400" />
           <h2 className="text-xl font-semibold mb-2">No Payment Proofs</h2>
           <p className="text-slate-600 dark:text-slate-400">
-            You haven't submitted any payment proofs yet
+            You haven&apos;t submitted any payment proofs yet
           </p>
         </Card>
       ) : (
@@ -205,7 +205,7 @@ export default function MyPaymentProofsPage() {
                         </p>
                         <p className="text-xs text-yellow-700 dark:text-yellow-300 mt-1">
                           Your payment proof is being reviewed by our admin team. This typically takes 24-48 hours.
-                          You'll receive an email once it's processed.
+                          You&apos;ll receive an email once it&apos;s processed.
                         </p>
                       </div>
                     </div>
@@ -219,7 +219,7 @@ export default function MyPaymentProofsPage() {
                           Payment Approved!
                         </p>
                         <p className="text-xs text-green-700 dark:text-green-300 mt-1">
-                          Your payment has been verified and you've been enrolled in the course(s).
+                          Your payment has been verified and you&apos;ve been enrolled in the course(s).
                           {proof.reviewedAt && ` Approved on ${formatDate(proof.reviewedAt)}`}
                         </p>
                       </div>

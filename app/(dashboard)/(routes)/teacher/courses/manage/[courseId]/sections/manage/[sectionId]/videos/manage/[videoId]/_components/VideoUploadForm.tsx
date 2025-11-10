@@ -11,7 +11,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { updateVideo } from "@/lib/actions/video.action";
 import { updateCourseStatus } from "@/lib/actions";
-import { CourseStatusEnum } from "@/lib/models/course.model";
+import { CourseStatusEnum } from "@/lib/enums";
 import { TVideo } from "@/types/models.types";
 
 const formSchema = z.object({

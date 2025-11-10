@@ -1,8 +1,8 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, CheckCircle2 } from "lucide-react";
-import Link from "next/link";
 import { motion } from "framer-motion";
+import { NavigationButton } from "@/components/shared";
 
 export default function FinalCTASection() {
   return (
@@ -68,24 +68,22 @@ export default function FinalCTASection() {
 
           {/* CTAs */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
-            <Link href="/interests">
-              <Button
-                size="lg"
-                className="w-full sm:w-auto h-14 px-10 text-lg font-semibold bg-gradient-to-r from-brand-gold-500 to-brand-gold-600 hover:from-brand-gold-600 hover:to-brand-gold-700 text-slate-900 shadow-lg hover:shadow-xl transition-all duration-300 group"
-              >
-                Get Started - Free Consultation
-                <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-              </Button>
-            </Link>
-            <Link href="/courses">
-              <Button
-                size="lg"
-                variant="outline"
-                className="w-full sm:w-auto h-14 px-10 text-lg font-semibold border-2 border-brand-red-500 text-brand-red-500 hover:bg-brand-red-500 hover:text-white"
-              >
-                Browse All Courses
-              </Button>
-            </Link>
+            <NavigationButton
+              href="/courses"
+              size="lg"
+              className="w-full sm:w-auto h-14 px-10 text-lg font-semibold bg-gradient-to-r from-brand-gold-500 to-brand-gold-600 hover:from-brand-gold-600 hover:to-brand-gold-700 text-slate-900 shadow-lg hover:shadow-xl transition-all duration-300 group"
+            >
+              Get Started - Free Consultation
+              <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+            </NavigationButton>
+            <NavigationButton
+              href="/courses"
+              size="lg"
+              variant="outline"
+              className="w-full sm:w-auto h-14 px-10 text-lg font-semibold border-2 border-brand-red-500 text-brand-red-500 hover:bg-brand-red-500 hover:text-white"
+            >
+              Browse All Courses
+            </NavigationButton>
           </div>
 
           {/* Trust Badge */}

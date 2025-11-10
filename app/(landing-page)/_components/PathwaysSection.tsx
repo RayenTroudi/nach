@@ -2,8 +2,8 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { BookOpen, Briefcase, Home, ArrowRight } from "lucide-react";
-import Link from "next/link";
 import { motion } from "framer-motion";
+import { NavigationButton } from "@/components/shared";
 
 const pathways = [
   {
@@ -140,16 +140,15 @@ export default function PathwaysSection() {
           className="text-center mt-16"
         >
           <p className="text-slate-600 dark:text-slate-300 mb-6">
-            Not sure which path is right for you?
+            Ready to explore all available courses?
           </p>
-          <Link href="/interests">
-            <Button
-              size="lg"
-              className="bg-gradient-to-r from-brand-gold-500 to-brand-gold-600 hover:from-brand-gold-600 hover:to-brand-gold-700 text-slate-900 font-semibold shadow-lg"
-            >
-              Take Our 3-Minute Assessment
-            </Button>
-          </Link>
+          <NavigationButton
+            href="/courses"
+            size="lg"
+            className="bg-gradient-to-r from-brand-gold-500 to-brand-gold-600 hover:from-brand-gold-600 hover:to-brand-gold-700 text-slate-900 font-semibold shadow-lg"
+          >
+            Browse All Courses
+          </NavigationButton>
         </motion.div>
       </div>
     </section>

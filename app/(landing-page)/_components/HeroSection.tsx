@@ -1,8 +1,8 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, CheckCircle2 } from "lucide-react";
-import Link from "next/link";
 import { motion } from "framer-motion";
+import { NavigationButton } from "@/components/shared";
 
 export default function HeroSection() {
   return (
@@ -54,24 +54,22 @@ export default function HeroSection() {
 
             {/* CTAs */}
             <div className="flex flex-col sm:flex-row gap-4">
-              <Link href="/interests">
-                <Button
-                  size="lg"
-                  className="w-full sm:w-auto h-14 px-8 text-lg font-semibold bg-gradient-to-r from-brand-red-600 to-brand-red-500 hover:from-brand-red-700 hover:to-brand-red-600 text-white shadow-button hover:shadow-button-hover transition-all duration-300 group"
-                >
-                  Start Your Journey
-                  <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-                </Button>
-              </Link>
-              <Link href="/courses">
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="w-full sm:w-auto h-14 px-8 text-lg font-semibold border-2 border-brand-red-500 text-brand-red-600 dark:text-brand-red-400 hover:bg-brand-red-50 dark:hover:bg-brand-red-950/50"
-                >
-                  Explore Pathways
-                </Button>
-              </Link>
+              <NavigationButton
+                href="/courses"
+                size="lg"
+                className="w-full sm:w-auto h-14 px-8 text-lg font-semibold bg-gradient-to-r from-brand-red-600 to-brand-red-500 hover:from-brand-red-700 hover:to-brand-red-600 text-white shadow-button hover:shadow-button-hover transition-all duration-300 group"
+              >
+                Start Your Journey
+                <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+              </NavigationButton>
+              <NavigationButton
+                href="/courses"
+                size="lg"
+                variant="outline"
+                className="w-full sm:w-auto h-14 px-8 text-lg font-semibold border-2 border-brand-red-500 text-brand-red-600 dark:text-brand-red-400 hover:bg-brand-red-50 dark:hover:bg-brand-red-950/50"
+              >
+                Explore Pathways
+              </NavigationButton>
             </div>
 
             {/* Trust Indicators */}

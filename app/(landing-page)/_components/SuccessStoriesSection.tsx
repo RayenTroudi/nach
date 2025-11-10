@@ -2,8 +2,8 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Quote, Play, ArrowRight } from "lucide-react";
-import Link from "next/link";
 import { motion } from "framer-motion";
+import { NavigationButton } from "@/components/shared";
 
 const successStories = [
   {
@@ -147,15 +147,14 @@ export default function SuccessStoriesSection() {
               <Play className="mr-2 h-5 w-5" />
               Watch Video Testimonials
             </Button>
-            <Link href="/courses">
-              <Button
-                size="lg"
-                className="bg-white text-brand-red-600 transition-all duration-300"
-              >
-                Start Your Journey
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </Button>
-            </Link>
+            <NavigationButton
+              href="/courses"
+              size="lg"
+              className="bg-white text-brand-red-600 transition-all duration-300"
+            >
+              Start Your Journey
+              <ArrowRight className="ml-2 h-5 w-5" />
+            </NavigationButton>
           </div>
         </motion.div>
       </div>

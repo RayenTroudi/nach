@@ -83,7 +83,7 @@ export default function ReachForMeSection() {
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
             </span>
-            We're Online & Ready to Help
+            We&apos;re Online & Ready to Help
           </div>
 
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
@@ -93,7 +93,7 @@ export default function ReachForMeSection() {
             to Us
           </h2>
           <p className="text-xl text-slate-300 max-w-2xl mx-auto">
-            Choose how you'd like to connect. Our team is here to support your journey to Germany.
+            Choose how you&apos;d like to connect. Our team is here to support your journey to Germany.
           </p>
         </motion.div>
 

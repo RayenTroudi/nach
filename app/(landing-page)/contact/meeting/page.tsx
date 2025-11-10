@@ -76,7 +76,7 @@ export default function BookMeetingPage() {
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <CheckCircle2 className="w-5 h-5 text-brand-red-500" />
-                    What's Included
+                    What&apos;s Included
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -162,7 +162,7 @@ export default function BookMeetingPage() {
                   Before the Meeting
                 </h4>
                 <p className="text-sm text-slate-600 dark:text-slate-400">
-                  You'll receive a pre-meeting questionnaire to help us understand
+                  You&apos;ll receive a pre-meeting questionnaire to help us understand
                   your background, goals, and current situation. This ensures we
                   make the most of our time together.
                 </p>
@@ -172,7 +172,7 @@ export default function BookMeetingPage() {
                   During the Meeting
                 </h4>
                 <p className="text-sm text-slate-600 dark:text-slate-400">
-                  We'll review your situation, discuss your options for studying or
+                  We&apos;ll review your situation, discuss your options for studying or
                   working in Germany, create a timeline, and address any specific
                   concerns or questions you have.
                 </p>
@@ -182,7 +182,7 @@ export default function BookMeetingPage() {
                   After the Meeting
                 </h4>
                 <p className="text-sm text-slate-600 dark:text-slate-400">
-                  You'll receive a detailed action plan, recommended resources,
+                  You&apos;ll receive a detailed action plan, recommended resources,
                   document checklists, and ongoing support via email for follow-up
                   questions.
                 </p>

@@ -81,7 +81,7 @@ export default function SendMessagePage() {
               Send Us a Message
             </h1>
             <p className="text-lg text-slate-600 dark:text-slate-300 max-w-2xl mx-auto">
-              Have a question or need guidance? Send us a message and we'll get
+              Have a question or need guidance? Send us a message and we&apos;ll get
               back to you within 24 hours
             </p>
           </div>

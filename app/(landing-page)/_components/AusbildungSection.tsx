@@ -104,7 +104,7 @@ export default function AusbildungSection() {
             <span className="text-brand-red-500">Ausbildung</span> Opportunities
           </h2>
           <p className="text-lg text-slate-600 dark:text-slate-300 max-w-2xl mx-auto mb-6">
-            Live opportunities from <strong>ausbildung.de</strong> - Germany's leading vocational training platform
+            Live opportunities from <strong>ausbildung.de</strong> - Germany&apos;s leading vocational training platform
           </p>
         </motion.div>
 
@@ -360,4 +360,3 @@ export default function AusbildungSection() {
     </section>
   );
 }
-{/* <p>nig</p> */}

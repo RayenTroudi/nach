@@ -77,7 +77,7 @@ export default function BookCallPage() {
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <CheckCircle2 className="w-5 h-5 text-brand-red-500" />
-                    What's Included
+                    What&apos;s Included
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -171,7 +171,7 @@ export default function BookCallPage() {
                 </h4>
                 <p className="text-sm text-slate-600 dark:text-slate-400">
                   Yes, you can reschedule up to 24 hours before your scheduled
-                  time through the confirmation email you'll receive.
+                  time through the confirmation email you&apos;ll receive.
                 </p>
               </div>
               <div>

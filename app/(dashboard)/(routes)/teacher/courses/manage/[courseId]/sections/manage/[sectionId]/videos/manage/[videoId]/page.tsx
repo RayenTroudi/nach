@@ -21,7 +21,8 @@ const VideIdPage = async ({ params }: { params: { videoId: string } }) => {
     redirect("/teacher/courses");
   }
 
-  if (!video) {
+  if (!video || !video.sectionId || !video.sectionId.course) {
+    console.error("Video data incomplete or not found");
     redirect("/teacher/courses");
   }
 

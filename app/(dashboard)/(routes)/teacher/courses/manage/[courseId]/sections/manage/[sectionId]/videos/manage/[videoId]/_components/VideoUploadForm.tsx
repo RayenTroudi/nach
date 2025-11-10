@@ -31,6 +31,15 @@ const VideoUploadForm = ({ video }: Props) => {
     video.videoUrl ? video.videoUrl : ""
   );
 
+  // Safety check for nested properties
+  if (!video?.sectionId?.course) {
+    return (
+      <div className="flex flex-col gap-2 bg-slate-200/50 dark:bg-slate-900 shadow-md p-6 rounded-md border border-input">
+        <p className="text-red-500">Error: Video data is incomplete</p>
+      </div>
+    );
+  }
+
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       setIsSaving(true);

@@ -41,6 +41,15 @@ const VideoTitleForm = ({ video }: Props) => {
   const router = useRouter();
   const [editing, setIsEditing] = useState<boolean>(false);
 
+  // Safety check for nested properties
+  if (!video?.sectionId?.course) {
+    return (
+      <div className="bg-slate-200/50 dark:bg-slate-900 border-input shadow-md w-full border rounded-sm p-4">
+        <p className="text-red-500">Error: Video data is incomplete</p>
+      </div>
+    );
+  }
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {

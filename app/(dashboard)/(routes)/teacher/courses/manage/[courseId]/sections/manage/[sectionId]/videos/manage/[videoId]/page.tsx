@@ -1,5 +1,3 @@
-"use server";
-import { scnToast } from "@/components/ui/use-toast";
 import { getVideoById } from "@/lib/actions/video.action";
 import React from "react";
 import { StepBack } from "../../../_components";
@@ -11,17 +9,20 @@ import {
 import VideoUploadForm from "./_components/VideoUploadForm";
 import { Banner, CourseStepHeader } from "@/components/shared";
 import { TVideo } from "@/types/models.types";
+import { redirect } from "next/navigation";
 
 const VideIdPage = async ({ params }: { params: { videoId: string } }) => {
-  let video: TVideo = {} as TVideo;
+  let video: TVideo | null = null;
+  
   try {
     video = await getVideoById(params.videoId);
   } catch (error: any) {
-    scnToast({
-      variant: "destructive",
-      title: "Error",
-      description: error.message,
-    });
+    console.error("Error fetching video:", error);
+    redirect("/teacher/courses");
+  }
+
+  if (!video) {
+    redirect("/teacher/courses");
   }
 
   return (

@@ -39,14 +39,32 @@ const PurchaseCourseCard = ({
 }: Props) => {
   const router = useRouter();
   
-  // Add null check for course
+  // Move all hooks to the top, before any conditional returns
+  const { addToCart, removeFromCart, cartItems } = useCart();
+  const { wishlist, addToWishlist, removeFromWishlist } = useWishlist();
+  const [videoToPreview, setVideoToPreview] = useState<TVideo | null>(null);
+  const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isFilled, setIsFilled] = useState(false);
+  const { user } = useUser();
+  const [isInCart, setIsInCart] = useState(false);
+
+  // Update wishlist and cart state when they change
+  useEffect(() => {
+    if (course) {
+      setIsFilled(wishlist.some((item: TCourse) => item._id === course._id));
+      setIsInCart(cartItems.some((item: TCourse) => item._id === course._id));
+    }
+  }, [wishlist, cartItems, course]);
+  
+  // Add null check for course - AFTER all hooks
   if (!course || !course._id) {
     return (
       <div className="w-full h-[400px] flex items-center justify-center">
         <div className="text-center">
           <p className="text-xl font-semibold mb-2">Course not found</p>
           <p className="text-slate-600 dark:text-slate-400">
-            The course you're looking for doesn't exist or has been removed.
+            The course you&apos;re looking for doesn&apos;t exist or has been removed.
           </p>
           <Button
             onClick={() => router.push("/courses")}
@@ -60,19 +78,6 @@ const PurchaseCourseCard = ({
   }
   
   const priceInDinar = course.price! * 3.3;
-  const { addToCart, removeFromCart, cartItems } = useCart();
-  const { wishlist, addToWishlist, removeFromWishlist } = useWishlist();
-  const [videoToPreview, setVideoToPreview] = useState<TVideo | null>(null);
-  const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
-
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [isFilled, setIsFilled] = useState(() =>
-    wishlist.some((item: TCourse) => item._id === course._id)
-  );
-  const { user } = useUser();
-  const [isInCart, setIsInCart] = useState(() =>
-    cartItems.some((item: TCourse) => item._id === course._id)
-  );
   const toggleHeart = () => {
     if (user === null) {
       console.log("the user", user);
@@ -329,7 +334,7 @@ const PurchaseCourseCard = ({
                             scnToast({
                               variant: "success",
                               title: "Upload Successful",
-                              description: "Your payment proof has been submitted. You'll receive an email once it's reviewed.",
+                              description: "Your payment proof has been submitted. You&apos;ll receive an email once it&apos;s reviewed.",
                             });
                             router.refresh();
                           }}

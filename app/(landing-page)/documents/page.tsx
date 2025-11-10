@@ -117,6 +117,7 @@ export default function DocumentsPage() {
 
   useEffect(() => {
     fetchDocuments();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage, categoryFilter, sortBy]);
 
   // Search with debounce
@@ -127,6 +128,7 @@ export default function DocumentsPage() {
     }, 500);
 
     return () => clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchTerm]);
 
   // Handle download

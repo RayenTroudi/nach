@@ -47,10 +47,12 @@ export default function CoursesContent() {
 
   useEffect(() => {
     fetchCourses();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     filterCourses();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [courses, searchTerm, selectedCategory, selectedLevel]);
 
   const fetchCourses = async () => {
@@ -148,7 +150,7 @@ export default function CoursesContent() {
             </h1>
             <p className="text-xl text-slate-600 dark:text-slate-300 max-w-3xl mx-auto mb-8">
               Master the skills you need to thrive in Germany. From language learning to career preparation, 
-              we've got everything covered.
+              we&apos;ve got everything covered.
             </p>
 
             {/* Stats */}

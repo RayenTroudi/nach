@@ -222,7 +222,7 @@ export default function BankTransferUpload({
               Payment Proof Submitted!
             </p>
             <p className="text-sm text-green-700 dark:text-green-300 mt-1">
-              Your proof is being reviewed. You'll receive an email once it's processed.
+              Your proof is being reviewed. You&apos;ll receive an email once it&apos;s processed.
             </p>
           </div>
         )}

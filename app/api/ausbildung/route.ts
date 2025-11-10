@@ -1,5 +1,8 @@
 import { NextResponse } from "next/server";
 
+// Mark this route as dynamic
+export const dynamic = 'force-dynamic';
+
 // In-memory cache to avoid excessive scraping - keyed by search params
 const cache = new Map<string, { data: any[]; timestamp: number }>();
 

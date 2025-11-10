@@ -4,6 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { BookOpen, Briefcase, Home, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
 import { NavigationButton } from "@/components/shared";
+import Link from "next/link";
 
 const pathways = [
   {

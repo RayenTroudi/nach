@@ -16,13 +16,27 @@ const VideIdPage = async ({ params }: { params: { videoId: string } }) => {
   
   try {
     video = await getVideoById(params.videoId);
+    console.log("Video data:", JSON.stringify(video, null, 2));
   } catch (error: any) {
     console.error("Error fetching video:", error);
     redirect("/teacher/courses");
   }
 
-  if (!video || !video.sectionId || !video.sectionId.course) {
-    console.error("Video data incomplete or not found");
+  if (!video) {
+    console.error("Video not found");
+    redirect("/teacher/courses");
+  }
+
+  if (!video.sectionId) {
+    console.error("Video sectionId missing");
+    redirect("/teacher/courses");
+  }
+
+  // Check if sectionId is populated (object) or just an ID (string)
+  const section = typeof video.sectionId === 'object' ? video.sectionId : null;
+  
+  if (!section || !section.course) {
+    console.error("Section or course data not populated properly");
     redirect("/teacher/courses");
   }
 

@@ -8,6 +8,9 @@ import {
 import { connectToDatabase } from "../mongoose";
 import mongoose from "mongoose";
 import Video from "../models/video.model";
+import Section from "../models/section.model";
+import Course from "../models/course.model";
+import User from "../models/user.model";
 import { revalidatePath } from "next/cache";
 import { getCourseById } from "./course.action";
 import { pullVideoFromSection } from "./section.action";
@@ -17,19 +20,31 @@ export const getVideoById = async (videoId: string) => {
   try {
     await connectToDatabase();
     if (!mongoose.isValidObjectId(videoId)) throw new Error("Invalid ID");
+    
+    // Ensure models are registered
     await UserProgress.find();
+    await Section.find();
+    await Course.find();
+    await User.find();
+    
     const video = await Video.findById(videoId)
       .populate({
         path: "sectionId",
+        model: "Section",
         populate: {
           path: "course",
           model: "Course",
           populate: {
             path: "instructor",
+            model: "User",
           },
         },
       })
       .populate("userProgress");
+
+    if (!video) {
+      throw new Error("Video not found");
+    }
 
     return JSON.parse(JSON.stringify(video));
   } catch (error: any) {

@@ -13,9 +13,9 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
     const type = searchParams.get("type");
 
-    // Build query
+    // Build query - show only published courses
     const query: any = {
-      status: CourseStatusEnum.Approved, // Only approved courses
+      isPublished: true,
     };
 
     // Filter by course type if specified

@@ -3,6 +3,9 @@ import { connectToDatabase } from "@/lib/mongoose";
 import Course from "@/lib/models/course.model";
 import { CourseTypeEnum, CourseStatusEnum } from "@/lib/enums";
 
+// Mark this route as dynamic
+export const dynamic = 'force-dynamic';
+
 export async function GET(request: Request) {
   try {
     await connectToDatabase();

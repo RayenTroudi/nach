@@ -5,6 +5,9 @@ import PaymentProof from "@/lib/models/payment-proof.model";
 import User from "@/lib/models/user.model";
 import Course from "@/lib/models/course.model";
 
+// Mark this route as dynamic
+export const dynamic = 'force-dynamic';
+
 export async function GET(request: Request) {
   try {
     const { userId: clerkId } = auth();

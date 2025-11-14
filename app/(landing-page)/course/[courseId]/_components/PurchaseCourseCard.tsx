@@ -131,115 +131,120 @@ const PurchaseCourseCard = ({
   };
 
   return (
-    <div className="w-full lg:w-[350px] min-h-[400px] lg:fixed lg:top-24 lg:right-24 flex flex-col gap-y-4 shadow-xl  z-50 p-2 lg:bg-slate-50 lg:dark:bg-slate-900 rounded-md">
-      {isLoading ? (
-        <div className="rounded-md w-full h-[187px] bg-slate-200 dark:bg-slate-900 lg:dark:bg-slate-950 flex items-center justify-center">
-          <Spinner size={50} />
-        </div>
-      ) : (
-        <VidSyncPlayer
-          src={
-            videoToPreview
-              ? videoToPreview.videoUrl!
-              : allFreeVideos[0]?.videoUrl || course?.thumbnail || ""
-          }
-          poster={course?.thumbnail!}
-          containerStyles={{
-            borderRadius: "none !important",
-          }}
-          videoStyles={{
-            borderRadius: "none !important",
-          }}
-        />
-      )}
-
-      <div className="flex flex-col gap-y-2">
-        <div className="w-full flex items-center justify-between">
-          <Image
-            src={course.thumbnail!}
-            alt="course-thumbnail"
-            width={100}
-            height={67}
-            className="rounded-sm"
-            style={{ width: 'auto', height: 'auto', maxWidth: '100px' }}
-          />
-          {course!.price! > 0 ? (
-            <div className="flex gap-x-1 items-center ">
-              <p className="text-3xl font-bold ">
-                {transformCurrencyToSymbol(course?.currency!.toUpperCase())}
-              </p>
-              <p className="text-2xl font-bold ">{course.price} </p>
-            </div>
-          ) : (
-            <div className="w-full flex items-center justify-between">
-              <p className="text-xl font-bold">Get it now</p>
-              <p className="text-lg font-semibold text-[#16a34a]">Free</p>
-            </div>
-          )}
-        </div>
-        <Separator />
-
-        {allFreeVideos.length > 0 && (
-          <div className="w-full flex flex-col gap-y-1">
-            <h2 className="text-lg text-slate-800 dark:text-slate-200 font-bold mb-2">
-              Videos For Preview
-            </h2>
-            {allFreeVideos.map((video: TVideo | undefined, key: number) => (
-              <div
-                onClick={() => onChangeVideoToPreviewHandler(video!)}
-              key={key}
-              className={` w-full px-3 py-2 rounded-sm flex items-center gap-x-2 hover:bg-slate-200/30 dark:hover:bg-slate-950/30 cursor-pointer
-            ${
-              videoToPreview
-                ? videoToPreview._id === video?._id
-                  ? "bg-slate-200/50 dark:bg-slate-900 dark:lg:bg-slate-950 duration-300 ease-in-out pointer-events-none"
-                  : ""
-                : allFreeVideos[0]?._id === video?._id
-                ? "bg-slate-200/50 dark:bg-slate-900 dark:lg:bg-slate-950 duration-300 ease-in-out pointer-events-none"
-                : ""
-            }
-
-            `}
-            >
-              <LucideVideo
-                size={20}
-                className="text-slate-800 dark:text-slate-300"
-              />
-              <p className="text-[12px] text-slate-800 dark:text-slate-300 font-bold">
-                {" "}
-                {video?.title}{" "}
-              </p>
-            </div>
-          ))}
+    <div className="w-full space-y-6">
+      {/* Video Preview Card */}
+      <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-slate-200 dark:border-slate-800 overflow-hidden">
+        {/* Video Player */}
+        {isLoading ? (
+          <div className="w-full aspect-video bg-slate-200 dark:bg-slate-950 flex items-center justify-center">
+            <Spinner size={50} />
+          </div>
+        ) : (
+          <div className="relative w-full aspect-video">
+            <VidSyncPlayer
+              src={
+                videoToPreview
+                  ? videoToPreview.videoUrl!
+                  : allFreeVideos[0]?.videoUrl || course?.thumbnail || ""
+              }
+              poster={course?.thumbnail!}
+              containerStyles={{
+                borderRadius: "0 !important",
+              }}
+              videoStyles={{
+                borderRadius: "0 !important",
+              }}
+            />
           </div>
         )}
-        {course.price! > 0 ? (
-          <div className=" w-full flex flex-col gap-y-1 mt-5">
-            {!isCourseOwner && !isEnrolled ? (
-              <div className="flex items-center justify-center space-x-4  rounded-md">
-                <Button
-                  name="add-to-cart"
-                  className="bg-brand-red-500 w-full text-lg font-bold text-white hover:bg-brand-red-600 hover:shadow-button-hover duration-300 ease-in-out rounded-button shadow-button"
-                  onClick={handleAddToCart}
-                >
-                  {isInCart ? "Remove from cart" : "Add to cart"}
-                </Button>
 
-                <Button
-                  name="add-to-wishlist"
-                  onClick={toggleHeart}
-                  className="bg-red-500 hover:bg-red-500"
-                >
-                  <LucideHeart
-                    onClick={toggleHeart}
-                    size={24}
-                    fill={isFilled ? "white" : "none"}
-                    stroke={isFilled ? "transparent" : "currentColor"}
-                    className="cursor-pointer text-white hover:fill-white transition-all duration-300 ease-in-out"
-                  />
-                </Button>
+        {/* Card Content */}
+        <div className="p-6 space-y-6">
+          {/* Price Section */}
+          <div className="flex items-center justify-between pb-6 border-b border-slate-200 dark:border-slate-800">
+            <Image
+              src={course.thumbnail!}
+              alt="course-thumbnail"
+              width={80}
+              height={53}
+              className="rounded-lg shadow-md"
+              style={{ width: 'auto', height: 'auto', maxWidth: '80px' }}
+            />
+            {course!.price! > 0 ? (
+              <div className="flex items-baseline gap-2">
+                <span className="text-4xl font-bold text-brand-red-500">
+                  {transformCurrencyToSymbol(course?.currency!.toUpperCase())}{course.price}
+                </span>
               </div>
-            ) : null}
+            ) : (
+              <div className="flex items-center gap-2">
+                <span className="text-3xl font-bold text-green-500">FREE</span>
+              </div>
+            )}
+          </div>
+
+          {/* Free Preview Videos */}
+          {allFreeVideos.length > 0 && (
+            <div className="space-y-3">
+              <h3 className="text-lg font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
+                <LucideVideo size={20} className="text-brand-red-500" />
+                Preview Videos
+              </h3>
+              <div className="space-y-2">
+                {allFreeVideos.map((video: TVideo | undefined, key: number) => (
+                  <button
+                    onClick={() => onChangeVideoToPreviewHandler(video!)}
+                    key={key}
+                    className={`w-full p-3 rounded-lg flex items-center gap-3 transition-all duration-200 ${
+                      videoToPreview?._id === video?._id || (!videoToPreview && allFreeVideos[0]?._id === video?._id)
+                        ? "bg-brand-red-50 dark:bg-brand-red-950/30 border-2 border-brand-red-500"
+                        : "bg-slate-50 dark:bg-slate-950 hover:bg-slate-100 dark:hover:bg-slate-800 border-2 border-transparent"
+                    }`}
+                  >
+                    <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                      videoToPreview?._id === video?._id || (!videoToPreview && allFreeVideos[0]?._id === video?._id)
+                        ? "bg-brand-red-500"
+                        : "bg-slate-300 dark:bg-slate-700"
+                    }`}>
+                      <LucideVideo size={16} className="text-white" />
+                    </div>
+                    <p className="flex-1 text-left text-sm font-medium text-slate-900 dark:text-slate-100 line-clamp-1">
+                      {video?.title}
+                    </p>
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+          
+          {/* Action Buttons */}
+          {course.price! > 0 ? (
+            <div className="space-y-3 pt-4 border-t border-slate-200 dark:border-slate-800">
+              {!isCourseOwner && !isEnrolled ? (
+                <div className="flex gap-3">
+                  <Button
+                    name="add-to-cart"
+                    className="flex-1 h-12 bg-brand-red-500 text-white hover:bg-brand-red-600 font-semibold text-base rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
+                    onClick={handleAddToCart}
+                  >
+                    {isInCart ? "Remove from cart" : "Add to cart"}
+                  </Button>
+
+                  <Button
+                    name="add-to-wishlist"
+                    onClick={toggleHeart}
+                    className="w-12 h-12 bg-red-500 hover:bg-red-600 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
+                  >
+                    <LucideHeart
+                      size={20}
+                      fill={isFilled ? "white" : "none"}
+                      stroke={isFilled ? "transparent" : "white"}
+                      className="transition-all duration-300"
+                    />
+                  </Button>
+                </div>
+              ) : null}
+              
             <SignedIn>
               {isCourseOwner ? (
                 <div className="mt-2  w-full flex flex-col gap-y-1">
@@ -367,9 +372,9 @@ const PurchaseCourseCard = ({
                 </Link>
               </div>
             </SignedOut>
-          </div>
-        ) : (
-          <div className="w-full flex flex-col gap-y-2 mt-5">
+            </div>
+          ) : (
+            <div className="space-y-3 pt-4 border-t border-slate-200 dark:border-slate-800">
             {/* FREE COURSE LOGIC */}
             <SignedIn>
               {!isCourseOwner && !isEnrolled ? (
@@ -463,8 +468,9 @@ const PurchaseCourseCard = ({
                 </Link>
               </div>
             </SignedOut>
-          </div>
-        )}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

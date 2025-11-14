@@ -100,38 +100,6 @@ export default function HeroSection() {
             transition={{ duration: 0.6, delay: 0.3 }}
             className="relative hidden lg:block"
           >
-            <div className="relative w-full h-[600px] rounded-2xl overflow-hidden shadow-2xl">
-              {/* Placeholder for German cityscape image */}
-              <div className="absolute inset-0 bg-brand-red-500" />
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="text-center text-white p-8">
-                  <div className="text-8xl font-bold mb-4">🇩🇪</div>
-                  <p className="text-2xl font-semibold">Brandenburg Gate</p>
-                  <p className="text-lg opacity-90">Your Future Awaits</p>
-                </div>
-              </div>
-              
-              {/* Floating Stats Cards */}
-              <motion.div
-                initial={{ y: 20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.8, duration: 0.5 }}
-                className="absolute top-8 right-8 bg-white dark:bg-gradient-to-br dark:from-brand-red-500/20 dark:to-brand-red-600/30 rounded-xl shadow-lg p-4 backdrop-blur-sm bg-opacity-95 dark:border dark:border-brand-red-500/30"
-              >
-                <div className="text-3xl font-bold text-brand-red-600 dark:text-brand-red-300">2,500+</div>
-                <div className="text-sm text-slate-600 dark:text-slate-100">Students Taught</div>
-              </motion.div>
-
-              <motion.div
-                initial={{ y: 20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 1, duration: 0.5 }}
-                className="absolute bottom-8 left-8 bg-white dark:bg-slate-900/90 rounded-xl shadow-lg p-4 backdrop-blur-sm bg-opacity-95 dark:border-2 dark:border-brand-green-400"
-              >
-                <div className="text-3xl font-bold text-brand-green-500 dark:text-brand-green-300">500+</div>
-                <div className="text-sm text-slate-600 dark:text-slate-100">Visas Approved</div>
-              </motion.div>
-            </div>
           </motion.div>
         </div>
       </div>

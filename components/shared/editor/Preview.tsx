@@ -66,21 +66,6 @@ const Preview = ({ data }: Props) => {
   return (
     <div className="relative">
       {parse(data)}
-
-      <Button
-        className={cn(
-          "absolute top-2 right-2 size-8 bg-transparent border-2 border-input hover:bg-gray-500 dark:hover:bg-input rounded-lg transition-all duration-300 ease-in-out",
-          copied &&
-            "bg-[#065f46] pointer-events-none text-slate-50 hover:bg-[#065f46] border-[#065f46]"
-        )}
-        onClick={onCopyToClipboardHandler}
-      >
-        {copied ? (
-          <CheckIcon className="flex-shrink-0 size-5 text-slate-50" />
-        ) : (
-          <ClipboardIcon className="flex-shrink-0 size-4 text-slate-50" />
-        )}
-      </Button>
     </div>
   );
 };

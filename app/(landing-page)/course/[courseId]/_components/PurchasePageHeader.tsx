@@ -16,73 +16,91 @@ const PurchasePageHeader = ({ course }: Props) => {
   const { courseRating, ratingFrom } = calculateCourseRating(course);
 
   return (
-    <div className="w-full bg-slate-200/30 dark:bg-slate-900/30 ">
-      <Container className=" w-full ">
-        <div className="flex flex-col gap-y-4 w-full lg:w-[950px]">
-          <div className="w-full flex flex-col gap-y-1 ">
-            <Badge className="bg-black hover:bg-dark/80 rounded-full w-fit px-4 py-2 text-slate-50">
+    <div className="relative w-full py-12 lg:py-16">
+      <Container className="relative z-10">
+        <div className="flex flex-col gap-y-6 w-full max-w-4xl">
+          {/* Breadcrumb & Category */}
+          <div className="flex items-center gap-3 flex-wrap">
+            <Badge className="bg-brand-red-500 hover:bg-brand-red-600 rounded-full px-4 py-2 text-white font-semibold shadow-lg">
               {course.category?.name ? course.category.name : <Spinner />}
             </Badge>
-            <h1 className="w-full text-slate-950 dark:text-slate-200 text-xl lg:text-4xl font-bold">
-              {course.title}
-            </h1>
-            {course.description ? (
-              <div className="w-full lg:w-[800px] text-wrap">
-                <Preview data={course?.description ?? ""} />
-              </div>
-            ) : (
-              <Spinner />
+            {course.level && (
+              <span className="text-sm text-slate-300 bg-white/10 backdrop-blur-sm px-3 py-1 rounded-full">
+                {course.level}
+              </span>
             )}
           </div>
 
-          <div className="w-fit rounded-md flex flex-wrap items-center gap-x-4  bg-gradient-to-r from-slate-900 via-purple-900 to-slate-900 p-2">
-            {course.keywords?.map((keyword, key) => (
-              <div
-                key={key}
-                className="relative mt-2 md:mt-0 text-sm w-fit px-6 py-1 flex items-center justify-center bg-gradient-to-r from-slate-100 to-teal-100
-                                rounded-md text-brand-red-500  uppercase
-                              "
-              >
-                {keyword}
-              </div>
-            ))}
-          </div>
-          <div className="flex flex-col items-start md:flex-row md:items-center gap-x-2">
-            <div className="flex items-center gap-x-2">
-              <p className="font-bold text-xl">{courseRating}</p>
-              {Array.from({ length: 5 }).map((_, key) => (
-                <Star
-                  key={key}
-                  index={key}
-                  stars={courseRating}
-                  filled={Boolean(courseRating > key)}
-                />
-              ))}
+          {/* Course Title */}
+          <h1 className="text-3xl lg:text-5xl font-bold text-white leading-tight">
+            {course.title}
+          </h1>
 
-              <p className="text-slate-500 text-sm">({ratingFrom} votes)</p>
+          {/* Course Description */}
+          {course.description ? (
+            <div className="text-slate-200 text-lg max-w-3xl">
+              <Preview data={course?.description ?? ""} />
+            </div>
+          ) : (
+            <Spinner />
+          )}
+
+          {/* Keywords */}
+          {course.keywords && course.keywords.length > 0 && (
+            <div className="flex flex-wrap gap-2">
+              {course.keywords?.map((keyword, key) => (
+                <span
+                  key={key}
+                  className="px-4 py-1.5 text-sm font-medium bg-white/10 backdrop-blur-sm text-white rounded-full border border-white/20 hover:bg-white/20 transition-all duration-300"
+                >
+                  {keyword}
+                </span>
+              ))}
+            </div>
+          )}
+
+          {/* Stats Row */}
+          <div className="flex flex-wrap items-center gap-6 text-white">
+            {/* Rating */}
+            <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-lg">
+              <span className="font-bold text-xl text-yellow-400">{courseRating}</span>
+              <div className="flex items-center gap-1">
+                {Array.from({ length: 5 }).map((_, key) => (
+                  <Star
+                    key={key}
+                    index={key}
+                    stars={courseRating}
+                    filled={Boolean(courseRating > key)}
+                  />
+                ))}
+              </div>
+              <span className="text-sm text-slate-300">({ratingFrom} ratings)</span>
             </div>
 
-            <Separator
-              className="h-[20px] hidden md:block"
-              orientation="vertical"
-            />
-            <p className="text-slate-800 dark:text-slate-300 font-semibold">
-              {" "}
-              {formatNumber(course?.students?.length ?? 0)} student(s){" "}
-            </p>
+            {/* Students */}
+            <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-lg">
+              <svg className="w-5 h-5 text-brand-red-400" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
+              </svg>
+              <span className="font-semibold">{formatNumber(course?.students?.length ?? 0)} students</span>
+            </div>
+
+            {/* Instructor */}
+            {course.instructor && (
+              <Link
+                href={`/user/${course.instructor._id}`}
+                className="flex items-center gap-3 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-lg hover:bg-white/20 transition-all duration-300 group"
+              >
+                <AnimatedTooltip items={[course.instructor]} />
+                <div className="flex flex-col">
+                  <span className="text-xs text-slate-300">Created by</span>
+                  <span className="font-semibold group-hover:text-brand-red-300 transition-colors">
+                    {course.instructor.username}
+                  </span>
+                </div>
+              </Link>
+            )}
           </div>
-          {course.instructor && (
-            <Link
-              href={`/user/${course.instructor._id}`}
-              className="flex flex-row items-center gap-x-2 group w-full"
-            >
-              <AnimatedTooltip items={[course.instructor]} />
-              <p className="font-semibold group-hover:text-brand-red-500 transition-all duration-300 ease-in-out">
-                {" "}
-                {course.instructor.username}{" "}
-              </p>
-            </Link>
-          )}
         </div>
       </Container>
     </div>

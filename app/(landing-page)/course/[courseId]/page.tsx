@@ -48,24 +48,38 @@ const PurchaseCoursePage = async ({
   }
 
   return (
-    <div
-      className="min-h-[calc(100vh-330px)] "
-      style={{
-        minHeight: "calc(100vh-330px)",
-      }}
-    >
+    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white dark:from-slate-950 dark:to-slate-900">
       {course ? (
         <>
-          <PurchaseCourseCard
-            course={course}
-            isEnrolled={isEnrolled}
-            isCourseOwner={isOwner}
-          />
-          <PurchasePageHeader course={course} />
-          <CourseInfo course={course} />
+          {/* Hero Section with Background */}
+          <div className="relative bg-gradient-to-r from-slate-900 via-brand-red-900 to-slate-900 dark:from-slate-950 dark:via-brand-red-950 dark:to-slate-950">
+            <div className="absolute inset-0 bg-grid-white/[0.05] bg-[size:20px_20px]" />
+            <PurchasePageHeader course={course} />
+          </div>
+
+          {/* Main Content Grid */}
+          <div className="container mx-auto px-4 py-8 lg:py-12">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              {/* Left Column - Course Info */}
+              <div className="lg:col-span-2 space-y-8">
+                <CourseInfo course={course} />
+              </div>
+
+              {/* Right Column - Sticky Purchase Card */}
+              <div className="lg:col-span-1">
+                <div className="lg:sticky lg:top-24">
+                  <PurchaseCourseCard
+                    course={course}
+                    isEnrolled={isEnrolled}
+                    isCourseOwner={isOwner}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
         </>
       ) : (
-        <div className="w-full h-full flex items-center justify-center">
+        <div className="w-full h-[calc(100vh-200px)] flex items-center justify-center">
           <Spinner size={100} />
         </div>
       )}

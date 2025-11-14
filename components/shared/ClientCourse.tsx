@@ -13,8 +13,9 @@ import Star from "./Star";
 import CourseCardFooter from "./CourseCardFooter";
 import Badge from "./Badge";
 import { useWishlist } from "@/contexts/WishlistContext";
-import { Link, LucideHeart } from "lucide-react";
+import { LucideHeart } from "lucide-react";
 import { BorderBeam } from "@/components/magicui/border-beam";
+import Link from "next/link";
 
 const Vector = ({
   icon,
@@ -52,6 +53,7 @@ const ClientCourse = ({
   const isFavorited = wishlist.some((item) => item._id === course._id);
   const toggleWishlist = (event: any) => {
     event.preventDefault();
+    event.stopPropagation();
     if (isFavorited) {
       removeFromWishlist(course._id);
     } else {
@@ -59,12 +61,13 @@ const ClientCourse = ({
     }
   };
   return (
-    <div
-      className={cn(
-        "group relative flex flex-col gap-2 w-full md:w-[360px] h-[500px] border border-input  rounded-md shadow-sm hover:shadow-md  duration-300 ease-in-out  hover:z-100 hover:bg-slate-200/50 hover:dark:bg-slate-900/30",
-        className
-      )}
-    >
+    <Link href={`/course/${course._id}`} className="block">
+      <div
+        className={cn(
+          "group relative flex flex-col gap-2 w-full md:w-[360px] h-[500px] border border-input  rounded-md shadow-sm hover:shadow-md  duration-300 ease-in-out  hover:z-100 hover:bg-slate-200/50 hover:dark:bg-slate-900/30",
+          className
+        )}
+      >
       <BorderBeam size={250} duration={12} delay={9} />
       <div className="absolute top-0 left-0 w-full aspect-[6/1] bg-gradient-to-b from-black/50 to-transparent"></div>
       <Badge text={course?.category.name} />
@@ -176,6 +179,7 @@ const ClientCourse = ({
         )}
       </div>
     </div>
+    </Link>
   );
 };
 

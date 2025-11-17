@@ -1,4 +1,3 @@
-"use server";
 import { getCourseById } from "@/lib/actions";
 
 import { alreadyEnrolled, getUserByClerkId } from "@/lib/actions/user.action";
@@ -37,6 +36,13 @@ const PurchaseCoursePage = async ({
         if (user && user._id) {
           isOwner = await isCourseOwner(params.courseId, user._id);
           isEnrolled = await alreadyEnrolled(params.courseId, user._id);
+          console.log("[course-detail] User enrollment status:", { 
+            userId: user._id, 
+            courseId: params.courseId, 
+            isEnrolled, 
+            isOwner,
+            enrolledCourses: user.enrolledCourses,
+          });
         }
       } catch (userError: any) {
         console.log("ERROR FETCHING USER DATA: ", userError.message);

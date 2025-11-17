@@ -1,4 +1,3 @@
-"use server";
 import React from "react";
 import { CourseCommunity } from "./_components";
 import { getCourseById, getUserByClerkId } from "@/lib/actions";
@@ -11,9 +10,9 @@ import {
 import { WatchScreen } from "@/components/shared";
 import { auth } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
-import { studentCourseExists } from "@/lib/actions/purchase.action";
 import { isCourseOwner } from "@/lib/actions/course.action";
 import ProtectedRoute from "@/components/shared/ProtectedRoute";
+import { alreadyEnrolled } from "@/lib/actions/user.action";
 import { getUserCourseProgress } from "@/lib/actions/user-progress.action";
 import { getUserCourseCompletedVideos } from "@/lib/actions/user-course-video-completed.action";
 
@@ -41,27 +40,50 @@ const CourseIdPage = async ({ params }: { params: { courseId: string } }) => {
       userId: user._id,
       courseId: course._id,
     });
-    isPurchased = await studentCourseExists(params.courseId);
+    
+    // Use alreadyEnrolled to match the logic in /course/[courseId]
+    isPurchased = await alreadyEnrolled(params.courseId, user._id);
     courseOwner = await isCourseOwner(course._id, user._id);
-  } catch (error: any) {}
+    
+    console.log("[my-learning] Access check:", {
+      userId: user._id,
+      courseId: params.courseId,
+      isPurchased,
+      courseOwner,
+      enrolledCourses: user.enrolledCourses,
+    });
+  } catch (error: any) {
+    console.error("[my-learning] Error loading course:", error);
+    redirect(`/my-learning`);
+  }
 
-  if (!isPurchased && !courseOwner) redirect(`/course/${course._id}`);
+  if (!isPurchased && !courseOwner) {
+    console.log("[my-learning] Access denied - redirecting to course page");
+    redirect(`/course/${params.courseId}`);
+  }
 
   return (
     <ProtectedRoute user={user}>
-      <div className="flex flex-col gap-y-28 pb-2">
-        <WatchScreen
-          user={user}
-          course={course}
-          isCourseOwner={user._id === course.instructor._id}
-          userProgress={userProgress}
-          userCourseCompletedVideos={userCourseCompletedVideos}
-        />
-        <CourseCommunity
-          course={course}
-          user={user}
-          userProgress={userProgress}
-        />
+      <div className="min-h-screen bg-slate-50 dark:bg-slate-950">
+        {/* Video Player Section - Full Width */}
+        <div className="w-full bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800">
+          <WatchScreen
+            user={user}
+            course={course}
+            isCourseOwner={user._id === course.instructor._id}
+            userProgress={userProgress}
+            userCourseCompletedVideos={userCourseCompletedVideos}
+          />
+        </div>
+
+        {/* Course Community Section - Contained Width */}
+        <div className="w-full py-8 lg:py-12">
+          <CourseCommunity
+            course={course}
+            user={user}
+            userProgress={userProgress}
+          />
+        </div>
       </div>
     </ProtectedRoute>
   );

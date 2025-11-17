@@ -15,16 +15,35 @@ const VideoPlayer = ({ video, isLoading, poster }: Props) => {
 
   useEffect(() => setIsMounted(true), []);
 
-  return isMounted ? (
-    <div className="bg-slate-50 dark:bg-slate-950   aspect-video flex-1 max-h-[250px]  border-t md:border-r">
-      <div className={` w-full  relative aspect-video max-h-full `}>
-        {isLoading ? (
-          <div className=" w-full h-full bg-slate-200 dark:bg-slate-900 flex items-center justify-center">
-            <Spinner size={50} />
+  // Check if video has a valid URL
+  if (!video || !video.videoUrl) {
+    return (
+      <div className="w-full lg:flex-1 bg-slate-50 dark:bg-slate-950 border-b lg:border-b-0 lg:border-r border-slate-200 dark:border-slate-800">
+        <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="text-center p-4">
+              <p className="text-slate-600 dark:text-slate-400">
+                Video not available
+              </p>
+            </div>
           </div>
-        ) : (
-          <VidSyncPlayer src={video.videoUrl!} poster={poster} />
-        )}
+        </div>
+      </div>
+    );
+  }
+
+  return isMounted ? (
+    <div className="w-full lg:flex-1 bg-slate-50 dark:bg-slate-950 border-b lg:border-b-0 lg:border-r border-slate-200 dark:border-slate-800">
+      <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
+        <div className="absolute inset-0">
+          {isLoading ? (
+            <div className="w-full h-full bg-slate-200 dark:bg-slate-900 flex items-center justify-center">
+              <Spinner size={50} />
+            </div>
+          ) : (
+            <VidSyncPlayer src={video.videoUrl} poster={poster} />
+          )}
+        </div>
       </div>
     </div>
   ) : null;

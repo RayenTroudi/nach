@@ -43,9 +43,19 @@ const WatchScreen = ({
     !pathname.includes("/admin") && !pathname.includes("/teacher");
   const isAdmin = pathname.includes("/admin") || pathname.startsWith("/admin");
 
-  const [videoToWatch, setVideoToWatch] = useState<TVideo>(
-    course?.sections![0].videos![0]
-  );
+  // Find first available video
+  const getFirstVideo = () => {
+    if (!course?.sections || course.sections.length === 0) return null;
+    
+    for (const section of course.sections) {
+      if (section.videos && section.videos.length > 0) {
+        return section.videos[0];
+      }
+    }
+    return null;
+  };
+
+  const [videoToWatch, setVideoToWatch] = useState<TVideo | null>(getFirstVideo());
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const onChangeVideoToWatchHandler = (video: TVideo) => {
@@ -59,27 +69,49 @@ const WatchScreen = ({
 
   useEffect(() => setIsMounted(true), []);
 
+  // If no videos available, show message
+  if (!course?.sections || course.sections.length === 0 || !getFirstVideo()) {
+    return (
+      <div className="w-full min-h-[400px] flex items-center justify-center">
+        <div className="text-center p-8">
+          <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-2">
+            No Videos Available
+          </h2>
+          <p className="text-slate-600 dark:text-slate-400">
+            The instructor hasn&apos;t uploaded any videos yet. Check back soon!
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <>
       {isMounted ? (
-        <div className="w-full flex flex-col gap-y-1 md:gap-y-0">
+        <div className="w-full">
           {isAdmin ? <ReviewBanner course={course} /> : null}
           {/* {isStudent && progress ? (
             <UserProgressBar progress={progress} />
           ) : null} */}
 
-          <div
-            className={`flex ${
-              isStudent ? "flex-col-reverse" : "flex-col"
-            }  lg:flex-row `}
-          >
-            {course!.sections!.length && course?.sections![0].videos?.length ? (
+          <div className="flex flex-col lg:flex-row w-full">
+            {videoToWatch && videoToWatch.videoUrl ? (
               <VideoPlayer
                 video={videoToWatch}
                 isLoading={isLoading}
                 poster={course?.thumbnail!}
               />
-            ) : null}
+            ) : (
+              <div className="w-full lg:flex-1 bg-slate-100 dark:bg-slate-900 border-b lg:border-b-0 lg:border-r border-slate-200 dark:border-slate-800">
+                <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <p className="text-slate-600 dark:text-slate-400">
+                      Select a video to watch
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
             {course!.sections!.length ? (
               <SectionsToWatch
                 isCourseOwner={isCourseOwner}

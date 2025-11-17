@@ -2,7 +2,7 @@
 import { TUser } from "@/types/models.types";
 import React from "react";
 import { useClerk } from "@clerk/clerk-react";
-import { redirect, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { scnToast } from "../ui/use-toast";
 
 const ProtectedRoute = ({
@@ -15,17 +15,16 @@ const ProtectedRoute = ({
   requireAdmin?: boolean;
 }) => {
   const { signOut } = useClerk();
-
   const router = useRouter();
 
-  if (!user) {
+  if (!user || !user._id) {
     scnToast({
       variant: "warning",
       title: "Something went wrong",
       description: "No account found, please sign up to continue.",
     });
     signOut(() => router.push("/sign-up"));
-    redirect("/sign-up");
+    return null;
   }
 
   // Check if admin access is required

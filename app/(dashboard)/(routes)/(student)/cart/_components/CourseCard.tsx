@@ -6,7 +6,7 @@ import { TCourse } from "@/types/models.types";
 import { useCart } from "@/contexts/CartContext";
 import { Ban, Radio, Trash2 } from "lucide-react";
 import { Star } from "@/components/shared";
-import { CourseStatusEnum } from "@/lib/models/course.model";
+import { CourseStatusEnum } from "@/lib/enums";
 import {
   calculateCourseRating,
   formatNumber,

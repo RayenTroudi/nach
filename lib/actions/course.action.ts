@@ -172,10 +172,13 @@ export const createCourse = async (params: CreateCourseParams) => {
       path,
     });
 
-    await createCourseChatRoom({
-      courseId: newCourse._id,
-      instructorId: user._id,
-    });
+    // Only create chat rooms for regular courses
+    if (courseType === CourseTypeEnum.Regular) {
+      await createCourseChatRoom({
+        courseId: newCourse._id,
+        instructorId: user._id,
+      });
+    }
 
     revalidatePath(path);
     return JSON.parse(JSON.stringify(newCourse));
@@ -500,18 +503,24 @@ export const pushStudentToCourse = async (params: ToggleStudentFromCourse) => {
     await connectToDatabase();
     const { courseId, studentId } = params;
 
-    CourseChatRoom.find();
+    await CourseChatRoom.find();
     const course = await Course.findById(courseId).populate("chatRoom");
 
-    course.students.push(studentId);
+    if (!course) {
+      throw new Error("Course not found");
+    }
 
+    course.students.push(studentId);
     await course.save();
 
-    // const course = await Course.findByIdAndUpdate(courseId, {
-    //   $push: { students: studentId },
-    // });
-
-    joinChatRoom(studentId, course.chatRoom._id);
+    // Only add student to chat room for regular courses
+    if (course.courseType === CourseTypeEnum.Regular) {
+      if (course.chatRoom && course.chatRoom._id) {
+        await joinChatRoom(studentId, course.chatRoom._id);
+      } else {
+        console.log("Warning: Regular course has no chat room, skipping joinChatRoom");
+      }
+    }
   } catch (error: any) {
     console.log("PUSH STUDENT TO COURSE ERROR: ", error.message);
     throw new Error(error.message);

@@ -76,12 +76,12 @@ const ChatRooms = ({ chatRooms, user }: Props) => {
           <div className="flex-1 h-full flex items-center flex-col">
             <NoChatAnimation className="h-[300px] md:h-[500px]" />
             <h1 className="text-slate-950 dark:text-slate-50 font-bold text-lg md:text-xl lg:text-2xl text-center">
-              No Courses Purchased , No Rooms Available
+              No Course Rooms Available
             </h1>
             <p className="text-slate-500 text:sm md:text-md text-center">
               {" "}
-              Once you purchase a course you&apos;ll bee joined automatically to
-              that course&apos;s room{" "}
+              Once you enroll in a regular course, you&apos;ll be joined automatically to
+              that course&apos;s learning room{" "}
             </p>
           </div>
         </div>

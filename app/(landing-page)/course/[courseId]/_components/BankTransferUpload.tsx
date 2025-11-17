@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import Image from "next/image";
 import { Upload, Check, X, AlertCircle, FileText, Image as ImageIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { scnToast } from "@/components/ui/use-toast";
@@ -167,10 +168,12 @@ export default function BankTransferUpload({
                 <span className="text-sm">PDF Document</span>
               </div>
             ) : (
-              <img
+              <Image
                 src={uploadedUrl}
                 alt="Payment proof preview"
-                className="max-w-full max-h-64 rounded-lg mx-auto"
+                width={500}
+                height={300}
+                className="max-w-full max-h-64 rounded-lg mx-auto object-contain"
               />
             )}
           </div>

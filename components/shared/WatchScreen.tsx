@@ -112,7 +112,7 @@ const WatchScreen = ({
                 </div>
               </div>
             )}
-            {course!.sections!.length ? (
+            {course!.sections!.length && videoToWatch ? (
               <SectionsToWatch
                 isCourseOwner={isCourseOwner}
                 courseId={course!._id!}

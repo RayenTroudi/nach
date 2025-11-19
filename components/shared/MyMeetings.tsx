@@ -102,14 +102,24 @@ export default function MyMeetings({ bookings: initialBookings }: MyMeetingsProp
     return null;
   };
 
-  // Helper to fix old meeting links (backwards compatibility)
-  const fixMeetingLink = (link: string) => {
-    if (!link) return link;
-    return link.replace('/meeting/', '/meet/');
+  // Get meeting page URL from meeting link or meetingId
+  const getMeetingPageUrl = (booking: Booking) => {
+    let roomId = booking.meetingId;
+    
+    // If no meetingId, try to extract from meetingLink
+    if (!roomId && booking.meetingLink) {
+      const match = booking.meetingLink.match(/\/meet\/([^/?]+)/);
+      roomId = match ? match[1] : undefined;
+    }
+    
+    if (!roomId) return null;
+    
+    // Return internal meeting page URL
+    return `/meet/${roomId}`;
   };
 
   const canJoinMeeting = (booking: Booking) => {
-    if (!booking.meetingLink) return false;
+    if (!booking.meetingLink && !booking.meetingId) return false;
     if (booking.status === "cancelled") return false;
     if (booking.paymentStatus === "pending") return false;
 
@@ -277,13 +287,13 @@ export default function MyMeetings({ bookings: initialBookings }: MyMeetingsProp
                 {/* Join Button */}
                 <div className="flex-shrink-0">
                   {canJoinMeeting(booking) ? (
-                    <Link href={fixMeetingLink(booking.meetingLink!)} target="_blank">
+                    <Link href={getMeetingPageUrl(booking) || '#'}>
                       <Button className="bg-green-600 hover:bg-green-700 text-white">
                         <Video className="w-4 h-4 mr-2" />
                         Join Meeting
                       </Button>
                     </Link>
-                  ) : booking.meetingLink && booking.paymentStatus === "paid" && new Date(booking.startAt) > now ? (
+                  ) : (booking.meetingLink || booking.meetingId) && booking.paymentStatus === "paid" && new Date(booking.startAt) > now ? (
                     <div className="text-center">
                       <p className="text-xs text-slate-600 dark:text-slate-400 mb-2">
                         Available 15 min before

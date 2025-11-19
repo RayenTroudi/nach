@@ -53,10 +53,20 @@ const ConsultantMeetings = ({ bookings }: ConsultantMeetingsProps) => {
     return true; // all
   });
 
-  // Helper to fix old meeting links (backwards compatibility)
-  const fixMeetingLink = (link: string) => {
-    if (!link) return link;
-    return link.replace('/meeting/', '/meet/');
+  // Get meeting page URL from meeting link or meetingId
+  const getMeetingPageUrl = (booking: Booking) => {
+    let roomId = booking.meetingId;
+    
+    // If no meetingId, try to extract from meetingLink
+    if (!roomId && booking.meetingLink) {
+      const match = booking.meetingLink.match(/\/meet\/([^/?]+)/);
+      roomId = match ? match[1] : undefined;
+    }
+    
+    if (!roomId) return null;
+    
+    // Return internal meeting page URL
+    return `/meet/${roomId}`;
   };
 
   const canJoinMeeting = (booking: Booking) => {
@@ -117,8 +127,11 @@ const ConsultantMeetings = ({ bookings }: ConsultantMeetingsProps) => {
     );
   };
 
-  const handleJoinMeeting = (meetingLink: string) => {
-    router.push(fixMeetingLink(meetingLink));
+  const handleJoinMeeting = (booking: Booking) => {
+    const meetingUrl = getMeetingPageUrl(booking);
+    if (meetingUrl) {
+      router.push(meetingUrl);
+    }
   };
 
   const formatDate = (dateString: string) => {
@@ -277,9 +290,9 @@ const ConsultantMeetings = ({ bookings }: ConsultantMeetingsProps) => {
                   )}
 
                   {/* Join Button */}
-                  {booking.meetingLink && (
+                  {(booking.meetingLink || booking.meetingId) && (
                     <button
-                      onClick={() => handleJoinMeeting(booking.meetingLink!)}
+                      onClick={() => handleJoinMeeting(booking)}
                       disabled={!canJoinMeeting(booking)}
                       className={`flex items-center gap-2 rounded-lg px-6 py-2.5 font-semibold transition-all ${
                         canJoinMeeting(booking)

@@ -31,6 +31,7 @@ const MyLearningPage = async () => {
         )
         ?.map((course: TCourse) => course.category) ?? [];
   } catch (error: any) {}
+  
   return (
     <ProtectedRoute user={student}>
       <div className="flex gap-4">

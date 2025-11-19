@@ -1,12 +1,21 @@
 "use client";
 
+import { useState } from "react";
 import { Container } from "@/components/shared";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Video, Clock, CheckCircle2, Calendar, ArrowLeft } from "lucide-react";
 import Link from "next/link";
+import BookingCalendar from "@/components/shared/BookingCalendar";
 
 export default function BookMeetingPage() {
+  const [isBookingOpen, setIsBookingOpen] = useState(false);
+  
+  // Replace with actual instructor/host MongoDB ID
+  // You can fetch this from your database or environment variable
+  const DEFAULT_HOST_ID = process.env.NEXT_PUBLIC_DEFAULT_HOST_ID || "675b6eb1a0d2a4e540c1d7f0";
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white dark:from-slate-900 dark:to-slate-950 py-12">
       <Container>
@@ -48,7 +57,7 @@ export default function BookMeetingPage() {
                       Duration
                     </p>
                     <p className="text-sm text-slate-600 dark:text-slate-400">
-                      60 minutes
+                      30 minutes
                     </p>
                   </div>
                   <div>
@@ -56,9 +65,9 @@ export default function BookMeetingPage() {
                       Availability
                     </p>
                     <p className="text-sm text-slate-600 dark:text-slate-400">
-                      Monday - Saturday
+                      Monday - Friday
                       <br />
-                      10:00 AM - 8:00 PM CET
+                      9:00 AM - 5:00 PM CET
                     </p>
                   </div>
                   <div>
@@ -66,7 +75,7 @@ export default function BookMeetingPage() {
                       Format
                     </p>
                     <p className="text-sm text-slate-600 dark:text-slate-400">
-                      Video call via Zoom/Google Meet
+                      Video call via Jitsi (in-platform)
                     </p>
                   </div>
                 </CardContent>
@@ -104,46 +113,98 @@ export default function BookMeetingPage() {
               </Card>
             </div>
 
-            {/* Calendly Embed */}
+            {/* Booking Interface */}
             <div className="lg:col-span-2">
               <Card className="h-full">
-                <CardContent className="p-0">
-                  <div className="aspect-[9/16] lg:aspect-auto lg:h-[700px] w-full">
-                    {/* Replace with your Calendly link */}
-                    <div className="flex items-center justify-center h-full bg-slate-50 dark:bg-slate-900 rounded-lg">
-                      <div className="text-center p-8">
-                        <Calendar className="w-16 h-16 mx-auto text-brand-red-500 mb-4" />
-                        <h3 className="text-xl font-semibold text-slate-900 dark:text-slate-50 mb-2">
-                          Calendly Integration
-                        </h3>
-                        <p className="text-slate-600 dark:text-slate-400 mb-6 max-w-md">
-                          To enable booking, add your Calendly embed code below.
-                          Replace this placeholder with your Calendly widget.
-                        </p>
-                        <div className="bg-slate-100 dark:bg-slate-800 p-4 rounded-lg text-left">
-                          <code className="text-xs text-slate-700 dark:text-slate-300">
-                            {`<!-- Calendly inline widget begin -->
-<div class="calendly-inline-widget" 
-     data-url="https://calendly.com/your-link/60min" 
-     style="min-width:320px;height:700px;">
-</div>
-<script type="text/javascript" 
-        src="https://assets.calendly.com/assets/external/widget.js" 
-        async>
-</script>
-<!-- Calendly inline widget end -->`}
-                          </code>
+                <CardHeader className="border-b">
+                  <CardTitle className="flex items-center gap-2">
+                    <Calendar className="w-5 h-5 text-brand-red-500" />
+                    Select Your Meeting Time
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="p-6">
+                  <div className="space-y-6">
+                    <div className="bg-gradient-to-r from-purple-500/10 to-pink-500/10 border border-purple-200 dark:border-purple-800 rounded-lg p-6 text-center">
+                      <Video className="w-12 h-12 mx-auto text-brand-red-500 mb-3" />
+                      <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-50 mb-2">
+                        Book Your Consultation
+                      </h3>
+                    <p className="text-sm text-slate-600 dark:text-slate-400 mb-4 max-w-md mx-auto">
+                      Choose a convenient time slot for your personalized consultation with our expert advisors.
+                    </p>
+                    <div className="mb-4">
+                      <p className="text-2xl font-bold text-brand-red-500">
+                        99 TND <span className="text-sm text-slate-600">(€30)</span>
+                      </p>
+                      <p className="text-xs text-slate-500">30-minute consultation</p>
+                    </div>
+                      <Button 
+                        onClick={() => setIsBookingOpen(true)}
+                        size="lg"
+                        className="bg-brand-red-500 hover:bg-brand-red-600"
+                      >
+                        <Calendar className="w-5 h-5 mr-2" />
+                        Select Date & Time
+                      </Button>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="flex items-start gap-3 p-4 bg-slate-50 dark:bg-slate-900 rounded-lg">
+                        <CheckCircle2 className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
+                        <div>
+                          <p className="font-medium text-slate-900 dark:text-slate-50 text-sm mb-1">
+                            Instant Confirmation
+                          </p>
+                          <p className="text-xs text-slate-600 dark:text-slate-400">
+                            Receive immediate email confirmation with meeting details
+                          </p>
                         </div>
-                        <p className="text-sm text-slate-500 dark:text-slate-400 mt-4">
-                          Or contact us directly at{" "}
-                          <a
-                            href="mailto:contact@nachdeutschland.com"
-                            className="text-brand-red-500 hover:underline"
-                          >
-                            contact@nachdeutschland.com
-                          </a>
-                        </p>
                       </div>
+                      <div className="flex items-start gap-3 p-4 bg-slate-50 dark:bg-slate-900 rounded-lg">
+                        <CheckCircle2 className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
+                        <div>
+                          <p className="font-medium text-slate-900 dark:text-slate-50 text-sm mb-1">
+                            Automated Reminders
+                          </p>
+                          <p className="text-xs text-slate-600 dark:text-slate-400">
+                            Get reminders 30 minutes before and at meeting time
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex items-start gap-3 p-4 bg-slate-50 dark:bg-slate-900 rounded-lg">
+                        <CheckCircle2 className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
+                        <div>
+                          <p className="font-medium text-slate-900 dark:text-slate-50 text-sm mb-1">
+                            In-Platform Video
+                          </p>
+                          <p className="text-xs text-slate-600 dark:text-slate-400">
+                            Join directly from your browser - no downloads needed
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex items-start gap-3 p-4 bg-slate-50 dark:bg-slate-900 rounded-lg">
+                        <CheckCircle2 className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
+                        <div>
+                          <p className="font-medium text-slate-900 dark:text-slate-50 text-sm mb-1">
+                            Easy Rescheduling
+                          </p>
+                          <p className="text-xs text-slate-600 dark:text-slate-400">
+                            Cancel or reschedule up to 24 hours before
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="border-t pt-4">
+                      <p className="text-xs text-center text-slate-500 dark:text-slate-400">
+                        Need help? Contact us at{" "}
+                        <a
+                          href="mailto:support@nachdeutschland.de"
+                          className="text-brand-red-500 hover:underline"
+                        >
+                          support@nachdeutschland.de
+                        </a>
+                      </p>
                     </div>
                   </div>
                 </CardContent>
@@ -190,6 +251,21 @@ export default function BookMeetingPage() {
             </CardContent>
           </Card>
         </div>
+
+        {/* Booking Modal */}
+        <Dialog open={isBookingOpen} onOpenChange={setIsBookingOpen}>
+          <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle>Book Your Consultation Meeting</DialogTitle>
+            </DialogHeader>
+            <BookingCalendar
+              hostId={DEFAULT_HOST_ID}
+              onBookingComplete={() => setIsBookingOpen(false)}
+              price={99}
+              requiresPayment={true}
+            />
+          </DialogContent>
+        </Dialog>
       </Container>
     </div>
   );

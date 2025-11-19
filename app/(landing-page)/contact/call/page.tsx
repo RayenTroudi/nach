@@ -1,12 +1,18 @@
 "use client";
 
+import { useState } from "react";
 import { Container } from "@/components/shared";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Phone, Clock, CheckCircle2, Calendar, ArrowLeft } from "lucide-react";
 import Link from "next/link";
+import BookingCalendar from "@/components/shared/BookingCalendar";
 
 export default function BookCallPage() {
+  const [isBookingOpen, setIsBookingOpen] = useState(false);
+  const DEFAULT_HOST_ID = process.env.NEXT_PUBLIC_DEFAULT_HOST_ID || "675b6eb1a0d2a4e540c1d7f0";
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white dark:from-slate-900 dark:to-slate-950 py-12">
       <Container>
@@ -102,45 +108,85 @@ export default function BookCallPage() {
               </Card>
             </div>
 
-            {/* Calendly Embed */}
+            {/* Booking Interface */}
             <div className="lg:col-span-2">
               <Card className="h-full">
-                <CardContent className="p-0">
-                  <div className="aspect-[9/16] lg:aspect-auto lg:h-[700px] w-full">
-                    {/* Replace with your Calendly link */}
-                    <div className="flex items-center justify-center h-full bg-slate-50 dark:bg-slate-900 rounded-lg">
-                      <div className="text-center p-8">
-                        <Calendar className="w-16 h-16 mx-auto text-brand-red-500 mb-4" />
-                        <h3 className="text-xl font-semibold text-slate-900 dark:text-slate-50 mb-2">
-                          Calendly Integration
-                        </h3>
-                        <p className="text-slate-600 dark:text-slate-400 mb-6 max-w-md">
-                          To enable booking, add your Calendly embed code below.
-                          Replace this placeholder with your Calendly widget.
-                        </p>
-                        <div className="bg-slate-100 dark:bg-slate-800 p-4 rounded-lg text-left">
-                          <code className="text-xs text-slate-700 dark:text-slate-300">
-                            {`<!-- Calendly inline widget begin -->
-<div class="calendly-inline-widget" 
-     data-url="https://calendly.com/your-link/30min" 
-     style="min-width:320px;height:700px;">
-</div>
-<script type="text/javascript" 
-        src="https://assets.calendly.com/assets/external/widget.js" 
-        async>
-</script>
-<!-- Calendly inline widget end -->`}
-                          </code>
+                <CardHeader className="border-b">
+                  <CardTitle className="flex items-center gap-2">
+                    <Calendar className="w-5 h-5 text-brand-red-500" />
+                    Select Your Call Time
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="p-6">
+                  <div className="space-y-6">
+                    <div className="bg-gradient-to-r from-blue-500/10 to-purple-500/10 border border-blue-200 dark:border-blue-800 rounded-lg p-6 text-center">
+                      <Phone className="w-12 h-12 mx-auto text-brand-red-500 mb-3" />
+                      <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-50 mb-2">
+                        Book Your Quick Call
+                      </h3>
+                    <p className="text-sm text-slate-600 dark:text-slate-400 mb-4 max-w-md mx-auto">
+                      Choose a convenient 30-minute time slot for a quick consultation.
+                    </p>
+                    <div className="mb-4">
+                      <p className="text-2xl font-bold text-brand-red-500">
+                        49 TND <span className="text-sm text-slate-600">(€15)</span>
+                      </p>
+                      <p className="text-xs text-slate-500">Quick 30-minute call</p>
+                    </div>
+                      <Button 
+                        onClick={() => setIsBookingOpen(true)}
+                        size="lg"
+                        className="bg-brand-red-500 hover:bg-brand-red-600"
+                      >
+                        <Calendar className="w-5 h-5 mr-2" />
+                        Select Date & Time
+                      </Button>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="flex items-start gap-3 p-4 bg-slate-50 dark:bg-slate-900 rounded-lg">
+                        <CheckCircle2 className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
+                        <div>
+                          <p className="font-medium text-slate-900 dark:text-slate-50 text-sm mb-1">
+                            Instant Confirmation
+                          </p>
+                          <p className="text-xs text-slate-600 dark:text-slate-400">
+                            Immediate email with call details and link
+                          </p>
                         </div>
-                        <p className="text-sm text-slate-500 dark:text-slate-400 mt-4">
-                          Or contact us directly at{" "}
-                          <a
-                            href="mailto:contact@nachdeutschland.com"
-                            className="text-brand-red-500 hover:underline"
-                          >
-                            contact@nachdeutschland.com
-                          </a>
-                        </p>
+                      </div>
+                      <div className="flex items-start gap-3 p-4 bg-slate-50 dark:bg-slate-900 rounded-lg">
+                        <CheckCircle2 className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
+                        <div>
+                          <p className="font-medium text-slate-900 dark:text-slate-50 text-sm mb-1">
+                            Email Reminders
+                          </p>
+                          <p className="text-xs text-slate-600 dark:text-slate-400">
+                            Never miss your call with automated reminders
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex items-start gap-3 p-4 bg-slate-50 dark:bg-slate-900 rounded-lg">
+                        <CheckCircle2 className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
+                        <div>
+                          <p className="font-medium text-slate-900 dark:text-slate-50 text-sm mb-1">
+                            Browser-Based
+                          </p>
+                          <p className="text-xs text-slate-600 dark:text-slate-400">
+                            No apps needed - join from any browser
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex items-start gap-3 p-4 bg-slate-50 dark:bg-slate-900 rounded-lg">
+                        <CheckCircle2 className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
+                        <div>
+                          <p className="font-medium text-slate-900 dark:text-slate-50 text-sm mb-1">
+                            Flexible Scheduling
+                          </p>
+                          <p className="text-xs text-slate-600 dark:text-slate-400">
+                            Cancel or reschedule up to 24 hours before
+                          </p>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -186,6 +232,21 @@ export default function BookCallPage() {
             </CardContent>
           </Card>
         </div>
+
+        {/* Booking Modal */}
+        <Dialog open={isBookingOpen} onOpenChange={setIsBookingOpen}>
+          <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle>Book Your Quick Call</DialogTitle>
+            </DialogHeader>
+            <BookingCalendar
+              hostId={DEFAULT_HOST_ID}
+              onBookingComplete={() => setIsBookingOpen(false)}
+              price={49}
+              requiresPayment={true}
+            />
+          </DialogContent>
+        </Dialog>
       </Container>
     </div>
   );

@@ -9,6 +9,7 @@ import {
   ShoppingCart,
   Table,
   FileText,
+  Calendar,
 } from "lucide-react";
 
 export const studentRoutes = [
@@ -22,6 +23,11 @@ export const studentRoutes = [
 
     label: "My learning",
     href: "/my-learning",
+  },
+  {
+    icon: Calendar,
+    label: "My Meetings",
+    href: "/my-meetings",
   },
   {
     icon: ShoppingCart,
@@ -85,6 +91,11 @@ export const adminRoutes = [
     icon: FileText,
     label: "Payment Proofs",
     href: "/admin/payment-proofs",
+  },
+  {
+    icon: Calendar,
+    label: "Meeting Bookings",
+    href: "/admin/bookings",
   },
   {
     icon: BarChart2,

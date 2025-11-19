@@ -37,3 +37,6 @@ export { default as Preview } from "@/components/shared/editor/Preview";
 export { default as Banner } from "@/components/shared/Banner";
 export { default as WatchScreen } from "@/components/shared/WatchScreen";
 export { default as NavigationButton } from "@/components/shared/NavigationButton";
+export { default as BookMeetingButton } from "@/components/shared/BookMeetingButton";
+export { default as BookingCalendar } from "@/components/shared/BookingCalendar";
+export { default as MyMeetings } from "@/components/shared/MyMeetings";

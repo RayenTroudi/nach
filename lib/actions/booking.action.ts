@@ -118,10 +118,10 @@ export async function getAvailableSlots(params: GetAvailableSlotsParams) {
       startAt: { $gte: startOfDay, $lte: endOfDay },
     }).select("startAt endAt");
 
-    // Default availability: 9 AM to 5 PM in 30-minute slots
+    // Default availability: 8 AM to 12 AM (midnight) in 30-minute slots
     const slots = [];
-    const workStart = 9; // 9 AM
-    const workEnd = 17; // 5 PM
+    const workStart = 8; // 8 AM
+    const workEnd = 24; // 12 AM (midnight)
     const slotDuration = 30; // minutes
 
     for (let hour = workStart; hour < workEnd; hour++) {

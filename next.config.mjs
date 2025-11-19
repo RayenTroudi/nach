@@ -12,6 +12,10 @@ const nextConfig = {
       "aceternity.com",
     ],
   },
+  // Optimize build for Vercel
+  swcMinify: true,
+  compress: true,
+  poweredByHeader: false,
 };
 
 export default nextConfig;

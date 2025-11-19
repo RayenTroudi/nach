@@ -139,7 +139,7 @@ export default function MyMeetings({ bookings: initialBookings }: MyMeetingsProp
             No Meetings Scheduled
           </h3>
           <p className="text-slate-600 dark:text-slate-400 mb-6">
-            You haven't booked any meetings yet. Schedule a consultation with our experts!
+            You haven&apos;t booked any meetings yet. Schedule a consultation with our experts!
           </p>
           <div className="flex gap-3 justify-center flex-wrap">
             <Link href="/contact/meeting">
@@ -268,7 +268,7 @@ export default function MyMeetings({ bookings: initialBookings }: MyMeetingsProp
                       <Separator className="my-4" />
                       <div className="bg-slate-50 dark:bg-slate-800 rounded p-3 border-l-4 border-brand-red-500">
                         <p className="text-sm text-slate-600 dark:text-slate-400 italic">
-                          "{booking.notes}"
+                          &quot;{booking.notes}&quot;
                         </p>
                       </div>
                     </>
@@ -278,7 +278,7 @@ export default function MyMeetings({ bookings: initialBookings }: MyMeetingsProp
                   {booking.paymentStatus === "pending" && (
                     <div className="mt-4 bg-yellow-50 dark:bg-yellow-900/20 border-2 border-yellow-200 dark:border-yellow-800 rounded-lg p-4">
                       <p className="text-sm text-yellow-800 dark:text-yellow-200">
-                        ⏳ Your payment proof is being verified. You'll receive a confirmation email with the meeting link once approved (usually within 24-48 hours).
+                        ⏳ Your payment proof is being verified. You&apos;ll receive a confirmation email with the meeting link once approved (usually within 24-48 hours).
                       </p>
                     </div>
                   )}

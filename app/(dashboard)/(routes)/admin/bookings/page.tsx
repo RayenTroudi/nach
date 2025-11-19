@@ -359,7 +359,7 @@ export default function AdminBookingsPage() {
 
                         {booking.notes && (
                           <p className="mt-2 text-sm text-slate-600 dark:text-slate-400 italic">
-                            "{booking.notes}"
+                            &quot;{booking.notes}&quot;
                           </p>
                         )}
                       </div>

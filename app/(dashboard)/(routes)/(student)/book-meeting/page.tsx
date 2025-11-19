@@ -92,8 +92,8 @@ const BookingDemoPage = async () => {
           <h3 className="font-semibold mb-2">📝 Important Notes</h3>
           <ul className="space-y-2 text-sm text-muted-foreground">
             <li>• Please ensure you have a stable internet connection for the video call</li>
-            <li>• Prepare any questions or documents you'd like to discuss in advance</li>
-            <li>• You'll receive a confirmation email with the meeting link immediately after booking</li>
+            <li>• Prepare any questions or documents you&apos;d like to discuss in advance</li>
+            <li>• You&apos;ll receive a confirmation email with the meeting link immediately after booking</li>
             <li>• You can cancel or reschedule up to 24 hours before the meeting</li>
           </ul>
         </div>

@@ -60,7 +60,7 @@ export async function POST(req: NextRequest) {
     if (action === "approve") {
       // Generate meeting link (Jitsi room)
       const meetingId = nanoid(12);
-      const meetingLink = `${process.env.NEXT_PUBLIC_SERVER_URL}/meeting/${meetingId}`;
+      const meetingLink = `${process.env.NEXT_PUBLIC_SERVER_URL}/meet/${meetingId}`;
 
       // Update booking status
       booking.paymentStatus = "paid";

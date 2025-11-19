@@ -10,6 +10,7 @@ import {
   Table,
   FileText,
   Calendar,
+  Video,
 } from "lucide-react";
 
 export const studentRoutes = [
@@ -96,6 +97,11 @@ export const adminRoutes = [
     icon: Calendar,
     label: "Meeting Bookings",
     href: "/admin/bookings",
+  },
+  {
+    icon: Video,
+    label: "My Consultations",
+    href: "/admin/my-consultations",
   },
   {
     icon: BarChart2,

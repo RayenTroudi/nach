@@ -17,20 +17,9 @@ export async function POST(request: Request) {
       );
     }
 
-    // If no hostId provided or invalid, find the first admin user
-    if (!hostId || hostId === "675b6eb1a0d2a4e540c1d7f0") {
-      await connectToDatabase();
-      const adminUser = await User.findOne({ role: "admin" }).select("_id");
-      
-      if (!adminUser) {
-        return NextResponse.json(
-          { error: "No admin user found to host the meeting" },
-          { status: 400 }
-        );
-      }
-      
-      hostId = adminUser._id.toString();
-    }
+    // Use the default consultant for all meetings
+    const DEFAULT_CONSULTANT_ID = "691dd26c9196bd0bbf04cf7c"; // Talel Jouini
+    hostId = DEFAULT_CONSULTANT_ID;
 
     const result = await createBooking({
       hostId,

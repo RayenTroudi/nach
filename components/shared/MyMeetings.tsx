@@ -1,11 +1,10 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Calendar, Clock, Video, CheckCircle, XCircle, HourglassIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
-import { Spinner } from "@/components/shared";
 
 interface Booking {
   _id: string;
@@ -75,7 +74,7 @@ export default function MyMeetings({ bookings: initialBookings }: MyMeetingsProp
 
     if (booking.paymentStatus === "pending") {
       return (
-        <Badge variant="secondary" className="gap-1 bg-yellow-100 text-yellow-800">
+        <Badge className="gap-1 bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-200">
           <HourglassIcon className="w-3 h-3" />
           Payment Pending
         </Badge>
@@ -86,14 +85,14 @@ export default function MyMeetings({ bookings: initialBookings }: MyMeetingsProp
       const meetingDate = new Date(booking.startAt);
       if (meetingDate < now) {
         return (
-          <Badge variant="secondary" className="gap-1">
+          <Badge className="gap-1 bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400">
             <CheckCircle className="w-3 h-3" />
             Completed
           </Badge>
         );
       }
       return (
-        <Badge className="gap-1 bg-green-100 text-green-800">
+        <Badge className="gap-1 bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-200">
           <CheckCircle className="w-3 h-3" />
           Confirmed
         </Badge>
@@ -101,6 +100,12 @@ export default function MyMeetings({ bookings: initialBookings }: MyMeetingsProp
     }
 
     return null;
+  };
+
+  // Helper to fix old meeting links (backwards compatibility)
+  const fixMeetingLink = (link: string) => {
+    if (!link) return link;
+    return link.replace('/meeting/', '/meet/');
   };
 
   const canJoinMeeting = (booking: Booking) => {
@@ -117,36 +122,38 @@ export default function MyMeetings({ bookings: initialBookings }: MyMeetingsProp
 
   if (bookings.length === 0) {
     return (
-      <div className="bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 p-8 text-center">
-        <Calendar className="w-16 h-16 mx-auto mb-4 text-slate-400" />
-        <h3 className="text-xl font-semibold text-slate-950 dark:text-slate-200 mb-2">
-          No Meetings Scheduled
-        </h3>
-        <p className="text-slate-600 dark:text-slate-400 mb-6">
-          You haven't booked any meetings yet. Schedule a consultation with our experts!
-        </p>
-        <div className="flex gap-3 justify-center">
-          <Link href="/contact/meeting">
-            <Button className="bg-brand-red-500 hover:bg-brand-red-600">
-              Book Full Consultation (99 TND)
-            </Button>
-          </Link>
-          <Link href="/contact/call">
-            <Button variant="outline">
-              Book Quick Call (49 TND)
-            </Button>
-          </Link>
+      <div className="w-full">
+        <div className="bg-white dark:bg-slate-900 rounded-lg border-2 border-slate-200 dark:border-slate-800 p-12 text-center">
+          <Calendar className="w-16 h-16 mx-auto mb-4 text-slate-400" />
+          <h3 className="text-xl font-semibold text-slate-950 dark:text-slate-200 mb-2">
+            No Meetings Scheduled
+          </h3>
+          <p className="text-slate-600 dark:text-slate-400 mb-6">
+            You haven't booked any meetings yet. Schedule a consultation with our experts!
+          </p>
+          <div className="flex gap-3 justify-center flex-wrap">
+            <Link href="/contact/meeting">
+              <Button className="bg-brand-red-500 hover:bg-brand-red-600 text-white">
+                Book Full Consultation (99 TND)
+              </Button>
+            </Link>
+            <Link href="/contact/call">
+              <Button variant="outline" className="border-2 border-slate-200 dark:border-slate-800 hover:border-brand-red-500 dark:hover:border-brand-red-500">
+                Book Quick Call (49 TND)
+              </Button>
+            </Link>
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="space-y-6">
+    <div className="flex flex-col gap-y-6 w-full">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between flex-wrap gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-slate-950 dark:text-slate-200">
+          <h2 className="text-3xl font-bold text-slate-950 dark:text-slate-200">
             My Meetings
           </h2>
           <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">
@@ -160,6 +167,10 @@ export default function MyMeetings({ bookings: initialBookings }: MyMeetingsProp
             variant={filter === "upcoming" ? "default" : "outline"}
             size="sm"
             onClick={() => setFilter("upcoming")}
+            className={filter === "upcoming" 
+              ? "bg-brand-red-500 hover:bg-brand-red-600 text-white shadow-md" 
+              : "border-2 border-slate-200 dark:border-slate-800 hover:border-brand-red-500 dark:hover:border-brand-red-500 bg-white dark:bg-slate-900"
+            }
           >
             Upcoming
           </Button>
@@ -167,6 +178,10 @@ export default function MyMeetings({ bookings: initialBookings }: MyMeetingsProp
             variant={filter === "past" ? "default" : "outline"}
             size="sm"
             onClick={() => setFilter("past")}
+            className={filter === "past" 
+              ? "bg-brand-red-500 hover:bg-brand-red-600 text-white shadow-md" 
+              : "border-2 border-slate-200 dark:border-slate-800 hover:border-brand-red-500 dark:hover:border-brand-red-500 bg-white dark:bg-slate-900"
+            }
           >
             Past
           </Button>
@@ -174,6 +189,10 @@ export default function MyMeetings({ bookings: initialBookings }: MyMeetingsProp
             variant={filter === "all" ? "default" : "outline"}
             size="sm"
             onClick={() => setFilter("all")}
+            className={filter === "all" 
+              ? "bg-brand-red-500 hover:bg-brand-red-600 text-white shadow-md" 
+              : "border-2 border-slate-200 dark:border-slate-800 hover:border-brand-red-500 dark:hover:border-brand-red-500 bg-white dark:bg-slate-900"
+            }
           >
             All
           </Button>
@@ -182,8 +201,9 @@ export default function MyMeetings({ bookings: initialBookings }: MyMeetingsProp
 
       {/* Meetings List */}
       {filteredBookings.length === 0 ? (
-        <div className="bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 p-8 text-center">
-          <p className="text-slate-600 dark:text-slate-400">
+        <div className="bg-white dark:bg-slate-900 rounded-lg border-2 border-slate-200 dark:border-slate-800 p-12 text-center">
+          <Calendar className="w-16 h-16 mx-auto mb-4 text-slate-400" />
+          <p className="text-slate-600 dark:text-slate-400 text-lg">
             No {filter} meetings found
           </p>
         </div>
@@ -192,20 +212,20 @@ export default function MyMeetings({ bookings: initialBookings }: MyMeetingsProp
           {filteredBookings.map((booking) => (
             <div
               key={booking._id}
-              className="bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 p-6 hover:shadow-lg transition-shadow"
+              className="bg-white dark:bg-slate-900 rounded-lg border-2 border-slate-200 dark:border-slate-800 p-6 hover:shadow-md hover:border-brand-red-500 dark:hover:border-brand-red-500 transition-all duration-200"
             >
               <div className="flex items-start justify-between gap-4">
                 <div className="flex-1">
                   {/* Status Badge */}
-                  <div className="mb-3">
+                  <div className="mb-4">
                     {getStatusBadge(booking)}
                   </div>
 
                   {/* Meeting Info */}
-                  <div className="space-y-2">
+                  <div className="space-y-3">
                     <div className="flex items-center gap-2 text-slate-700 dark:text-slate-300">
                       <Calendar className="w-4 h-4" />
-                      <span className="font-medium">{formatDate(booking.startAt)}</span>
+                      <span className="font-semibold">{formatDate(booking.startAt)}</span>
                     </div>
 
                     <div className="flex items-center gap-2 text-slate-600 dark:text-slate-400">
@@ -226,7 +246,7 @@ export default function MyMeetings({ bookings: initialBookings }: MyMeetingsProp
                     </div>
 
                     {booking.price && (
-                      <div className="text-sm text-slate-500">
+                      <div className="text-sm font-medium text-slate-600 dark:text-slate-400">
                         Amount: {booking.price} TND
                       </div>
                     )}
@@ -235,16 +255,18 @@ export default function MyMeetings({ bookings: initialBookings }: MyMeetingsProp
                   {/* Notes */}
                   {booking.notes && (
                     <>
-                      <Separator className="my-3" />
-                      <p className="text-sm text-slate-600 dark:text-slate-400 italic">
-                        "{booking.notes}"
-                      </p>
+                      <Separator className="my-4" />
+                      <div className="bg-slate-50 dark:bg-slate-800 rounded p-3 border-l-4 border-brand-red-500">
+                        <p className="text-sm text-slate-600 dark:text-slate-400 italic">
+                          "{booking.notes}"
+                        </p>
+                      </div>
                     </>
                   )}
 
                   {/* Payment Pending Message */}
                   {booking.paymentStatus === "pending" && (
-                    <div className="mt-3 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-3">
+                    <div className="mt-4 bg-yellow-50 dark:bg-yellow-900/20 border-2 border-yellow-200 dark:border-yellow-800 rounded-lg p-4">
                       <p className="text-sm text-yellow-800 dark:text-yellow-200">
                         ⏳ Your payment proof is being verified. You'll receive a confirmation email with the meeting link once approved (usually within 24-48 hours).
                       </p>
@@ -255,18 +277,18 @@ export default function MyMeetings({ bookings: initialBookings }: MyMeetingsProp
                 {/* Join Button */}
                 <div className="flex-shrink-0">
                   {canJoinMeeting(booking) ? (
-                    <Link href={booking.meetingLink!} target="_blank">
-                      <Button className="bg-green-600 hover:bg-green-700">
+                    <Link href={fixMeetingLink(booking.meetingLink!)} target="_blank">
+                      <Button className="bg-green-600 hover:bg-green-700 text-white">
                         <Video className="w-4 h-4 mr-2" />
                         Join Meeting
                       </Button>
                     </Link>
                   ) : booking.meetingLink && booking.paymentStatus === "paid" && new Date(booking.startAt) > now ? (
                     <div className="text-center">
-                      <p className="text-sm text-slate-600 dark:text-slate-400 mb-2">
+                      <p className="text-xs text-slate-600 dark:text-slate-400 mb-2">
                         Available 15 min before
                       </p>
-                      <Button variant="outline" disabled>
+                      <Button variant="outline" disabled className="border-2 border-slate-200 dark:border-slate-800">
                         <Video className="w-4 h-4 mr-2" />
                         Join Meeting
                       </Button>
@@ -280,21 +302,21 @@ export default function MyMeetings({ bookings: initialBookings }: MyMeetingsProp
       )}
 
       {/* Book More Button */}
-      <div className="bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-900/20 dark:to-blue-900/20 rounded-lg border border-purple-200 dark:border-purple-800 p-6 text-center">
+      <div className="bg-slate-50 dark:bg-slate-900 rounded-lg border-2 border-slate-200 dark:border-slate-800 p-6 text-center">
         <h3 className="text-lg font-semibold text-slate-950 dark:text-slate-200 mb-2">
           Need More Guidance?
         </h3>
         <p className="text-slate-600 dark:text-slate-400 mb-4">
           Book another consultation session with our expert advisors
         </p>
-        <div className="flex gap-3 justify-center">
+        <div className="flex gap-3 justify-center flex-wrap">
           <Link href="/contact/meeting">
-            <Button className="bg-brand-red-500 hover:bg-brand-red-600">
+            <Button className="bg-brand-red-500 hover:bg-brand-red-600 text-white">
               Book Consultation
             </Button>
           </Link>
           <Link href="/contact/call">
-            <Button variant="outline">
+            <Button variant="outline" className="border-2 border-slate-200 dark:border-slate-800 hover:border-brand-red-500 dark:hover:border-brand-red-500 bg-white dark:bg-slate-900">
               Quick Call
             </Button>
           </Link>

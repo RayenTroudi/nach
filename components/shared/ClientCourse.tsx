@@ -12,8 +12,6 @@ import {
 import Star from "./Star";
 import CourseCardFooter from "./CourseCardFooter";
 import Badge from "./Badge";
-import { useWishlist } from "@/contexts/WishlistContext";
-import { LucideHeart } from "lucide-react";
 import { BorderBeam } from "@/components/magicui/border-beam";
 import Link from "next/link";
 
@@ -34,32 +32,18 @@ const Vector = ({
 
 type Props = {
   course: TCourse;
-  showWishlistHeart?: boolean;
   className?: string;
   children?: React.ReactNode;
 };
 
 const ClientCourse = ({
   course,
-  showWishlistHeart = true,
   className,
   children,
 }: Props) => {
   const { courseRating, ratingFrom } = calculateCourseRating(course);
 
   const isFree = false;
-  const { wishlist, addToWishlist, removeFromWishlist } = useWishlist();
-
-  const isFavorited = wishlist.some((item) => item._id === course._id);
-  const toggleWishlist = (event: any) => {
-    event.preventDefault();
-    event.stopPropagation();
-    if (isFavorited) {
-      removeFromWishlist(course._id);
-    } else {
-      addToWishlist(course);
-    }
-  };
   return (
     <Link href={`/course/${course._id}`} className="block">
       <div
@@ -71,17 +55,6 @@ const ClientCourse = ({
       <BorderBeam size={250} duration={12} delay={9} />
       <div className="absolute top-0 left-0 w-full aspect-[6/1] bg-gradient-to-b from-black/50 to-transparent"></div>
       <Badge text={course?.category.name} />
-      {showWishlistHeart ? (
-        <div className="absolute top-2 right-2 z-50">
-          <LucideHeart
-            onClick={toggleWishlist}
-            size={24}
-            fill={isFavorited ? "red" : "none"}
-            stroke="currentColor"
-            className="cursor-pointer text-red-500 hover:fill-red-500 transition-all duration-300 ease-in-out"
-          />
-        </div>
-      ) : null}
 
       <Image
         src={

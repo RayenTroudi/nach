@@ -7,7 +7,6 @@ import ToasterProvider from "@/components/providers/ToasterProvider";
 import { Toaster } from "@/components/ui/toaster";
 import { ThemeProvider } from "@/contexts/ThemeProvider";
 import { CartProvider } from "@/contexts/CartContext";
-import { WishlistProvider } from "@/contexts/WishlistContext";
 import { PageLoaderProvider } from "@/contexts/PageLoaderProvider";
 import ClerkLogo from "@/components/shared/ClerkLogo";
 
@@ -89,7 +88,7 @@ export default function RootLayout({
             >
               <ToasterProvider />
               <CartProvider>
-                <WishlistProvider>{children}</WishlistProvider>
+                {children}
               </CartProvider>
 
               <Toaster />

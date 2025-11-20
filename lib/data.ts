@@ -2,7 +2,6 @@ import {
   BarChart2,
   CircleDollarSign,
   GraduationCap,
-  Heart,
   Home,
   MessagesSquare,
   Settings,
@@ -41,12 +40,6 @@ export const studentRoutes = [
 
     label: "My cart",
     href: "/cart",
-  },
-  {
-    icon: Heart,
-
-    label: "My wishlist",
-    href: "/wishlist",
   },
   {
     icon: MessagesSquare,

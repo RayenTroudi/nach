@@ -17,8 +17,17 @@ export default authMiddleware({
     "/about",
     "/blog",
     "/blog/(.*)",
+    "/sign-in(.*)",
+    "/sign-up(.*)",
   ],
-  ignoredRoutes: ["/api/webhooks"],
+  ignoredRoutes: [
+    "/api/webhooks",
+    "/_next/static(.*)",
+    "/_next/image(.*)",
+    "/favicon.ico",
+    "/public(.*)",
+  ],
+  debug: false,
 });
 
 export const config = {

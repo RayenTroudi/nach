@@ -13,12 +13,14 @@ interface MeetingPaymentProps {
   bookingId: string;
   amount: number;
   onSuccess?: () => void;
+  apiEndpoint?: string; // Optional custom endpoint
 }
 
 export default function MeetingPayment({
   bookingId,
   amount,
   onSuccess,
+  apiEndpoint = "/api/booking-payment",
 }: MeetingPaymentProps) {
   const [uploadedUrl, setUploadedUrl] = useState<string | null>(null);
   const [notes, setNotes] = useState("");
@@ -26,6 +28,7 @@ export default function MeetingPayment({
   const [uploadStatus, setUploadStatus] = useState<"idle" | "success" | "error">("idle");
 
   const handleSubmitProof = async () => {
+    
     if (!uploadedUrl) {
       scnToast({
         variant: "destructive",
@@ -35,15 +38,17 @@ export default function MeetingPayment({
       return;
     }
 
+    const payload = {
+      proofUrl: uploadedUrl,
+      bookingId: bookingId,
+      amount: amount,
+      notes: notes,
+    };
+
     try {
       setIsSubmitting(true);
 
-      const response = await axios.post("/api/booking-payment", {
-        proofUrl: uploadedUrl,
-        bookingId: bookingId,
-        amount: amount,
-        notes: notes,
-      });
+      const response = await axios.post(apiEndpoint, payload);
 
       if (response.data.success) {
         setUploadStatus("success");
@@ -52,10 +57,15 @@ export default function MeetingPayment({
           title: "Payment Submitted",
           description: "Your payment proof has been submitted. You'll receive confirmation once verified.",
         });
-        if (onSuccess) onSuccess();
+        if (onSuccess) {
+          onSuccess();
+        }
+      } else {
+        console.log("⚠️ Response success was false:", response.data);
       }
     } catch (error: any) {
-      console.error("Submit error:", error);
+      console.error("❌ Submit error:", error);
+      console.error("❌ Error response:", error.response?.data);
       setUploadStatus("error");
       scnToast({
         variant: "destructive",
@@ -142,13 +152,16 @@ export default function MeetingPayment({
               endpoint="paymentProof"
               onClientUploadComplete={(res) => {
                 if (res && res[0]) {
-                  setUploadedUrl(res[0].url);
+                  const uploadedFileUrl = res[0].url;
+                  setUploadedUrl(uploadedFileUrl);
                   setUploadStatus("idle");
                   scnToast({
                     variant: "success",
                     title: "File Uploaded",
                     description: "Payment proof uploaded successfully. Click submit to complete.",
                   });
+                } else {
+                  console.log("⚠️ Upload complete but no file URL in response");
                 }
               }}
               onUploadError={(error: Error) => {

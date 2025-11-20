@@ -263,3 +263,8 @@ body,
 .cl-formButtonPrimary:hover {
   background-color: #B80000 !important;
 }
+
+/* Speed up input field rendering */
+.cl-formFieldInput {
+  will-change: border-color;
+}

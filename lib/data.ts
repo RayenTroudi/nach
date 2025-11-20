@@ -11,6 +11,7 @@ import {
   FileText,
   Calendar,
   Video,
+  FileCheck,
 } from "lucide-react";
 
 export const studentRoutes = [
@@ -29,6 +30,11 @@ export const studentRoutes = [
     icon: Calendar,
     label: "My Meetings",
     href: "/my-meetings",
+  },
+  {
+    icon: FileCheck,
+    label: "My Resume",
+    href: "/my-resume",
   },
   {
     icon: ShoppingCart,
@@ -97,6 +103,11 @@ export const adminRoutes = [
     icon: Calendar,
     label: "Meeting Bookings",
     href: "/admin/bookings",
+  },
+  {
+    icon: FileCheck,
+    label: "Resume Payments",
+    href: "/admin/resume-payments",
   },
   {
     icon: Video,

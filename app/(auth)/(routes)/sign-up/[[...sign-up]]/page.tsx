@@ -32,10 +32,11 @@ const SignUpPage = () => {
             footerActionLink: "text-brand-red-500 hover:text-brand-red-600",
           },
         }}
-        redirectUrl="/"
+        fallbackRedirectUrl="/my-learning"
         signInUrl="/sign-in"
         routing="path"
         path="/sign-up"
+        forceRedirectUrl={undefined}
       />
     </div>
   );

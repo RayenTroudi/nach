@@ -37,6 +37,7 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider
+      publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
       appearance={{
         variables: {
           colorPrimary: "#DD0000",
@@ -69,9 +70,13 @@ export default function RootLayout({
         },
         layout: {
           logoPlacement: "none",
-          shimmer: true,
+          shimmer: false,
         },
       }}
+      afterSignInUrl="/my-learning"
+      afterSignUpUrl="/my-learning"
+      signInUrl="/sign-in"
+      signUpUrl="/sign-up"
     >
       <ThemeProvider>
         <PageLoaderProvider>

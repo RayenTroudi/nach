@@ -50,8 +50,6 @@ export async function GET(req: NextRequest) {
     const hasInProgress = resumeRequests.some(req => req.status === "in_progress");
     const hasPending = resumeRequests.some(req => req.paymentStatus === "pending");
 
-    console.log(`[Resume Requests] User: ${userEmail}, Found: ${resumeRequests.length}, InProgress: ${hasInProgress}`);
-
     return NextResponse.json({ 
       success: true,
       resumeRequests,

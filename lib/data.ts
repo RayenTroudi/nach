@@ -75,6 +75,13 @@ export const teacherRoutes = [
   },
 
   {
+    icon: FileCheck,
+
+    label: "Resume Requests",
+    href: "/teacher/resume-requests",
+  },
+
+  {
     icon: MessagesSquare,
 
     label: "Chat Rooms",

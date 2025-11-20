@@ -39,20 +39,14 @@ export default function MyResumeRequestsPage() {
   const fetchRequests = async () => {
     try {
       const response = await fetch("/api/my-resume-requests");
-      console.log("API Response status:", response.ok, response.status);
       
       if (response.ok) {
         const data = await response.json();
-        console.log("API Response data:", data);
-        console.log("Resume requests array:", data.resumeRequests);
-        console.log("Resume requests length:", data.resumeRequests?.length);
         setRequests(data.resumeRequests || []);
       } else {
-        console.log("API Response not OK");
         setRequests([]);
       }
     } catch (error) {
-      console.error("Fetch error:", error);
       toast.error("Failed to fetch resume requests");
       setRequests([]);
     } finally {

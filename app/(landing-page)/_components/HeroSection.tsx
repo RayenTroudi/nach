@@ -3,8 +3,11 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, CheckCircle2 } from "lucide-react";
 import { motion } from "framer-motion";
 import { NavigationButton } from "@/components/shared";
+import { useTranslations } from 'next-intl';
 
 export default function HeroSection() {
+  const t = useTranslations('landingPage');
+  
   return (
     <section className="relative min-h-[90vh] flex items-center overflow-hidden bg-gradient-to-br from-slate-50 via-white to-slate-100 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950">
       {/* Background Pattern */}
@@ -33,22 +36,22 @@ export default function HeroSection() {
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-red-500 opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-brand-red-600"></span>
               </span>
-              2,500+ Students Successfully in Germany
+              {t('badge')}
             </motion.div>
 
             {/* Main Heading */}
             <div className="space-y-4">
               <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold leading-tight">
                 <span className="bg-gradient-to-r from-brand-red-600 via-brand-red-500 to-brand-gold-500 bg-clip-text text-transparent">
-                  Nach Deutschland
+                  {t('mainHeading')}
                 </span>
                 <br />
                 <span className="text-slate-900 dark:text-white">
-                  Your Pathway to Germany
+                  {t('subHeading')}
                 </span>
               </h1>
               <p className="text-xl md:text-2xl text-slate-600 dark:text-slate-300 max-w-2xl">
-                Transform your dream of <span className="font-semibold text-slate-900 dark:text-white">studying</span>, <span className="font-semibold text-slate-900 dark:text-white">working</span>, or <span className="font-semibold text-slate-900 dark:text-white">living</span> in Germany into reality with expert-led courses and personalized guidance.
+                {t('description')}
               </p>
             </div>
 
@@ -59,7 +62,7 @@ export default function HeroSection() {
                 size="lg"
                 className="w-full sm:w-auto h-14 px-8 text-lg font-semibold bg-gradient-to-r from-brand-red-600 to-brand-red-500 hover:from-brand-red-700 hover:to-brand-red-600 text-white shadow-button hover:shadow-button-hover transition-all duration-300 group"
               >
-                Start Your Journey
+                {t('startJourney')}
                 <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
               </NavigationButton>
               <NavigationButton
@@ -68,16 +71,16 @@ export default function HeroSection() {
                 variant="outline"
                 className="w-full sm:w-auto h-14 px-8 text-lg font-semibold border-2 border-brand-red-500 text-brand-red-600 dark:text-brand-red-400 hover:bg-brand-red-50 dark:hover:bg-brand-red-950/50"
               >
-                Explore Pathways
+                {t('explorePathways')}
               </NavigationButton>
             </div>
 
             {/* Trust Indicators */}
             <div className="flex flex-wrap gap-6 pt-4">
               {[
-                { icon: CheckCircle2, text: "98% Visa Approval Rate" },
-                { icon: CheckCircle2, text: "Expert Instructors" },
-                { icon: CheckCircle2, text: "Job Placement Support" },
+                { icon: CheckCircle2, text: t('visaApproval') },
+                { icon: CheckCircle2, text: t('expertInstructors') },
+                { icon: CheckCircle2, text: t('jobPlacement') },
               ].map((item, index) => (
                 <motion.div
                   key={index}

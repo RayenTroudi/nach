@@ -1,15 +1,17 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import "./globals.css";
-import "../styles/prism.css";
+import "../globals.css";
+import "../../styles/prism.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import ToasterProvider from "@/components/providers/ToasterProvider";
 import { Toaster } from "@/components/ui/toaster";
 import { ThemeProvider } from "@/contexts/ThemeProvider";
 import { CartProvider } from "@/contexts/CartContext";
 import { PageLoaderProvider } from "@/contexts/PageLoaderProvider";
-import { IntlProvider } from '@/components/providers/IntlProvider';
-import { getLocale, getMessages } from '@/lib/locale';
+import { NextIntlClientProvider } from 'next-intl';
+import { getMessages } from 'next-intl/server';
+import { notFound } from 'next/navigation';
+import { locales } from '@/i18n';
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -30,13 +32,26 @@ Whether you're a beginner looking to learn a new skill or a professional seeking
   `,
 };
 
-export default async function RootLayout({
+export function generateStaticParams() {
+  return locales.map((locale) => ({ locale }));
+}
+
+export default async function LocaleLayout({
   children,
+  params: { locale }
 }: Readonly<{
   children: React.ReactNode;
+  params: { locale: string };
 }>) {
-  const locale = await getLocale();
-  const messages = await getMessages(locale);
+  // Ensure that the incoming `locale` is valid
+  if (!locales.includes(locale as any)) {
+    notFound();
+  }
+
+  // Get messages for the locale
+  const messages = await getMessages();
+
+  // Determine text direction based on locale
   const direction = locale === 'ar' ? 'rtl' : 'ltr';
 
   return (
@@ -82,7 +97,7 @@ export default async function RootLayout({
       signInUrl="/sign-in"
       signUpUrl="/sign-up"
     >
-      <IntlProvider locale={locale} messages={messages}>
+      <NextIntlClientProvider messages={messages}>
         <ThemeProvider>
           <PageLoaderProvider>
             <html lang={locale} dir={direction} className="dark">
@@ -102,7 +117,7 @@ export default async function RootLayout({
             </html>
           </PageLoaderProvider>
         </ThemeProvider>
-      </IntlProvider>
+      </NextIntlClientProvider>
     </ClerkProvider>
   );
 }

@@ -11,6 +11,7 @@ import { useTheme } from "@/contexts/ThemeProvider";
 import ThemeSwitcher from "./ThemeSwitcher";
 import { Separator } from "../ui/separator";
 import ClerkUserButton from "./ClerkUserButton";
+import { useTranslations } from 'next-intl';
 
 import { motion } from "framer-motion";
 
@@ -25,6 +26,7 @@ const transition = {
 
 const Navbar = ({ isUserAdmin }: { isUserAdmin: boolean }) => {
   const pathname = usePathname();
+  const t = useTranslations('navigation');
   const isTeacher = pathname?.startsWith("/teacher");
   const isSection = pathname?.includes("/section");
   const isAdmin = pathname?.includes("/admin");
@@ -36,7 +38,7 @@ const Navbar = ({ isUserAdmin }: { isUserAdmin: boolean }) => {
             href="/"
             className="text-slate-950 dark:text-slate-200 font-bold text-sm hover:text-brand-red-500 ease-in-out duration-100"
           >
-            Student
+            {t('student')}
           </Link>
           <SignedIn>
             <ClerkUserButton />
@@ -52,7 +54,7 @@ const Navbar = ({ isUserAdmin }: { isUserAdmin: boolean }) => {
                 href="/admin/dashboard/"
                 className="font-bold text-sm text-brand-red-500 ease-in-out duration-100 hidden lg:block"
               >
-                Admin
+                {t('admin')}
               </Link>
               <Separator
                 orientation="vertical"
@@ -62,7 +64,7 @@ const Navbar = ({ isUserAdmin }: { isUserAdmin: boolean }) => {
               <Link href="/teacher/courses" className="hidden lg:block">
                 <p className="text-slate-950 dark:text-slate-200 font-bold text-[14px] cursor-pointer  relative">
                   <span className="primary-color hover:border-b-2 hover:border-brand-red-500 ease-in-out duration-100">
-                    Instructor
+                    {t('instructor')}
                   </span>
                 </p>
               </Link>
@@ -78,7 +80,7 @@ const Navbar = ({ isUserAdmin }: { isUserAdmin: boolean }) => {
             className="text-slate-950 dark:text-slate-200 font-medium text-[14px] cursor-pointer relative hidden md:block"
           >
             <span className="hover:primary-color ease-in-out duration-100">
-              My learning
+              {t('myLearning')}
             </span>
           </Link>
         </div>

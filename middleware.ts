@@ -19,6 +19,8 @@ export default authMiddleware({
     "/blog/(.*)",
     "/sign-in(.*)",
     "/sign-up(.*)",
+    "/contact(.*)",
+    "/documents(.*)",
   ],
   ignoredRoutes: [
     "/api/webhooks",

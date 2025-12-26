@@ -2,39 +2,42 @@
 import { Card } from "@/components/ui/card";
 import { CheckCircle2, BookOpen, FileCheck, Plane } from "lucide-react";
 import { motion } from "framer-motion";
-
-const steps = [
-  {
-    number: "01",
-    icon: CheckCircle2,
-    title: "Assess Your Path",
-    description: "Take our personalized assessment to identify the best pathway for your goals—whether it's studying, working, or living in Germany.",
-    color: "brand-blue",
-  },
-  {
-    number: "02",
-    icon: BookOpen,
-    title: "Learn & Prepare",
-    description: "Follow our expert-led courses covering everything from German language to visa requirements and cultural integration.",
-    color: "brand-red",
-  },
-  {
-    number: "03",
-    icon: FileCheck,
-    title: "Apply with Confidence",
-    description: "Get step-by-step guidance through the visa application process with document checklists and expert review.",
-    color: "brand-gold",
-  },
-  {
-    number: "04",
-    icon: Plane,
-    title: "Succeed in Germany",
-    description: "Arrive prepared and confident. Join our community of successful students and professionals already living their German dream.",
-    color: "brand-green",
-  },
-];
+import { useTranslations } from 'next-intl';
 
 export default function HowItWorksSection() {
+  const t = useTranslations('howItWorks');
+  
+  const steps = [
+    {
+      number: "01",
+      icon: CheckCircle2,
+      title: t('step1Title'),
+      description: t('step1Description'),
+      color: "brand-blue",
+    },
+    {
+      number: "02",
+      icon: BookOpen,
+      title: t('step2Title'),
+      description: t('step2Description'),
+      color: "brand-red",
+    },
+    {
+      number: "03",
+      icon: FileCheck,
+      title: t('step3Title'),
+      description: t('step3Description'),
+      color: "brand-gold",
+    },
+    {
+      number: "04",
+      icon: Plane,
+      title: t('step4Title'),
+      description: t('step4Description'),
+      color: "brand-green",
+    },
+  ];
+  
   return (
     <section className="py-24 bg-gradient-to-b from-slate-50 to-white dark:from-slate-950 dark:to-slate-900">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -47,13 +50,12 @@ export default function HowItWorksSection() {
           className="text-center mb-20"
         >
           <h2 className="text-4xl md:text-5xl font-bold mb-4">
-            <span className="text-slate-900 dark:text-white">How </span>
             <span className="bg-gradient-to-r from-brand-red-600 to-brand-gold-500 bg-clip-text text-transparent">
-              It Works
+              {t('title')}
             </span>
           </h2>
           <p className="text-xl text-slate-600 dark:text-slate-300 max-w-3xl mx-auto">
-            Your journey to Germany in four simple steps
+            {t('subtitle')}
           </p>
         </motion.div>
 
@@ -158,10 +160,10 @@ export default function HowItWorksSection() {
           className="mt-20 grid grid-cols-2 md:grid-cols-4 gap-8 p-8 bg-gradient-to-r from-brand-red-600 to-brand-red-500 rounded-2xl text-white"
         >
           {[
-            { value: "2,500+", label: "Students Taught" },
-            { value: "98%", label: "Visa Success Rate" },
-            { value: "500+", label: "Visas Approved" },
-            { value: "50+", label: "Partner Companies" },
+            { value: "2,500+", label: t('statStudents') || "Students Taught" },
+            { value: "98%", label: t('statVisaRate') || "Visa Success Rate" },
+            { value: "500+", label: t('statVisasApproved') || "Visas Approved" },
+            { value: "50+", label: t('statPartners') || "Partner Companies" },
           ].map((stat, index) => (
             <div key={index} className="text-center">
               <div className="text-3xl md:text-4xl font-bold mb-2">{stat.value}</div>

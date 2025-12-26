@@ -9,8 +9,10 @@ import { getTeacherCourses } from "@/lib/actions/user.action";
 import { auth } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
 import CourseRatingBarChart from "./_components/CourseRatingBarChart";
+import { getTranslations } from "next-intl/server";
 
 const StatsPage: React.FC = async () => {
+  const t = await getTranslations('dashboard.teacher.statistics');
   const { userId } = auth();
   let teacherCourses;
   try {
@@ -32,14 +34,14 @@ const StatsPage: React.FC = async () => {
   return (
     <div className="p-6 bg-transparent rounded-lg shadow-md">
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <Card label="Total students" icon={User} amount={totalStudents || 0} />
+        <Card label={t('totalStudents')} icon={User} amount={totalStudents || 0} />
         <Card
-          label="Wallet balance"
+          label={t('walletBalance')}
           icon={DollarSign}
           amount={teacherCourses?.wallet.toFixed(2) || 0}
         />
         <Card
-          label="Total created courses"
+          label={t('totalCreatedCourses')}
           icon={BookOpen}
           amount={totalCreatedCourses}
         />

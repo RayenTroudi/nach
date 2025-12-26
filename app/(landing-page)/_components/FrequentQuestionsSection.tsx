@@ -9,6 +9,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { CourseTypeEnum } from "@/lib/enums";
 import FAQVideoPlayer from "./FAQVideoPlayer";
+import { useTranslations } from 'next-intl';
 
 interface FrequentQuestionsProps {
   courses: TCourse[];
@@ -16,6 +17,7 @@ interface FrequentQuestionsProps {
 
 export default function FrequentQuestionsSection({ courses }: FrequentQuestionsProps) {
   const [selectedCourse, setSelectedCourse] = useState<TCourse | null>(null);
+  const t = useTranslations('faq');
 
   // Filter courses to show only "Most Frequent Questions" type courses
   const faqCourses = courses.filter(
@@ -36,12 +38,12 @@ export default function FrequentQuestionsSection({ courses }: FrequentQuestionsP
               <HelpCircle className="w-6 h-6 text-brand-red-600 dark:text-brand-red-400" />
             </div>
             <h2 className="text-4xl font-bold text-slate-900 dark:text-slate-50">
-              Most Frequent <span className="text-brand-red-500">Questions</span>
+              <span className="text-brand-red-500">{t('title')}</span>
             </h2>
           </div>
 
           <p className="text-lg text-slate-600 dark:text-slate-300 mb-12 text-center max-w-3xl mx-auto">
-            Get quick answers to common questions about moving to Germany. Watch short video guides directly below.
+            {t('subtitle')}
           </p>
 
           {/* Video Player Modal */}
@@ -120,7 +122,7 @@ export default function FrequentQuestionsSection({ courses }: FrequentQuestionsP
                           }}
                         >
                           <Play className="w-4 h-4 mr-1" />
-                          Watch
+                          {t('watchVideo')}
                         </Button>
                       </div>
                     </div>
@@ -131,7 +133,7 @@ export default function FrequentQuestionsSection({ courses }: FrequentQuestionsP
               <div className="col-span-full text-center py-12">
                 <BookOpen className="w-16 h-16 mx-auto text-slate-400 mb-4" />
                 <p className="text-slate-500 dark:text-slate-400 text-lg">
-                  No FAQ videos available yet. Check back soon!
+                  {t('noCoursesAvailable')}
                 </p>
               </div>
             )}
@@ -145,7 +147,7 @@ export default function FrequentQuestionsSection({ courses }: FrequentQuestionsP
                   className="bg-brand-red-500 hover:bg-brand-red-600"
                 >
                   <BookOpen className="w-5 h-5 mr-2" />
-                  View All Courses
+                  {t('checkBackSoon')}
                 </Button>
               </Link>
             </div>

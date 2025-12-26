@@ -27,6 +27,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
+import { useTranslations } from "next-intl";
 
 interface Booking {
   _id: string;
@@ -63,6 +64,7 @@ interface PaginationInfo {
 }
 
 export default function AdminBookingsPage() {
+  const t = useTranslations('dashboard.admin.bookings');
   const router = useRouter();
   const [allBookings, setAllBookings] = useState<Booking[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -99,8 +101,8 @@ export default function AdminBookingsPage() {
     } catch (error: any) {
       console.error("Error fetching bookings:", error);
       scnToast({
-        title: "Error",
-        description: error.response?.data?.error || "Failed to fetch bookings",
+        title: t('error'),
+        description: error.response?.data?.error || t('errorFetching'),
         variant: "destructive",
       });
     } finally {
@@ -131,8 +133,8 @@ export default function AdminBookingsPage() {
 
       if (response.data.success) {
         scnToast({
-          title: "Success",
-          description: "Booking approved and confirmation email sent",
+          title: t('success'),
+          description: t('bookingApprovedDesc'),
         });
 
         // Update local state
@@ -151,8 +153,8 @@ export default function AdminBookingsPage() {
     } catch (error: any) {
       console.error("Error approving booking:", error);
       scnToast({
-        title: "Error",
-        description: error.response?.data?.error || "Failed to approve booking",
+        title: t('error'),
+        description: error.response?.data?.error || t('errorApproving'),
         variant: "destructive",
       });
     } finally {
@@ -173,8 +175,8 @@ export default function AdminBookingsPage() {
 
       if (response.data.success) {
         scnToast({
-          title: "Success",
-          description: "Booking rejected and notification email sent",
+          title: t('success'),
+          description: t('bookingRejectedDesc'),
         });
 
         // Update local state - mark as cancelled
@@ -193,8 +195,8 @@ export default function AdminBookingsPage() {
     } catch (error: any) {
       console.error("Error rejecting booking:", error);
       scnToast({
-        title: "Error",
-        description: error.response?.data?.error || "Failed to reject booking",
+        title: t('error'),
+        description: error.response?.data?.error || t('errorRejecting'),
         variant: "destructive",
       });
     } finally {
@@ -238,10 +240,10 @@ export default function AdminBookingsPage() {
           {/* Header */}
           <div className="mb-8">
             <h1 className="text-3xl font-bold text-slate-950 dark:text-slate-200 mb-2">
-              Meeting Bookings
+              {t('title')}
             </h1>
             <p className="text-slate-600 dark:text-slate-400">
-              Review and approve payment proofs for scheduled meetings
+              {t('subtitle')}
             </p>
           </div>
 

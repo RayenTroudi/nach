@@ -26,6 +26,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
+import { useTranslations } from "next-intl";
 
 interface PaymentProof {
   _id: string;
@@ -69,6 +70,7 @@ interface PaginationInfo {
 }
 
 export default function PaymentProofsAdminPage() {
+  const t = useTranslations('dashboard.admin.paymentProofs');
   const router = useRouter();
   const [allProofs, setAllProofs] = useState<PaymentProof[]>([]); // Store all proofs
   const [isLoading, setIsLoading] = useState(true);
@@ -107,8 +109,8 @@ export default function PaymentProofsAdminPage() {
       console.error("Fetch proofs error:", error);
       scnToast({
         variant: "destructive",
-        title: "Error",
-        description: error.response?.data?.error || "Failed to load payment proofs",
+        title: t('errorTitle'),
+        description: error.response?.data?.error || t('errorLoadingProofs'),
       });
     } finally {
       setIsLoading(false);
@@ -129,8 +131,8 @@ export default function PaymentProofsAdminPage() {
     if (status === "rejected" && !adminNotes.trim()) {
       scnToast({
         variant: "destructive",
-        title: "Admin Notes Required",
-        description: "Please provide a reason for rejection",
+        title: t('adminNotesRequired'),
+        description: t('provideReason'),
       });
       return;
     }
@@ -146,8 +148,8 @@ export default function PaymentProofsAdminPage() {
       if (response.data.success) {
         scnToast({
           variant: "success",
-          title: status === "approved" ? "Proof Approved" : "Proof Rejected",
-          description: `Payment proof has been ${status}`,
+          title: status === "approved" ? t('proofApproved') : t('proofRejected'),
+          description: status === "approved" ? t('proofApprovedDesc') : t('proofRejectedDesc'),
         });
         
         // Update the proof in the local state
@@ -165,8 +167,8 @@ export default function PaymentProofsAdminPage() {
       console.error("Action error:", error);
       scnToast({
         variant: "destructive",
-        title: "Error",
-        description: error.response?.data?.error || `Failed to ${status} proof`,
+        title: t('errorTitle'),
+        description: error.response?.data?.error || (status === "approved" ? t('errorApproving') : t('errorRejecting')),
       });
     } finally {
       setActionLoading(false);
@@ -176,11 +178,11 @@ export default function PaymentProofsAdminPage() {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case "pending":
-        return <Badge className="bg-yellow-500 hover:bg-yellow-600">Pending</Badge>;
+        return <Badge className="bg-yellow-500 hover:bg-yellow-600">{t('pendingBadge')}</Badge>;
       case "approved":
-        return <Badge className="bg-green-500 hover:bg-green-600">Approved</Badge>;
+        return <Badge className="bg-green-500 hover:bg-green-600">{t('approvedBadge')}</Badge>;
       case "rejected":
-        return <Badge className="bg-red-500 hover:bg-red-600">Rejected</Badge>;
+        return <Badge className="bg-red-500 hover:bg-red-600">{t('rejectedBadge')}</Badge>;
       default:
         return <Badge>{status}</Badge>;
     }
@@ -219,9 +221,9 @@ export default function PaymentProofsAdminPage() {
       
       <div className="p-6 flex-1">
       <div className="mb-6">
-        <h1 className="text-3xl font-bold mb-2">Payment Proofs Review</h1>
+        <h1 className="text-3xl font-bold mb-2">{t('title')}</h1>
         <p className="text-slate-600 dark:text-slate-400">
-          Review and approve/reject student payment proofs
+          {t('subtitle')}
         </p>
       </div>
 
@@ -232,28 +234,28 @@ export default function PaymentProofsAdminPage() {
           variant={statusFilter === "all" ? "default" : "outline"}
           className={statusFilter === "all" ? "bg-brand-red-500 hover:bg-brand-red-600" : ""}
         >
-          All ({allProofs.length})
+          {t('all')} ({allProofs.length})
         </Button>
         <Button
           onClick={() => setStatusFilter("pending")}
           variant={statusFilter === "pending" ? "default" : "outline"}
           className={statusFilter === "pending" ? "bg-yellow-500 hover:bg-yellow-600" : ""}
         >
-          Pending ({allProofs.filter(p => p.status === "pending").length})
+          {t('pending')} ({allProofs.filter(p => p.status === "pending").length})
         </Button>
         <Button
           onClick={() => setStatusFilter("approved")}
           variant={statusFilter === "approved" ? "default" : "outline"}
           className={statusFilter === "approved" ? "bg-green-500 hover:bg-green-600" : ""}
         >
-          Approved ({allProofs.filter(p => p.status === "approved").length})
+          {t('approved')} ({allProofs.filter(p => p.status === "approved").length})
         </Button>
         <Button
           onClick={() => setStatusFilter("rejected")}
           variant={statusFilter === "rejected" ? "default" : "outline"}
           className={statusFilter === "rejected" ? "bg-red-500 hover:bg-red-600" : ""}
         >
-          Rejected ({allProofs.filter(p => p.status === "rejected").length})
+          {t('rejected')} ({allProofs.filter(p => p.status === "rejected").length})
         </Button>
       </div>
 
@@ -261,11 +263,11 @@ export default function PaymentProofsAdminPage() {
       {filteredProofs.length === 0 ? (
         <div className="text-center py-12 bg-slate-100 dark:bg-slate-900 rounded-lg">
           <FileText className="w-16 h-16 mx-auto mb-4 text-slate-400" />
-          <p className="text-xl font-semibold mb-2">No payment proofs found</p>
+          <p className="text-xl font-semibold mb-2">{t('noProofsFound')}</p>
           <p className="text-slate-600 dark:text-slate-400">
             {statusFilter !== "all"
-              ? `No ${statusFilter} payment proofs at the moment`
-              : "No payment proofs have been submitted yet"}
+              ? t('noProofsStatus', { status: statusFilter })
+              : t('noProofsSubmitted')}
           </p>
         </div>
       ) : (
@@ -317,7 +319,7 @@ export default function PaymentProofsAdminPage() {
                     <div className="space-y-1">
                       <p className="text-xs font-semibold text-slate-600 dark:text-slate-400 flex items-center gap-1">
                         <BookOpen className="w-3 h-3" />
-                        Courses ({proof.courses.length}):
+                        {t('courses')} ({proof.courses.length}):
                       </p>
                       {proof.courses.map((course) => (
                         <p key={course._id} className="text-sm">
@@ -328,7 +330,7 @@ export default function PaymentProofsAdminPage() {
                   )}
                   {proof.notes && (
                     <div className="mt-2 text-sm">
-                      <p className="font-semibold">Student Notes:</p>
+                      <p className="font-semibold">{t('studentNotes')}</p>
                       <p className="text-slate-600 dark:text-slate-400">{proof.notes}</p>
                     </div>
                   )}
@@ -343,7 +345,7 @@ export default function PaymentProofsAdminPage() {
                     className="w-full"
                   >
                     <Eye className="w-4 h-4 mr-2" />
-                    View
+                    {t('view')}
                   </Button>
                   {proof.status === "pending" && (
                     <>
@@ -357,7 +359,7 @@ export default function PaymentProofsAdminPage() {
                         disabled={actionLoading}
                       >
                         <Check className="w-4 h-4 mr-2" />
-                        Approve
+                        {t('approve')}
                       </Button>
                       <Button
                         onClick={() => handleViewProof(proof)}
@@ -366,7 +368,7 @@ export default function PaymentProofsAdminPage() {
                         className="w-full"
                       >
                         <X className="w-4 h-4 mr-2" />
-                        Reject
+                        {t('reject')}
                       </Button>
                     </>
                   )}
@@ -377,15 +379,15 @@ export default function PaymentProofsAdminPage() {
               {proof.status !== "pending" && proof.reviewedBy && (
                 <div className="mt-4 pt-4 border-t border-slate-200 dark:border-slate-700">
                   <p className="text-sm text-slate-600 dark:text-slate-400">
-                    {proof.status === "approved" ? "Approved" : "Rejected"} by{" "}
+                    {proof.status === "approved" ? t('approvedBy') : t('rejectedBy')}{" "}
                     <span className="font-semibold">
                       {proof.reviewedBy.firstName} {proof.reviewedBy.lastName}
                     </span>{" "}
-                    on {formatDate(proof.reviewedAt!)}
+                    {t('on')} {formatDate(proof.reviewedAt!)}
                   </p>
                   {proof.adminNotes && (
                     <p className="text-sm mt-1">
-                      <span className="font-semibold">Admin Notes:</span> {proof.adminNotes}
+                      <span className="font-semibold">{t('adminNotes')}:</span> {proof.adminNotes}
                     </p>
                   )}
                 </div>
@@ -402,7 +404,7 @@ export default function PaymentProofsAdminPage() {
         <Dialog open={isViewDialogOpen} onOpenChange={setIsViewDialogOpen}>
           <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
-              <DialogTitle>Payment Proof Details</DialogTitle>
+              <DialogTitle>{t('proofDetails')}</DialogTitle>
             </DialogHeader>
 
             <div className="space-y-4">
@@ -416,7 +418,7 @@ export default function PaymentProofsAdminPage() {
                       onClick={() => window.open(selectedProof.proofUrl, "_blank")}
                       variant="outline"
                     >
-                      Open PDF in New Tab
+                      {t('viewProof')}
                     </Button>
                   </div>
                 ) : (
@@ -433,7 +435,7 @@ export default function PaymentProofsAdminPage() {
               {/* User & Payment Info */}
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <p className="text-sm font-semibold text-slate-600 dark:text-slate-400">Student</p>
+                  <p className="text-sm font-semibold text-slate-600 dark:text-slate-400">{t('studentInfo')}</p>
                   <p className="font-medium">
                     {selectedProof.userId?.firstName} {selectedProof.userId?.lastName}
                   </p>
@@ -442,7 +444,7 @@ export default function PaymentProofsAdminPage() {
                   </p>
                 </div>
                 <div>
-                  <p className="text-sm font-semibold text-slate-600 dark:text-slate-400">Amount</p>
+                  <p className="text-sm font-semibold text-slate-600 dark:text-slate-400">{t('amount')}</p>
                   <p className="text-2xl font-bold text-brand-red-500">
                     {selectedProof.amount.toFixed(2)} DT
                   </p>
@@ -452,7 +454,7 @@ export default function PaymentProofsAdminPage() {
               {selectedProof.notes && (
                 <div>
                   <p className="text-sm font-semibold text-slate-600 dark:text-slate-400 mb-1">
-                    Student Notes
+                    {t('studentNotes')}
                   </p>
                   <p className="text-sm bg-slate-100 dark:bg-slate-900 p-3 rounded">
                     {selectedProof.notes}
@@ -464,12 +466,12 @@ export default function PaymentProofsAdminPage() {
               {selectedProof.status === "pending" && (
                 <div>
                   <label className="block text-sm font-semibold mb-2">
-                    Admin Notes {selectedProof.status === "pending" && "(Required for rejection)"}
+                    {t('adminNotes')} {selectedProof.status === "pending" && t('adminNotesRequired')}
                   </label>
                   <textarea
                     value={adminNotes}
                     onChange={(e) => setAdminNotes(e.target.value)}
-                    placeholder="Add notes about this payment proof..."
+                    placeholder={t('adminNotesPlaceholder')}
                     className="w-full px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-brand-red-500"
                     rows={3}
                   />
@@ -485,7 +487,7 @@ export default function PaymentProofsAdminPage() {
                     className="flex-1 bg-green-500 hover:bg-green-600"
                   >
                     {actionLoading ? <Spinner className="mr-2" /> : <Check className="w-4 h-4 mr-2" />}
-                    Approve Payment
+                    {t('approveProof')}
                   </Button>
                   <Button
                     onClick={() => handleApproveReject(selectedProof._id, "rejected")}
@@ -494,7 +496,7 @@ export default function PaymentProofsAdminPage() {
                     className="flex-1"
                   >
                     {actionLoading ? <Spinner className="mr-2" /> : <X className="w-4 h-4 mr-2" />}
-                    Reject Payment
+                    {t('rejectProof')}
                   </Button>
                 </div>
               )}

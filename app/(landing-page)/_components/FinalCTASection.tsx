@@ -3,8 +3,11 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, CheckCircle2 } from "lucide-react";
 import { motion } from "framer-motion";
 import { NavigationButton } from "@/components/shared";
+import { useTranslations } from 'next-intl';
 
 export default function FinalCTASection() {
+  const t = useTranslations('finalCTA');
+  
   return (
     <section className="py-24 bg-gradient-to-br from-slate-900 via-brand-red-900 to-slate-900 dark:from-slate-950 dark:via-brand-red-950 dark:to-slate-950 relative overflow-hidden">
       {/* Background Pattern */}
@@ -27,30 +30,30 @@ export default function FinalCTASection() {
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-gold-400 opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2 w-2 bg-brand-gold-500"></span>
             </span>
-            Limited Time: Free Consultation Available
+            {t('badge')}
           </div>
 
           {/* Heading */}
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight">
-            Ready to Start Your
+            {t('title')}
             <br />
             <span className="bg-gradient-to-r from-brand-gold-400 to-brand-gold-600 bg-clip-text text-transparent">
-              German Journey?
+              {t('titleHighlight')}
             </span>
           </h2>
 
           {/* Description */}
           <p className="text-xl text-slate-300 max-w-3xl mx-auto">
-            Join 2,500+ students and professionals who&apos;ve successfully moved to Germany with our expert guidance. Your dream is closer than you think.
+            {t('description')}
           </p>
 
           {/* Benefits */}
           <div className="flex flex-wrap justify-center gap-6 py-6">
             {[
-              "Expert-Led Courses",
-              "98% Visa Success Rate",
-              "Lifetime Community Access",
-              "Money-Back Guarantee",
+              t('benefit1'),
+              t('benefit2'),
+              t('benefit3'),
+              t('benefit4'),
             ].map((benefit, index) => (
               <motion.div
                 key={index}
@@ -73,7 +76,7 @@ export default function FinalCTASection() {
               size="lg"
               className="w-full sm:w-auto h-14 px-10 text-lg font-semibold bg-gradient-to-r from-brand-gold-500 to-brand-gold-600 hover:from-brand-gold-600 hover:to-brand-gold-700 text-slate-900 shadow-lg hover:shadow-xl transition-all duration-300 group"
             >
-              Get Started - Free Consultation
+              {t('mainCTA')}
               <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
             </NavigationButton>
             <NavigationButton
@@ -82,13 +85,13 @@ export default function FinalCTASection() {
               variant="outline"
               className="w-full sm:w-auto h-14 px-10 text-lg font-semibold border-2 border-brand-red-500 text-brand-red-500 hover:bg-brand-red-500 hover:text-white"
             >
-              Browse All Courses
+              {t('secondaryCTA')}
             </NavigationButton>
           </div>
 
           {/* Trust Badge */}
           <p className="text-sm text-slate-400 pt-6">
-            🔒 No credit card required • 🎓 Trusted by 2,500+ students • ⭐ 4.9/5 rating
+            {t('trustBadge')}
           </p>
         </motion.div>
       </div>

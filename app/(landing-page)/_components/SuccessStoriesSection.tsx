@@ -4,41 +4,45 @@ import { Button } from "@/components/ui/button";
 import { Quote, Play, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
 import { NavigationButton } from "@/components/shared";
-
-const successStories = [
-  {
-    name: "Sarah Ahmed",
-    country: "Egypt",
-    pathway: "Study Path",
-    achievement: "Accepted to TU Berlin",
-    image: "🎓",
-    quote: "From Cairo to Berlin: How I got my student visa in just 3 months with Nach's guidance. The step-by-step courses made everything so clear!",
-    timeframe: "3 months",
-    bgColor: "bg-brand-blue-50 dark:bg-brand-blue-900/20",
-  },
-  {
-    name: "Mohammed Hassan",
-    country: "Pakistan",
-    pathway: "Work Path",
-    achievement: "Software Engineer at SAP",
-    image: "💼",
-    quote: "The job search strategies and CV optimization course helped me land my dream job at SAP Munich. Worth every minute!",
-    timeframe: "5 months",
-    bgColor: "bg-brand-red-50 dark:bg-brand-red-900/20",
-  },
-  {
-    name: "Priya Patel",
-    country: "India",
-    pathway: "Study Path",
-    achievement: "Master's at Heidelberg University",
-    image: "🌟",
-    quote: "The B2 German preparation and university application guidance were game-changers. Now I'm living my dream in Heidelberg!",
-    timeframe: "4 months",
-    bgColor: "bg-brand-green-50 dark:bg-brand-green-900/20",
-  },
-];
+import { useTranslations } from 'next-intl';
 
 export default function SuccessStoriesSection() {
+  const t = useTranslations('successStories');
+  const tCommon = useTranslations('common');
+  
+  const successStories = [
+    {
+      name: "Sarah Ahmed",
+      country: "Egypt",
+      pathway: "Study Path",
+      achievement: "Accepted to TU Berlin",
+      image: "🎓",
+      quote: "From Cairo to Berlin: How I got my student visa in just 3 months with Nach's guidance. The step-by-step courses made everything so clear!",
+      timeframe: "3 months",
+      bgColor: "bg-brand-blue-50 dark:bg-brand-blue-900/20",
+    },
+    {
+      name: "Mohammed Hassan",
+      country: "Pakistan",
+      pathway: "Work Path",
+      achievement: "Software Engineer at SAP",
+      image: "💼",
+      quote: "The job search strategies and CV optimization course helped me land my dream job at SAP Munich. Worth every minute!",
+      timeframe: "5 months",
+      bgColor: "bg-brand-red-50 dark:bg-brand-red-900/20",
+    },
+    {
+      name: "Priya Patel",
+      country: "India",
+      pathway: "Study Path",
+      achievement: "Master's at Heidelberg University",
+      image: "🌟",
+      quote: "The B2 German preparation and university application guidance were game-changers. Now I'm living my dream in Heidelberg!",
+      timeframe: "4 months",
+      bgColor: "bg-brand-green-50 dark:bg-brand-green-900/20",
+    },
+  ];
+  
   return (
     <section className="py-24 bg-white dark:bg-gradient-to-b dark:from-slate-900 dark:to-slate-950">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -51,13 +55,12 @@ export default function SuccessStoriesSection() {
           className="text-center mb-16"
         >
           <h2 className="text-4xl md:text-5xl font-bold mb-4">
-            <span className="text-slate-900 dark:text-white">Success </span>
             <span className="bg-gradient-to-r from-brand-red-600 to-brand-gold-500 bg-clip-text text-transparent">
-              Stories
+              {t('title')}
             </span>
           </h2>
           <p className="text-xl text-slate-600 dark:text-slate-300 max-w-3xl mx-auto">
-            Join thousands of students and professionals who&apos;ve successfully moved to Germany with our guidance
+            {t('subtitle')}
           </p>
         </motion.div>
 
@@ -133,10 +136,10 @@ export default function SuccessStoriesSection() {
           className="bg-gradient-to-r from-brand-red-600 to-brand-red-500 rounded-2xl p-8 md:p-12 text-white text-center"
         >
           <h3 className="text-3xl font-bold mb-4">
-            Watch More Success Stories
+            {t('viewAllStories')}
           </h3>
           <p className="text-red-100 mb-8 max-w-2xl mx-auto">
-            Hear directly from students and professionals who transformed their lives with our Germany pathways
+            {t('subtitle')}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button
@@ -145,14 +148,14 @@ export default function SuccessStoriesSection() {
               className="bg-white text-brand-red-600 hover:bg-red-50"
             >
               <Play className="mr-2 h-5 w-5" />
-              Watch Video Testimonials
+              {t('watchStory')}
             </Button>
             <NavigationButton
               href="/courses"
               size="lg"
               className="bg-white text-brand-red-600 transition-all duration-300"
             >
-              Start Your Journey
+              {tCommon('courses')}
               <ArrowRight className="ml-2 h-5 w-5" />
             </NavigationButton>
           </div>

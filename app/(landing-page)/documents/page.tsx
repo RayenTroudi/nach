@@ -31,6 +31,7 @@ import { Badge } from "@/components/ui/badge";
 import { Container } from "@/components/shared";
 import Loader from "@/components/shared/Loader";
 import { toast } from "sonner";
+import { useTranslations } from 'next-intl';
 
 const CATEGORIES = [
   "All",
@@ -43,33 +44,10 @@ const CATEGORIES = [
   "Other",
 ];
 
-const SORT_OPTIONS = [
-  { value: "newest", label: "Newest First" },
-  { value: "downloads", label: "Most Downloaded" },
-  { value: "title", label: "Title A-Z" },
-];
-
-interface Document {
-  _id: string;
-  title: string;
-  description: string;
-  fileUrl: string;
-  fileName: string;
-  fileType: string;
-  fileSize: number;
-  category: string;
-  tags: string[];
-  downloads: number;
-  createdAt: string;
-  uploadedBy: {
-    firstName: string;
-    lastName: string;
-  };
-}
-
 export default function DocumentsPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
+  const t = useTranslations('documentsPage');
 
   const [documents, setDocuments] = useState<Document[]>([]);
   const [loading, setLoading] = useState(true);
@@ -81,6 +59,12 @@ export default function DocumentsPage() {
   const [total, setTotal] = useState(0);
 
   const ITEMS_PER_PAGE = 12;
+  
+  const SORT_OPTIONS = [
+    { value: "newest", label: t('sortOptions.newest') },
+    { value: "downloads", label: t('sortOptions.downloads') },
+    { value: "title", label: t('sortOptions.title') },
+  ];
 
   // Fetch documents
   const fetchDocuments = async () => {
@@ -126,7 +110,7 @@ export default function DocumentsPage() {
       setCurrentPage(1);
       fetchDocuments();
     }, 500);
-
+t('loadFailed')
     return () => clearTimeout(timer);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchTerm]);
@@ -168,11 +152,11 @@ export default function DocumentsPage() {
   const formatFileSize = (bytes: number) => {
     if (bytes < 1024) return bytes + " B";
     if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + " KB";
-    return (bytes / (1024 * 1024)).toFixed(1) + " MB";
-  };
-
-  // Category colors
-  const getCategoryColor = (category: string) => {
+    return (bytes / t('downloadStarted'));
+      fetchDocuments(); // Refresh to show updated download count
+    } catch (error) {
+      console.error("Error downloading:", error);
+      toast.error(t('downloadFailed')g) => {
     const colors: { [key: string]: string } = {
       Visa: "bg-blue-100 text-blue-700 border-blue-200",
       Application: "bg-green-100 text-green-700 border-green-200",
@@ -207,12 +191,11 @@ export default function DocumentsPage() {
               <div className="relative md:col-span-2">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                 <Input
-                  placeholder="Search documents, guides, templates..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10"
-                />
-              </div>
+                  placeholder={t('searchPlaceholder')}
+            {t('title')}
+          </h1>
+          <p className="text-lg text-slate-600 dark:text-slate-300 max-w-2xl mx-auto">
+            {t('subtitle')}
 
               {/* Category Filter */}
               <Select value={categoryFilter} onValueChange={setCategoryFilter}>
@@ -224,7 +207,7 @@ export default function DocumentsPage() {
                   {CATEGORIES.map((cat) => (
                     <SelectItem key={cat} value={cat}>
                       {cat === "All" ? "All Categories" : cat}
-                    </SelectItem>
+                    </SelectItem>t('allCategories')
                   ))}
                 </SelectContent>
               </Select>
@@ -234,7 +217,7 @@ export default function DocumentsPage() {
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mt-4 pt-4 border-t">
               <p className="text-sm text-slate-600 dark:text-slate-400">
                 Showing {documents.length} of {total} documents
-              </p>
+              </{t('showing', { count: documents.length, total })}
               <Select value={sortBy} onValueChange={setSortBy}>
                 <SelectTrigger className="w-full sm:w-48">
                   <SelectValue />
@@ -263,11 +246,12 @@ export default function DocumentsPage() {
               <FileText className="w-16 h-16 mx-auto text-slate-400 mb-4" />
               <h3 className="text-xl font-semibold text-slate-900 dark:text-slate-50 mb-2">
                 No documents found
+              </{t('noDocumentsFound')}
               </h3>
               <p className="text-slate-600 dark:text-slate-400 mb-6">
                 {searchTerm || categoryFilter !== "All"
-                  ? "Try adjusting your search or filters"
-                  : "Check back soon for new resources"}
+                  ? t('tryAdjustingFilters')
+                  : t('checkBackSoon')}
               </p>
               {(searchTerm || categoryFilter !== "All") && (
                 <Button
@@ -277,8 +261,7 @@ export default function DocumentsPage() {
                     setCategoryFilter("All");
                   }}
                 >
-                  Clear Filters
-                </Button>
+                  {t('clearFilters')}
               )}
             </CardContent>
           </Card>
@@ -312,7 +295,7 @@ export default function DocumentsPage() {
                   <CardContent>
                     <CardDescription className="line-clamp-3 mb-4">
                       {doc.description || "No description available"}
-                    </CardDescription>
+                    </CardDescription>t('noDescription')
 
                     {/* Tags */}
                     {doc.tags.length > 0 && (
@@ -339,6 +322,7 @@ export default function DocumentsPage() {
                       <div className="flex items-center gap-1">
                         <Download className="w-3 h-3" />
                         {doc.downloads} downloads
+                      </div>{t('downloads')}
                       </div>
                       <span>{formatFileSize(doc.fileSize)}</span>
                     </div>
@@ -352,7 +336,7 @@ export default function DocumentsPage() {
                         className="w-full"
                       >
                         <Eye className="w-4 h-4 mr-1" />
-                        Preview
+                        {t('preview')}
                       </Button>
                       <Button
                         size="sm"
@@ -360,14 +344,13 @@ export default function DocumentsPage() {
                         className="w-full bg-brand-red-500 hover:bg-brand-red-600"
                       >
                         <Download className="w-4 h-4 mr-1" />
-                        Download
+                        {t('download')}
                       </Button>
                     </div>
 
                     {/* Footer */}
                     <div className="mt-4 pt-4 border-t text-xs text-slate-500 dark:text-slate-400">
-                      Uploaded by {doc.uploadedBy.firstName}{" "}
-                      {doc.uploadedBy.lastName}
+                      {t('uploadedBy')}edBy.lastName}
                     </div>
                   </CardContent>
                 </Card>
@@ -385,7 +368,7 @@ export default function DocumentsPage() {
                 >
                   <ChevronLeft className="w-4 h-4 mr-1" />
                   Previous
-                </Button>
+                </{t('previous')}
 
                 <div className="flex items-center gap-1">
                   {Array.from({ length: totalPages }, (_, i) => i + 1)
@@ -425,7 +408,7 @@ export default function DocumentsPage() {
                   disabled={currentPage === totalPages}
                 >
                   Next
-                  <ChevronRight className="w-4 h-4 ml-1" />
+                  {t('next')}vronRight className="w-4 h-4 ml-1" />
                 </Button>
               </div>
             )}

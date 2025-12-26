@@ -8,6 +8,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { Loader2, Clock, CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import MeetingPayment from "./MeetingPayment";
+import { useTranslations } from "next-intl";
 
 interface BookingCalendarProps {
   hostId: string;
@@ -28,6 +29,7 @@ const BookingCalendar = ({
   price = 0,
   requiresPayment = false,
 }: BookingCalendarProps) => {
+  const t = useTranslations('components.bookingCalendar');
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
   const [selectedSlot, setSelectedSlot] = useState<TimeSlot | null>(null);
   const [notes, setNotes] = useState("");
@@ -59,15 +61,15 @@ const BookingCalendar = ({
         setSlots(data.slots || []);
       } else {
         scnToast({
-          title: "Error",
-          description: data.error || "Failed to load available slots",
+          title: t('errorTitle'),
+          description: data.error || t('errorDesc'),
           variant: "destructive",
         });
       }
     } catch (error) {
       scnToast({
-        title: "Error",
-        description: "Failed to load available slots",
+        title: t('errorTitle'),
+        description: t('errorDesc'),
         variant: "destructive",
       });
     } finally {
@@ -105,22 +107,22 @@ const BookingCalendar = ({
         } else {
           // Free booking - show success
           scnToast({
-            title: "Success! 🎉",
-            description: "Meeting booked successfully. Check your email for confirmation.",
+            title: t('successTitle'),
+            description: t('successDesc'),
           });
           onBookingComplete();
         }
       } else {
         scnToast({
-          title: "Error",
-          description: data.error || "Failed to book meeting",
+          title: t('errorTitle'),
+          description: data.error || t('errorBookingDesc'),
           variant: "destructive",
         });
       }
     } catch (error) {
       scnToast({
-        title: "Error",
-        description: "Failed to book meeting",
+        title: t('errorTitle'),
+        description: t('errorBookingDesc'),
         variant: "destructive",
       });
     } finally {
@@ -163,7 +165,7 @@ const BookingCalendar = ({
           <div>
         <div className="flex items-center gap-2 mb-4">
           <CalendarIcon className="w-5 h-5 text-muted-foreground" />
-          <h3 className="font-semibold">Select a Date</h3>
+          <h3 className="font-semibold">{t('selectDate')}</h3>
         </div>
         <div className="flex justify-center">
           <Calendar
@@ -179,7 +181,7 @@ const BookingCalendar = ({
         </div>
         {selectedDate && (
           <div className="mt-4 text-center">
-            <p className="text-sm text-muted-foreground">Selected date</p>
+            <p className="text-sm text-muted-foreground">{t('selectedDate')}</p>
             <p className="text-lg font-semibold">{formatDate(selectedDate)}</p>
           </div>
         )}
@@ -189,7 +191,7 @@ const BookingCalendar = ({
       <div>
         <div className="flex items-center gap-2 mb-4">
           <Clock className="w-5 h-5 text-muted-foreground" />
-          <h3 className="font-semibold">Available Time Slots</h3>
+          <h3 className="font-semibold">{t('availableTimeSlots')}</h3>
         </div>
 
         {loading ? (
@@ -198,8 +200,8 @@ const BookingCalendar = ({
           </div>
         ) : slots.length === 0 ? (
           <div className="text-center py-12 text-muted-foreground">
-            <p>No available slots for this date.</p>
-            <p className="text-sm mt-2">Try selecting a different date.</p>
+            <p>{t('noSlots')}</p>
+            <p className="text-sm mt-2">{t('tryDifferentDate')}</p>
           </div>
         ) : (
           <div className="grid grid-cols-3 gap-3 max-h-[300px] overflow-y-auto p-1">
@@ -227,10 +229,10 @@ const BookingCalendar = ({
       {selectedSlot && (
         <div className="space-y-2">
           <label className="text-sm font-medium">
-            Notes (optional)
+            {t('notesOptional')}
           </label>
           <Textarea
-            placeholder="Add any notes or topics you'd like to discuss..."
+            placeholder={t('notesPlaceholder')}
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
             rows={3}
@@ -242,16 +244,16 @@ const BookingCalendar = ({
       {selectedSlot && selectedDate && (
         <div className="p-4 bg-muted rounded-lg space-y-4">
           <div>
-            <p className="text-sm text-muted-foreground">You selected:</p>
+            <p className="text-sm text-muted-foreground">{t('youSelected')}</p>
             <p className="font-semibold">
               {formatDate(selectedDate)} at {formatTime(selectedSlot.start)}
             </p>
             <p className="text-sm text-muted-foreground">
-              Duration: 30 minutes
+              {t('duration')}
             </p>
             {requiresPayment && price > 0 && (
               <div className="mt-2 pt-2 border-t">
-                <p className="text-sm text-muted-foreground">Price:</p>
+                <p className="text-sm text-muted-foreground">{t('price')}</p>
                 <p className="text-lg font-bold text-brand-red-500">
                   {price.toFixed(2)} TND (€{(price / 3.3).toFixed(2)})
                 </p>
@@ -268,19 +270,19 @@ const BookingCalendar = ({
             {booking ? (
               <>
                 <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                Booking...
+                {t('booking')}
               </>
             ) : requiresPayment && price > 0 ? (
-              "Continue to Payment"
+              t('continueToPayment')
             ) : (
-              "Confirm Booking"
+              t('confirmBooking')
             )}
           </Button>
 
           <p className="text-xs text-center text-muted-foreground">
             {requiresPayment && price > 0
-              ? "You'll be redirected to payment after booking"
-              : "You'll receive email reminders before the meeting"}
+              ? t('paymentRedirect')
+              : t('emailReminder')}
           </p>
         </div>
       )}

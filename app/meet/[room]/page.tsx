@@ -5,6 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 import { Loader2, AlertCircle, Video, Calendar, User, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useUser } from "@clerk/nextjs";
+import { useTranslations } from "next-intl";
 
 interface BookingDetails {
   _id: string;
@@ -24,6 +25,7 @@ interface BookingDetails {
 }
 
 const MeetingPage = () => {
+  const t = useTranslations('meeting');
   const params = useParams();
   const router = useRouter();
   const { user } = useUser();
@@ -88,7 +90,7 @@ const MeetingPage = () => {
           <div className="bg-red-500/10 border-2 border-red-500/20 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-6">
             <AlertCircle className="w-10 h-10 text-red-500" />
           </div>
-          <h2 className="text-2xl font-bold text-white mb-3">Unable to Join Meeting</h2>
+          <h2 className="text-2xl font-bold text-white mb-3">{t('error.title')}</h2>
           <p className="text-slate-400 mb-6">{error}</p>
           <div className="flex gap-3 justify-center">
             <Button 
@@ -96,13 +98,13 @@ const MeetingPage = () => {
               variant="outline"
               className="border-slate-600 text-slate-300 hover:bg-slate-800"
             >
-              Try Again
+              {t('error.tryAgain')}
             </Button>
             <Button 
               onClick={() => router.push("/")}
               className="bg-brand-red-500 hover:bg-brand-red-600 text-white"
             >
-              Return Home
+              {t('error.returnHome')}
             </Button>
           </div>
         </div>
@@ -120,8 +122,8 @@ const MeetingPage = () => {
             </div>
             <Loader2 className="w-12 h-12 animate-spin text-brand-red-500 mx-auto relative z-10" />
           </div>
-          <h2 className="text-2xl font-bold text-white mb-2">Preparing Meeting</h2>
-          <p className="text-slate-400">Setting up your consultation...</p>
+          <h2 className="text-2xl font-bold text-white mb-2">{t('loading.title')}</h2>
+          <p className="text-slate-400">{t('loading.subtitle')}</p>
         </div>
       </div>
     );
@@ -137,7 +139,7 @@ const MeetingPage = () => {
               <Video className="w-5 h-5 text-brand-red-500" />
             </div>
             <div>
-              <h1 className="text-base font-bold text-white tracking-tight">Video Consultation</h1>
+              <h1 className="text-base font-bold text-white tracking-tight">{t('header.title')}</h1>
               {booking && (
                 <p className="text-xs text-slate-400 mt-0.5">
                   {formatDateTime(booking.startAt)} • {" "}
@@ -158,14 +160,14 @@ const MeetingPage = () => {
               className="border-2 border-slate-700 bg-slate-800/50 text-slate-200 hover:bg-slate-700 hover:border-brand-red-500 hover:text-white transition-all duration-200"
             >
               <ExternalLink className="w-4 h-4 mr-2" />
-              New Tab
+              {t('header.newTab')}
             </Button>
             <Button
               onClick={() => router.push("/")}
               size="sm"
               className="bg-brand-red-500 hover:bg-brand-red-600 text-white border-2 border-brand-red-500 hover:border-brand-red-400 transition-all duration-200 shadow-md"
             >
-              Exit Meeting
+              {t('header.exitMeeting')}
             </Button>
           </div>
         </div>

@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { MapPin, Briefcase, Clock, ExternalLink, Loader2, Search, Filter, X, Building2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useTranslations } from "next-intl";
 
 interface AusbildungJob {
   id: string;
@@ -40,6 +41,7 @@ const popularCities = [
 ];
 
 export default function AusbildungSection() {
+  const t = useTranslations('ausbildungSection');
   const [jobs, setJobs] = useState<AusbildungJob[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -102,10 +104,10 @@ export default function AusbildungSection() {
           className="text-center mb-8"
         >
           <h2 className="text-4xl md:text-5xl font-bold text-slate-900 dark:text-slate-50 mb-4">
-            <span className="text-brand-red-500">Ausbildung</span> Opportunities
+            <span className="text-brand-red-500">{t('titleHighlight')}</span> {t('title')}
           </h2>
           <p className="text-lg text-slate-600 dark:text-slate-300 max-w-2xl mx-auto mb-6">
-            Live opportunities from <strong>ausbildung.de</strong> - Germany&apos;s leading vocational training platform
+            {t('subtitle', { platform: t('platform') })}
           </p>
         </motion.div>
 
@@ -122,7 +124,7 @@ export default function AusbildungSection() {
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
               <Input
                 type="text"
-                placeholder="Job title or keyword (e.g., Pflegefachmann)"
+                placeholder={t('searchPlaceholder')}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="pl-10 h-12 text-base"
@@ -132,7 +134,7 @@ export default function AusbildungSection() {
               <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
               <Input
                 type="text"
-                placeholder="City (e.g., Berlin)"
+                placeholder={t('locationPlaceholder')}
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}
                 className="pl-10 h-12 text-base"
@@ -149,7 +151,7 @@ export default function AusbildungSection() {
               ) : (
                 <>
                   <Search className="w-5 h-5 mr-2" />
-                  Search
+                  {t('searchButton')}
                 </>
               )}
             </Button>
@@ -164,7 +166,7 @@ export default function AusbildungSection() {
               className="text-slate-600 dark:text-slate-400"
             >
               <Filter className="w-4 h-4 mr-2" />
-              {showFilters ? "Hide" : "Show"} Quick Filters
+              {t('filterButton')}
               {showFilters ? <X className="w-4 h-4 ml-2" /> : null}
             </Button>
           </div>
@@ -184,7 +186,7 @@ export default function AusbildungSection() {
                 <div className="mb-6">
                   <h3 className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-3 flex items-center gap-2">
                     <Briefcase className="w-4 h-4" />
-                    Popular Job Types
+                    {t('popularSearches')}
                   </h3>
                   <div className="flex flex-wrap gap-2">
                     {popularSearches.map((search) => (
@@ -204,7 +206,7 @@ export default function AusbildungSection() {
                 <div>
                   <h3 className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-3 flex items-center gap-2">
                     <Building2 className="w-4 h-4" />
-                    Popular Cities
+                    {t('popularCities')}
                   </h3>
                   <div className="flex flex-wrap gap-2">
                     {popularCities.map((city) => (
@@ -247,7 +249,7 @@ export default function AusbildungSection() {
         {loading && (
           <div className="flex flex-col items-center justify-center py-12">
             <Loader2 className="w-12 h-12 animate-spin text-brand-red-500 mb-4" />
-            <p className="text-slate-600 dark:text-slate-400">Loading opportunities...</p>
+            <p className="text-slate-600 dark:text-slate-400">{t('loadingOpportunities')}</p>
           </div>
         )}
 
@@ -266,10 +268,10 @@ export default function AusbildungSection() {
           <div className="text-center py-12">
             <Briefcase className="w-16 h-16 mx-auto text-slate-400 mb-4" />
             <h3 className="text-xl font-semibold text-slate-700 dark:text-slate-300 mb-2">
-              No opportunities found
+              {t('noResults')}
             </h3>
             <p className="text-slate-600 dark:text-slate-400 mb-6">
-              Try adjusting your search terms or location
+              {t('noResultsDesc')}
             </p>
             <Button onClick={() => handleQuickSearch("Pflegefachmann", "Berlin")} variant="outline">
               Reset to Default Search
@@ -318,7 +320,7 @@ export default function AusbildungSection() {
                       className="w-full bg-brand-red-500 hover:bg-brand-red-600 group"
                       onClick={() => window.open(job.url, "_blank")}
                     >
-                      View Details
+                      {t('viewDetails')}
                       <ExternalLink className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
                     </Button>
                   </Card>
@@ -335,7 +337,7 @@ export default function AusbildungSection() {
                   onClick={() => setDisplayCount(displayCount + 6)}
                   className="border-2 border-slate-300 dark:border-slate-600 hover:border-brand-red-500 hover:text-brand-red-600 dark:hover:border-brand-red-500"
                 >
-                  Load More ({jobs.length - displayCount} remaining)
+                  {t('viewMore')}
                 </Button>
               )}
               <div>

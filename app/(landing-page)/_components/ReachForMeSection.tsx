@@ -4,58 +4,61 @@ import { Card } from "@/components/ui/card";
 import { Calendar, Phone, MessageSquare, Clock, CheckCircle2 } from "lucide-react";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 
 export default function ReachForMeSection() {
+  const t = useTranslations('reachOut');
+
   const contactOptions = [
     {
       icon: Phone,
-      title: "Book a Call",
-      description: "Schedule a free 30-minute consultation call with our experts",
-      duration: "30 minutes",
-      availability: "Mon-Fri, 9 AM - 6 PM CET",
+      title: t('bookCall'),
+      description: t('bookCallDesc'),
+      duration: t('duration30'),
+      availability: t('availabilityWeekdays'),
       color: "from-blue-500 to-blue-600",
       bgColor: "bg-blue-50 dark:bg-blue-900/20",
       iconColor: "text-blue-600 dark:text-blue-400",
-      action: "Schedule Call",
+      action: t('scheduleCall'),
       href: "/contact/call",
       features: [
-        "Personalized guidance",
-        "Visa process clarity",
-        "University selection help",
+        t('feature1Call'),
+        t('feature2Call'),
+        t('feature3Call'),
       ],
     },
     {
       icon: Calendar,
-      title: "Book a Meeting",
-      description: "In-depth 60-minute session covering your complete German pathway",
-      duration: "60 minutes",
-      availability: "Mon-Sat, 10 AM - 8 PM CET",
+      title: t('bookMeeting'),
+      description: t('bookMeetingDesc'),
+      duration: t('duration60'),
+      availability: t('availabilityExtended'),
       color: "from-brand-red-500 to-brand-red-600",
       bgColor: "bg-brand-red-50 dark:bg-brand-red-900/20",
       iconColor: "text-brand-red-600 dark:text-brand-red-400",
-      action: "Book Meeting",
+      action: t('bookMeetingAction'),
       href: "/contact/meeting",
       features: [
-        "Document review",
-        "Application strategy",
-        "Interview preparation",
+        t('feature1Meeting'),
+        t('feature2Meeting'),
+        t('feature3Meeting'),
       ],
     },
     {
       icon: MessageSquare,
-      title: "Request Resume Making",
-      description: "Get a professional German-style CV (Lebenslauf) crafted by our experts",
-      duration: "2-3 business days",
-      availability: "24/7 Submissions",
+      title: t('requestResume'),
+      description: t('requestResumeDesc'),
+      duration: t('duration23Days'),
+      availability: t('availability247'),
       color: "from-green-500 to-green-600",
       bgColor: "bg-green-50 dark:bg-green-900/20",
       iconColor: "text-green-600 dark:text-green-400",
-      action: "Request Resume",
+      action: t('requestResumeAction'),
       href: "/contact/resume",
       features: [
-        "German CV standards",
-        "ATS-optimized format",
-        "Professional review",
+        t('feature1Resume'),
+        t('feature2Resume'),
+        t('feature3Resume'),
       ],
     },
   ];
@@ -83,17 +86,16 @@ export default function ReachForMeSection() {
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
             </span>
-            We&apos;re Online & Ready to Help
+            {t('onlineBadge')}
           </div>
 
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
             <span className="bg-gradient-to-r from-brand-red-400 to-brand-gold-400 bg-clip-text text-transparent">
-              Reach Out
+              {t('title')}
             </span>{" "}
-            to Us
           </h2>
           <p className="text-xl text-slate-300 max-w-2xl mx-auto">
-            Choose how you&apos;d like to connect. Our team is here to support your journey to Germany.
+            {t('subtitle')}
           </p>
         </motion.div>
 

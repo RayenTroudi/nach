@@ -11,6 +11,7 @@ import MeetingPayment from "@/components/shared/MeetingPayment";
 import { MessageSquare, Clock, CheckCircle2, FileText, ArrowLeft, Upload } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
+import { useTranslations } from 'next-intl';
 import {
   Dialog,
   DialogContent,
@@ -19,6 +20,7 @@ import {
 } from "@/components/ui/dialog";
 
 export default function ResumeRequestPage() {
+  const t = useTranslations('contact.resume');
   const [loading, setLoading] = useState(false);
   const [showPayment, setShowPayment] = useState(false);
   const [requestId, setRequestId] = useState<string | null>(null);
@@ -39,7 +41,7 @@ export default function ResumeRequestPage() {
     e.preventDefault();
     
     if (!formData.name || !formData.email || !formData.phone) {
-      toast.error("Please fill in all required fields");
+      toast.error(t('errors.requiredFields'));
       return;
     }
 
@@ -56,12 +58,12 @@ export default function ResumeRequestPage() {
 
       if (response.ok) {
         setRequestId(data.resumeRequest._id);
-        setShowPayment(true);
-        toast.success("Request created! Please proceed with payment.");
+        setShowPaymentt('success.requestCreated'));
       } else {
-        toast.error(data.error || "Failed to submit request. Please try again.");
+        toast.error(data.error || t('errors.submitFailed'));
       }
     } catch (error) {
+      toast.error(t('errors.somethingWrong')
       toast.error("Something went wrong. Please try again.");
     } finally {
       setLoading(false);
@@ -91,7 +93,7 @@ export default function ResumeRequestPage() {
         {/* Back Button */}
         <Link href="/" className="inline-flex items-center gap-2 text-slate-600 dark:text-slate-400 hover:text-brand-red-500 dark:hover:text-brand-red-400 mb-8 transition-colors">
           <ArrowLeft className="w-4 h-4" />
-          Back to Home
+          {t('backToHome')}
         </Link>
 
         {/* Payment Dialog */}
@@ -100,7 +102,7 @@ export default function ResumeRequestPage() {
             <DialogHeader>
               <DialogTitle className="text-2xl text-slate-950 dark:text-white flex items-center gap-2">
                 <FileText className="w-6 h-6 text-green-600" />
-                Complete Your Payment
+                {t('completePayment')}
               </DialogTitle>
             </DialogHeader>
             {requestId && (
@@ -121,10 +123,10 @@ export default function ResumeRequestPage() {
               <FileText className="w-8 h-8 text-white" />
             </div>
             <h1 className="text-4xl md:text-5xl font-bold text-slate-950 dark:text-white mb-4">
-              Request Professional Resume
+              {t('title')}
             </h1>
             <p className="text-xl text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
-              Get a German-style CV (Lebenslauf) crafted by experts to boost your job applications
+              {t('subtitle')}
             </p>
           </div>
 
@@ -133,24 +135,24 @@ export default function ResumeRequestPage() {
             <Card className="border-2 border-slate-200 dark:border-slate-800">
               <CardContent className="p-6 text-center">
                 <Clock className="w-8 h-8 text-green-600 dark:text-green-400 mx-auto mb-3" />
-                <h3 className="font-semibold text-slate-950 dark:text-white mb-1">Quick Turnaround</h3>
-                <p className="text-sm text-slate-600 dark:text-slate-400">2-3 business days</p>
+                <h3 className="font-semibold text-slate-950 dark:text-white mb-1">{t('features.turnaroundTitle')}</h3>
+                <p className="text-sm text-slate-600 dark:text-slate-400">{t('features.turnaroundDesc')}</p>
               </CardContent>
             </Card>
 
             <Card className="border-2 border-slate-200 dark:border-slate-800">
               <CardContent className="p-6 text-center">
                 <CheckCircle2 className="w-8 h-8 text-green-600 dark:text-green-400 mx-auto mb-3" />
-                <h3 className="font-semibold text-slate-950 dark:text-white mb-1">German Standards</h3>
-                <p className="text-sm text-slate-600 dark:text-slate-400">ATS-optimized format</p>
+                <h3 className="font-semibold text-slate-950 dark:text-white mb-1">{t('features.standardsTitle')}</h3>
+                <p className="text-sm text-slate-600 dark:text-slate-400">{t('features.standardsDesc')}</p>
               </CardContent>
             </Card>
 
             <Card className="border-2 border-slate-200 dark:border-slate-800">
               <CardContent className="p-6 text-center">
                 <MessageSquare className="w-8 h-8 text-green-600 dark:text-green-400 mx-auto mb-3" />
-                <h3 className="font-semibold text-slate-950 dark:text-white mb-1">Expert Review</h3>
-                <p className="text-sm text-slate-600 dark:text-slate-400">Professional feedback</p>
+                <h3 className="font-semibold text-slate-950 dark:text-white mb-1">{t('features.reviewTitle')}</h3>
+                <p className="text-sm text-slate-600 dark:text-slate-400">{t('features.reviewDesc')}</p>
               </CardContent>
             </Card>
           </div>
@@ -158,24 +160,24 @@ export default function ResumeRequestPage() {
           {/* Form */}
           <Card className="border-2 border-slate-200 dark:border-slate-800 shadow-xl">
             <CardHeader className="bg-gradient-to-r from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 border-b-2 border-slate-200 dark:border-slate-800">
-              <CardTitle className="text-2xl text-slate-950 dark:text-white">Resume Request Form</CardTitle>
-              <p className="text-sm text-slate-600 dark:text-slate-400">Fill in your details and we&apos;ll create your professional resume</p>
+              <CardTitle className="text-2xl text-slate-950 dark:text-white">{t('formTitle')}</CardTitle>
+              <p className="text-sm text-slate-600 dark:text-slate-400">{t('formDescription')}</p>
             </CardHeader>
             <CardContent className="p-8">
               <form onSubmit={handleSubmit} className="space-y-6">
                 {/* Personal Information */}
                 <div className="space-y-4">
                   <h3 className="font-semibold text-lg text-slate-950 dark:text-white border-b-2 border-slate-200 dark:border-slate-800 pb-2">
-                    Personal Information
+                    {t('personalInfo')}
                   </h3>
                   
                   <div className="grid md:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-                        Full Name <span className="text-red-500">*</span>
+                        {t('form.fullName')} <span className="text-red-500">*</span>
                       </label>
                       <Input
-                        placeholder="John Doe"
+                        placeholder={t('form.fullNamePlaceholder')}
                         value={formData.name}
                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                         required
@@ -185,11 +187,11 @@ export default function ResumeRequestPage() {
 
                     <div>
                       <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-                        Email Address <span className="text-red-500">*</span>
+                        {t('form.email')} <span className="text-red-500">*</span>
                       </label>
                       <Input
                         type="email"
-                        placeholder="john@example.com"
+                        placeholder={t('form.emailPlaceholder')}
                         value={formData.email}
                         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                         required
@@ -200,11 +202,11 @@ export default function ResumeRequestPage() {
 
                   <div>
                     <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-                      Phone Number <span className="text-red-500">*</span>
+                      {t('form.phone')} <span className="text-red-500">*</span>
                     </label>
                     <Input
                       type="tel"
-                      placeholder="+49 123 456 7890"
+                      placeholder={t('form.phonePlaceholder')}
                       value={formData.phone}
                       onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                       required
@@ -216,16 +218,16 @@ export default function ResumeRequestPage() {
                 {/* Professional Information */}
                 <div className="space-y-4">
                   <h3 className="font-semibold text-lg text-slate-950 dark:text-white border-b-2 border-slate-200 dark:border-slate-800 pb-2">
-                    Professional Details
+                    {t('professionalDetails')}
                   </h3>
 
                   <div className="grid md:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-                        Current Role/Position
+                        {t('form.currentRole')}
                       </label>
                       <Input
-                        placeholder="Software Engineer"
+                        placeholder={t('form.currentRolePlaceholder')}
                         value={formData.currentRole}
                         onChange={(e) => setFormData({ ...formData, currentRole: e.target.value })}
                         className="border-2 border-slate-200 dark:border-slate-800"
@@ -234,10 +236,10 @@ export default function ResumeRequestPage() {
 
                     <div>
                       <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-                        Target Role in Germany
+                        {t('form.targetRole')}
                       </label>
                       <Input
-                        placeholder="Senior Developer"
+                        placeholder={t('form.targetRolePlaceholder')}
                         value={formData.targetRole}
                         onChange={(e) => setFormData({ ...formData, targetRole: e.target.value })}
                         className="border-2 border-slate-200 dark:border-slate-800"
@@ -247,10 +249,10 @@ export default function ResumeRequestPage() {
 
                   <div>
                     <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-                      Work Experience (briefly describe)
+                      {t('form.experience')}
                     </label>
                     <Textarea
-                      placeholder="List your key work experiences, roles, and responsibilities..."
+                      placeholder={t('form.experiencePlaceholder')}
                       value={formData.experience}
                       onChange={(e) => setFormData({ ...formData, experience: e.target.value })}
                       rows={4}
@@ -260,10 +262,10 @@ export default function ResumeRequestPage() {
 
                   <div>
                     <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-                      Education Background
+                      {t('form.education')}
                     </label>
                     <Textarea
-                      placeholder="List your degrees, certifications, and educational qualifications..."
+                      placeholder={t('form.educationPlaceholder')}
                       value={formData.education}
                       onChange={(e) => setFormData({ ...formData, education: e.target.value })}
                       rows={3}
@@ -273,10 +275,10 @@ export default function ResumeRequestPage() {
 
                   <div>
                     <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-                      Key Skills & Competencies
+                      {t('form.skills')}
                     </label>
                     <Textarea
-                      placeholder="List your technical skills, languages, soft skills..."
+                      placeholder={t('form.skillsPlaceholder')}
                       value={formData.skills}
                       onChange={(e) => setFormData({ ...formData, skills: e.target.value })}
                       rows={3}
@@ -288,17 +290,17 @@ export default function ResumeRequestPage() {
                 {/* Document Upload */}
                 <div className="space-y-4">
                   <h3 className="font-semibold text-lg text-slate-950 dark:text-white border-b-2 border-slate-200 dark:border-slate-800 pb-2">
-                    Supporting Documents (Optional)
+                    {t('supportingDocuments')}
                   </h3>
                   
                   <div>
                     <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-                      Upload Current CV/Resume (if available)
+                      {t('form.uploadCV')}
                     </label>
                     {formData.documentUrl ? (
                       <div className="flex items-center gap-2 p-3 bg-green-50 dark:bg-green-900/20 border-2 border-green-200 dark:border-green-800 rounded-lg">
                         <FileText className="w-5 h-5 text-green-600" />
-                        <span className="text-sm text-slate-700 dark:text-slate-300 flex-1">Document uploaded successfully</span>
+                        <span className="text-sm text-slate-700 dark:text-slate-300 flex-1">{t('form.documentUploaded')}</span>
                         <Button
                           type="button"
                           variant="outline"
@@ -306,7 +308,7 @@ export default function ResumeRequestPage() {
                           onClick={() => setFormData({ ...formData, documentUrl: "" })}
                           className="text-xs"
                         >
-                          Remove
+                          {t('form.remove')}
                         </Button>
                       </div>
                     ) : (
@@ -316,7 +318,7 @@ export default function ResumeRequestPage() {
                       />
                     )}
                     <p className="text-xs text-slate-500 dark:text-slate-400 mt-2">
-                      Accepted formats: PDF, DOCX (Max 10MB)
+                      {t('form.acceptedFormats')}
                     </p>
                   </div>
                 </div>
@@ -324,10 +326,10 @@ export default function ResumeRequestPage() {
                 {/* Additional Information */}
                 <div>
                   <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-                    Additional Information
+                    {t('form.additionalInfo')}
                   </label>
                   <Textarea
-                    placeholder="Any specific requirements, preferences, or additional details you'd like us to know..."
+                    placeholder={t('form.additionalInfoPlaceholder')}
                     value={formData.additionalInfo}
                     onChange={(e) => setFormData({ ...formData, additionalInfo: e.target.value })}
                     rows={4}
@@ -339,11 +341,11 @@ export default function ResumeRequestPage() {
                 <div className="bg-green-50 dark:bg-green-900/20 border-2 border-green-200 dark:border-green-800 rounded-lg p-6">
                   <div className="flex items-center justify-between">
                     <div>
-                      <h4 className="font-semibold text-lg text-slate-950 dark:text-white">Service Fee</h4>
-                      <p className="text-sm text-slate-600 dark:text-slate-400">Payment required after request submission</p>
+                      <h4 className="font-semibold text-lg text-slate-950 dark:text-white">{t('serviceFee')}</h4>
+                      <p className="text-sm text-slate-600 dark:text-slate-400">{t('paymentRequired')}</p>
                     </div>
                     <div className="text-right">
-                      <div className="text-3xl font-bold text-green-600 dark:text-green-400">49 TND</div>
+                      <div className="text-3xl font-bold text-green-600 dark:text-green-400">{t('price')}</div>
                     </div>
                   </div>
                 </div>
@@ -358,19 +360,19 @@ export default function ResumeRequestPage() {
                     {loading ? (
                       <>
                         <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
-                        Submitting...
+                        {t('submitting')}
                       </>
                     ) : (
                       <>
                         <Upload className="w-5 h-5 mr-2" />
-                        Continue to Payment
+                        {t('continueToPayment')}
                       </>
                     )}
                   </Button>
                 </div>
 
                 <p className="text-sm text-slate-500 dark:text-slate-400 text-center">
-                  By submitting this form, you agree to our terms and privacy policy. You&apos;ll be redirected to payment after submission.
+                  {t('termsNotice')}
                 </p>
               </form>
             </CardContent>
@@ -379,25 +381,25 @@ export default function ResumeRequestPage() {
           {/* What You'll Get */}
           <Card className="mt-8 border-2 border-green-200 dark:border-green-800 bg-green-50 dark:bg-green-900/20">
             <CardHeader>
-              <CardTitle className="text-xl text-slate-950 dark:text-white">What You&apos;ll Receive</CardTitle>
+              <CardTitle className="text-xl text-slate-950 dark:text-white">{t('whatYoullReceive')}</CardTitle>
             </CardHeader>
             <CardContent>
               <ul className="space-y-3">
                 <li className="flex items-start gap-3">
                   <CheckCircle2 className="w-5 h-5 text-green-600 dark:text-green-400 flex-shrink-0 mt-0.5" />
-                  <span className="text-slate-700 dark:text-slate-300">German-standard CV (Lebenslauf) in both German and English</span>
+                  <span className="text-slate-700 dark:text-slate-300">{t('includes.germanCV')}</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <CheckCircle2 className="w-5 h-5 text-green-600 dark:text-green-400 flex-shrink-0 mt-0.5" />
-                  <span className="text-slate-700 dark:text-slate-300">ATS-optimized formatting for job portals</span>
+                  <span className="text-slate-700 dark:text-slate-300">{t('includes.atsOptimized')}</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <CheckCircle2 className="w-5 h-5 text-green-600 dark:text-green-400 flex-shrink-0 mt-0.5" />
-                  <span className="text-slate-700 dark:text-slate-300">Professional review and optimization suggestions</span>
+                  <span className="text-slate-700 dark:text-slate-300">{t('includes.review')}</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <CheckCircle2 className="w-5 h-5 text-green-600 dark:text-green-400 flex-shrink-0 mt-0.5" />
-                  <span className="text-slate-700 dark:text-slate-300">One round of revisions included</span>
+                  <span className="text-slate-700 dark:text-slate-300">{t('includes.revisions')}</span>
                 </li>
               </ul>
             </CardContent>

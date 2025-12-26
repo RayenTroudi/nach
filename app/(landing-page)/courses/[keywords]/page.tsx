@@ -5,6 +5,7 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { getCoursesByCategoryID, getCoursesByTitle } from "@/lib/actions";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { useTranslations } from 'next-intl';
 
 import NoCoursesAnimation from "@/components/shared/animations/NoCourses";
 import { TCourse } from "@/types/models.types";
@@ -36,6 +37,7 @@ interface props {
 }
 
 const Page = ({ params }: props) => {
+  const t = useTranslations('coursesPage');
   const [showSpinner, setShowSpinner] = useState(true);
   const [courses, setCourses] = useState<TCourse[]>([]);
   const [categories, setCategories] = useState<string[]>([]);
@@ -58,14 +60,14 @@ const Page = ({ params }: props) => {
     id: "price",
     name: "Price",
     options: [
-      { value: [0, 999], label: "Any price" },
+      { value: [0, 999], label: t('filters.price.any') },
       {
         value: [0, 20],
-        label: "Under 20€",
+        label: t('filters.price.under20'),
       },
       {
         value: [0, 40],
-        label: "Under 40€",
+        label: t('filters.price.under40'),
       },
     ],
   } as const;

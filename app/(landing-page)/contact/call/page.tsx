@@ -8,10 +8,13 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Phone, Clock, CheckCircle2, Calendar, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import BookingCalendar from "@/components/shared/BookingCalendar";
+import { useTranslations } from 'next-intl';
 
 export default function BookCallPage() {
   const [isBookingOpen, setIsBookingOpen] = useState(false);
   const DEFAULT_HOST_ID = process.env.NEXT_PUBLIC_DEFAULT_HOST_ID || "675b6eb1a0d2a4e540c1d7f0";
+  const t = useTranslations('contact.call');
+  const tCommon = useTranslations('common');
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white dark:from-slate-900 dark:to-slate-950 py-12">
@@ -20,7 +23,7 @@ export default function BookCallPage() {
         <Link href="/">
           <Button variant="ghost" className="mb-6">
             <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to Home
+            {t('backToHome')}
           </Button>
         </Link>
 
@@ -31,11 +34,10 @@ export default function BookCallPage() {
               <Phone className="w-8 h-8 text-brand-red-500" />
             </div>
             <h1 className="text-4xl md:text-5xl font-bold text-slate-900 dark:text-slate-50 mb-4">
-              Book a Quick Call
+              {t('title')}
             </h1>
             <p className="text-lg text-slate-600 dark:text-slate-300 max-w-2xl mx-auto">
-              Get instant answers to your questions about studying, working, or
-              living in Germany
+              {t('subtitle')}
             </p>
           </div>
 
@@ -46,34 +48,32 @@ export default function BookCallPage() {
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <Clock className="w-5 h-5 text-brand-red-500" />
-                    Call Details
+                    {t('detailsTitle')}
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div>
                     <p className="text-sm font-medium text-slate-900 dark:text-slate-50 mb-1">
-                      Duration
+                      {t('duration')}
                     </p>
                     <p className="text-sm text-slate-600 dark:text-slate-400">
-                      30 minutes
+                      {t('duration30min')}
                     </p>
                   </div>
                   <div>
                     <p className="text-sm font-medium text-slate-900 dark:text-slate-50 mb-1">
-                      Availability
+                      {t('availability')}
                     </p>
-                    <p className="text-sm text-slate-600 dark:text-slate-400">
-                      Monday - Friday
-                      <br />
-                      9:00 AM - 6:00 PM CET
+                    <p className="text-sm text-slate-600 dark:text-slate-400" style={{ whiteSpace: 'pre-line' }}>
+                      {t('availabilityWeekdays')}
                     </p>
                   </div>
                   <div>
                     <p className="text-sm font-medium text-slate-900 dark:text-slate-50 mb-1">
-                      Response Time
+                      {t('responseTime')}
                     </p>
                     <p className="text-sm text-slate-600 dark:text-slate-400">
-                      Same day booking available
+                      {t('sameDayBooking')}
                     </p>
                   </div>
                 </CardContent>
@@ -83,17 +83,17 @@ export default function BookCallPage() {
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <CheckCircle2 className="w-5 h-5 text-brand-red-500" />
-                    What&apos;s Included
+                    {t('whatsIncluded')}
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <ul className="space-y-3">
                     {[
-                      "Quick Q&A session",
-                      "Personalized advice",
-                      "Resource recommendations",
-                      "Next steps guidance",
-                      "Follow-up email summary",
+                      t('features.qanda'),
+                      t('features.advice'),
+                      t('features.resources'),
+                      t('features.guidance'),
+                      t('features.summary'),
                     ].map((item) => (
                       <li
                         key={item}
@@ -114,7 +114,7 @@ export default function BookCallPage() {
                 <CardHeader className="border-b">
                   <CardTitle className="flex items-center gap-2">
                     <Calendar className="w-5 h-5 text-brand-red-500" />
-                    Select Your Call Time
+                    {t('selectTimeTitle')}
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="p-6">
@@ -122,16 +122,16 @@ export default function BookCallPage() {
                     <div className="bg-gradient-to-r from-blue-500/10 to-purple-500/10 border border-blue-200 dark:border-blue-800 rounded-lg p-6 text-center">
                       <Phone className="w-12 h-12 mx-auto text-brand-red-500 mb-3" />
                       <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-50 mb-2">
-                        Book Your Quick Call
+                        {t('bookCallTitle')}
                       </h3>
                     <p className="text-sm text-slate-600 dark:text-slate-400 mb-4 max-w-md mx-auto">
-                      Choose a convenient 30-minute time slot for a quick consultation.
+                      {t('bookCallDescription')}
                     </p>
                     <div className="mb-4">
                       <p className="text-2xl font-bold text-brand-red-500">
-                        49 TND <span className="text-sm text-slate-600">(€15)</span>
+                        {t('priceLabel')} <span className="text-sm text-slate-600">(€15)</span>
                       </p>
-                      <p className="text-xs text-slate-500">Quick 30-minute call</p>
+                      <p className="text-xs text-slate-500">{t('priceNote')}</p>
                     </div>
                       <Button 
                         onClick={() => setIsBookingOpen(true)}
@@ -139,7 +139,7 @@ export default function BookCallPage() {
                         className="bg-brand-red-500 hover:bg-brand-red-600"
                       >
                         <Calendar className="w-5 h-5 mr-2" />
-                        Select Date & Time
+                        {t('selectDateTime')}
                       </Button>
                     </div>
 
@@ -148,10 +148,10 @@ export default function BookCallPage() {
                         <CheckCircle2 className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
                         <div>
                           <p className="font-medium text-slate-900 dark:text-slate-50 text-sm mb-1">
-                            Instant Confirmation
+                            {t('benefits.confirmation')}
                           </p>
                           <p className="text-xs text-slate-600 dark:text-slate-400">
-                            Immediate email with call details and link
+                            {t('benefits.confirmationDesc')}
                           </p>
                         </div>
                       </div>
@@ -159,10 +159,10 @@ export default function BookCallPage() {
                         <CheckCircle2 className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
                         <div>
                           <p className="font-medium text-slate-900 dark:text-slate-50 text-sm mb-1">
-                            Email Reminders
+                            {t('benefits.reminders')}
                           </p>
                           <p className="text-xs text-slate-600 dark:text-slate-400">
-                            Never miss your call with automated reminders
+                            {t('benefits.remindersDesc')}
                           </p>
                         </div>
                       </div>
@@ -170,10 +170,10 @@ export default function BookCallPage() {
                         <CheckCircle2 className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
                         <div>
                           <p className="font-medium text-slate-900 dark:text-slate-50 text-sm mb-1">
-                            Browser-Based
+                            {t('benefits.browserBased')}
                           </p>
                           <p className="text-xs text-slate-600 dark:text-slate-400">
-                            No apps needed - join from any browser
+                            {t('benefits.browserBasedDesc')}
                           </p>
                         </div>
                       </div>
@@ -181,10 +181,10 @@ export default function BookCallPage() {
                         <CheckCircle2 className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
                         <div>
                           <p className="font-medium text-slate-900 dark:text-slate-50 text-sm mb-1">
-                            Flexible Scheduling
+                            {t('benefits.flexible')}
                           </p>
                           <p className="text-xs text-slate-600 dark:text-slate-400">
-                            Cancel or reschedule up to 24 hours before
+                            {t('benefits.flexibleDesc')}
                           </p>
                         </div>
                       </div>
@@ -198,35 +198,31 @@ export default function BookCallPage() {
           {/* FAQ */}
           <Card className="mt-8">
             <CardHeader>
-              <CardTitle>Frequently Asked Questions</CardTitle>
+              <CardTitle>{t('faqTitle')}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div>
                 <h4 className="font-medium text-slate-900 dark:text-slate-50 mb-1">
-                  What should I prepare before the call?
+                  {t('faq1Question')}
                 </h4>
                 <p className="text-sm text-slate-600 dark:text-slate-400">
-                  Have your questions ready and any relevant documents (academic
-                  transcripts, work experience, etc.) that might help us provide
-                  better guidance.
+                  {t('faq1Answer')}
                 </p>
               </div>
               <div>
                 <h4 className="font-medium text-slate-900 dark:text-slate-50 mb-1">
-                  Can I reschedule my call?
+                  {t('faq2Question')}
                 </h4>
                 <p className="text-sm text-slate-600 dark:text-slate-400">
-                  Yes, you can reschedule up to 24 hours before your scheduled
-                  time through the confirmation email you&apos;ll receive.
+                  {t('faq2Answer')}
                 </p>
               </div>
               <div>
                 <h4 className="font-medium text-slate-900 dark:text-slate-50 mb-1">
-                  What if I need more time?
+                  {t('faq3Question')}
                 </h4>
                 <p className="text-sm text-slate-600 dark:text-slate-400">
-                  If you need more in-depth consultation, we can schedule a
-                  60-minute meeting or provide additional resources after the call.
+                  {t('faq3Answer')}
                 </p>
               </div>
             </CardContent>
@@ -237,7 +233,7 @@ export default function BookCallPage() {
         <Dialog open={isBookingOpen} onOpenChange={setIsBookingOpen}>
           <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
-              <DialogTitle>Book Your Quick Call</DialogTitle>
+              <DialogTitle>{t('bookYourCall')}</DialogTitle>
             </DialogHeader>
             <BookingCalendar
               hostId={DEFAULT_HOST_ID}

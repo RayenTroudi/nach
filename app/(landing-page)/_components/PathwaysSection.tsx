@@ -5,53 +5,56 @@ import { BookOpen, Briefcase, Home, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
 import { NavigationButton } from "@/components/shared";
 import Link from "next/link";
-
-const pathways = [
-  {
-    icon: BookOpen,
-    title: "Study Path",
-    subtitle: "From Application to Acceptance",
-    description: "Master the German university system, ace your language tests, and secure your student visa—all in one structured pathway.",
-    features: [
-      "University Selection Guide",
-      "Visa Application Process",
-      "German Language B2/C1",
-      "Application Documents",
-    ],
-    color: "brand-blue",
-    link: "/courses?category=study",
-  },
-  {
-    icon: Briefcase,
-    title: "Work Path",
-    subtitle: "Launch Your Career in Germany",
-    description: "Land your dream job with Germany's top employers. Learn job search strategies, CV optimization, and interview skills from industry experts.",
-    features: [
-      "Job Search Strategies",
-      "German CV & Cover Letter",
-      "Interview Preparation",
-      "Skilled Worker Visa",
-    ],
-    color: "brand-red",
-    link: "/courses?category=work",
-  },
-  {
-    icon: Home,
-    title: "Live Path",
-    subtitle: "Make Germany Your Home",
-    description: "Integrate seamlessly into German life. From finding housing to understanding culture, we'll guide you every step of the way.",
-    features: [
-      "Housing & Accommodation",
-      "Cultural Integration",
-      "Daily Life Essentials",
-      "Permanent Residency",
-    ],
-    color: "brand-green",
-    link: "/courses?category=living",
-  },
-];
+import { useTranslations } from 'next-intl';
 
 export default function PathwaysSection() {
+  const t = useTranslations('pathways');
+  
+  const pathways = [
+    {
+      icon: BookOpen,
+      title: t('studyPath'),
+      subtitle: t('studySubtitle'),
+      description: t('studyDescription'),
+      features: [
+        t('studyFeature1'),
+        t('studyFeature2'),
+        t('studyFeature3'),
+        t('studyFeature4'),
+      ],
+      color: "brand-blue",
+      link: "/courses?category=study",
+    },
+    {
+      icon: Briefcase,
+      title: t('workPath'),
+      subtitle: t('workSubtitle'),
+      description: t('workDescription'),
+      features: [
+        t('workFeature1'),
+        t('workFeature2'),
+        t('workFeature3'),
+        t('workFeature4'),
+      ],
+      color: "brand-red",
+      link: "/courses?category=work",
+    },
+    {
+      icon: Home,
+      title: t('livePath'),
+      subtitle: t('liveSubtitle'),
+      description: t('liveDescription'),
+      features: [
+        t('liveFeature1'),
+        t('liveFeature2'),
+        t('liveFeature3'),
+        t('liveFeature4'),
+      ],
+      color: "brand-green",
+      link: "/courses?category=living",
+    },
+  ];
+  
   return (
     <section className="py-24 bg-white dark:bg-gradient-to-b dark:from-slate-950 dark:to-slate-900">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -64,13 +67,12 @@ export default function PathwaysSection() {
           className="text-center mb-16"
         >
           <h2 className="text-4xl md:text-5xl font-bold mb-4">
-            <span className="text-slate-900 dark:text-white">Choose Your </span>
             <span className="bg-gradient-to-r from-brand-red-600 to-brand-gold-500 bg-clip-text text-transparent">
-              German Pathway
+              {t('title')}
             </span>
           </h2>
           <p className="text-xl text-slate-600 dark:text-slate-300 max-w-3xl mx-auto">
-            Whether you&apos;re pursuing education, career opportunities, or a new life in Germany, we have a tailored pathway for your journey.
+            {t('subtitle')}
           </p>
         </motion.div>
 
@@ -122,7 +124,7 @@ export default function PathwaysSection() {
                       variant="outline"
                       className="w-full group-hover:bg-brand-red-600 group-hover:text-white group-hover:border-brand-red-600 transition-all duration-300"
                     >
-                      Explore Path
+                      {t('explorePathway')}
                       <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
                     </Button>
                   </Link>
@@ -141,14 +143,14 @@ export default function PathwaysSection() {
           className="text-center mt-16"
         >
           <p className="text-slate-600 dark:text-slate-300 mb-6">
-            Ready to explore all available courses?
+            {t('seeAllCourses')}
           </p>
           <NavigationButton
             href="/courses"
             size="lg"
             className="bg-gradient-to-r from-brand-gold-500 to-brand-gold-600 hover:from-brand-gold-600 hover:to-brand-gold-700 text-slate-900 font-semibold shadow-lg"
           >
-            Browse All Courses
+            {t('seeAllCourses')}
           </NavigationButton>
         </motion.div>
       </div>

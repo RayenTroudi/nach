@@ -6,6 +6,7 @@ import { Download, FileText, Eye, Calendar } from "lucide-react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
+import { useTranslations } from "next-intl";
 
 interface Document {
   _id: string;
@@ -27,6 +28,7 @@ interface DocumentsSectionProps {
 }
 
 export default function DocumentsSection({ documents }: DocumentsSectionProps) {
+  const t = useTranslations('documentsSection');
   const [mounted, setMounted] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("All");
 
@@ -36,12 +38,12 @@ export default function DocumentsSection({ documents }: DocumentsSectionProps) {
   }, []);
 
   const categories = [
-    { name: "All", color: "bg-slate-500" },
-    { name: "Visa", color: "bg-blue-500" },
-    { name: "Application", color: "bg-green-500" },
-    { name: "Language", color: "bg-purple-500" },
-    { name: "Certificate", color: "bg-orange-500" },
-    { name: "Guide", color: "bg-pink-500" },
+    { name: "All", label: t('categoryAll'), color: "bg-slate-500" },
+    { name: "Visa", label: t('categoryVisa'), color: "bg-blue-500" },
+    { name: "Application", label: t('categoryApplication'), color: "bg-green-500" },
+    { name: "Language", label: t('categoryLanguage'), color: "bg-purple-500" },
+    { name: "Certificate", label: t('categoryCertificate'), color: "bg-orange-500" },
+    { name: "Guide", label: t('categoryGuide'), color: "bg-pink-500" },
   ];
 
   // Filter documents based on selected category
@@ -94,10 +96,10 @@ export default function DocumentsSection({ documents }: DocumentsSectionProps) {
             transition={{ duration: 0.5 }}
           >
             <h2 className="text-4xl md:text-5xl font-bold text-slate-900 dark:text-slate-50 mb-4">
-              Essential <span className="text-brand-red-500">Documents</span>
+              {t('title')} <span className="text-brand-red-500">{t('titleHighlight')}</span>
             </h2>
             <p className="text-lg text-slate-600 dark:text-slate-300 max-w-2xl mx-auto">
-              Download templates, guides, and forms to streamline your German immigration journey
+              {t('subtitle')}
             </p>
           </motion.div>
         </div>
@@ -122,7 +124,7 @@ export default function DocumentsSection({ documents }: DocumentsSectionProps) {
                 onClick={() => setSelectedCategory(cat.name)}
               >
                 <span className={`w-2 h-2 rounded-full ${cat.color} mr-2`} />
-                {cat.name}
+                {cat.label}
               </Button>
             </motion.div>
           ))}
@@ -133,10 +135,10 @@ export default function DocumentsSection({ documents }: DocumentsSectionProps) {
           <div className="text-center py-12">
             <FileText className="w-16 h-16 mx-auto text-slate-300 dark:text-slate-700 mb-4" />
             <h3 className="text-xl font-semibold text-slate-900 dark:text-slate-50 mb-2">
-              No documents found
+              {t('noDocuments')}
             </h3>
             <p className="text-slate-600 dark:text-slate-400">
-              No documents available in the {selectedCategory} category yet.
+              {t('noDocumentsDesc', { category: selectedCategory })}
             </p>
           </div>
         ) : (
@@ -189,7 +191,7 @@ export default function DocumentsSection({ documents }: DocumentsSectionProps) {
                     onClick={() => handleDownload(doc)}
                   >
                     <Download className="w-4 h-4 mr-2" />
-                    Download
+                    {t('download')}
                   </Button>
                   <Button
                     size="sm"
@@ -213,7 +215,7 @@ export default function DocumentsSection({ documents }: DocumentsSectionProps) {
               variant="outline"
               className="border-2 border-brand-red-500 text-brand-red-600 dark:text-brand-red-400 hover:bg-brand-red-50 dark:hover:bg-brand-red-950/50"
             >
-              View All Documents
+              {t('viewAll')}
             </Button>
           </Link>
         </div>

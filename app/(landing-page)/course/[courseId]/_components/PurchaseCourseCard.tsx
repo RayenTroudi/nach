@@ -14,6 +14,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useUser } from "@clerk/nextjs";
+import { useTranslations } from 'next-intl';
 
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { SignedIn, SignedOut } from "@clerk/nextjs";
@@ -38,6 +39,7 @@ const PurchaseCourseCard = ({
   isCourseOwner,
 }: Props) => {
   const router = useRouter();
+  const t = useTranslations('course.purchase');
   
   // Move all hooks to the top, before any conditional returns
   const { addToCart, removeFromCart, cartItems } = useCart();
@@ -62,15 +64,15 @@ const PurchaseCourseCard = ({
     return (
       <div className="w-full h-[400px] flex items-center justify-center">
         <div className="text-center">
-          <p className="text-xl font-semibold mb-2">Course not found</p>
+          <p className="text-xl font-semibold mb-2">{t('courseNotFound')}</p>
           <p className="text-slate-600 dark:text-slate-400">
-            The course you&apos;re looking for doesn&apos;t exist or has been removed.
+            {t('courseNotFoundDesc')}
           </p>
           <Button
             onClick={() => router.push("/courses")}
             className="mt-4 bg-brand-red-500 hover:bg-brand-red-600"
           >
-            Browse Courses
+            {t('browseCourses')}
           </Button>
         </div>
       </div>
@@ -116,16 +118,16 @@ const PurchaseCourseCard = ({
       setIsInCart(false);
       scnToast({
         variant: "success",
-        title: "Removed from Cart",
-        description: "This course has been removed from your cart.",
+        title: t('removedFromCart'),
+        description: t('removedFromCartDesc'),
       });
     } else {
       addToCart(course);
       setIsInCart(true);
       scnToast({
         variant: "success",
-        title: "Added to Cart",
-        description: "This course has been added to your cart.",
+        title: t('addedToCart'),
+        description: t('addedToCartDesc'),
       });
     }
   };
@@ -178,7 +180,7 @@ const PurchaseCourseCard = ({
               </div>
             ) : (
               <div className="flex items-center gap-2">
-                <span className="text-3xl font-bold text-green-500">FREE</span>
+                <span className="text-3xl font-bold text-green-500">{t('free')}</span>
               </div>
             )}
           </div>
@@ -188,7 +190,7 @@ const PurchaseCourseCard = ({
             <div className="space-y-3">
               <h3 className="text-lg font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
                 <LucideVideo size={20} className="text-brand-red-500" />
-                Preview Videos
+                {t('previewVideos')}
               </h3>
               <div className="space-y-2">
                 {allFreeVideos.map((video: TVideo | undefined, key: number) => (
@@ -227,7 +229,7 @@ const PurchaseCourseCard = ({
                     className="flex-1 h-12 bg-brand-red-500 text-white hover:bg-brand-red-600 font-semibold text-base rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
                     onClick={handleAddToCart}
                   >
-                    {isInCart ? "Remove from cart" : "Add to cart"}
+                    {isInCart ? t('removeFromCart') : t('addToCart')}
                   </Button>
 
                   <Button
@@ -262,7 +264,7 @@ const PurchaseCourseCard = ({
                       name="manage-course"
                       className="w-full bg-slate-950 dark:bg-slate-200 dark:hover:opacity-90 transition-all duration-300 ease-in-out  rounded-sm text-md font-bold"
                     >
-                      Manage your course
+                      {t('manageYourCourse')}
                     </Button>
                   </Link>
                 </div>
@@ -272,7 +274,7 @@ const PurchaseCourseCard = ({
                     name="continue_learning"
                     className="w-full bg-slate-950 dark:bg-slate-200 dark:hover:opacity-90 transition-all mt2 duration-300 ease-in-out rounded-sm text-md font-bold"
                   >
-                    Continue Learning
+                    {t('continueLearning')}
                   </Button>
                 </Link>
               ) : (
@@ -283,12 +285,12 @@ const PurchaseCourseCard = ({
                         name="buy-now"
                         className="w-full bg-slate-950 dark:bg-slate-200 dark:hover:opacity-90 transition-all duration-300 ease-in-out  mt-2 rounded-sm text-md font-bold"
                       >
-                        Buy now
+                        {t('buyNow')}
                       </Button>
                     </DialogTrigger>
                     <DialogContent className="sm:max-w-[425px] md:max-w-[700px] p-6 bg-slate-100 dark:bg-slate-950 max-h-[90vh] overflow-y-auto">
                       <div className="flex flex-col gap-y-4">
-                        <h2 className="text-2xl font-bold">Complete Your Purchase</h2>
+                        <h2 className="text-2xl font-bold">{t('completePurchase')}</h2>
                         
                         <div className="flex gap-x-3 p-4 bg-white dark:bg-slate-900 rounded-lg">
                           <Image
@@ -338,8 +340,8 @@ const PurchaseCourseCard = ({
                             setIsDialogOpen(false);
                             scnToast({
                               variant: "success",
-                              title: "Upload Successful",
-                              description: "Your payment proof has been submitted. You&apos;ll receive an email once it&apos;s reviewed.",
+                              title: t('uploadSuccessful'),
+                              description: t('uploadSuccessfulDesc'),
                             });
                             router.refresh();
                           }}
@@ -358,7 +360,7 @@ const PurchaseCourseCard = ({
                     name="sign-up"
                     className="contrast-100 hover:opacity-90 w-full h-[40px] bg-slate-100 dark:bg-slate-800 text-brand-red-500 font-medium hover:bg-slate-200 dark:hover:bg-slate-700 transition-all duration-300 ease-in-out rounded-button"
                   >
-                    Sign Up
+                    {t('signUp')}
                   </Button>
                 </Link>
 
@@ -367,7 +369,7 @@ const PurchaseCourseCard = ({
                     name="Login"
                     className="contrast-100 bg-brand-red-500 text-white w-full h-[40px] hover:bg-brand-red-600 hover:shadow-button-hover transition-all duration-300 ease-in-out rounded-button shadow-button"
                   >
-                    Login
+                    {t('login')}
                   </Button>
                 </Link>
               </div>
@@ -393,8 +395,8 @@ const PurchaseCourseCard = ({
                       if (response.data.success) {
                         scnToast({
                           variant: "success",
-                          title: "Enrolled Successfully",
-                          description: "You have been enrolled in this free course!",
+                          title: t('enrolledSuccessfully'),
+                          description: t('enrolledSuccessfullyDesc'),
                         });
                         router.push(`/my-learning/${course._id}`);
                         router.refresh();
@@ -403,8 +405,8 @@ const PurchaseCourseCard = ({
                       console.error("Enrollment error:", error);
                       scnToast({
                         variant: "destructive",
-                        title: "Enrollment Failed",
-                        description: error.response?.data?.message || "Failed to enroll in the course",
+                        title: t('enrollmentFailed'),
+                        description: error.response?.data?.message || t('enrollmentFailed'),
                       });
                     } finally {
                       setIsLoading(false);
@@ -413,7 +415,7 @@ const PurchaseCourseCard = ({
                   disabled={isLoading}
                   className="w-full bg-brand-red-500 hover:bg-brand-red-600 hover:shadow-button-hover text-white transition-all duration-300 ease-in-out rounded-button shadow-button text-md font-bold"
                 >
-                  {isLoading ? <Spinner className="text-white" /> : "Enroll For Free"}
+                  {isLoading ? <Spinner className="text-white" /> : t('enrollForFree')}
                 </Button>
               ) : isCourseOwner ? (
                 <div className="w-full flex flex-col gap-y-1">
@@ -422,16 +424,16 @@ const PurchaseCourseCard = ({
                       name="watch-course"
                       className="w-full bg-brand-red-500 hover:bg-brand-red-600 hover:shadow-button-hover text-white transition-all duration-300 ease-in-out rounded-button shadow-button text-md font-bold"
                     >
-                      Watch your course
+                      {t('watchYourCourse')}
                     </Button>
                   </Link>
 
                   <Link href={`/teacher/courses/manage/${course._id}`}>
                     <Button
                       name="manage-course"
-                      className="w-full bg-slate-950 dark:bg-slate-200 dark:hover:opacity-90 transition-all duration-300 ease-in-out rounded-sm text-md font-bold"
+                      className="w-full bg-slate-950 dark:bg-slate-200 dark:hover:opacity-90 transition-all duration-300 ease-in-out  rounded-sm text-md font-bold"
                     >
-                      Manage your course
+                      {t('manageYourCourse')}
                     </Button>
                   </Link>
                 </div>
@@ -454,7 +456,7 @@ const PurchaseCourseCard = ({
                     name="sign-up"
                     className="contrast-100 hover:opacity-90 w-full h-[40px] bg-slate-100 dark:bg-slate-800 text-brand-red-500 font-medium hover:bg-slate-200 dark:hover:bg-slate-700 transition-all duration-300 ease-in-out rounded-button"
                   >
-                    Sign Up to Enroll
+                    {t('signUpToEnroll')}
                   </Button>
                 </Link>
 
@@ -463,7 +465,7 @@ const PurchaseCourseCard = ({
                     name="Login"
                     className="contrast-100 bg-brand-red-500 text-white w-full h-[40px] hover:bg-brand-red-600 hover:shadow-button-hover transition-all duration-300 ease-in-out rounded-button shadow-button"
                   >
-                    Login
+                    {t('login')}
                   </Button>
                 </Link>
               </div>

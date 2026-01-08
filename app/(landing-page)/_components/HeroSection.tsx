@@ -2,6 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, CheckCircle2 } from "lucide-react";
 import { motion } from "framer-motion";
+import Image from "next/image";
 import { NavigationButton } from "@/components/shared";
 import { useTranslations } from 'next-intl';
 
@@ -101,8 +102,27 @@ export default function HeroSection() {
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.6, delay: 0.3 }}
-            className="relative hidden lg:block"
+            className="relative hidden lg:flex items-center justify-center lg:-mr-32 xl:-mr-48"
           >
+            {/* Decorative background elements */}
+            <div className="absolute inset-0 bg-gradient-to-br from-brand-red-500/10 via-transparent to-brand-gold-500/10 rounded-full blur-3xl scale-150" />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-r from-brand-red-500/5 to-brand-gold-500/5 rounded-full animate-pulse" />
+            
+            {/* Main Image */}
+            <motion.div
+              animate={{ y: [0, -10, 0] }}
+              transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+              className="relative z-10 scale-125 xl:scale-150"
+            >
+              <Image
+                src="/images/tds.png"
+                alt="Talel Deutschland"
+                width={1800}
+                height={1800}
+                priority
+                className="object-contain drop-shadow-2xl"
+              />
+            </motion.div>
           </motion.div>
         </div>
       </div>

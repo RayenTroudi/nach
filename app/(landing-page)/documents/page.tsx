@@ -44,6 +44,20 @@ const CATEGORIES = [
   "Other",
 ];
 
+interface Document {
+  _id: string;
+  title: string;
+  description: string;
+  category: string;
+  fileUrl: string;
+  fileName: string;
+  fileSize: number;
+  downloads: number;
+  uploadedBy: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export default function DocumentsPage() {
   const searchParams = useSearchParams();
   const router = useRouter();

@@ -381,8 +381,8 @@ export default function DocumentsPage() {
                   disabled={currentPage === 1}
                 >
                   <ChevronLeft className="w-4 h-4 mr-1" />
-                  Previous
-                </{t('previous')}
+                  {t('previous')}
+                </Button>
 
                 <div className="flex items-center gap-1">
                   {Array.from({ length: totalPages }, (_, i) => i + 1)
@@ -421,8 +421,8 @@ export default function DocumentsPage() {
                   }
                   disabled={currentPage === totalPages}
                 >
-                  Next
-                  {t('next')}vronRight className="w-4 h-4 ml-1" />
+                  {t('next')}
+                  <ChevronRight className="w-4 h-4 ml-1" />
                 </Button>
               </div>
             )}

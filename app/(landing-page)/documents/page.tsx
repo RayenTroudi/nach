@@ -110,7 +110,7 @@ export default function DocumentsPage() {
       setCurrentPage(1);
       fetchDocuments();
     }, 500);
-t('loadFailed')
+
     return () => clearTimeout(timer);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchTerm]);
@@ -135,11 +135,11 @@ t('loadFailed')
       window.URL.revokeObjectURL(url);
       document.body.removeChild(a);
 
-      toast.success("Download started!");
+      toast.success(t('downloadStarted'));
       fetchDocuments(); // Refresh to show updated download count
     } catch (error) {
       console.error("Error downloading:", error);
-      toast.error("Failed to download file");
+      toast.error(t('downloadFailed'));
     }
   };
 
@@ -152,11 +152,11 @@ t('loadFailed')
   const formatFileSize = (bytes: number) => {
     if (bytes < 1024) return bytes + " B";
     if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + " KB";
-    return (bytes / t('downloadStarted'));
-      fetchDocuments(); // Refresh to show updated download count
-    } catch (error) {
-      console.error("Error downloading:", error);
-      toast.error(t('downloadFailed')g) => {
+    return (bytes / (1024 * 1024)).toFixed(1) + " MB";
+  };
+
+  // Get category color
+  const getCategoryColor = (category: string) => {
     const colors: { [key: string]: string } = {
       Visa: "bg-blue-100 text-blue-700 border-blue-200",
       Application: "bg-green-100 text-green-700 border-green-200",
@@ -192,10 +192,11 @@ t('loadFailed')
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                 <Input
                   placeholder={t('searchPlaceholder')}
-            {t('title')}
-          </h1>
-          <p className="text-lg text-slate-600 dark:text-slate-300 max-w-2xl mx-auto">
-            {t('subtitle')}
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-10"
+                />
+              </div>
 
               {/* Category Filter */}
               <Select value={categoryFilter} onValueChange={setCategoryFilter}>
@@ -206,8 +207,8 @@ t('loadFailed')
                 <SelectContent>
                   {CATEGORIES.map((cat) => (
                     <SelectItem key={cat} value={cat}>
-                      {cat === "All" ? "All Categories" : cat}
-                    </SelectItem>t('allCategories')
+                      {cat === "All" ? t('allCategories') : cat}
+                    </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
@@ -216,8 +217,8 @@ t('loadFailed')
             {/* Sort and Results */}
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mt-4 pt-4 border-t">
               <p className="text-sm text-slate-600 dark:text-slate-400">
-                Showing {documents.length} of {total} documents
-              </{t('showing', { count: documents.length, total })}
+                {t('showing', { count: documents.length, total })}
+              </p>
               <Select value={sortBy} onValueChange={setSortBy}>
                 <SelectTrigger className="w-full sm:w-48">
                   <SelectValue />
@@ -245,8 +246,7 @@ t('loadFailed')
             <CardContent className="py-20 text-center">
               <FileText className="w-16 h-16 mx-auto text-slate-400 mb-4" />
               <h3 className="text-xl font-semibold text-slate-900 dark:text-slate-50 mb-2">
-                No documents found
-              </{t('noDocumentsFound')}
+                {t('noDocumentsFound')}
               </h3>
               <p className="text-slate-600 dark:text-slate-400 mb-6">
                 {searchTerm || categoryFilter !== "All"

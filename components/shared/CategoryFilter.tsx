@@ -22,7 +22,7 @@ const CategoryFilter = () => {
 
       localStorage.setItem("categoriesCache", JSON.stringify(response));
 
-      setCategories(response);
+      setCategories(response || []);
     };
 
     fetchCategories();
@@ -49,7 +49,7 @@ const CategoryFilter = () => {
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         <div>
-          {categories.map((category) => (
+          {categories?.map((category) => (
             <DropdownMenuItem key={category._id}>
               <Link
                 href={`/courses/${encodeURIComponent(category.name)}?category=${

@@ -15,6 +15,7 @@ import {
 import { UploadDropzone } from "@/lib/upload-thing";
 import { LeftSideBar } from "@/components/shared";
 import axios from "axios";
+import { useTranslations } from "next-intl";
 
 interface ResumeRequest {
   _id: string;
@@ -34,6 +35,7 @@ interface ResumeRequest {
 }
 
 export default function TeacherResumeRequestsPage() {
+  const t = useTranslations("dashboard.teacher.resumeRequests");
   const [requests, setRequests] = useState<ResumeRequest[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedRequest, setSelectedRequest] = useState<ResumeRequest | null>(null);
@@ -367,7 +369,7 @@ export default function TeacherResumeRequestsPage() {
         <Dialog open={isViewDialogOpen} onOpenChange={setIsViewDialogOpen}>
           <DialogContent className="max-w-3xl max-h-[80vh] overflow-y-auto">
             <DialogHeader>
-              <DialogTitle className="text-2xl">Resume Request Details</DialogTitle>
+              <DialogTitle className="text-2xl">{t('resumeRequests.detailsTitle')}</DialogTitle>
             </DialogHeader>
 
             {selectedRequest && (

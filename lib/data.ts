@@ -16,107 +16,96 @@ import {
 export const studentRoutes = [
   {
     icon: Home,
-    label: "Home",
+    labelKey: "navigation.home",
     href: "/",
   },
   {
     icon: GraduationCap,
-
-    label: "My learning",
+    labelKey: "navigation.myLearning",
     href: "/my-learning",
   },
   {
     icon: Calendar,
-    label: "My Meetings",
+    labelKey: "navigation.myMeetings",
     href: "/my-meetings",
   },
   {
     icon: FileCheck,
-    label: "My Resume",
+    labelKey: "navigation.myResume",
     href: "/my-resume",
   },
   {
     icon: ShoppingCart,
-
-    label: "My cart",
+    labelKey: "navigation.myCart",
     href: "/cart",
   },
   {
     icon: MessagesSquare,
-    label: "Chat Rooms",
+    labelKey: "navigation.chatRooms",
     href: "/chat-rooms",
   },
   {
     icon: Settings,
-    label: "Manage my account",
+    labelKey: "navigation.manageMyAccount",
     href: "/manage",
   },
 ];
 export const teacherRoutes = [
   {
     icon: Home,
-
-    label: "Courses",
+    labelKey: "navigation.courses",
     href: "/teacher/courses",
   },
-
   {
     icon: FileText,
-
-    label: "Documents",
+    labelKey: "navigation.documents",
     href: "/teacher/documents",
   },
-
   {
     icon: FileCheck,
-
-    label: "Resume Requests",
+    labelKey: "navigation.resumeRequests",
     href: "/teacher/resume-requests",
   },
-
   {
     icon: MessagesSquare,
-
-    label: "Chat Rooms",
+    labelKey: "navigation.chatRooms",
     href: "/teacher/chat-rooms",
   },
-
   {
     icon: BarChart2,
-
-    label: "Statistics",
+    labelKey: "navigation.statistics",
     href: "/teacher/statistics",
   },
 ];
 export const adminRoutes = [
   {
     icon: Table,
-    label: "Categories",
+    labelKey: "navigation.categories",
     href: "/admin/categories",
   },
   {
     icon: FileText,
-    label: "Payment Proofs",
+    labelKey: "navigation.paymentProofs",
     href: "/admin/payment-proofs",
   },
   {
     icon: Calendar,
-    label: "Meeting Bookings",
+    labelKey: "navigation.meetingBookings",
     href: "/admin/bookings",
   },
   {
     icon: FileCheck,
-    label: "Resume Payments",
+    labelKey: "navigation.resumePayments",
     href: "/admin/resume-payments",
   },
   {
     icon: Video,
-    label: "My Consultations",
+    labelKey: "navigation.myConsultations",
     href: "/admin/my-consultations",
   },
   {
     icon: BarChart2,
-    label: "Statistics",
+    labelKey: "navigation.statistics",
     href: "/admin/statistics",
   },
 ];

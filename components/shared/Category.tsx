@@ -20,11 +20,11 @@ const Category = ({ category, courses = 0, description = "" }: Props) => {
           <BorderBeam size={250} duration={12} delay={7} />
           <div className=" w-full h-full flex flex-col  items-center justify-center gap-4 ">
             <Image
-              src="/icons/logo.svg"
-              alt="logo"
-              width={40}
+              src="/images/nobgLogo.png"
+              alt="TDS logo"
+              width={80}
               height={40}
-              className="flex-shrink-0 w-[32px] h-[32px] md:w-[40px] md:h-[40px]"
+              className="flex-shrink-0 w-[60px] h-[30px] md:w-[80px] md:h-[40px] object-contain"
             />
             <div className="flex flex-col gap-y-2 items-center justify-center">
               <p className="text-md text-center md:text-lg  text-slate-950 dark:text-slate-200 font-semibold group-hover:primary-color ease-in-out duration-300">

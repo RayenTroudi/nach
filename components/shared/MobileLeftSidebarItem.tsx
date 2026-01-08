@@ -6,13 +6,16 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React, { ForwardRefExoticComponent, RefAttributes } from "react";
+import { useTranslations } from "next-intl";
+
 interface Props {
   icon: LucideIcon;
-  label: string;
+  labelKey: string;
   href: string;
 }
 
-const MobileLeftSidebarItem = ({ icon: Icon, label, href }: Props) => {
+const MobileLeftSidebarItem = ({ icon: Icon, labelKey, href }: Props) => {
+  const t = useTranslations();
   const pathname = usePathname();
   const { mode } = useTheme();
   const isActive = pathname === href || pathname.startsWith(`${href}/`);
@@ -46,7 +49,7 @@ const MobileLeftSidebarItem = ({ icon: Icon, label, href }: Props) => {
             : ""
         }`}
       >
-        {label}
+        {t(labelKey)}
       </p>
     </Link>
   );

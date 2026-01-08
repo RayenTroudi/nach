@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 
 interface Booking {
   _id: string;
@@ -30,6 +31,7 @@ interface MyMeetingsProps {
 }
 
 export default function MyMeetings({ bookings: initialBookings }: MyMeetingsProps) {
+  const t = useTranslations("dashboard.student.myMeetings");
   const [bookings, setBookings] = useState<Booking[]>(initialBookings);
   const [filter, setFilter] = useState<"upcoming" | "past" | "all">("upcoming");
 
@@ -67,7 +69,7 @@ export default function MyMeetings({ bookings: initialBookings }: MyMeetingsProp
       return (
         <Badge variant="destructive" className="gap-1">
           <XCircle className="w-3 h-3" />
-          Cancelled
+          {t("cancelled")}
         </Badge>
       );
     }
@@ -76,7 +78,7 @@ export default function MyMeetings({ bookings: initialBookings }: MyMeetingsProp
       return (
         <Badge className="gap-1 bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-200">
           <HourglassIcon className="w-3 h-3" />
-          Payment Pending
+          {t("paymentPending")}
         </Badge>
       );
     }
@@ -87,14 +89,14 @@ export default function MyMeetings({ bookings: initialBookings }: MyMeetingsProp
         return (
           <Badge className="gap-1 bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400">
             <CheckCircle className="w-3 h-3" />
-            Completed
+            {t("completed")}
           </Badge>
         );
       }
       return (
         <Badge className="gap-1 bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-200">
           <CheckCircle className="w-3 h-3" />
-          Confirmed
+          {t("confirmed")}
         </Badge>
       );
     }
@@ -136,20 +138,20 @@ export default function MyMeetings({ bookings: initialBookings }: MyMeetingsProp
         <div className="bg-white dark:bg-slate-900 rounded-lg border-2 border-slate-200 dark:border-slate-800 p-12 text-center">
           <Calendar className="w-16 h-16 mx-auto mb-4 text-slate-400" />
           <h3 className="text-xl font-semibold text-slate-950 dark:text-slate-200 mb-2">
-            No Meetings Scheduled
+            {t("noMeetingsScheduled")}
           </h3>
           <p className="text-slate-600 dark:text-slate-400 mb-6">
-            You haven&apos;t booked any meetings yet. Schedule a consultation with our experts!
+            {t("noMeetingsBooked")}
           </p>
           <div className="flex gap-3 justify-center flex-wrap">
             <Link href="/contact/meeting">
               <Button className="bg-brand-red-500 hover:bg-brand-red-600 text-white">
-                Book Full Consultation (99 TND)
+                {t("bookConsultation")}
               </Button>
             </Link>
             <Link href="/contact/call">
               <Button variant="outline" className="border-2 border-slate-200 dark:border-slate-800 hover:border-brand-red-500 dark:hover:border-brand-red-500">
-                Book Quick Call (49 TND)
+                {t("bookQuickCall")}
               </Button>
             </Link>
           </div>
@@ -164,10 +166,10 @@ export default function MyMeetings({ bookings: initialBookings }: MyMeetingsProp
       <div className="flex items-center justify-between flex-wrap gap-4">
         <div>
           <h2 className="text-3xl font-bold text-slate-950 dark:text-slate-200">
-            My Meetings
+            {t("title")}
           </h2>
           <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">
-            {filteredBookings.length} {filter} {filteredBookings.length === 1 ? 'meeting' : 'meetings'}
+            {filteredBookings.length} {filter} {filteredBookings.length === 1 ? t("meetingCount") : t("meetingsCount")}
           </p>
         </div>
 
@@ -182,7 +184,7 @@ export default function MyMeetings({ bookings: initialBookings }: MyMeetingsProp
               : "border-2 border-slate-200 dark:border-slate-800 hover:border-brand-red-500 dark:hover:border-brand-red-500 bg-white dark:bg-slate-900"
             }
           >
-            Upcoming
+            {t("upcoming")}
           </Button>
           <Button
             variant={filter === "past" ? "default" : "outline"}
@@ -193,7 +195,7 @@ export default function MyMeetings({ bookings: initialBookings }: MyMeetingsProp
               : "border-2 border-slate-200 dark:border-slate-800 hover:border-brand-red-500 dark:hover:border-brand-red-500 bg-white dark:bg-slate-900"
             }
           >
-            Past
+            {t("past")}
           </Button>
           <Button
             variant={filter === "all" ? "default" : "outline"}
@@ -204,7 +206,7 @@ export default function MyMeetings({ bookings: initialBookings }: MyMeetingsProp
               : "border-2 border-slate-200 dark:border-slate-800 hover:border-brand-red-500 dark:hover:border-brand-red-500 bg-white dark:bg-slate-900"
             }
           >
-            All
+            {t("all")}
           </Button>
         </div>
       </div>
@@ -214,7 +216,7 @@ export default function MyMeetings({ bookings: initialBookings }: MyMeetingsProp
         <div className="bg-white dark:bg-slate-900 rounded-lg border-2 border-slate-200 dark:border-slate-800 p-12 text-center">
           <Calendar className="w-16 h-16 mx-auto mb-4 text-slate-400" />
           <p className="text-slate-600 dark:text-slate-400 text-lg">
-            No {filter} meetings found
+            {t("noMeetingsFound")} {filter}
           </p>
         </div>
       ) : (
@@ -249,15 +251,15 @@ export default function MyMeetings({ bookings: initialBookings }: MyMeetingsProp
                       <Video className="w-4 h-4" />
                       <span>
                         {booking.hostId 
-                          ? `With ${booking.hostId.firstName} ${booking.hostId.lastName}`
-                          : 'With Advisor'
+                          ? `${booking.hostId.firstName} ${booking.hostId.lastName}`
+                          : t("withAdvisor")
                         }
                       </span>
                     </div>
 
                     {booking.price && (
                       <div className="text-sm font-medium text-slate-600 dark:text-slate-400">
-                        Amount: {booking.price} TND
+                        {t("amount")}: {booking.price} TND
                       </div>
                     )}
                   </div>
@@ -278,7 +280,7 @@ export default function MyMeetings({ bookings: initialBookings }: MyMeetingsProp
                   {booking.paymentStatus === "pending" && (
                     <div className="mt-4 bg-yellow-50 dark:bg-yellow-900/20 border-2 border-yellow-200 dark:border-yellow-800 rounded-lg p-4">
                       <p className="text-sm text-yellow-800 dark:text-yellow-200">
-                        ⏳ Your payment proof is being verified. You&apos;ll receive a confirmation email with the meeting link once approved (usually within 24-48 hours).
+                        {t("paymentVerifying")}
                       </p>
                     </div>
                   )}
@@ -290,17 +292,17 @@ export default function MyMeetings({ bookings: initialBookings }: MyMeetingsProp
                     <Link href={getMeetingPageUrl(booking) || '#'}>
                       <Button className="bg-green-600 hover:bg-green-700 text-white">
                         <Video className="w-4 h-4 mr-2" />
-                        Join Meeting
+                        {t("joinMeeting")}
                       </Button>
                     </Link>
                   ) : (booking.meetingLink || booking.meetingId) && booking.paymentStatus === "paid" && new Date(booking.startAt) > now ? (
                     <div className="text-center">
                       <p className="text-xs text-slate-600 dark:text-slate-400 mb-2">
-                        Available 15 min before
+                        {t("availableBefore")}
                       </p>
                       <Button variant="outline" disabled className="border-2 border-slate-200 dark:border-slate-800">
                         <Video className="w-4 h-4 mr-2" />
-                        Join Meeting
+                        {t("joinMeeting")}
                       </Button>
                     </div>
                   ) : null}
@@ -314,20 +316,20 @@ export default function MyMeetings({ bookings: initialBookings }: MyMeetingsProp
       {/* Book More Button */}
       <div className="bg-slate-50 dark:bg-slate-900 rounded-lg border-2 border-slate-200 dark:border-slate-800 p-6 text-center">
         <h3 className="text-lg font-semibold text-slate-950 dark:text-slate-200 mb-2">
-          Need More Guidance?
+          {t("needMoreGuidance")}
         </h3>
         <p className="text-slate-600 dark:text-slate-400 mb-4">
-          Book another consultation session with our expert advisors
+          {t("bookAnotherSession")}
         </p>
         <div className="flex gap-3 justify-center flex-wrap">
           <Link href="/contact/meeting">
             <Button className="bg-brand-red-500 hover:bg-brand-red-600 text-white">
-              Book Consultation
+              {t("bookConsultation")}
             </Button>
           </Link>
           <Link href="/contact/call">
             <Button variant="outline" className="border-2 border-slate-200 dark:border-slate-800 hover:border-brand-red-500 dark:hover:border-brand-red-500 bg-white dark:bg-slate-900">
-              Quick Call
+              {t("quickCall")}
             </Button>
           </Link>
         </div>

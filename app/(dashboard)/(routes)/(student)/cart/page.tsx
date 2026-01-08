@@ -18,8 +18,10 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import { scnToast } from "@/components/ui/use-toast";
 import { Spinner } from "@/components/shared";
+import { useTranslations } from "next-intl";
 
 const CartPage = () => {
+  const t = useTranslations("dashboard.student.cart");
   const { cartItems } = useCart();
   const router = useRouter();
   const [showDialog, setShowDialog] = useState(false);
@@ -74,11 +76,11 @@ const CartPage = () => {
             <div className="flex flex-col items-center">
               <EmptyCartAnimation className="h-[300px] md:h-[500px]" />
               <h1 className="text-center text-xl md:text-3xl text-slate-950 dark:text-slate-50 font-bold">
-                No Courses In Your Cart.
+                {t("noCoursesInCart")}
               </h1>
               <Link href={"/"} className="w-full md:w-1/2 md:mx-auto">
                 <Button className="w-full bg-brand-red-500 rounded-sm font-bold text-slate-50 mt-2 hover:opacity-90 hover:bg-brand-red-600 duration-300 transition-all ease-in-out">
-                  Start Browsing
+                  {t("startBrowsing")}
                 </Button>
               </Link>
             </div>
@@ -86,8 +88,7 @@ const CartPage = () => {
             <div className="w-full flex flex-col gap-y-3">
               <div className="w-full flex items-center justify-between py-3">
                 <h2 className="text-3xl font-bold text-slate-950 dark:text-slate-200">
-                  {cartItems.length} Course{cartItems.length > 1 && "s"} In Your
-                  Cart
+                  {cartItems.length} {cartItems.length > 1 ? t("courses") : t("course")} {t("coursesInCart")}
                 </h2>
 
                 <Button
@@ -100,7 +101,7 @@ const CartPage = () => {
                   ) : (
                     <>
                       <CreditCard size={20} />
-                      <span>Checkout with Flouci</span>
+                      <span>{t("checkoutWithFlouci")}</span>
                     </>
                   )}
                 </Button>

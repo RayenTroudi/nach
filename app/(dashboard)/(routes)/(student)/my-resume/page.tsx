@@ -19,6 +19,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { scnToast } from "@/components/ui/use-toast";
 import { LeftSideBar } from "@/components/shared";
+import { useTranslations } from "next-intl";
 
 interface ResumeRequest {
   _id: string;
@@ -39,6 +40,7 @@ interface ResumeRequest {
 }
 
 export default function MyResumePage() {
+  const t = useTranslations("dashboard.student.myResume");
   const { user } = useUser();
   const [requests, setRequests] = useState<ResumeRequest[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -54,8 +56,8 @@ export default function MyResumePage() {
     } catch (error: any) {
       console.error("Error fetching resume requests:", error);
       scnToast({
-        title: "Error",
-        description: error.response?.data?.error || "Failed to fetch your resume requests",
+        title: t("errorTitle"),
+        description: error.response?.data?.error || t("errorFetching"),
         variant: "destructive",
       });
     } finally {
@@ -74,7 +76,7 @@ export default function MyResumePage() {
       return (
         <Badge className="bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400">
           <XCircle className="w-3 h-3 mr-1" />
-          Payment Rejected
+          {t("paymentRejected")}
         </Badge>
       );
     }
@@ -84,28 +86,28 @@ export default function MyResumePage() {
         return (
           <Badge className="bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400">
             <Clock className="w-3 h-3 mr-1" />
-            Pending Review
+            {t("pendingReview")}
           </Badge>
         );
       case "in_progress":
         return (
           <Badge className="bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/20">
             <Loader2 className="w-3 h-3 mr-1 animate-spin" />
-            In Progress
+            {t("inProgress")}
           </Badge>
         );
       case "completed":
         return (
           <Badge className="bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400">
             <CheckCircle2 className="w-3 h-3 mr-1" />
-            Completed
+            {t("completed")}
           </Badge>
         );
       case "rejected":
         return (
           <Badge className="bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400">
             <XCircle className="w-3 h-3 mr-1" />
-            Rejected
+            {t("rejected")}
           </Badge>
         );
       default:
@@ -119,7 +121,7 @@ export default function MyResumePage() {
         <div className="flex items-start gap-2 text-sm text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/10 p-3 rounded">
           <AlertCircle className="w-4 h-4 mt-0.5 flex-shrink-0" />
           <div>
-            <p className="font-medium">Payment was not approved</p>
+            <p className="font-medium">{t("paymentNotApproved")}</p>
             {adminNotes && <p className="mt-1">{adminNotes}</p>}
           </div>
         </div>
@@ -131,21 +133,21 @@ export default function MyResumePage() {
         return (
           <div className="flex items-start gap-2 text-sm text-yellow-600 dark:text-yellow-400 bg-yellow-50 dark:bg-yellow-900/10 p-3 rounded">
             <Clock className="w-4 h-4 mt-0.5 flex-shrink-0" />
-            <p>Your resume request is being reviewed. We&apos;ll verify your payment and start working on your resume within 24-48 hours.</p>
+            <p>{t("beingReviewed")}</p>
           </div>
         );
       case "in_progress":
         return (
           <div className="flex items-start gap-2 text-sm text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/10 p-3 rounded border border-blue-200 dark:border-blue-800">
             <Loader2 className="w-4 h-4 mt-0.5 flex-shrink-0 animate-spin" />
-            <p>Our experts are currently crafting your professional resume. Expected delivery: 1-2 business days.</p>
+            <p>{t("crafting")}</p>
           </div>
         );
       case "completed":
         return (
           <div className="flex items-start gap-2 text-sm text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/10 p-3 rounded">
             <CheckCircle2 className="w-4 h-4 mt-0.5 flex-shrink-0" />
-            <p>Your professional resume is ready! Download it below and start applying to your dream jobs.</p>
+            <p>{t("resumeReady")}</p>
           </div>
         );
       case "rejected":
@@ -153,8 +155,8 @@ export default function MyResumePage() {
           <div className="flex items-start gap-2 text-sm text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/10 p-3 rounded">
             <XCircle className="w-4 h-4 mt-0.5 flex-shrink-0" />
             <div>
-              <p className="font-medium">This request was not approved</p>
-              {adminNotes && <p className="mt-1">Reason: {adminNotes}</p>}
+              <p className="font-medium">{t("notApproved")}</p>
+              {adminNotes && <p className="mt-1">{t("reason")}: {adminNotes}</p>}
             </div>
           </div>
         );
@@ -173,16 +175,16 @@ export default function MyResumePage() {
           <div>
             <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-100 mb-2 flex items-center gap-3">
               <FileText className="w-8 h-8 text-brand-red-500" />
-              My Resume
+              {t("title")}
             </h1>
             <p className="text-slate-600 dark:text-slate-400">
-              Track your professional resume creation requests
+              {t("subtitle")}
             </p>
           </div>
           <Link href="/contact/resume">
             <Button className="bg-brand-red-500 hover:bg-brand-red-600">
               <Plus className="w-4 h-4 mr-2" />
-              New Resume Request
+              {t("newRequest")}
             </Button>
           </Link>
         </div>
@@ -198,15 +200,15 @@ export default function MyResumePage() {
             <CardContent className="flex flex-col items-center justify-center py-16">
               <FileText className="w-16 h-16 text-slate-300 dark:text-slate-700 mb-4" />
               <h3 className="text-xl font-semibold text-slate-900 dark:text-slate-100 mb-2">
-                No resume requests yet
+                {t("noRequestsYet")}
               </h3>
               <p className="text-slate-600 dark:text-slate-400 mb-6 text-center max-w-md">
-                Get a professional German-style CV (Lebenslauf) crafted by our experts. Stand out in your job applications!
+                {t("getGermanCV")}
               </p>
               <Link href="/contact/resume">
                 <Button className="bg-brand-red-500 hover:bg-brand-red-600">
                   <Plus className="w-4 h-4 mr-2" />
-                  Request Your First Resume
+                  {t("requestFirst")}
                 </Button>
               </Link>
             </CardContent>
@@ -220,11 +222,11 @@ export default function MyResumePage() {
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
                       <CardTitle className="text-xl mb-2">
-                        {request.targetRole || "Professional Resume"}
+                        {request.targetRole || t("professionalResume")}
                       </CardTitle>
                       {request.currentRole && (
                         <p className="text-sm text-slate-600 dark:text-slate-400">
-                          Current Role: {request.currentRole}
+                          {t("currentRole")}: {request.currentRole}
                         </p>
                       )}
                     </div>
@@ -241,24 +243,24 @@ export default function MyResumePage() {
                   {/* Request Details */}
                   <div className="grid grid-cols-2 gap-4 text-sm">
                     <div>
-                      <p className="text-slate-600 dark:text-slate-400">Submitted</p>
+                      <p className="text-slate-600 dark:text-slate-400">{t("submitted")}</p>
                       <p className="font-medium">
                         {new Date(request.createdAt).toLocaleDateString()}
                       </p>
                     </div>
                     <div>
-                      <p className="text-slate-600 dark:text-slate-400">Price</p>
+                      <p className="text-slate-600 dark:text-slate-400">{t("price")}</p>
                       <p className="font-medium">{request.price} TND</p>
                     </div>
                     {request.experience && (
                       <div>
-                        <p className="text-slate-600 dark:text-slate-400">Experience Level</p>
+                        <p className="text-slate-600 dark:text-slate-400">{t("experienceLevel")}</p>
                         <p className="font-medium">{request.experience}</p>
                       </div>
                     )}
                     {request.education && (
                       <div>
-                        <p className="text-slate-600 dark:text-slate-400">Education</p>
+                        <p className="text-slate-600 dark:text-slate-400">{t("education")}</p>
                         <p className="font-medium text-xs">{request.education}</p>
                       </div>
                     )}
@@ -271,10 +273,10 @@ export default function MyResumePage() {
                       <div className="flex justify-between items-center bg-green-50 dark:bg-green-900/10 p-4 rounded-lg">
                         <div>
                           <p className="font-semibold text-green-900 dark:text-green-100">
-                            Your resume is ready!
+                            {t("yourResumeReady")}
                           </p>
                           <p className="text-sm text-green-700 dark:text-green-300">
-                            Download your professional resume and start applying
+                            {t("downloadAndApply")}
                           </p>
                         </div>
                         <a
@@ -285,7 +287,7 @@ export default function MyResumePage() {
                         >
                           <Button className="bg-green-600 hover:bg-green-700">
                             <Download className="w-4 h-4 mr-2" />
-                            Download Resume
+                            {t("downloadResume")}
                           </Button>
                         </a>
                       </div>
@@ -298,7 +300,7 @@ export default function MyResumePage() {
                       <Separator />
                       <div className="bg-blue-50 dark:bg-blue-900/10 p-3 rounded">
                         <p className="text-xs text-blue-600 dark:text-blue-400 font-medium mb-1">
-                          Note from our team:
+                          {t("noteFromTeam")}
                         </p>
                         <p className="text-sm text-slate-700 dark:text-slate-300">
                           {request.adminNotes}

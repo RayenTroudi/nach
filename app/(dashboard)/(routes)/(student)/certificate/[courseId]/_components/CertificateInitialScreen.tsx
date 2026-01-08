@@ -28,7 +28,7 @@ const CertificateInitialScreen = ({ user, course, userProgress }: Props) => {
     pdf.addImage(imageData, "PNG", 0, 0, 1000, 667);
 
     pdf.save(
-      `GERMANPATH_PLATFORM_${course.title}_${user.username}_CERTIFICATE.pdf`
+      `TDS_PLATFORM_${course.title}_${user.username}_CERTIFICATE.pdf`
     );
   };
   return (

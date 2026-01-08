@@ -21,7 +21,7 @@ export async function POST(req: NextRequest) {
 
   try {
     const data = await resend.emails.send({
-      from: "GermanPath Platform <onboarding@resend.dev>",
+      from: "TDS Platform <onboarding@resend.dev>",
       to: comment.user.email,
       subject: `${reply.owner.username} replied to your ${comment.title} comment!`,
       react: ReplyToCommentEmail({ comment, course, reply, mode }),

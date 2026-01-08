@@ -331,7 +331,7 @@ export default function AdminResumePaymentsPage() {
           <Dialog open={isViewDialogOpen} onOpenChange={setIsViewDialogOpen}>
           <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
-              <DialogTitle>Resume Request Details</DialogTitle>
+              <DialogTitle>{t('resumePayments.detailsTitle')}</DialogTitle>
             </DialogHeader>
 
             {selectedRequest && (

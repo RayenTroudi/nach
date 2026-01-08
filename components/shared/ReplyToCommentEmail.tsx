@@ -48,7 +48,7 @@ export const ReplyToCommentEmail = ({
     >
       <Html>
         <Head>
-          <title>GermanPath Platform</title>
+          <title>TDS Platform</title>
         </Head>
 
         <Body className={`w-full`}>

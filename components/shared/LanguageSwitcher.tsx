@@ -36,7 +36,8 @@ export function LanguageSwitcher() {
     startTransition(async () => {
       await setLocale(newLocale as 'ar' | 'en' | 'de');
       setCurrentLocale(newLocale);
-      router.refresh();
+      // Force a hard refresh to reload all translations
+      window.location.reload();
     });
   };
 

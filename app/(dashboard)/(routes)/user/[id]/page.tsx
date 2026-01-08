@@ -83,7 +83,7 @@ export default async function Page({ params }: PageProps) {
           </h1>
           <div className="space-y-4">
             <span className="inline-block p-2 bg-blue-100 text-blue-800 text-xs font-semibold rounded dark:bg-blue-200 dark:text-blue-800">
-              GermanPath Instructor Partner
+              TDS Instructor Partner
             </span>
             <div className="flex flex-wrap gap-2">
               {user.interests.map(

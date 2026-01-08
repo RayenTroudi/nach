@@ -1,9 +1,13 @@
+"use client";
+
 import React from "react";
 import { Container, Logo } from "./";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
+import { useTranslations } from "next-intl";
 
 const Footer = () => {
+  const t = useTranslations("footer");
   return (
     <footer className="border-t border-input bg-slate-100 dark:bg-slate-950">
       <div className="mx-auto max-w-screen-xl px-4 py-16 sm:px-6 lg:px-8">
@@ -12,11 +16,11 @@ const Footer = () => {
             <div className="col-span-2">
               <div>
                 <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-                  Start Your Germany Journey!
+                  {t("startJourneyTitle")}
                 </h2>
 
                 <p className="mt-4 text-gray-500 dark:text-gray-400">
-                  Get updates on new courses, visa requirements, and opportunities to move to Germany. Join thousands of Tunisians preparing for their German adventure.
+                  {t("startJourneyDesc")}
                 </p>
               </div>
             </div>
@@ -24,214 +28,22 @@ const Footer = () => {
             <div className="col-span-2 lg:col-span-3 lg:flex lg:items-end">
               <form className="w-full">
                 <label htmlFor="UserEmail" className="sr-only">
-                  {" "}
-                  Email{" "}
+                  {t("email")}
                 </label>
 
                 <div className="border border-gray-100 p-2 focus-within:ring sm:flex sm:items-center sm:gap-4 dark:border-gray-800">
                   <Input
                     type="email"
                     id="UserEmail"
-                    placeholder="john@rhcp.com"
+                    placeholder={t("enterEmail")}
                     className="bg-transparent w-full h-full text-slate-950 dark:text-slate-50 border-none rounded-none focus:bg-transparent"
                   />
 
                   <Button className="rounded-button mt-1 w-full bg-brand-red-500 hover:bg-brand-red-600 px-6 py-3 text-sm font-bold uppercase tracking-wide text-white shadow-button hover:shadow-button-hover transition-all duration-300 sm:mt-0 sm:w-auto sm:shrink-0">
-                    Sign Up
+                    {t("signUp")}
                   </Button>
                 </div>
               </form>
-            </div>
-
-            <div className="col-span-2 sm:col-span-1">
-              <p className="font-medium text-gray-900 dark:text-white">
-                Our Services
-              </p>
-
-              <ul className="mt-6 space-y-4 text-sm">
-                <li>
-                  <a
-                    href="#"
-                    className="text-gray-700 transition hover:opacity-75 dark:text-gray-200"
-                  >
-                    German Language Courses
-                  </a>
-                </li>
-
-                <li>
-                  <a
-                    href="#"
-                    className="text-gray-700 transition hover:opacity-75 dark:text-gray-200"
-                  >
-                    Visa Consultation
-                  </a>
-                </li>
-
-                <li>
-                  <a
-                    href="#"
-                    className="text-gray-700 transition hover:opacity-75 dark:text-gray-200"
-                  >
-                    Job Placement Support
-                  </a>
-                </li>
-
-                <li>
-                  <a
-                    href="#"
-                    className="text-gray-700 transition hover:opacity-75 dark:text-gray-200"
-                  >
-                    Cultural Integration
-                  </a>
-                </li>
-
-                <li>
-                  <a
-                    href="#"
-                    className="text-gray-700 transition hover:opacity-75 dark:text-gray-200"
-                  >
-                    Housing Assistance
-                  </a>
-                </li>
-              </ul>
-            </div>
-
-            <div className="col-span-2 sm:col-span-1">
-              <p className="font-medium text-gray-900 dark:text-white">
-                About Us
-              </p>
-
-              <ul className="mt-6 space-y-4 text-sm">
-                <li>
-                  <a
-                    href="#"
-                    className="text-gray-700 transition hover:opacity-75 dark:text-gray-200"
-                  >
-                    Our Mission
-                  </a>
-                </li>
-
-                <li>
-                  <a
-                    href="#"
-                    className="text-gray-700 transition hover:opacity-75 dark:text-gray-200"
-                  >
-                    Success Stories
-                  </a>
-                </li>
-
-                <li>
-                  <a
-                    href="#"
-                    className="text-gray-700 transition hover:opacity-75 dark:text-gray-200"
-                  >
-                    Partner Institutions
-                  </a>
-                </li>
-              </ul>
-            </div>
-
-            <div className="col-span-2 sm:col-span-1">
-              <p className="font-medium text-gray-900 dark:text-white">
-                Resources
-              </p>
-
-              <ul className="mt-6 space-y-4 text-sm">
-                <li>
-                  <a
-                    href="#"
-                    className="text-gray-700 transition hover:opacity-75 dark:text-gray-200"
-                  >
-                    Contact Support
-                  </a>
-                </li>
-
-                <li>
-                  <a
-                    href="#"
-                    className="text-gray-700 transition hover:opacity-75 dark:text-gray-200"
-                  >
-                    Germany FAQs
-                  </a>
-                </li>
-
-                <li>
-                  <a
-                    href="#"
-                    className="text-gray-700 transition hover:opacity-75 dark:text-gray-200"
-                  >
-                    Community Forum
-                  </a>
-                </li>
-              </ul>
-            </div>
-
-            <div className="col-span-2 sm:col-span-1">
-              <p className="font-medium text-gray-900 dark:text-white">Legal</p>
-
-              <ul className="mt-6 space-y-4 text-sm">
-                <li>
-                  <a
-                    href="#"
-                    className="text-gray-700 transition hover:opacity-75 dark:text-gray-200"
-                  >
-                    Accessibility
-                  </a>
-                </li>
-
-                <li>
-                  <a
-                    href="#"
-                    className="text-gray-700 transition hover:opacity-75 dark:text-gray-200"
-                  >
-                    Returns Policy
-                  </a>
-                </li>
-
-                <li>
-                  <a
-                    href="#"
-                    className="text-gray-700 transition hover:opacity-75 dark:text-gray-200"
-                  >
-                    Refund Policy
-                  </a>
-                </li>
-
-                <li>
-                  <a
-                    href="#"
-                    className="text-gray-700 transition hover:opacity-75 dark:text-gray-200"
-                  >
-                    Hiring Statistics
-                  </a>
-                </li>
-              </ul>
-            </div>
-
-            <div className="col-span-2 sm:col-span-1">
-              <p className="font-medium text-gray-900 dark:text-white">
-                Downloads
-              </p>
-
-              <ul className="mt-6 space-y-4 text-sm">
-                <li>
-                  <a
-                    href="#"
-                    className="text-gray-700 transition hover:opacity-75 dark:text-gray-200"
-                  >
-                    Marketing Calendar
-                  </a>
-                </li>
-
-                <li>
-                  <a
-                    href="#"
-                    className="text-gray-700 transition hover:opacity-75 dark:text-gray-200"
-                  >
-                    SEO Infographics
-                  </a>
-                </li>
-              </ul>
             </div>
 
             <ul className="col-span-2 flex justify-start gap-6 lg:col-span-5 lg:justify-end">
@@ -242,7 +54,7 @@ const Footer = () => {
                   target="_blank"
                   className="text-gray-700 transition hover:opacity-75 dark:text-gray-200"
                 >
-                  <span className="sr-only">Facebook</span>
+                  <span className="sr-only">{t("facebook")}</span>
 
                   <svg
                     className="h-6 w-6"
@@ -266,7 +78,7 @@ const Footer = () => {
                   target="_blank"
                   className="text-gray-700 transition hover:opacity-75 dark:text-gray-200"
                 >
-                  <span className="sr-only">Instagram</span>
+                  <span className="sr-only">{t("instagram")}</span>
 
                   <svg
                     className="h-6 w-6"
@@ -290,7 +102,7 @@ const Footer = () => {
                   target="_blank"
                   className="text-gray-700 transition hover:opacity-75 dark:text-gray-200"
                 >
-                  <span className="sr-only">Twitter</span>
+                  <span className="sr-only">{t("twitter")}</span>
 
                   <svg
                     className="h-6 w-6"
@@ -310,7 +122,7 @@ const Footer = () => {
                   target="_blank"
                   className="text-gray-700 transition hover:opacity-75 dark:text-gray-200"
                 >
-                  <span className="sr-only">GitHub</span>
+                  <span className="sr-only">{t("github")}</span>
 
                   <svg
                     className="h-6 w-6"
@@ -334,7 +146,7 @@ const Footer = () => {
                   target="_blank"
                   className="text-gray-700 transition hover:opacity-75 dark:text-gray-200"
                 >
-                  <span className="sr-only">Dribbble</span>
+                  <span className="sr-only">{t("dribbble")}</span>
 
                   <svg
                     className="h-6 w-6"
@@ -356,9 +168,14 @@ const Footer = () => {
 
         <div className="mt-8 border-t border-gray-100 pt-8 dark:border-gray-800">
           <div className="sm:flex sm:justify-between">
-            <p className="text-xs text-gray-500 dark:text-gray-400">
-              &copy; 2022. GermanPath. All rights reserved.
-            </p>
+            <div className="flex flex-col gap-2">
+              <p className="text-xs text-gray-500 dark:text-gray-400">
+                © 2026. TDS (Talel Deutschland Services). All rights reserved.
+              </p>
+              <p className="text-xs text-gray-500 dark:text-gray-400">
+                Developed by Rayen Troudi
+              </p>
+            </div>
 
             <ul className="mt-8 flex flex-wrap justify-start gap-4 text-xs sm:mt-0 lg:justify-end">
               <li>
@@ -366,7 +183,7 @@ const Footer = () => {
                   href="#"
                   className="text-gray-500 transition hover:opacity-75 dark:text-gray-400"
                 >
-                  Terms & Conditions
+                  {t("termsConditions")}
                 </a>
               </li>
 
@@ -375,7 +192,7 @@ const Footer = () => {
                   href="#"
                   className="text-gray-500 transition hover:opacity-75 dark:text-gray-400"
                 >
-                  Privacy Policy
+                  {t("privacyPolicy")}
                 </a>
               </li>
 
@@ -384,7 +201,7 @@ const Footer = () => {
                   href="#"
                   className="text-gray-500 transition hover:opacity-75 dark:text-gray-400"
                 >
-                  Cookies
+                  {t("cookies")}
                 </a>
               </li>
             </ul>

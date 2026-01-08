@@ -298,7 +298,7 @@ export default function ResumeWorkflowPage() {
             <DialogHeader>
               <DialogTitle className="flex items-center gap-2">
                 <FileText className="w-5 h-5" />
-                Resume Request Details
+                {t('resumeWorkflow.detailsTitle')}
               </DialogTitle>
             </DialogHeader>
 

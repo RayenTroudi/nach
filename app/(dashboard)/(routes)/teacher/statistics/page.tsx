@@ -1,5 +1,3 @@
-"use server";
-
 import React from "react";
 import RevenuePieChart from "./_components/RevenuePieChart";
 import MonthlyRevenueBarChart from "./_components/MonthlyRevenueBarChart";
@@ -9,10 +7,8 @@ import { getTeacherCourses } from "@/lib/actions/user.action";
 import { auth } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
 import CourseRatingBarChart from "./_components/CourseRatingBarChart";
-import { getTranslations } from "next-intl/server";
 
 const StatsPage: React.FC = async () => {
-  const t = await getTranslations('dashboard.teacher.statistics');
   const { userId } = auth();
   let teacherCourses;
   try {
@@ -34,14 +30,14 @@ const StatsPage: React.FC = async () => {
   return (
     <div className="p-6 bg-transparent rounded-lg shadow-md">
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <Card label={t('totalStudents')} icon={User} amount={totalStudents || 0} />
+        <Card label="Total Students" icon={User} amount={totalStudents || 0} />
         <Card
-          label={t('walletBalance')}
+          label="Wallet Balance"
           icon={DollarSign}
           amount={teacherCourses?.wallet.toFixed(2) || 0}
         />
         <Card
-          label={t('totalCreatedCourses')}
+          label="Total Created Courses"
           icon={BookOpen}
           amount={totalCreatedCourses}
         />

@@ -16,7 +16,7 @@ import { locales } from '@/i18n';
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "GermanPath",
+  title: "TDS - Talel Deutschland Services",
   description: `
     Our e-learning platform is a comprehensive, AI-powered solution designed to revolutionize the way you learn. It offers a wide range of courses across various disciplines, allowing users to learn at their own pace, anytime, anywhere.
 
@@ -30,6 +30,16 @@ The platform also includes a dynamic discussion forum where learners can interac
 
 Whether you're a beginner looking to learn a new skill or a professional seeking to advance your career, our AI-powered e-learning platform is your go-to resource for quality, accessible, and personalized online education.
   `,
+  icons: {
+    icon: [
+      { url: "/images/nobgLogo.png", sizes: "48x48", type: "image/png" },
+      { url: "/images/nobgLogo.png", sizes: "96x96", type: "image/png" },
+      { url: "/images/nobgLogo.png", sizes: "192x192", type: "image/png" },
+      { url: "/images/nobgLogo.png", sizes: "512x512", type: "image/png" },
+    ],
+    shortcut: "/images/nobgLogo.png",
+    apple: { url: "/images/nobgLogo.png", sizes: "180x180", type: "image/png" },
+  },
 };
 
 export function generateStaticParams() {

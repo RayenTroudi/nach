@@ -3,14 +3,16 @@ import { useTheme } from "@/contexts/ThemeProvider";
 import { LucideIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useTranslations } from "next-intl";
 
 interface Props {
   icon: LucideIcon;
-  label: string;
+  labelKey: string;
   href: string;
 }
 
-const SideBarItem = ({ icon: Icon, label, href }: Props) => {
+const SideBarItem = ({ icon: Icon, labelKey, href }: Props) => {
+  const t = useTranslations();
   const { mode } = useTheme();
   const pathname = usePathname();
   const isActive = pathname === href || pathname.startsWith(`${href}/`);
@@ -39,7 +41,7 @@ const SideBarItem = ({ icon: Icon, label, href }: Props) => {
           isActive ? "!text-slate-200" : ""
         }`}
       >
-        {label}
+        {t(labelKey)}
       </p>
     </Link>
   );

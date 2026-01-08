@@ -14,6 +14,7 @@ import { MessageCircleIcon } from "lucide-react";
 import Messages from "./Messages";
 import MessageInput from "./MessageInput";
 import { pusherClient } from "@/lib/pusher";
+import { useTranslations } from "next-intl";
 
 type Props = {
   chatRooms: TCourseChatRoom[];
@@ -26,6 +27,7 @@ export type UnreadMessagesType = {
 };
 
 const ChatRooms = ({ chatRooms, user }: Props) => {
+  const t = useTranslations("dashboard.student.chatRooms");
   console.log("Chat Rooms: ", chatRooms);
   const [unreadMessages, setUnreadMessages] = useState<UnreadMessagesType[]>(
     []
@@ -76,12 +78,10 @@ const ChatRooms = ({ chatRooms, user }: Props) => {
           <div className="flex-1 h-full flex items-center flex-col">
             <NoChatAnimation className="h-[300px] md:h-[500px]" />
             <h1 className="text-slate-950 dark:text-slate-50 font-bold text-lg md:text-xl lg:text-2xl text-center">
-              No Course Rooms Available
+              {t("noChatRooms")}
             </h1>
             <p className="text-slate-500 text:sm md:text-md text-center">
-              {" "}
-              Once you enroll in a regular course, you&apos;ll be joined automatically to
-              that course&apos;s learning room{" "}
+              {t("enrollInCourse")}
             </p>
           </div>
         </div>
@@ -99,7 +99,7 @@ const ChatRooms = ({ chatRooms, user }: Props) => {
           >
             <div className="p-4 w-full bg-slate-100 dark:bg-slate-900 h-[80px] flex items-center gap-x-2">
               <MessageCircleIcon size={30} />
-              <h1 className="font-bold text-xl md:text-2xl">Learning Rooms</h1>
+              <h1 className="font-bold text-xl md:text-2xl">{t("title")}</h1>
             </div>
             {chatRooms!.map((chatRoom: TCourseChatRoom) => (
               <ChatRoomCard

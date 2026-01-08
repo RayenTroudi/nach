@@ -18,6 +18,7 @@ import { SignedIn } from "@clerk/nextjs";
 import Image from "next/image";
 import Link from "next/link";
 import { useTheme } from "@/contexts/ThemeProvider";
+import { useTranslations } from "next-intl";
 
 const MobileSideBar = ({
   isAdmin,
@@ -26,6 +27,7 @@ const MobileSideBar = ({
   isAdmin: boolean;
   children?: React.ReactNode;
 }) => {
+  const t = useTranslations();
   const { mode } = useTheme();
   const pathname = usePathname();
   const isTeacherView =
@@ -105,7 +107,7 @@ const MobileSideBar = ({
                         : ""
                     }`}
                   >
-                    Instructor
+                    {t("navigation.instructor")}
                   </p>
                 </Link>
               ) : null}
@@ -143,7 +145,7 @@ const MobileSideBar = ({
                             : ""
                         }`}
                       >
-                        Admin
+                        {t("navigation.admin")}
                       </p>
                     </Link>
                   ) : null}

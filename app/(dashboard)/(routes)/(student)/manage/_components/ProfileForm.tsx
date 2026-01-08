@@ -27,12 +27,14 @@ import {
 import Image from "next/image";
 import { updateUserDetails } from "@/lib/actions/user.action";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 
 interface ProfileFormProps {
   user: TUser;
 }
 
 const ProfileForm: React.FC<ProfileFormProps> = ({ user }) => {
+  const t = useTranslations("dashboard.student.manage");
   const [picture, setPicture] = useState(user.picture || "");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isPictureDirty, setIsPictureDirty] = useState(false);
@@ -117,7 +119,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ user }) => {
               />
             </label>
             <span className="text-slate-950 dark:text-slate-50">
-              Click to change profile picture
+              {t("clickToChange")}
             </span>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 text-slate-950 dark:text-slate-50">
@@ -130,7 +132,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ user }) => {
                     <div className="flex items-center space-x-2">
                       <UserIcon className="h-5 w-5 text-slate-950 dark:text-slate-50" />
                       <Input
-                        placeholder="First Name"
+                        placeholder={t("firstNamePlaceholder")}
                         disabled={isSubmitting}
                         {...field}
                         className="flex-1 focus:border-brand-red-500 focus:ring-brand-red-500"
@@ -150,7 +152,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ user }) => {
                     <div className="flex items-center space-x-2">
                       <UserIcon className="h-5 w-5 text-slate-950 dark:text-slate-50" />
                       <Input
-                        placeholder="Last Name"
+                        placeholder={t("lastNamePlaceholder")}
                         disabled={isSubmitting}
                         {...field}
                         className="flex-1 focus:border-brand-red-500 focus:ring-brand-red-500"
@@ -170,7 +172,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ user }) => {
                     <div className="flex items-center space-x-2">
                       <PencilLineIcon className="h-5 w-5 text-slate-950 dark:text-slate-50" />
                       <Input
-                        placeholder="Username"
+                        placeholder={t("usernamePlaceholder")}
                         disabled={isSubmitting}
                         {...field}
                         className="flex-1 focus:border-brand-red-500 focus:ring-brand-red-500"
@@ -191,7 +193,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ user }) => {
                       <MailIcon className="h-5 w-5 text-slate-950 dark:text-slate-50" />
                       <Input
                         type="email"
-                        placeholder="Email"
+                        placeholder={t("emailPlaceholder")}
                         disabled={isSubmitting}
                         {...field}
                         className="flex-1 focus:border-brand-red-500 focus:ring-brand-red-500"
@@ -211,7 +213,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ user }) => {
                     <div className="flex items-center space-x-2">
                       <GlobeIcon className="h-5 w-5 text-slate-950 dark:text-slate-50" />
                       <Input
-                        placeholder="Website"
+                        placeholder={t("websitePlaceholder")}
                         disabled={isSubmitting}
                         {...field}
                         className="flex-1 focus:border-brand-red-500 focus:ring-brand-red-500"
@@ -231,7 +233,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ user }) => {
                     <div className="flex items-center space-x-2">
                       <LinkedinIcon className="h-5 w-5 text-slate-950 dark:text-slate-50" />
                       <Input
-                        placeholder="LinkedIn"
+                        placeholder={t("linkedinPlaceholder")}
                         disabled={isSubmitting}
                         {...field}
                         className="flex-1 focus:border-brand-red-500 focus:ring-brand-red-500"
@@ -251,7 +253,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ user }) => {
                     <div className="flex items-center space-x-2">
                       <YoutubeIcon className="h-5 w-5 text-slate-950 dark:text-slate-50" />
                       <Input
-                        placeholder="YouTube"
+                        placeholder={t("youtubePlaceholder")}
                         disabled={isSubmitting}
                         {...field}
                         className="flex-1 focus:border-brand-red-500 focus:ring-brand-red-500"
@@ -271,7 +273,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ user }) => {
                     <div className="flex items-center space-x-2">
                       <Github className="h-5 w-5 text-slate-950 dark:text-slate-50" />
                       <Input
-                        placeholder="Github"
+                        placeholder={t("githubPlaceholder")}
                         disabled={isSubmitting}
                         {...field}
                         className="flex-1 focus:border-brand-red-500 focus:ring-brand-red-500"
@@ -292,7 +294,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ user }) => {
                   <div className="flex items-center space-x-2">
                     <PencilLineIcon className="h-5 w-5 text-slate-950 dark:text-slate-50" />
                     <Input
-                      placeholder="Biography"
+                      placeholder={t("bioPlaceholder")}
                       disabled={isSubmitting}
                       {...field}
                       className="flex-1 border-gray-300 rounded-md focus:border-brand-red-500 focus:ring-brand-red-500"
@@ -309,7 +311,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ user }) => {
               disabled={!isDirty && !isPictureDirty}
               className="bg-brand-red-500 hover:bg-brand-red-500 text-slate-950 dark:text-slate-50"
             >
-              {isSubmitting ? "Submitting..." : "Update Profile"}
+              {isSubmitting ? t("updating") : t("updateProfile")}
             </Button>
           </div>
         </form>

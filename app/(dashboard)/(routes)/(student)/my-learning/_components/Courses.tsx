@@ -8,6 +8,7 @@ import Link from "next/link";
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { useTranslations } from "next-intl";
 
 interface Props {
   enrolledCourses: TCourse[];
@@ -15,6 +16,7 @@ interface Props {
 }
 
 const Courses = ({ enrolledCourses, enrolledCoursesCategories }: Props) => {
+  const t = useTranslations("dashboard.student.myLearning");
   const [selectedCategory, setSelectedCategory] = useState<TCategory | null>(
     null
   );
@@ -43,7 +45,7 @@ const Courses = ({ enrolledCourses, enrolledCoursesCategories }: Props) => {
       <div className="w-full relative">
         <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 z-10" />
         <Input
-          placeholder="Search your enrolled courses..."
+          placeholder={t("searchPlaceholder")}
           className="w-full pl-12 pr-12 h-14 text-base text-slate-950 dark:text-slate-200 font-medium bg-white dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-800 rounded-lg focus-visible:ring-2 focus-visible:ring-brand-red-500 focus-visible:border-brand-red-500 shadow-sm"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
@@ -63,7 +65,7 @@ const Courses = ({ enrolledCourses, enrolledCoursesCategories }: Props) => {
         <div className="flex items-center justify-between">
           <h3 className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
             <BookOpen className="w-4 h-4" />
-            Filter by Category
+            {t("filterByCategory")}
           </h3>
           {hasActiveFilters && (
             <Button
@@ -73,7 +75,7 @@ const Courses = ({ enrolledCourses, enrolledCoursesCategories }: Props) => {
               className="text-brand-red-500 hover:text-brand-red-600 hover:bg-brand-red-50 dark:hover:bg-brand-red-950/30"
             >
               <X className="w-4 h-4 mr-1" />
-              Clear Filters
+              {t("clearFilters")}
             </Button>
           )}
         </div>
@@ -89,7 +91,7 @@ const Courses = ({ enrolledCourses, enrolledCoursesCategories }: Props) => {
                 : "border-2 border-slate-200 dark:border-slate-800 hover:border-brand-red-500 dark:hover:border-brand-red-500 bg-white dark:bg-slate-900"
             } transition-all duration-200`}
           >
-            All Courses
+            {t("allCourses")}
             <Badge 
               className={`ml-2 ${
                 !selectedCategory 
@@ -139,7 +141,7 @@ const Courses = ({ enrolledCourses, enrolledCoursesCategories }: Props) => {
       {hasActiveFilters && (
         <div className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
           <span className="font-medium">
-            Showing {filteredCourses.length} of {enrolledCourses.length} courses
+            {t("showing")} {filteredCourses.length} {t("of")} {enrolledCourses.length} {t("coursesText")}
           </span>
           {selectedCategory && (
             <Badge className="bg-brand-red-100 dark:bg-brand-red-900/30 text-brand-red-700 dark:text-brand-red-400 border-0">
@@ -163,10 +165,10 @@ const Courses = ({ enrolledCourses, enrolledCoursesCategories }: Props) => {
               <Search className="w-8 h-8 text-slate-400" />
             </div>
             <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-2">
-              No courses found
+              {t("noCoursesFound")}
             </h3>
             <p className="text-slate-600 dark:text-slate-400 mb-4">
-              Try adjusting your filters or search query
+              {t("tryAdjusting")}
             </p>
             {hasActiveFilters && (
               <Button
@@ -174,7 +176,7 @@ const Courses = ({ enrolledCourses, enrolledCoursesCategories }: Props) => {
                 onClick={clearFilters}
                 className="border-2 hover:border-brand-red-500"
               >
-                Clear all filters
+                {t("clearAllFilters")}
               </Button>
             )}
           </div>

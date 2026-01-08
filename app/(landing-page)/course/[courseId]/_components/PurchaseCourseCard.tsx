@@ -22,7 +22,7 @@ import Link from "next/link";
 import { TCourse, TSection, TVideo } from "@/types/models.types";
 import { scnToast } from "@/components/ui/use-toast";
 import { useCart } from "@/contexts/CartContext";
-import { useWishlist } from "@/contexts/WishlistContext";
+// import { useWishlist } from "@/contexts/WishlistContext"; // TODO: Create WishlistContext
 import BankTransferUpload from "./BankTransferUpload";
 
 import { VidSyncPlayer } from "vidsync";
@@ -43,7 +43,7 @@ const PurchaseCourseCard = ({
   
   // Move all hooks to the top, before any conditional returns
   const { addToCart, removeFromCart, cartItems } = useCart();
-  const { wishlist, addToWishlist, removeFromWishlist } = useWishlist();
+  // const { wishlist, addToWishlist, removeFromWishlist } = useWishlist(); // TODO: Create WishlistContext
   const [videoToPreview, setVideoToPreview] = useState<TVideo | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -54,10 +54,10 @@ const PurchaseCourseCard = ({
   // Update wishlist and cart state when they change
   useEffect(() => {
     if (course) {
-      setIsFilled(wishlist.some((item: TCourse) => item._id === course._id));
+      // setIsFilled(wishlist.some((item: TCourse) => item._id === course._id)); // TODO: Enable when WishlistContext exists
       setIsInCart(cartItems.some((item: TCourse) => item._id === course._id));
     }
-  }, [wishlist, cartItems, course]);
+  }, [cartItems, course]); // Removed wishlist dependency
   
   // Add null check for course - AFTER all hooks
   if (!course || !course._id) {
@@ -85,6 +85,8 @@ const PurchaseCourseCard = ({
       console.log("the user", user);
       return router.push("/sign-in");
     }
+    // TODO: Implement wishlist functionality when WishlistContext is created
+    /*
     if (isFilled) {
       removeFromWishlist(course._id);
       setIsFilled(false);
@@ -92,6 +94,8 @@ const PurchaseCourseCard = ({
       addToWishlist(course);
       setIsFilled(true);
     }
+    */
+    console.log("Wishlist functionality temporarily disabled");
   };
 
   const allVideos =

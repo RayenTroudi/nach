@@ -39,8 +39,6 @@ const SigninPage = () => {
           routing="path"
           path="/sign-in"
           signUpUrl="/sign-up"
-          fallbackRedirectUrl="/my-learning"
-          forceRedirectUrl={undefined}
         />
       </Suspense>
     </div>

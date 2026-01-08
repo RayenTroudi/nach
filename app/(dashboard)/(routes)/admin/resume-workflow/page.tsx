@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { useTranslations } from "next-intl";
 import { 
   FileText,
   Upload,
@@ -50,6 +51,7 @@ interface ResumeRequest {
 }
 
 export default function ResumeWorkflowPage() {
+  const t = useTranslations('dashboard.admin');
   const [requests, setRequests] = useState<ResumeRequest[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState<"in_progress" | "completed">("in_progress");

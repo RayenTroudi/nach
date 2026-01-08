@@ -32,12 +32,14 @@ const Vector = ({
 
 type Props = {
   course: TCourse;
+  showWishlistHeart?: boolean;
   className?: string;
   children?: React.ReactNode;
 };
 
 const ClientCourse = ({
   course,
+  showWishlistHeart,
   className,
   children,
 }: Props) => {

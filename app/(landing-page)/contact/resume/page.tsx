@@ -58,13 +58,13 @@ export default function ResumeRequestPage() {
 
       if (response.ok) {
         setRequestId(data.resumeRequest._id);
-        setShowPaymentt('success.requestCreated'));
+        setShowPayment(true);
+        toast.success(t('success.requestCreated'));
       } else {
         toast.error(data.error || t('errors.submitFailed'));
       }
     } catch (error) {
-      toast.error(t('errors.somethingWrong')
-      toast.error("Something went wrong. Please try again.");
+      toast.error(t('errors.somethingWrong'));
     } finally {
       setLoading(false);
     }

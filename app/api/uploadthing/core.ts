@@ -37,7 +37,7 @@ export const ourFileRouter = {
     .onUploadComplete(() => {}),
 
   resumeDocument: f({ 
-    pdf: { maxFileSize: "10MB", maxFileCount: 1 }
+    pdf: { maxFileSize: "16MB", maxFileCount: 1 }
   })
     .middleware(() => handleAuth())
     .onUploadComplete(() => {}),

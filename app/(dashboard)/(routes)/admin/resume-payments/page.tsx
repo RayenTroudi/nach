@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 import { 
   Check, 
   X, 
@@ -39,6 +40,7 @@ interface ResumeRequest {
 }
 
 export default function AdminResumePaymentsPage() {
+  const t = useTranslations('dashboard.admin');
   const [requests, setRequests] = useState<ResumeRequest[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState<"all" | "pending" | "paid" | "rejected">("pending");

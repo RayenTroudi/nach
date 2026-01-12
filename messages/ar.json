@@ -745,6 +745,15 @@
     "availabilityExtended": "من الاثنين إلى السبت، 10 صباحاً - 8 مساءً CET",
     "availability247": "تقديم على مدار الساعة"
   },
+  "coursesSection": {
+    "title": "دورات",
+    "titleHighlight": "مميزة",
+    "subtitle": "استكشف دوراتنا الشاملة المصممة لمساعدتك على النجاح في ألمانيا",
+    "categoryAll": "الكل",
+    "noCourses": "لم يتم العثور على دورات",
+    "noCoursesDesc": "لا توجد دورات متاحة في فئة {category} حتى الآن.",
+    "viewAllCourses": "عرض جميع الدورات"
+  },
   "documentsSection": {
     "title": "المستندات",
     "titleHighlight": "الأساسية",

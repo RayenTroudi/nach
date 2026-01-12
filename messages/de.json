@@ -745,6 +745,15 @@
     "availabilityExtended": "Mo-Sa, 10-20 Uhr MEZ",
     "availability247": "24/7 Einreichungen"
   },
+  "coursesSection": {
+    "title": "Vorgestellte",
+    "titleHighlight": "Kurse",
+    "subtitle": "Entdecken Sie unsere umfassenden Kurse, die Ihnen helfen, in Deutschland erfolgreich zu sein",
+    "categoryAll": "Alle",
+    "noCourses": "Keine Kurse gefunden",
+    "noCoursesDesc": "In der Kategorie {category} sind noch keine Kurse verfügbar.",
+    "viewAllCourses": "Alle Kurse ansehen"
+  },
   "documentsSection": {
     "title": "Wichtige",
     "titleHighlight": "Dokumente",

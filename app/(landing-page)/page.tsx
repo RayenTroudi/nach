@@ -7,6 +7,7 @@ import { getAllPublishedCourses } from "@/lib/actions/course.action";
 
 import Courses from "./_components/Courses";
 import HeroSection from "./_components/HeroSection";
+import CoursesSection from "./_components/CoursesSection";
 import DocumentsSection from "./_components/DocumentsSection";
 import FrequentQuestionsSection from "./_components/FrequentQuestionsSection";
 import AusbildungSection from "./_components/AusbildungSection";
@@ -16,6 +17,7 @@ import { TCategory, TCourse, TUser } from "@/types/models.types";
 import { auth } from "@clerk/nextjs";
 import DocumentModel from "@/lib/models/document.model";
 import { connectToDatabase } from "@/lib/mongoose";
+import { CourseTypeEnum } from "@/lib/enums";
 
 const LandingPage = async () => {
   const { userId } = auth();
@@ -23,11 +25,17 @@ const LandingPage = async () => {
   // Fetch data
   let categories: TCategory[] = [];
   let courses: TCourse[] = [];
+  let regularCourses: TCourse[] = [];
   let documents: any[] = [];
   
   try {
     categories = await getAllCategories();
     courses = await getAllPublishedCourses();
+    
+    // Filter for regular courses only
+    regularCourses = courses.filter(
+      (course) => course.courseType === CourseTypeEnum.Regular
+    );
     
     // Fetch documents
     await connectToDatabase();
@@ -46,6 +54,9 @@ const LandingPage = async () => {
       {/* Hero Section - "Nach Deutschland" */}
       <HeroSection />
       
+      {/* Regular Courses Section */}
+      <CoursesSection courses={regularCourses} />
+
       {/* Documents Section - Replaces "Featured Courses" */}
       <DocumentsSection documents={documents} />
 

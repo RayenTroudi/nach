@@ -745,6 +745,15 @@
     "availabilityExtended": "Mon-Sat, 10 AM - 8 PM CET",
     "availability247": "24/7 Submissions"
   },
+  "coursesSection": {
+    "title": "Featured",
+    "titleHighlight": "Courses",
+    "subtitle": "Explore our comprehensive courses designed to help you succeed in Germany",
+    "categoryAll": "All",
+    "noCourses": "No courses found",
+    "noCoursesDesc": "No courses available in the {category} category yet.",
+    "viewAllCourses": "View All Courses"
+  },
   "documentsSection": {
     "title": "Essential",
     "titleHighlight": "Documents",

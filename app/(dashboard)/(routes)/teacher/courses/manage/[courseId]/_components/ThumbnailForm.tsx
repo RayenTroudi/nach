@@ -41,9 +41,6 @@ const ThumbnailForm = ({ course }: Props) => {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      if (!imageUrl) {
-        throw new Error("Thumbnail is required.");
-      }
       setIsSaving(true);
       await updateCourse({
         courseId: course._id,
@@ -81,6 +78,7 @@ const ThumbnailForm = ({ course }: Props) => {
 
   return (
     <div className=" flex flex-col gap-2 bg-slate-200/10 px-3 dark:bg-slate-800/10 rounded-sm">
+      <p className="text-xs text-slate-500 dark:text-slate-400 italic">Optional: Add a thumbnail to make your course more attractive</p>
       <div className="w-full flex items-center justify-end">
         <Button variant="ghost" size="icon" onClick={onToggleEditHandler}>
           {!edit && course.thumbnail ? (

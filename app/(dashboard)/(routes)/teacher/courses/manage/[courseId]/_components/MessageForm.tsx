@@ -24,9 +24,9 @@ import { scnToast } from "@/components/ui/use-toast";
 import { TCourse } from "@/types/models.types";
 
 const formSchema = z.object({
-  message: z.string().min(100, {
-    message: "Description must be at least 100 characters long.",
-  }),
+  message: z.string().min(1, {
+    message: "Message is required when provided.",
+  }).optional().or(z.literal("")),
 });
 
 interface Props {
@@ -114,8 +114,8 @@ const MessageForm = ({ course, type }: Props) => {
     <div className=" flex flex-col gap-2 bg-slate-200/10 px-3 dark:bg-slate-800/10 rounded-sm">
       {!edit &&
       (type === "welcome"
-        ? course.welcomeMessage !== ""
-        : course.congratsMessage !== "") ? (
+        ? course.welcomeMessage !== "" && course.welcomeMessage
+        : course.congratsMessage !== "" && course.congratsMessage) ? (
         <div>
           <div className="w-full flex items-center justify-end">
             <Button variant="ghost" size="icon" onClick={onToggleEditHandler}>
@@ -141,7 +141,7 @@ const MessageForm = ({ course, type }: Props) => {
                   <FormControl>
                     <Textarea
                       {...field}
-                      placeholder="Enter your message here..."
+                      placeholder={`Enter your ${type} message here... (Optional)`}
                       className="min-h-[300px] resize-none"
                     />
                   </FormControl>
@@ -152,9 +152,9 @@ const MessageForm = ({ course, type }: Props) => {
             <div className="w-full flex justify-between items-center gap-2">
               <p className="text-[13px] text-slate-500 font-bold">
                 <span className="primary-color">
-                  {form.getValues().message.length}
+                  {form.getValues().message?.length || 0}
                 </span>{" "}
-                / 100 letters
+                characters
               </p>
               <div className="flex gap-2">
                 <Button
@@ -172,7 +172,7 @@ const MessageForm = ({ course, type }: Props) => {
                   type="submit"
                   size="sm"
                   className="bg-brand-red-500 hover:bg-brand-red-600"
-                  disabled={!isValid || isSubmitting}
+                  disabled={isSubmitting}
                 >
                   {isSubmitting ? (
                     <Spinner size={15} className="text-slate-500" />

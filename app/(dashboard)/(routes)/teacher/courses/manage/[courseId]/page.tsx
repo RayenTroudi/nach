@@ -62,18 +62,18 @@ const CourseIdPage = async ({ params }: { params: { courseId: string } }) => {
         course?.title,
         course?.category,
         course?.description,
-        course?.thumbnail,
+        // thumbnail is now optional
         course?.faqVideo,
       ]
     : [
         course?.title,
         course?.category,
         course?.description,
-        course?.welcomeMessage,
-        course?.congratsMessage,
+        // welcomeMessage is now optional
+        // congratsMessage is now optional
         course?.price,
         course?.currency,
-        course?.thumbnail,
+        // thumbnail is now optional
         course?.level,
         course?.language,
         (course?.sections ?? []).filter(
@@ -83,7 +83,7 @@ const CourseIdPage = async ({ params }: { params: { courseId: string } }) => {
             section.videos.length > 0 &&
             section.videos.some((video: TVideo) => video?.isPublished)
         ).length >= 1,
-        course?.exam,
+        // exam is now optional
       ];
 
   const completedFields = requiredFields.filter(Boolean).length;

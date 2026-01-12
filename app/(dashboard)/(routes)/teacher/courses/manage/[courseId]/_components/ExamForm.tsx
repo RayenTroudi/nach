@@ -138,6 +138,7 @@ const ExamForm = ({ course }: Props) => {
 
   return (
     <div className="flex flex-col gap-2 bg-slate-200/10 px-3 min-h-[150px] dark:bg-slate-800/10 rounded-sm">
+      <p className="text-xs text-slate-500 dark:text-slate-400 italic">Optional: Add an exam for students to earn a certificate</p>
       <div className="w-full flex items-center justify-between">
         <h2 className="font-bold text-slate-600 dark:text-slate-200 break-words">
           {course?.exam ? course?.exam?.title : "Certificate's Exam"}

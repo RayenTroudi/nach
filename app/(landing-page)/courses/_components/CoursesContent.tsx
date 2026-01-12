@@ -60,11 +60,22 @@ export default function CoursesContent() {
   const fetchCourses = async () => {
     try {
       setLoading(true);
+      console.log("🔍 Fetching courses from API...");
       const response = await fetch("/api/courses?type=regular");
       const data = await response.json();
+      console.log("✅ API Response:", data);
+      console.log("📊 Courses received:", data.courses?.length || 0);
+      if (data.courses && data.courses.length > 0) {
+        console.log("📝 First course:", {
+          title: data.courses[0].title,
+          category: data.courses[0].category,
+          courseType: data.courses[0].courseType,
+          isPublished: data.courses[0].isPublished
+        });
+      }
       setCourses(data.courses || []);
     } catch (error) {
-      console.error("Error fetching courses:", error);
+      console.error("❌ Error fetching courses:", error);
     } finally {
       setLoading(false);
       setInitialLoad(false);
@@ -72,9 +83,12 @@ export default function CoursesContent() {
   };
 
   const filterCourses = () => {
-    let filtered = courses.filter(
-      (course) => course.courseType === CourseTypeEnum.Regular
-    );
+    console.log("🔍 Filtering courses...");
+    console.log("📊 Total courses to filter:", courses.length);
+    
+    // Start with all courses (already filtered by API for type=regular)
+    let filtered = [...courses];
+    console.log("✅ After initial filter:", filtered.length);
 
     // Search filter
     if (searchTerm) {
@@ -85,20 +99,29 @@ export default function CoursesContent() {
           course.instructor?.firstName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
           course.instructor?.lastName?.toLowerCase().includes(searchTerm.toLowerCase())
       );
+      console.log(`🔍 After search filter (term: "${searchTerm}"):`, filtered.length);
     }
 
     // Category filter
     if (selectedCategory !== "all") {
+      console.log(`🏷️ Filtering by category: "${selectedCategory}"`);
       filtered = filtered.filter(
-        (course) => course.category?.name?.toLowerCase() === selectedCategory.toLowerCase()
+        (course) => {
+          const matches = course.category?.name?.toLowerCase() === selectedCategory.toLowerCase();
+          console.log(`   - ${course.title}: category="${course.category?.name}" matches=${matches}`);
+          return matches;
+        }
       );
+      console.log(`✅ After category filter:`, filtered.length);
     }
 
     // Level filter
     if (selectedLevel) {
       filtered = filtered.filter((course) => course.level === selectedLevel);
+      console.log(`🎓 After level filter (level: "${selectedLevel}"):`, filtered.length);
     }
 
+    console.log("✅ Final filtered courses:", filtered.length);
     setFilteredCourses(filtered);
   };
 

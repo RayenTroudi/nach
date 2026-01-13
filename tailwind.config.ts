@@ -219,6 +219,7 @@ const config = withUt({
   },
   plugins: [
     require("tailwindcss-animate"),
+    require('tailwindcss-rtl'),
     addVariablesForColors,
 
     function ({ matchUtilities, theme }: any) {
@@ -243,10 +244,6 @@ const config = withUt({
         { values: flattenColorPalette(theme("backgroundColor")), type: "color" }
       );
     },
-  ],
-  plugins: [
-    // Add RTL support plugin
-    require('tailwindcss-rtl'),
   ],
 }) satisfies Config;
 

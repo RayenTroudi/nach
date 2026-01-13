@@ -112,6 +112,7 @@ export default function AdminBookingsPage() {
 
   useEffect(() => {
     fetchBookings(pagination.currentPage);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleViewBooking = (booking: Booking) => {

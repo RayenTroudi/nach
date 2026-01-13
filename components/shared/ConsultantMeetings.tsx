@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Calendar, Clock, DollarSign, User, Video, CheckCircle2, XCircle, AlertCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 interface Booking {
   _id: string;
@@ -226,9 +227,11 @@ const ConsultantMeetings = ({ bookings }: ConsultantMeetingsProps) => {
                   {/* Student Info */}
                   <div className="flex items-center gap-3">
                     {booking.userId?.picture ? (
-                      <img
+                      <Image
                         src={booking.userId.picture}
                         alt={booking.userId.name}
+                        width={48}
+                        height={48}
                         className="h-12 w-12 rounded-full object-cover"
                       />
                     ) : (

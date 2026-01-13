@@ -119,6 +119,7 @@ export default function PaymentProofsAdminPage() {
 
   useEffect(() => {
     fetchProofs(1);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // Only fetch once on mount
 
   const handleViewProof = (proof: PaymentProof) => {

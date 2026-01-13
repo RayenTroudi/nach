@@ -69,6 +69,7 @@ export default function MyResumePage() {
     if (user) {
       fetchRequests();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
   const getStatusBadge = (status: string, paymentStatus: string) => {

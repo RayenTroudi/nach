@@ -45,6 +45,7 @@ const BookingCalendar = ({
     if (selectedDate) {
       fetchSlots();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedDate]);
 
   const fetchSlots = async () => {

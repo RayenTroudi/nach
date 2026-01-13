@@ -106,14 +106,9 @@ const WatchScreen = ({
                   {/* Video Title Overlay - Modern Design */}
                   <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent p-6 lg:p-8">
                     <div className="max-w-5xl">
-                      <h1 className="text-xl lg:text-2xl font-bold text-white mb-2 drop-shadow-lg">
+                      <h1 className="text-xl lg:text-2xl font-bold text-white drop-shadow-lg">
                         {videoToWatch.title}
                       </h1>
-                      {videoToWatch.description && (
-                        <p className="text-sm text-slate-300 line-clamp-2">
-                          {videoToWatch.description}
-                        </p>
-                      )}
                     </div>
                   </div>
                 </div>

@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 
 import { z } from "zod";
-import { VidSyncPlayer } from "vidsync";
+import MuxPlayer from "@mux/mux-player-react";
 
 import { PencilLineIcon, XCircle } from "lucide-react";
 import { FileUpload, Spinner } from "@/components/shared";
@@ -104,12 +104,40 @@ const VideoUploadForm = ({ video }: Props) => {
       </div>
       {!edit && video.videoUrl ? (
         <div className="w-full h-full relative aspect-video">
-          <VidSyncPlayer src={video.videoUrl!} primaryColor="#DD0000" />
+          <MuxPlayer
+            src={video.videoUrl!}
+            streamType="on-demand"
+            playbackId={video.muxData?.playbackId}
+            metadata={{
+              video_id: video._id?.toString(),
+              video_title: video.title,
+            }}
+            accentColor="#DD0000"
+            style={{ 
+              width: '100%', 
+              height: '100%',
+              '--media-object-fit': 'cover',
+            } as React.CSSProperties}
+          />
         </div>
       ) : (
         <>
           {videoUrl ? (
-            <VidSyncPlayer src={video.videoUrl!} primaryColor="#DD0000" />
+            <MuxPlayer
+              src={video.videoUrl!}
+              streamType="on-demand"
+              playbackId={video.muxData?.playbackId}
+              metadata={{
+                video_id: video._id?.toString(),
+                video_title: video.title,
+              }}
+              accentColor="#DD0000"
+              style={{ 
+                width: '100%', 
+                height: '100%',
+                '--media-object-fit': 'cover',
+              } as React.CSSProperties}
+            />
           ) : (
             <>
               {isSaving ? (

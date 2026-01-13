@@ -3,6 +3,7 @@ import {
   AlignCenterVertical,
   LucideHeart,
   Video as LucideVideo,
+  PlayCircle,
 } from "lucide-react";
 
 import { Spinner } from "@/components/shared";
@@ -24,8 +25,7 @@ import { scnToast } from "@/components/ui/use-toast";
 import { useCart } from "@/contexts/CartContext";
 // import { useWishlist } from "@/contexts/WishlistContext"; // TODO: Create WishlistContext
 import BankTransferUpload from "./BankTransferUpload";
-
-import { VidSyncPlayer } from "vidsync";
+import MuxPlayer from "@mux/mux-player-react";
 
 interface Props {
   course: TCourse;
@@ -50,6 +50,7 @@ const PurchaseCourseCard = ({
   const [isFilled, setIsFilled] = useState(false);
   const { user } = useUser();
   const [isInCart, setIsInCart] = useState(false);
+  const [isVideoPlaying, setIsVideoPlaying] = useState(false);
 
   // Update wishlist and cart state when they change
   useEffect(() => {
@@ -146,20 +147,53 @@ const PurchaseCourseCard = ({
             <Spinner size={50} />
           </div>
         ) : (
-          <div className="relative w-full aspect-video">
-            <VidSyncPlayer
+          <div className="relative w-full aspect-video group">
+            {/* Play Icon Overlay - Shows when video is paused */}
+            {!isVideoPlaying && (
+              <div 
+                className="absolute inset-0 z-10 flex items-center justify-center bg-black/20 group-hover:bg-black/30 transition-all duration-300 cursor-pointer"
+                onClick={() => {
+                  const videoElement = document.querySelector('mux-player') as any;
+                  if (videoElement) {
+                    videoElement.play();
+                    setIsVideoPlaying(true);
+                  }
+                }}
+              >
+                <div className="transform group-hover:scale-110 transition-transform duration-300">
+                  <PlayCircle 
+                    className="w-20 h-20 text-white drop-shadow-2xl opacity-90 group-hover:opacity-100" 
+                    strokeWidth={1.5}
+                    fill="rgba(221, 0, 0, 0.8)"
+                  />
+                </div>
+              </div>
+            )}
+            
+            <MuxPlayer
               src={
                 videoToPreview
                   ? videoToPreview.videoUrl!
                   : allFreeVideos[0]?.videoUrl || course?.thumbnail || ""
               }
               poster={course?.thumbnail!}
-              containerStyles={{
-                borderRadius: "0 !important",
+              streamType="on-demand"
+              playbackId={videoToPreview?.muxData?.playbackId || allFreeVideos[0]?.muxData?.playbackId}
+              metadata={{
+                video_id: videoToPreview?._id?.toString() || allFreeVideos[0]?._id?.toString(),
+                video_title: videoToPreview?.title || allFreeVideos[0]?.title || course?.title,
+                course_id: course?._id?.toString(),
               }}
-              videoStyles={{
-                borderRadius: "0 !important",
-              }}
+              accentColor="#DD0000"
+              style={{ 
+                width: '100%', 
+                height: '100%', 
+                borderRadius: 0,
+                '--media-object-fit': 'cover',
+              } as React.CSSProperties}
+              onPlay={() => setIsVideoPlaying(true)}
+              onPause={() => setIsVideoPlaying(false)}
+              onEnded={() => setIsVideoPlaying(false)}
             />
           </div>
         )}

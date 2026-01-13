@@ -260,6 +260,29 @@ body,
 }
 @import "~@uploadthing/react/styles.css";
 
+/* Mux Player Customization */
+/* Make poster image fill entire container */
+mux-player {
+  --media-object-fit: cover;
+  --media-object-position: center;
+}
+
+mux-player::part(poster) {
+  object-fit: cover !important;
+}
+
+/* Show quality selector and enable all controls */
+mux-player::part(rendition-selectmenu) {
+  display: block !important;
+}
+
+/* Hide play button overlay when video is playing */
+mux-player[media-paused="false"] ~ .absolute,
+mux-player:not([media-paused]) ~ .absolute {
+  opacity: 0;
+  pointer-events: none;
+}
+
 /* Hide Clerk "Secured by Clerk" watermark - Comprehensive */
 .cl-footer,
 .cl-footerAction,

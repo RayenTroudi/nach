@@ -1,8 +1,8 @@
 "use client";
 import { TVideo } from "@/types/models.types";
 import { useEffect, useState } from "react";
+import MuxPlayer from "@mux/mux-player-react";
 import Spinner from "./Spinner";
-import { VidSyncPlayer } from "vidsync";
 
 interface Props {
   video: TVideo;
@@ -41,7 +41,22 @@ const VideoPlayer = ({ video, isLoading, poster }: Props) => {
               <Spinner size={50} />
             </div>
           ) : (
-            <VidSyncPlayer src={video.videoUrl} poster={poster} />
+            <MuxPlayer
+              src={video.videoUrl}
+              poster={poster}
+              streamType="on-demand"
+              playbackId={video.muxData?.playbackId}
+              metadata={{
+                video_id: video._id?.toString(),
+                video_title: video.title,
+              }}
+              accentColor="#DD0000"
+              style={{ 
+                width: '100%', 
+                height: '100%',
+                '--media-object-fit': 'cover',
+              } as React.CSSProperties}
+            />
           )}
         </div>
       </div>

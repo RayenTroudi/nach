@@ -85,16 +85,18 @@ const WatchScreen = ({
     );
   }
 
+  const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(true);
+
   return (
     <>
       {isMounted ? (
         <div className="w-full">
           {isAdmin ? <ReviewBanner course={course} /> : null}
 
-          {/* Modern Video Player + Sidebar Layout */}
-          <div className="flex flex-col lg:flex-row w-full bg-slate-950">
-            {/* Video Player Section - Enhanced */}
-            <div className="w-full lg:flex-1 relative">
+          {/* Modern Video Player + Collapsible Sidebar Layout */}
+          <div className="relative flex flex-col lg:flex-row w-full bg-slate-950">
+            {/* Video Player Section - Enhanced with Toggle Button */}
+            <div className={`w-full transition-all duration-500 ease-in-out ${isSidebarOpen ? 'lg:flex-1' : 'lg:w-full'} relative`}>
               {videoToWatch && videoToWatch.videoUrl ? (
                 <div className="relative bg-black">
                   <VideoPlayer
@@ -111,6 +113,38 @@ const WatchScreen = ({
                       </h1>
                     </div>
                   </div>
+
+                  {/* Modern Toggle Button - Floating on Video */}
+                  <button
+                    onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+                    className={`absolute top-4 right-4 z-20 hidden lg:flex items-center justify-center w-12 h-12 rounded-xl backdrop-blur-md transition-all duration-300 shadow-xl group ${
+                      isSidebarOpen 
+                        ? 'bg-slate-900/80 hover:bg-slate-900/90 border border-slate-700/50' 
+                        : 'bg-brand-red-500/90 hover:bg-brand-red-600/90 border border-red-400/50'
+                    }`}
+                    aria-label={isSidebarOpen ? 'Hide course content' : 'Show course content'}
+                  >
+                    <svg 
+                      className={`w-6 h-6 transition-all duration-300 ${
+                        isSidebarOpen ? 'text-white rotate-0' : 'text-white rotate-180'
+                      }`}
+                      fill="none" 
+                      stroke="currentColor" 
+                      viewBox="0 0 24 24"
+                    >
+                      <path 
+                        strokeLinecap="round" 
+                        strokeLinejoin="round" 
+                        strokeWidth={2.5} 
+                        d="M11 19l-7-7 7-7m8 14l-7-7 7-7" 
+                      />
+                    </svg>
+                    <span className={`absolute -bottom-10 right-0 px-3 py-1 bg-slate-900/90 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap pointer-events-none ${
+                      isSidebarOpen ? '' : 'hidden'
+                    }`}>
+                      {isSidebarOpen ? 'Hide content' : 'Show content'}
+                    </span>
+                  </button>
                 </div>
               ) : (
                 <div className="w-full aspect-video bg-gradient-to-br from-slate-900 via-slate-950 to-black flex items-center justify-center">
@@ -124,33 +158,39 @@ const WatchScreen = ({
                       Select a video to watch
                     </p>
                     <p className="text-sm text-slate-600">
-                      Choose from the course content on the right
+                      Choose from the course content {isSidebarOpen ? 'on the right' : 'by clicking the button above'}
                     </p>
                   </div>
                 </div>
               )}
             </div>
 
-            {/* Sidebar - Course Content */}
+            {/* Collapsible Sidebar - Course Content */}
             {course!.sections!.length && videoToWatch ? (
-              <SectionsToWatch
-                isCourseOwner={isCourseOwner}
-                courseId={course!._id!}
-                courseTitle={course!.title!}
-                sections={course!.sections!}
-                selectedVideo={videoToWatch}
-                userProgress={userProgress}
-                userCourseCompletedVideos={userCourseCompletedVideos}
-                isStudent={isStudent}
-                onChangeVideoToWatchHandler={onChangeVideoToWatchHandler}
-                allVideos={
-                  allVideos
-                    ? allVideos.filter((video): video is TVideo =>
-                        Boolean(video)
-                      )
-                    : []
-                }
-              />
+              <div className={`w-full lg:w-[420px] transform transition-all duration-500 ease-in-out ${
+                isSidebarOpen 
+                  ? 'lg:translate-x-0 opacity-100' 
+                  : 'lg:translate-x-full lg:w-0 opacity-0 lg:absolute lg:right-0 lg:pointer-events-none'
+              }`}>
+                <SectionsToWatch
+                  isCourseOwner={isCourseOwner}
+                  courseId={course!._id!}
+                  courseTitle={course!.title!}
+                  sections={course!.sections!}
+                  selectedVideo={videoToWatch}
+                  userProgress={userProgress}
+                  userCourseCompletedVideos={userCourseCompletedVideos}
+                  isStudent={isStudent}
+                  onChangeVideoToWatchHandler={onChangeVideoToWatchHandler}
+                  allVideos={
+                    allVideos
+                      ? allVideos.filter((video): video is TVideo =>
+                          Boolean(video)
+                        )
+                      : []
+                  }
+                />
+              </div>
             ) : null}
           </div>
         </div>

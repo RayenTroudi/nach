@@ -8,10 +8,8 @@ import { redirect } from "next/navigation";
 import BestSellerChart from "./_components/BestSellerChart";
 import RegistrationChart from "./_components/RegistrationChart";
 import BestSellingCourse from "./_components/BestSellingCourse";
-import { getTranslations } from "next-intl/server";
 
 const page = async () => {
-  const t = await getTranslations('dashboard.admin.statistics');
   let courses;
   try {
     courses = await getAllPublishedCourses();
@@ -67,25 +65,25 @@ const page = async () => {
     <div className="flex flex-col md:flex-row">
       <LeftSideBar />
       <div className="flex-1 p-4">
-        <h1 className="text-2xl font-bold mb-4">{t('title')}</h1>
+        <h1 className="text-2xl font-bold mb-4">Admin Statistics</h1>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
           <Card
-            label={t('totalUsers')}
+            label="Total Users"
             icon={GraduationCap}
             amount={totalUsers.toString()}
           />
           <Card
-            label={t('totalInstructors')}
+            label="Total Instructors"
             icon={User}
             amount={totalInstructors.toString()}
           />
           <Card
-            label={t('totalCourses')}
+            label="Total Courses"
             icon={BookOpen}
             amount={totalCourses.toString()}
           />
           <Card
-            label={t('platformMonthlyRevenue')}
+            label="Platform Monthly Revenue"
             icon={DollarSign}
             amount={`$${platformMonthlyRevenue}`}
           />

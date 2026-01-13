@@ -57,6 +57,7 @@ const WatchScreen = ({
 
   const [videoToWatch, setVideoToWatch] = useState<TVideo | null>(getFirstVideo());
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(true);
 
   const onChangeVideoToWatchHandler = (video: TVideo) => {
     setIsLoading(true);
@@ -84,8 +85,6 @@ const WatchScreen = ({
       </div>
     );
   }
-
-  const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(true);
 
   return (
     <>

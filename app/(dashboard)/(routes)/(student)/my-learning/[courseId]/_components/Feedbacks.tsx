@@ -6,6 +6,7 @@ import { useEffect } from "react";
 import FeedbackCard from "./FeedbackCard";
 import FeedbackForm from "./FeedbackForm";
 import { Separator } from "@/components/ui/separator";
+import { useTranslations } from 'next-intl';
 
 type Props = {
   isCourseOwner: boolean;
@@ -22,6 +23,7 @@ const Feedbacks = ({
   user,
   isAllowed,
 }: Props) => {
+  const t = useTranslations('dashboard.student.myLearning.courseCommunity');
   console.log("feedbacks", feedbacks);
   const alreadyGivenFeedback = feedbacks.find(
     (feedback) => feedback.user?._id === user._id
@@ -39,19 +41,19 @@ const Feedbacks = ({
           <NoFeedbacks className="md:h-[300px]" />
           {alreadyGivenFeedback ? (
             <p className="font-bold text-lg md:text-xl text-center">
-              You have already given feedback for this course.
+              {t('alreadyGivenFeedback')}
             </p>
           ) : (
             <div className="flex flex-col gap-y-2 ">
               {!isCourseOwner ? (
                 <p className="font-bold text-lg md:text-xl text-center">
                   {isAllowed
-                    ? "No feedbacks yet, and you can be the first one to give feedback."
-                    : " No feedbacks yet. Once you have completed the course and the assignments, you can give a feedback."}
+                    ? t('beFirstFeedback')
+                    : t('completeCourseFirst')}
                 </p>
               ) : (
                 <p className="font-bold text-lg md:text-xl text-center">
-                  None of the students have given feedback yet.
+                  {t('noFeedbacksYet')}
                 </p>
               )}
               {isAllowed && !isCourseOwner ? (

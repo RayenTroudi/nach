@@ -1301,7 +1301,29 @@
         "coursesText": "دورة",
         "noCoursesFound": "لم يتم العثور على دورات",
         "tryAdjusting": "حاول تعديل الفلاتر أو استعلام البحث",
-        "clearAllFilters": "مسح جميع الفلاتر"
+        "clearAllFilters": "مسح جميع الفلاتر",
+        "courseCommunity": {
+          "title": "مجتمع الدورة",
+          "subtitle": "اطرح الأسئلة، شارك أفكارك، وتواصل مع المتعلمين الآخرين",
+          "qna": "الأسئلة والأجوبة",
+          "reviews": "التقييمات",
+          "questionsDiscussions": "الأسئلة والمناقشات",
+          "questionsHelp": "اطرح الأسئلة واحصل على المساعدة من مدرسك وزملائك الطلاب",
+          "noQuestionsYet": "لا توجد أسئلة بعد",
+          "beFirstToAsk": "كن أول من يطرح سؤالاً حول هذه الدورة! مدرسك مستعد للمساعدة.",
+          "askFirstQuestion": "اطرح سؤالك الأول",
+          "askYourQuestion": "اطرح سؤالك",
+          "instructorNotified": "سيتم إعلام مدرسك وسيرد في أقرب وقت ممكن",
+          "moreDetails": "المزيد من التفاصيل حول السؤال",
+          "enterDetails": "أدخل المزيد من التفاصيل...",
+          "askQuestion": "اطرح سؤالاً",
+          "searchQuestions": "ابحث عن الأسئلة...",
+          "cancel": "إلغاء",
+          "noFeedbacksYet": "لم يقدم أي من الطلاب تقييماً بعد.",
+          "alreadyGivenFeedback": "لقد قدمت تقييماً لهذه الدورة بالفعل.",
+          "beFirstFeedback": "لا توجد تقييمات بعد، ويمكنك أن تكون أول من يقدم تقييماً.",
+          "completeCourseFirst": "لا توجد تقييمات بعد. بمجرد إكمال الدورة والمهام، يمكنك تقديم تقييم."
+        }
       },
       "myResume": {
         "title": "سيرتي الذاتية",

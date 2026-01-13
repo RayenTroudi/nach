@@ -1301,7 +1301,29 @@
         "coursesText": "Kurse",
         "noCoursesFound": "Keine Kurse gefunden",
         "tryAdjusting": "Versuchen Sie, Ihre Filter oder Suchanfrage anzupassen",
-        "clearAllFilters": "Alle Filter löschen"
+        "clearAllFilters": "Alle Filter löschen",
+        "courseCommunity": {
+          "title": "Kurs-Community",
+          "subtitle": "Stellen Sie Fragen, teilen Sie Ihre Gedanken und vernetzen Sie sich mit anderen Lernenden",
+          "qna": "Fragen & Antworten",
+          "reviews": "Bewertungen",
+          "questionsDiscussions": "Fragen & Diskussionen",
+          "questionsHelp": "Stellen Sie Fragen und erhalten Sie Hilfe von Ihrem Dozenten und anderen Teilnehmern",
+          "noQuestionsYet": "Noch keine Fragen",
+          "beFirstToAsk": "Seien Sie der Erste, der eine Frage zu diesem Kurs stellt! Ihr Dozent ist bereit zu helfen.",
+          "askFirstQuestion": "Stellen Sie Ihre erste Frage",
+          "askYourQuestion": "Stellen Sie Ihre Frage",
+          "instructorNotified": "Ihr Dozent wird benachrichtigt und antwortet so schnell wie möglich",
+          "moreDetails": "Weitere Details zur Frage",
+          "enterDetails": "Details eingeben...",
+          "askQuestion": "Frage stellen",
+          "searchQuestions": "Fragen durchsuchen...",
+          "cancel": "Abbrechen",
+          "noFeedbacksYet": "Keiner der Teilnehmer hat bisher eine Bewertung abgegeben.",
+          "alreadyGivenFeedback": "Sie haben bereits eine Bewertung für diesen Kurs abgegeben.",
+          "beFirstFeedback": "Noch keine Bewertungen, und Sie können der Erste sein, der eine Bewertung abgibt.",
+          "completeCourseFirst": "Noch keine Bewertungen. Sobald Sie den Kurs und die Aufgaben abgeschlossen haben, können Sie eine Bewertung abgeben."
+        }
       },
       "myResume": {
         "title": "Mein Lebenslauf",

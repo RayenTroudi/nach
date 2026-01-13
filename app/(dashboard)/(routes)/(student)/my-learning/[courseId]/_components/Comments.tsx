@@ -55,6 +55,7 @@ import {
 } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
+import { useTranslations } from 'next-intl';
 
 const formSchema = z.object({
   content: z.string().min(3).max(500),
@@ -67,6 +68,7 @@ interface Props {
 
 const Comments = ({ course, user }: Props) => {
   const { mode } = useTheme();
+  const t = useTranslations('dashboard.student.myLearning.courseCommunity');
 
   const [isAsking, setIsAsking] = useState<boolean>(false);
   const [isSendingEmail, setIsSendingEmail] = useState<boolean>(false);
@@ -184,10 +186,10 @@ const Comments = ({ course, user }: Props) => {
         <Card className="w-full max-w-3xl mx-auto border-slate-200 dark:border-slate-800 shadow-lg">
           <CardHeader className="space-y-3 pb-6">
             <CardTitle className="text-2xl font-bold text-center bg-gradient-to-r from-brand-red-500 to-red-600 bg-clip-text text-transparent">
-              Ask Your Question
+              {t('askYourQuestion')}
             </CardTitle>
             <p className="text-sm text-center text-slate-600 dark:text-slate-400">
-              Your instructor will be notified and respond as soon as possible
+              {t('instructorNotified')}
             </p>
             <Separator className="bg-gradient-to-r from-transparent via-slate-200 dark:via-slate-700 to-transparent" />
           </CardHeader>
@@ -203,12 +205,12 @@ const Comments = ({ course, user }: Props) => {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel htmlFor="editor" className="text-sm font-semibold text-slate-700 dark:text-slate-300">
-                        More details about the question
+                        {t('moreDetails')}
                       </FormLabel>
                       <FormControl>
                         <Textarea
                           {...field}
-                          placeholder="Enter more details..."
+                          placeholder={t('enterDetails')}
                           className="min-h-[100px] resize-y border-slate-300 dark:border-slate-700 focus-visible:ring-brand-red-500 focus-visible:ring-offset-0 rounded-lg"
                         />
                       </FormControl>
@@ -224,7 +226,7 @@ const Comments = ({ course, user }: Props) => {
                     onClick={() => setIsAsking(false)}
                     className="h-11 px-6 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors duration-200"
                   >
-                    Cancel
+                    {t('cancel')}
                   </Button>
                   <Button
                     type="submit"
@@ -238,7 +240,7 @@ const Comments = ({ course, user }: Props) => {
                     {isSubmitting || isSendingEmail ? (
                       <Spinner className="text-slate-50" size={15} />
                     ) : (
-                      "Ask Question"
+                      t('askQuestion')
                     )}
                   </Button>
                 </div>
@@ -250,10 +252,10 @@ const Comments = ({ course, user }: Props) => {
         <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col gap-y-8 pt-6">
           <div className="flex flex-col gap-y-2">
             <h1 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-slate-100">
-              Questions & Discussions
+              {t('questionsDiscussions')}
             </h1>
             <p className="text-slate-600 dark:text-slate-400">
-              Ask questions and get help from your instructor and fellow students
+              {t('questionsHelp')}
             </p>
           </div>
 
@@ -266,7 +268,7 @@ const Comments = ({ course, user }: Props) => {
                   <div className="relative flex-1">
                     <Input
                       className="w-full h-11 bg-slate-50 dark:bg-slate-900 border-slate-300 dark:border-slate-700 pl-10 rounded-lg focus-visible:ring-brand-red-500 focus-visible:ring-offset-0"
-                      placeholder="Search questions..."
+                      placeholder={t('searchQuestions')}
                       onChange={(e) => setSearchTerm(e.target.value)}
                     />
                     <Image
@@ -281,8 +283,8 @@ const Comments = ({ course, user }: Props) => {
                     onClick={() => setIsAsking(true)}
                     className="h-11 px-6 rounded-lg bg-brand-red-500 hover:bg-red-600 text-white font-medium shadow-sm hover:shadow-md transition-all duration-200 flex items-center gap-x-2"
                   >
-                    <span className="hidden sm:inline">Ask Question</span>
-                    <span className="sm:hidden">Ask</span>
+                    <span className="hidden sm:inline">{t('askQuestion')}</span>
+                    <span className="sm:hidden">{t('askQuestion')}</span>
                     <MessageCircleQuestion size={18} />
                   </Button>
                 </div>
@@ -559,16 +561,16 @@ const Comments = ({ course, user }: Props) => {
               <NoQuestions className="w-32 h-60" />
               <div className="flex flex-col gap-y-4 items-center text-center max-w-md">
                 <h3 className="font-bold text-2xl md:text-3xl text-slate-900 dark:text-slate-100">
-                  No Questions Yet
+                  {t('noQuestionsYet')}
                 </h3>
                 <p className="text-slate-600 dark:text-slate-400 text-sm md:text-base">
-                  Be the first to ask a question about this course! Your instructor is ready to help.
+                  {t('beFirstToAsk')}
                 </p>
                 <Button
                   onClick={() => setIsAsking(true)}
                   className="bg-brand-red-500 hover:bg-red-600 transition-all duration-200 rounded-lg px-8 h-12 font-semibold text-white shadow-sm hover:shadow-md"
                 >
-                  Ask Your First Question
+                  {t('askFirstQuestion')}
                 </Button>
               </div>
             </div>

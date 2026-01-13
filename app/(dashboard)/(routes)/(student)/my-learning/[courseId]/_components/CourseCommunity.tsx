@@ -5,6 +5,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import Comments from "./Comments";
 import Feedbacks from "./Feedbacks";
+import { useTranslations } from 'next-intl';
 
 interface Props {
   user: TUser;
@@ -14,16 +15,17 @@ interface Props {
 
 const CourseCommunity = ({ user, course, userProgress }: Props) => {
   const isOwner = user._id === course.instructor._id;
+  const t = useTranslations('dashboard.student.myLearning.courseCommunity');
 
   return (
     <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       {/* Modern Section Header */}
       <div className="mb-6">
         <h2 className="text-2xl lg:text-3xl font-bold text-slate-900 dark:text-slate-100 mb-2">
-          Course Community
+          {t('title')}
         </h2>
         <p className="text-slate-600 dark:text-slate-400">
-          Ask questions, share your thoughts, and connect with other learners
+          {t('subtitle')}
         </p>
       </div>
 
@@ -47,7 +49,7 @@ const CourseCommunity = ({ user, course, userProgress }: Props) => {
             >
               <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
             </svg>
-            <span>Q&A</span>
+            <span>{t('qna')}</span>
           </TabsTrigger>
           <TabsTrigger
             id="feedbacks"
@@ -67,7 +69,7 @@ const CourseCommunity = ({ user, course, userProgress }: Props) => {
             >
               <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
             </svg>
-            <span>Reviews</span>
+            <span>{t('reviews')}</span>
           </TabsTrigger>
         </TabsList>
         <TabsContent value="q&a" className="w-full mt-0">

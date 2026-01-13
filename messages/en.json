@@ -1301,7 +1301,29 @@
         "coursesText": "courses",
         "noCoursesFound": "No courses found",
         "tryAdjusting": "Try adjusting your filters or search query",
-        "clearAllFilters": "Clear all filters"
+        "clearAllFilters": "Clear all filters",
+        "courseCommunity": {
+          "title": "Course Community",
+          "subtitle": "Ask questions, share your thoughts, and connect with other learners",
+          "qna": "Q&A",
+          "reviews": "Reviews",
+          "questionsDiscussions": "Questions & Discussions",
+          "questionsHelp": "Ask questions and get help from your instructor and fellow students",
+          "noQuestionsYet": "No Questions Yet",
+          "beFirstToAsk": "Be the first to ask a question about this course! Your instructor is ready to help.",
+          "askFirstQuestion": "Ask Your First Question",
+          "askYourQuestion": "Ask Your Question",
+          "instructorNotified": "Your instructor will be notified and respond as soon as possible",
+          "moreDetails": "More details about the question",
+          "enterDetails": "Enter more details...",
+          "askQuestion": "Ask Question",
+          "searchQuestions": "Search questions...",
+          "cancel": "Cancel",
+          "noFeedbacksYet": "None of the students have given feedback yet.",
+          "alreadyGivenFeedback": "You have already given feedback for this course.",
+          "beFirstFeedback": "No feedbacks yet, and you can be the first one to give feedback.",
+          "completeCourseFirst": "No feedbacks yet. Once you have completed the course and the assignments, you can give a feedback."
+        }
       },
       "myResume": {
         "title": "My Resume",

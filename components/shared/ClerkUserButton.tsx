@@ -28,6 +28,21 @@ const ClerkUserButton = () => {
 
           colorBackground: mode === "dark" ? "#0f172a" : "#f8fafc",
         },
+        elements: {
+          badge: {
+            display: "none",
+          },
+          userButtonBox: {
+            "& .cl-badge": {
+              display: "none !important",
+            },
+          },
+          avatarBox: {
+            "& .cl-badge": {
+              display: "none !important",
+            },
+          },
+        },
       }}
     ></DynamicUserButton>
   );

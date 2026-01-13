@@ -31,6 +31,18 @@ body,
   line-height: 1.8; /* Better for Arabic script */
 }
 
+/* Hide Clerk badge in RTL/Arabic mode */
+[dir="rtl"] .cl-userButtonBox .cl-badge,
+[dir="rtl"] .cl-avatarBox .cl-badge,
+[dir="rtl"] .cl-userButtonTrigger .cl-badge,
+[lang="ar"] .cl-userButtonBox .cl-badge,
+[lang="ar"] .cl-avatarBox .cl-badge,
+[lang="ar"] .cl-userButtonTrigger .cl-badge {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+}
+
 /* Fix Tailwind space-x utilities for RTL */
 [dir="rtl"] .space-x-reverse > :not([hidden]) ~ :not([hidden]) {
   --tw-space-x-reverse: 1;
@@ -318,4 +330,12 @@ mux-player:not([media-paused]) ~ .absolute {
 /* Speed up input field rendering */
 .cl-formFieldInput {
   will-change: border-color;
+}
+
+/* Hide Clerk UserButton badge */
+.cl-userButtonBox .cl-badge,
+.cl-avatarBox .cl-badge,
+.cl-userButtonTrigger .cl-badge {
+  display: none !important;
+  visibility: hidden !important;
 }

@@ -293,7 +293,7 @@ const PurchaseCourseCard = ({
                       name="watch-course"
                       className="w-full bg-brand-red-500 hover:bg-brand-red-600 hover:shadow-button-hover text-white transition-all duration-300 ease-in-out rounded-button shadow-button text-md font-bold"
                     >
-                      Watch your course
+                      {t('watchYourCourse')}
                     </Button>
                   </Link>
 

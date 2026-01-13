@@ -114,10 +114,10 @@ const WatchScreen = ({
                     </div>
                   </div>
 
-                  {/* Modern Toggle Button - Floating on Video */}
+                  {/* Modern Toggle Button - Floating on Video - RTL Support */}
                   <button
                     onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-                    className={`absolute top-4 right-4 z-20 hidden lg:flex items-center justify-center w-12 h-12 rounded-xl backdrop-blur-md transition-all duration-300 shadow-xl group ${
+                    className={`absolute top-4 ltr:right-4 rtl:left-4 z-20 hidden lg:flex items-center justify-center w-12 h-12 rounded-xl backdrop-blur-md transition-all duration-300 shadow-xl group ${
                       isSidebarOpen 
                         ? 'bg-slate-900/80 hover:bg-slate-900/90 border border-slate-700/50' 
                         : 'bg-brand-red-500/90 hover:bg-brand-red-600/90 border border-red-400/50'
@@ -126,7 +126,7 @@ const WatchScreen = ({
                   >
                     <svg 
                       className={`w-6 h-6 transition-all duration-300 ${
-                        isSidebarOpen ? 'text-white rotate-0' : 'text-white rotate-180'
+                        isSidebarOpen ? 'text-white ltr:rotate-0 rtl:rotate-180' : 'text-white ltr:rotate-180 rtl:rotate-0'
                       }`}
                       fill="none" 
                       stroke="currentColor" 
@@ -139,7 +139,7 @@ const WatchScreen = ({
                         d="M11 19l-7-7 7-7m8 14l-7-7 7-7" 
                       />
                     </svg>
-                    <span className={`absolute -bottom-10 right-0 px-3 py-1 bg-slate-900/90 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap pointer-events-none ${
+                    <span className={`absolute -bottom-10 ltr:right-0 rtl:left-0 px-3 py-1 bg-slate-900/90 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap pointer-events-none ${
                       isSidebarOpen ? '' : 'hidden'
                     }`}>
                       {isSidebarOpen ? 'Hide content' : 'Show content'}
@@ -165,12 +165,12 @@ const WatchScreen = ({
               )}
             </div>
 
-            {/* Collapsible Sidebar - Course Content */}
+            {/* Collapsible Sidebar - Course Content - RTL Support */}
             {course!.sections!.length && videoToWatch ? (
               <div className={`w-full lg:w-[420px] transform transition-all duration-500 ease-in-out ${
                 isSidebarOpen 
-                  ? 'lg:translate-x-0 opacity-100' 
-                  : 'lg:translate-x-full lg:w-0 opacity-0 lg:absolute lg:right-0 lg:pointer-events-none'
+                  ? 'ltr:lg:translate-x-0 rtl:lg:translate-x-0 opacity-100' 
+                  : 'ltr:lg:translate-x-full rtl:lg:-translate-x-full lg:w-0 opacity-0 ltr:lg:absolute rtl:lg:absolute ltr:lg:right-0 rtl:lg:left-0 lg:pointer-events-none'
               }`}>
                 <SectionsToWatch
                   isCourseOwner={isCourseOwner}

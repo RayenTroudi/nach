@@ -137,7 +137,7 @@ const SectionsToWatch = ({
   useEffect(() => setIsMounted(true), []);
 
   return isMounted ? (
-    <div className="w-full h-full flex flex-col bg-gradient-to-b from-white to-slate-50 dark:from-slate-900 dark:to-slate-950 border-l border-slate-200 dark:border-slate-800 shadow-2xl">
+    <div className="w-full h-full flex flex-col bg-gradient-to-b from-white to-slate-50 dark:from-slate-900 dark:to-slate-950 ltr:border-l rtl:border-r border-slate-200 dark:border-slate-800 shadow-2xl">
       {/* Modern Header with Progress */}
       {isStudent && !isCourseOwner ? (
         <div className="w-full px-6 py-5 border-b border-slate-200 dark:border-slate-800 bg-gradient-to-br from-slate-50 via-white to-slate-50 dark:from-slate-900 dark:via-slate-900 dark:to-slate-950 backdrop-blur-sm">
@@ -265,12 +265,12 @@ const SectionsToWatch = ({
                               ${
                                 !video?.videoUrl 
                                   ? "pointer-events-none opacity-40" 
-                                  : "hover:bg-gradient-to-r hover:from-slate-100 hover:to-transparent dark:hover:from-slate-800 dark:hover:to-transparent"
+                                  : "hover:bg-gradient-to-r ltr:hover:from-slate-100 rtl:hover:from-transparent ltr:hover:to-transparent rtl:hover:to-slate-100 dark:ltr:hover:from-slate-800 dark:rtl:hover:from-transparent dark:ltr:hover:to-transparent dark:rtl:hover:to-slate-800"
                               } 
                               ${
                                 video._id === selectedVideo._id
-                                  ? "bg-gradient-to-r from-brand-red-50 to-transparent dark:from-brand-red-950/30 dark:to-transparent border-l-4 border-brand-red-500 shadow-sm"
-                                  : "border-l-4 border-transparent"
+                                  ? "bg-gradient-to-r ltr:from-brand-red-50 rtl:from-transparent ltr:to-transparent rtl:to-brand-red-50 dark:ltr:from-brand-red-950/30 dark:rtl:from-transparent dark:ltr:to-transparent dark:rtl:to-brand-red-950/30 ltr:border-l-4 rtl:border-r-4 border-brand-red-500 shadow-sm"
+                                  : "ltr:border-l-4 rtl:border-r-4 border-transparent"
                               }
                             `}
                           >
@@ -383,7 +383,7 @@ const SectionsToWatch = ({
                           href={attachment.url}
                           target="_blank"
                           key={index}
-                          className="w-full flex items-center gap-3 p-3 rounded-xl bg-gradient-to-r from-blue-50 to-transparent dark:from-blue-950/20 dark:to-transparent hover:from-blue-100 hover:to-blue-50 dark:hover:from-blue-950/30 dark:hover:to-blue-950/10 border-l-4 border-blue-500 hover:border-blue-600 transition-all duration-200 group shadow-sm hover:shadow-md"
+                          className="w-full flex items-center gap-3 p-3 rounded-xl bg-gradient-to-r ltr:from-blue-50 rtl:from-transparent ltr:to-transparent rtl:to-blue-50 dark:ltr:from-blue-950/20 dark:rtl:from-transparent dark:ltr:to-transparent dark:rtl:to-blue-950/20 hover:ltr:from-blue-100 hover:rtl:from-transparent hover:ltr:to-blue-50 hover:rtl:to-blue-100 dark:hover:ltr:from-blue-950/30 dark:hover:rtl:from-transparent dark:hover:ltr:to-blue-950/10 dark:hover:rtl:to-blue-950/30 ltr:border-l-4 rtl:border-r-4 border-blue-500 hover:border-blue-600 transition-all duration-200 group shadow-sm hover:shadow-md"
                         >
                           <div className="flex-shrink-0 w-9 h-9 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 text-white flex items-center justify-center group-hover:scale-110 transition-transform shadow-md shadow-blue-500/20">
                             <FileDown size={16} />
@@ -391,7 +391,7 @@ const SectionsToWatch = ({
                           <span className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex-1 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
                             {attachment.title}
                           </span>
-                          <svg className="w-4 h-4 text-slate-400 group-hover:text-blue-500 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <svg className="w-4 h-4 text-slate-400 group-hover:text-blue-500 group-hover:ltr:translate-x-0.5 group-hover:rtl:-translate-x-0.5 group-hover:-translate-y-0.5 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                           </svg>
                         </Link>

@@ -102,8 +102,8 @@ export default async function LocaleLayout({
           shimmer: false,
         },
       }}
-      afterSignInUrl="/my-learning"
-      afterSignUpUrl="/my-learning"
+      afterSignInUrl="/"
+      afterSignUpUrl="/"
       signInUrl="/sign-in"
       signUpUrl="/sign-up"
     >

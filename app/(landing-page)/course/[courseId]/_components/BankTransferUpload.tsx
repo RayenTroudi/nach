@@ -7,6 +7,7 @@ import { scnToast } from "@/components/ui/use-toast";
 import { Spinner } from "@/components/shared";
 import axios from "axios";
 import { UploadDropzone } from "@/lib/upload-thing";
+import { useTranslations } from 'next-intl';
 
 interface BankTransferUploadProps {
   courseIds: string[];
@@ -19,6 +20,7 @@ export default function BankTransferUpload({
   amount,
   onSuccess,
 }: BankTransferUploadProps) {
+  const t = useTranslations('course.bankTransfer');
   const [uploadedUrl, setUploadedUrl] = useState<string | null>(null);
   const [notes, setNotes] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -28,8 +30,8 @@ export default function BankTransferUpload({
     if (!uploadedUrl) {
       scnToast({
         variant: "destructive",
-        title: "No File Uploaded",
-        description: "Please upload a payment proof first.",
+        title: t('noFileUploaded'),
+        description: t('noFileUploadedDesc'),
       });
       return;
     }
@@ -48,8 +50,8 @@ export default function BankTransferUpload({
         setUploadStatus("success");
         scnToast({
           variant: "success",
-          title: "Upload Successful",
-          description: "Your payment proof has been submitted for review.",
+          title: t('uploadSuccessful'),
+          description: t('uploadSuccessfulDesc'),
         });
         if (onSuccess) onSuccess();
       }
@@ -58,8 +60,8 @@ export default function BankTransferUpload({
       setUploadStatus("error");
       scnToast({
         variant: "destructive",
-        title: "Submission Failed",
-        description: error.response?.data?.error || "Failed to submit payment proof.",
+        title: t('submissionFailed'),
+        description: error.response?.data?.error || t('submissionFailed'),
       });
     } finally {
       setIsSubmitting(false);
@@ -72,45 +74,45 @@ export default function BankTransferUpload({
       <div className="bg-slate-100 dark:bg-slate-800 rounded-lg p-6 space-y-4">
         <h3 className="text-lg font-semibold flex items-center gap-2">
           <AlertCircle className="w-5 h-5 text-brand-red-500" />
-          Bank Transfer Instructions
+          {t('title')}
         </h3>
         
         <div className="space-y-2">
           <div className="grid grid-cols-2 gap-2 text-sm">
-            <div className="font-medium">Bank Name:</div>
+            <div className="font-medium">{t('bankName')}</div>
             <div>Banque Centrale de Tunisie</div>
             
-            <div className="font-medium">Account Name:</div>
+            <div className="font-medium">{t('accountName')}</div>
             <div>GermanyFormation SARL</div>
             
-            <div className="font-medium">Account Number:</div>
+            <div className="font-medium">{t('accountNumber')}</div>
             <div className="font-mono">12345678901234567890</div>
             
-            <div className="font-medium">IBAN:</div>
+            <div className="font-medium">{t('iban')}</div>
             <div className="font-mono">TN59 1234 5678 9012 3456 7890</div>
             
-            <div className="font-medium">BIC/SWIFT:</div>
+            <div className="font-medium">{t('swiftCode')}</div>
             <div className="font-mono">BCTUTNTX</div>
             
-            <div className="font-medium">Amount to Transfer:</div>
+            <div className="font-medium">{t('amountToTransfer')}</div>
             <div className="text-lg font-bold text-brand-red-500">{amount.toFixed(2)} TND</div>
           </div>
         </div>
 
         <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded p-3 text-sm">
-          <p className="font-medium text-yellow-800 dark:text-yellow-200 mb-1">Important:</p>
+          <p className="font-medium text-yellow-800 dark:text-yellow-200 mb-1">{t('important')}</p>
           <ul className="list-disc list-inside space-y-1 text-yellow-700 dark:text-yellow-300">
-            <li>Please include your full name in the transfer reference</li>
-            <li>Take a clear photo or screenshot of the transfer receipt</li>
-            <li>Upload the proof below after completing the transfer</li>
-            <li>Processing time: 24-48 hours</li>
+            <li>{t('includeFullName')}</li>
+            <li>{t('takeClearPhoto')}</li>
+            <li>{t('uploadProofBelow')}</li>
+            <li>{t('processingTime')}</li>
           </ul>
         </div>
       </div>
 
       {/* Upload Form */}
       <div className="space-y-4">
-        <h3 className="text-lg font-semibold">Upload Payment Proof</h3>
+        <h3 className="text-lg font-semibold">{t('uploadProofTitle')}</h3>
 
         {/* UploadThing Dropzone */}
         {!uploadedUrl ? (
@@ -123,8 +125,8 @@ export default function BankTransferUpload({
                   setUploadStatus("idle");
                   scnToast({
                     variant: "success",
-                    title: "File Uploaded",
-                    description: "Payment proof uploaded successfully. Click submit to complete.",
+                    title: t('fileUploaded'),
+                    description: t('fileUploadedDesc'),
                   });
                 }
               }}
@@ -132,8 +134,8 @@ export default function BankTransferUpload({
                 console.error("Upload error:", error);
                 scnToast({
                   variant: "destructive",
-                  title: "Upload Failed",
-                  description: error.message || "Failed to upload file.",
+                  title: t('uploadFailed'),
+                  description: error.message || t('uploadFailed'),
                 });
               }}
               appearance={{
@@ -150,7 +152,7 @@ export default function BankTransferUpload({
               <div className="flex items-center gap-2">
                 <Check className="w-5 h-5 text-green-500" />
                 <span className="text-sm font-medium text-green-600 dark:text-green-400">
-                  Payment proof uploaded successfully
+                  {t('paymentProofUploaded')}
                 </span>
               </div>
               <button
@@ -165,7 +167,7 @@ export default function BankTransferUpload({
             {uploadedUrl.toLowerCase().endsWith('.pdf') ? (
               <div className="flex items-center gap-2 text-slate-600 dark:text-slate-400">
                 <FileText className="w-8 h-8" />
-                <span className="text-sm">PDF Document</span>
+                <span className="text-sm">{t('pdfDocument')}</span>
               </div>
             ) : (
               <Image
@@ -182,12 +184,12 @@ export default function BankTransferUpload({
         {/* Notes Field */}
         <div>
           <label className="block text-sm font-medium mb-2">
-            Additional Notes (Optional)
+            {t('additionalNotes')}
           </label>
           <textarea
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
-            placeholder="e.g., Transfer reference number, bank name, etc."
+            placeholder={t('notesPlaceholder')}
             className="w-full px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-brand-red-500"
             rows={3}
           />
@@ -202,17 +204,17 @@ export default function BankTransferUpload({
           {isSubmitting ? (
             <>
               <Spinner className="mr-2" />
-              Submitting...
+              {t('submitting')}
             </>
           ) : uploadStatus === "success" ? (
             <>
               <Check className="w-5 h-5 mr-2" />
-              Submitted Successfully
+              {t('submittedSuccessfully')}
             </>
           ) : (
             <>
               <Upload className="w-5 h-5 mr-2" />
-              Submit Payment Proof
+              {t('submitProof')}
             </>
           )}
         </Button>
@@ -222,10 +224,10 @@ export default function BankTransferUpload({
           <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-4 text-center">
             <Check className="w-8 h-8 text-green-500 mx-auto mb-2" />
             <p className="font-medium text-green-800 dark:text-green-200">
-              Payment Proof Submitted!
+              {t('paymentProofSubmitted')}
             </p>
             <p className="text-sm text-green-700 dark:text-green-300 mt-1">
-              Your proof is being reviewed. You&apos;ll receive an email once it&apos;s processed.
+              {t('proofUnderReview')}
             </p>
           </div>
         )}

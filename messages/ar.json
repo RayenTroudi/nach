@@ -931,6 +931,19 @@
     }
   },
   "course": {
+    "header": {
+      "createdBy": "من تقديم",
+      "ratings": "تقييمات",
+      "students": "طلاب"
+    },
+    "content": {
+      "courseContent": "محتوى الدورة",
+      "lectures": "المحاضرات",
+      "attachments": "المرفقات",
+      "contentComingSoon": "المحتوى قادم قريباً! نحن نعمل على إضافة مقاطع الفيديو والمواد إلى هذا القسم.",
+      "noSectionsYet": "لا توجد أقسام متاحة بعد",
+      "instructorBuilding": "المدرب لا يزال يبني هذه الدورة"
+    },
     "purchase": {
       "courseNotFound": "الدورة غير موجودة",
       "courseNotFoundDesc": "الدورة التي تبحث عنها غير موجودة أو تم حذفها.",

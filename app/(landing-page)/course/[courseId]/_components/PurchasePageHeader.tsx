@@ -1,3 +1,4 @@
+"use client";
 import { Container, ShowMoreLess, Spinner, Star } from "@/components/shared";
 import Preview from "@/components/shared/editor/Preview";
 import { AnimatedTooltip } from "@/components/ui/animated-tooltip";
@@ -7,6 +8,7 @@ import { calculateCourseRating, formatNumber } from "@/lib/utils";
 import { TCourse } from "@/types/models.types";
 import Link from "next/link";
 import React from "react";
+import { useTranslations } from 'next-intl';
 
 interface Props {
   course: TCourse;
@@ -14,6 +16,7 @@ interface Props {
 
 const PurchasePageHeader = ({ course }: Props) => {
   const { courseRating, ratingFrom } = calculateCourseRating(course);
+  const t = useTranslations('course.header');
 
   return (
     <div className="relative w-full py-12 lg:py-16">
@@ -74,7 +77,7 @@ const PurchasePageHeader = ({ course }: Props) => {
                   />
                 ))}
               </div>
-              <span className="text-sm text-slate-300">({ratingFrom} ratings)</span>
+              <span className="text-sm text-slate-300">({ratingFrom} {t('ratings')})</span>
             </div>
 
             {/* Students */}
@@ -82,7 +85,7 @@ const PurchasePageHeader = ({ course }: Props) => {
               <svg className="w-5 h-5 text-brand-red-400" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
               </svg>
-              <span className="font-semibold">{formatNumber(course?.students?.length ?? 0)} students</span>
+              <span className="font-semibold">{formatNumber(course?.students?.length ?? 0)} {t('students')}</span>
             </div>
 
             {/* Instructor */}
@@ -93,7 +96,7 @@ const PurchasePageHeader = ({ course }: Props) => {
               >
                 <AnimatedTooltip items={[course.instructor]} />
                 <div className="flex flex-col">
-                  <span className="text-xs text-slate-300">Created by</span>
+                  <span className="text-xs text-slate-300">{t('createdBy')}</span>
                   <span className="font-semibold group-hover:text-brand-red-300 transition-colors">
                     {course.instructor.username}
                   </span>

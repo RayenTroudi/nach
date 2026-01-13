@@ -1,5 +1,6 @@
 "use client";
 import React from "react";
+import { useTranslations } from 'next-intl';
 
 import { TAttachment, TCourse, TSection, TVideo } from "@/types/models.types";
 import {
@@ -18,6 +19,7 @@ interface Props {
 
 const CourseInfo = ({ course }: Props) => {
   const [selectedItem, setSelectedItem] = React.useState<string | null>(null);
+  const t = useTranslations('course.content');
 
   // Check if course has meaningful content
   const hasContent = course?.sections && course.sections.length > 0 && 
@@ -32,7 +34,7 @@ const CourseInfo = ({ course }: Props) => {
         <div className="flex items-center gap-3 mb-6">
           <div className="w-1 h-8 bg-brand-red-500 rounded-full" />
           <h2 className="text-2xl lg:text-3xl font-bold text-slate-900 dark:text-slate-100">
-            Course Content
+            {t('courseContent')}
           </h2>
         </div>
         
@@ -68,7 +70,7 @@ const CourseInfo = ({ course }: Props) => {
                     <div className="space-y-3">
                       <div className="flex items-center gap-2 text-sm font-semibold text-slate-600 dark:text-slate-400 mb-3">
                         <Video size={16} className="text-brand-red-500" />
-                        <span>Lectures</span>
+                        <span>{t('lectures')}</span>
                       </div>
 
                       <div className="space-y-2">
@@ -114,7 +116,7 @@ const CourseInfo = ({ course }: Props) => {
                     <div className="flex items-start gap-3 p-4 bg-yellow-50 dark:bg-yellow-950/20 rounded-lg border border-yellow-200 dark:border-yellow-800">
                       <AlertTriangle size={20} className="text-yellow-600 dark:text-yellow-400 flex-shrink-0 mt-0.5" />
                       <p className="text-sm text-yellow-700 dark:text-yellow-300 font-medium">
-                        Content coming soon! We&apos;re working on adding videos and materials to this section.
+                        {t('contentComingSoon')}
                       </p>
                     </div>
                   )}
@@ -125,7 +127,7 @@ const CourseInfo = ({ course }: Props) => {
                       <div className="space-y-3">
                         <div className="flex items-center gap-2 text-sm font-semibold text-slate-600 dark:text-slate-400 mb-3">
                           <FileDown size={16} className="text-brand-red-500" />
-                          <span>Attachments</span>
+                          <span>{t('attachments')}</span>
                         </div>
                         <div className="space-y-2">
                           {section?.attachments?.map((attachment: TAttachment) => (
@@ -154,8 +156,8 @@ const CourseInfo = ({ course }: Props) => {
             <div className="w-16 h-16 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center mb-4">
               <AlertTriangle size={24} className="text-slate-400" />
             </div>
-            <p className="text-lg font-semibold text-slate-600 dark:text-slate-400">No sections available yet</p>
-            <p className="text-sm text-slate-500 dark:text-slate-500 mt-1">The instructor is still building this course</p>
+            <p className="text-lg font-semibold text-slate-600 dark:text-slate-400">{t('noSectionsYet')}</p>
+            <p className="text-sm text-slate-500 dark:text-slate-500 mt-1">{t('instructorBuilding')}</p>
           </div>
         )}
       </div>

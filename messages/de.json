@@ -931,6 +931,19 @@
     }
   },
   "course": {
+    "header": {
+      "createdBy": "Erstellt von",
+      "ratings": "Bewertungen",
+      "students": "Studenten"
+    },
+    "content": {
+      "courseContent": "Kursinhalte",
+      "lectures": "Vorlesungen",
+      "attachments": "Anhänge",
+      "contentComingSoon": "Inhalte kommen bald! Wir arbeiten daran, Videos und Materialien zu diesem Abschnitt hinzuzufügen.",
+      "noSectionsYet": "Noch keine Abschnitte verfügbar",
+      "instructorBuilding": "Der Dozent baut diesen Kurs noch auf"
+    },
     "purchase": {
       "courseNotFound": "Kurs nicht gefunden",
       "courseNotFoundDesc": "Der von Ihnen gesuchte Kurs existiert nicht oder wurde entfernt.",

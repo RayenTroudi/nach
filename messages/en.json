@@ -965,6 +965,19 @@
       "enrollmentFailed": "Enrollment Failed",
       "paymentProof": "Payment Proof"
     },
+    "header": {
+      "createdBy": "Created by",
+      "ratings": "ratings",
+      "students": "students"
+    },
+    "content": {
+      "courseContent": "Course Content",
+      "lectures": "Lectures",
+      "attachments": "Attachments",
+      "contentComingSoon": "Content coming soon! We're working on adding videos and materials to this section.",
+      "noSectionsYet": "No sections available yet",
+      "instructorBuilding": "The instructor is still building this course"
+    },
     "bankTransfer": {
       "title": "Bank Transfer Instructions",
       "bankName": "Bank Name",

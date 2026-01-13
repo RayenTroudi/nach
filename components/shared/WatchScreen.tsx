@@ -90,28 +90,53 @@ const WatchScreen = ({
       {isMounted ? (
         <div className="w-full">
           {isAdmin ? <ReviewBanner course={course} /> : null}
-          {/* {isStudent && progress ? (
-            <UserProgressBar progress={progress} />
-          ) : null} */}
 
-          <div className="flex flex-col lg:flex-row w-full">
-            {videoToWatch && videoToWatch.videoUrl ? (
-              <VideoPlayer
-                video={videoToWatch}
-                isLoading={isLoading}
-                poster={course?.thumbnail!}
-              />
-            ) : (
-              <div className="w-full lg:flex-1 bg-slate-100 dark:bg-slate-900 border-b lg:border-b-0 lg:border-r border-slate-200 dark:border-slate-800">
-                <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <p className="text-slate-600 dark:text-slate-400">
+          {/* Modern Video Player + Sidebar Layout */}
+          <div className="flex flex-col lg:flex-row w-full bg-slate-950">
+            {/* Video Player Section - Enhanced */}
+            <div className="w-full lg:flex-1 relative">
+              {videoToWatch && videoToWatch.videoUrl ? (
+                <div className="relative bg-black">
+                  <VideoPlayer
+                    video={videoToWatch}
+                    isLoading={isLoading}
+                    poster={course?.thumbnail!}
+                  />
+                  
+                  {/* Video Title Overlay - Modern Design */}
+                  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent p-6 lg:p-8">
+                    <div className="max-w-5xl">
+                      <h1 className="text-xl lg:text-2xl font-bold text-white mb-2 drop-shadow-lg">
+                        {videoToWatch.title}
+                      </h1>
+                      {videoToWatch.description && (
+                        <p className="text-sm text-slate-300 line-clamp-2">
+                          {videoToWatch.description}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div className="w-full aspect-video bg-gradient-to-br from-slate-900 via-slate-950 to-black flex items-center justify-center">
+                  <div className="text-center p-8">
+                    <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-slate-800/50 flex items-center justify-center">
+                      <svg className="w-10 h-10 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                      </svg>
+                    </div>
+                    <p className="text-lg font-semibold text-slate-400 mb-1">
                       Select a video to watch
+                    </p>
+                    <p className="text-sm text-slate-600">
+                      Choose from the course content on the right
                     </p>
                   </div>
                 </div>
-              </div>
-            )}
+              )}
+            </div>
+
+            {/* Sidebar - Course Content */}
             {course!.sections!.length && videoToWatch ? (
               <SectionsToWatch
                 isCourseOwner={isCourseOwner}

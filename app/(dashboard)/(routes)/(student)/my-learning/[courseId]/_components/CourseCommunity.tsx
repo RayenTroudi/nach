@@ -17,17 +17,27 @@ const CourseCommunity = ({ user, course, userProgress }: Props) => {
 
   return (
     <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      {/* Modern Section Header */}
+      <div className="mb-6">
+        <h2 className="text-2xl lg:text-3xl font-bold text-slate-900 dark:text-slate-100 mb-2">
+          Course Community
+        </h2>
+        <p className="text-slate-600 dark:text-slate-400">
+          Ask questions, share your thoughts, and connect with other learners
+        </p>
+      </div>
+
       <Tabs defaultValue="q&a" className="w-full">
-        <TabsList className="w-full h-14 flex justify-start items-center rounded-lg bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-1 mb-6">
+        <TabsList className="w-full lg:w-auto inline-flex h-12 items-center justify-start gap-2 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-1.5 mb-8 shadow-sm">
           <TabsTrigger
             id="comments"
             value="q&a"
-            className="text-base font-semibold rounded-md px-6 h-full flex items-center justify-center gap-2 data-[state=active]:bg-white data-[state=active]:dark:bg-slate-800 data-[state=active]:shadow-sm data-[state=active]:text-brand-red-500 text-slate-600 dark:text-slate-400 transition-all duration-200"
+            className="inline-flex items-center justify-center gap-2 rounded-lg px-5 h-9 text-sm font-semibold transition-all duration-200 data-[state=active]:bg-white data-[state=active]:dark:bg-slate-800 data-[state=active]:shadow-md data-[state=active]:text-brand-red-500 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              width="18"
-              height="18"
+              width="16"
+              height="16"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
@@ -37,17 +47,17 @@ const CourseCommunity = ({ user, course, userProgress }: Props) => {
             >
               <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
             </svg>
-            Q&A
+            <span>Q&A</span>
           </TabsTrigger>
           <TabsTrigger
             id="feedbacks"
             value="feedbacks"
-            className="text-base font-semibold rounded-md px-6 h-full flex items-center justify-center gap-2 data-[state=active]:bg-white data-[state=active]:dark:bg-slate-800 data-[state=active]:shadow-sm data-[state=active]:text-brand-red-500 text-slate-600 dark:text-slate-400 transition-all duration-200"
+            className="inline-flex items-center justify-center gap-2 rounded-lg px-5 h-9 text-sm font-semibold transition-all duration-200 data-[state=active]:bg-white data-[state=active]:dark:bg-slate-800 data-[state=active]:shadow-md data-[state=active]:text-brand-red-500 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              width="18"
-              height="18"
+              width="16"
+              height="16"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
@@ -55,11 +65,9 @@ const CourseCommunity = ({ user, course, userProgress }: Props) => {
               strokeLinecap="round"
               strokeLinejoin="round"
             >
-              <path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z" />
-              <line x1="16" y1="8" x2="2" y2="22" />
-              <line x1="17.5" y1="15" x2="9" y2="15" />
+              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
             </svg>
-            Reviews
+            <span>Reviews</span>
           </TabsTrigger>
         </TabsList>
         <TabsContent value="q&a" className="w-full mt-0">

@@ -137,104 +137,119 @@ const SectionsToWatch = ({
   useEffect(() => setIsMounted(true), []);
 
   return isMounted ? (
-    <div className="w-full lg:w-96 flex flex-col gap-2 max-h-[480px] overflow-y-auto bg-slate-50 dark:bg-slate-950">
+    <div className="w-full lg:w-[420px] flex flex-col bg-white dark:bg-slate-900 border-l border-slate-200 dark:border-slate-800">
+      {/* Modern Header with Progress */}
       {isStudent && !isCourseOwner ? (
-        <div className="w-full h-fit px-2 py-3 flex items-center justify-between bg-black text-white dark:bg-white dark:text-black ">
-          <p className="text-lg font-bold line-clamp-1">{courseTitle}</p>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild className="!border-none">
-              <div className="relative size-[45px] rounded-full border cursor-pointer">
-                <svg
-                  width="45"
-                  height="45"
-                  viewBox="0 0 250 250"
-                  className="circular-progress"
-                  style={
-                    {
-                      "--progress": userProgress?.progress || 0,
-                    } as React.CSSProperties
-                  }
-                >
-                  <circle className="bg"></circle>
-                  <circle className="fg"></circle>
-                </svg>
-                <TrophyIcon
-                  size={20}
-                  className="text-primaryColor absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
-                />
-              </div>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-72 pointer-events-none p-0">
-              <DropdownMenuGroup className="p-0">
-                <DropdownMenuItem className="pointer-events-none font-semibold text-md bg-transparent hover:bg-transparent">
-                  Your Progress
-                  <DropdownMenuShortcut>
-                    {userProgress?.progress ?? 0}%{" "}
-                  </DropdownMenuShortcut>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem className="pointer-events-none font-normal text-xs">
-                  <p
-                    className={`${
-                      userProgress?.isCompleted ? "text-green-600" : ""
-                    }`}
-                  >
-                    {userProgress?.isCompleted
-                      ? "All video completed"
-                      : `${
-                          allVideos.length -
-                          (userCourseCompletedVideos?.length ?? 0)
-                        } video(s) left`}
-                  </p>
-                  <DropdownMenuShortcut>
+        <div className="w-full px-6 py-5 border-b border-slate-200 dark:border-slate-800 bg-gradient-to-br from-slate-50 to-white dark:from-slate-900 dark:to-slate-950">
+          <div className="flex items-start justify-between gap-3">
+            <div className="flex-1 min-w-0">
+              <h2 className="text-sm font-semibold text-slate-500 dark:text-slate-400 mb-1">
+                Course Content
+              </h2>
+              <p className="text-base font-bold text-slate-900 dark:text-slate-100 line-clamp-2">
+                {courseTitle}
+              </p>
+            </div>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild className="!border-none flex-shrink-0">
+                <button className="relative group">
+                  <div className="relative size-[52px] rounded-xl bg-gradient-to-br from-brand-red-500 to-brand-red-600 shadow-lg shadow-brand-red-500/20 group-hover:shadow-xl group-hover:shadow-brand-red-500/30 transition-all duration-300">
+                    <svg
+                      width="52"
+                      height="52"
+                      viewBox="0 0 250 250"
+                      className="circular-progress"
+                      style={
+                        {
+                          "--progress": userProgress?.progress || 0,
+                        } as React.CSSProperties
+                      }
+                    >
+                      <circle className="bg"></circle>
+                      <circle className="fg"></circle>
+                    </svg>
+                    <div className="absolute inset-0 flex flex-col items-center justify-center">
+                      <TrophyIcon
+                        size={18}
+                        className="text-white mb-0.5"
+                      />
+                      <span className="text-[10px] font-bold text-white">
+                        {userProgress?.progress || 0}%
+                      </span>
+                    </div>
+                  </div>
+                </button>
+              </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-80 p-4 shadow-xl">
+              <DropdownMenuGroup className="space-y-3">
+                <div className="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800">
+                  <span className="font-bold text-lg text-slate-900 dark:text-slate-100">Your Progress</span>
+                  <span className="text-2xl font-bold text-brand-red-500">
+                    {userProgress?.progress ?? 0}%
+                  </span>
+                </div>
+                
+                <div className="bg-slate-50 dark:bg-slate-950 rounded-lg p-3">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm font-medium text-slate-700 dark:text-slate-300">
+                      {userProgress?.isCompleted
+                        ? "🎉 All videos completed!"
+                        : `${allVideos.length - (userCourseCompletedVideos?.length ?? 0)} video(s) remaining`}
+                    </span>
                     {userProgress?.isCompleted ? (
-                      <CheckCircle size={20} className="text-green-600" />
+                      <CheckCircle size={18} className="text-green-500" />
                     ) : (
-                      <VideoIcon size={20} />
+                      <VideoIcon size={18} className="text-slate-400" />
                     )}
-                  </DropdownMenuShortcut>
-                </DropdownMenuItem>
+                  </div>
+                  
+                  {/* Progress Bar */}
+                  <div className="w-full h-2 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
+                    <div 
+                      className="h-full bg-gradient-to-r from-brand-red-500 to-brand-red-600 transition-all duration-500"
+                      style={{ width: `${userProgress?.progress ?? 0}%` }}
+                    />
+                  </div>
+                </div>
 
                 <Button
-                  className="rounded-none w-full mt-4"
+                  className="w-full h-11 bg-gradient-to-r from-brand-red-500 to-brand-red-600 hover:from-brand-red-600 hover:to-brand-red-700 text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
                   disabled={!userProgress?.isCompleted}
                   onClick={() => router.push(`/certificate/${courseId}`)}
                 >
-                  Get Certificate
+                  {userProgress?.isCompleted ? '🏆 Get Your Certificate' : '🔒 Complete Course to Get Certificate'}
                 </Button>
               </DropdownMenuGroup>
             </DropdownMenuContent>
           </DropdownMenu>
+          </div>
         </div>
       ) : null}
-      <Accordion type="single" collapsible className="">
-        {sections.map((section: TSection, index: number) => (
-          <AccordionItem
-            key={section._id}
-            value={index + ""}
-            className="group  px-2 rounded-sm group-hover:border-none "
-          >
-            <AccordionTrigger className="group-hover:no-underline w-full  relative">
-              <h2 className="font-bold text-slate-900 dark:text-slate-300">
-                {" "}
-                {section.title.length > 25
-                  ? `${section.title.slice(0, 26)} ...`
-                  : section.title}{" "}
-              </h2>
-              {isAdmin ? (
-                <>
-                  {section?.isPublished ? (
-                    <Badge className="bg-[#065f46] hover:bg-[#065f46] text-slate-200 font-bold absolute right-5 top-5">
-                      Published
+      
+      {/* Scrollable Content Area */}
+      <div className="flex-1 overflow-y-auto">
+        <Accordion type="single" collapsible className="px-4 py-2">
+          {sections.map((section: TSection, index: number) => (
+            <AccordionItem
+              key={section._id}
+              value={index + ""}
+              className="border-none mb-3"
+            >
+              <AccordionTrigger className="hover:no-underline px-4 py-3 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors duration-200">
+                <div className="flex items-center gap-3 flex-1">
+                  <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-gradient-to-br from-brand-red-500 to-brand-red-600 text-white text-sm font-bold shadow-sm">
+                    {index + 1}
+                  </div>
+                  <h3 className="font-bold text-sm text-slate-900 dark:text-slate-100 text-left line-clamp-2 flex-1">
+                    {section.title}
+                  </h3>
+                  {isAdmin && (
+                    <Badge className={`ml-2 ${section?.isPublished ? 'bg-green-600 hover:bg-green-700' : 'bg-slate-400 dark:bg-slate-700'} text-white text-xs`}>
+                      {section?.isPublished ? 'Published' : 'Draft'}
                     </Badge>
-                  ) : (
-                    <Badge className=" text-slate-200 dark:bg-slate-700 dark:text-slate-200 font-bold absolute right-5 top-5">
-                      Draft
-                    </Badge>
-                  )}{" "}
-                </>
-              ) : null}
-            </AccordionTrigger>
+                  )}
+                </div>
+              </AccordionTrigger>
             <AccordionContent className="flex flex-col gap-4 w-full">
               <div className="flex flex-col items-start gap-x-1 w-full">
                 {section?.videos?.length ? (
@@ -243,114 +258,148 @@ const SectionsToWatch = ({
                       <div key={video._id} className="w-full">
                         {isStudent ? (
                           <div
-                            className={`w-full flex items-center rounded-sm gap-x-2 hover:bg-slate-200/50 dark:hover:bg-slate-900 duration-300 ease-in-out cursor-pointer p-2
-                      ${
-                        !video?.videoUrl ? "pointer-events-none opacity-50" : ""
-                      } ${
-                              video._id === selectedVideo._id
-                                ? "bg-slate-200/80 dark:bg-slate-900"
-                                : ""
-                            }
-                    `}
+                            className={`w-full flex items-center gap-3 p-3 rounded-lg transition-all duration-200 group cursor-pointer
+                              ${
+                                !video?.videoUrl 
+                                  ? "pointer-events-none opacity-40" 
+                                  : "hover:bg-slate-50 dark:hover:bg-slate-800/50"
+                              } 
+                              ${
+                                video._id === selectedVideo._id
+                                  ? "bg-brand-red-50 dark:bg-brand-red-950/20 border-2 border-brand-red-500"
+                                  : "border-2 border-transparent"
+                              }
+                            `}
                           >
                             {isStudent && !isCourseOwner ? (
-                              <>
-                                {videoToComplete &&
-                                videoToComplete?._id === video._id ? (
+                              <div className="flex-shrink-0">
+                                {videoToComplete && videoToComplete?._id === video._id ? (
                                   <Spinner size={18} />
                                 ) : (
                                   <Checkbox
                                     checked={
                                       userCourseCompletedVideos
                                         ? userCourseCompletedVideos?.some(
-                                            (
-                                              completedVideo: TUserCourseVideoCompleted
-                                            ) =>
-                                              completedVideo.videoId._id ===
-                                              video._id
+                                            (completedVideo: TUserCourseVideoCompleted) =>
+                                              completedVideo.videoId._id === video._id
                                           )
                                         : false
                                     }
                                     id={video._id}
-                                    onClick={() => toggleVideoCompleted(video)}
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      toggleVideoCompleted(video);
+                                    }}
+                                    className="w-5 h-5"
                                   />
                                 )}
-                              </>
+                              </div>
                             ) : null}
-                            <label
+                            <div 
                               onClick={() => onChangeVideoToWatchHandler(video)}
-                              className="cursor-pointer text-[13px] font-bold text-slate-500 dark:text-slate-300 pl-2 border-l-2"
+                              className="flex items-center gap-3 flex-1 min-w-0"
                             >
-                              {video.title}
-                            </label>
+                              <div className={`flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center ${
+                                video._id === selectedVideo._id
+                                  ? 'bg-brand-red-500 text-white'
+                                  : 'bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-400'
+                              }`}>
+                                <Video size={16} />
+                              </div>
+                              <span className={`text-sm font-semibold flex-1 min-w-0 ${
+                                video._id === selectedVideo._id
+                                  ? 'text-brand-red-600 dark:text-brand-red-400'
+                                  : 'text-slate-700 dark:text-slate-300'
+                              }`}>
+                                {video.title}
+                              </span>
+                            </div>
                           </div>
                         ) : (
                           <div
-                            className={`w-full flex items-center rounded-sm gap-x-2 hover:bg-slate-200/50 dark:hover:bg-slate-900 duration-300 ease-in-out cursor-pointer p-2
-                      ${
-                        !video?.videoUrl ? "pointer-events-none opacity-50" : ""
-                      } ${
-                              video._id === selectedVideo._id
-                                ? "bg-slate-200/80 dark:bg-slate-900"
-                                : ""
-                            }
-                    `}
+                            className={`w-full flex items-center gap-3 p-3 rounded-lg transition-all duration-200 cursor-pointer
+                              ${
+                                !video?.videoUrl 
+                                  ? "pointer-events-none opacity-40" 
+                                  : "hover:bg-slate-50 dark:hover:bg-slate-800/50"
+                              } 
+                              ${
+                                video._id === selectedVideo._id
+                                  ? "bg-brand-red-50 dark:bg-brand-red-950/20 border-2 border-brand-red-500"
+                                  : "border-2 border-transparent"
+                              }
+                            `}
                             onClick={() => onChangeVideoToWatchHandler(video)}
                           >
-                            {video.videoUrl ? (
-                              <Video
-                                size={18}
-                                className="text-slate-500 dark:text-slate-300  "
-                              />
-                            ) : (
-                              <VideoOff
-                                size={18}
-                                className="text-slate-500  "
-                              />
-                            )}
-                            <p className="text-[13px] font-bold text-slate-500 dark:text-slate-300 pl-2 border-l-2">
+                            <div className={`flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center ${
+                              video._id === selectedVideo._id
+                                ? 'bg-brand-red-500 text-white'
+                                : 'bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-400'
+                            }`}>
+                              {video.videoUrl ? (
+                                <Video size={16} />
+                              ) : (
+                                <VideoOff size={16} />
+                              )}
+                            </div>
+                            <span className={`text-sm font-semibold flex-1 ${
+                              video._id === selectedVideo._id
+                                ? 'text-brand-red-600 dark:text-brand-red-400'
+                                : 'text-slate-700 dark:text-slate-300'
+                            }`}>
                               {video.title}
-                            </p>
+                            </span>
                           </div>
                         )}
                       </div>
                     ))}
                   </>
                 ) : (
-                  <p className="text-[#065f46] text-[13px] font-bold">
-                    No Videos yet.
-                  </p>
+                  <div className="flex items-center gap-2 p-3 rounded-lg bg-yellow-50 dark:bg-yellow-950/20 border border-yellow-200 dark:border-yellow-800">
+                    <VideoOff size={16} className="text-yellow-600 dark:text-yellow-400" />
+                    <p className="text-sm font-semibold text-yellow-700 dark:text-yellow-300">
+                      No videos available yet
+                    </p>
+                  </div>
                 )}
               </div>
               {section?.attachments?.length ? (
-                <div className="flex flex-col items-start gap-x-1 w-full ml-2">
-                  <p className="text-brand-red-500 font-bold">
-                    Attachments & Resources
-                  </p>
-                  {section?.attachments?.map(
-                    (attachment: TAttachment, index: number) => (
-                      <Link
-                        href={attachment.url}
-                        target="_blank"
-                        key={index}
-                        className="w-full flex items-center gap-x-2 hover:bg-slate-200/80 dark:hover:bg-slate-950/80 duration-300 ease-in-out cursor-pointer p-2"
-                      >
-                        <FileDown
-                          size={18}
-                          className="text-slate-500 dark:text-slate-300 "
-                        />
-                        <p className="text-[13px] font-bold text-slate-500 dark:text-slate-300 pl-2 border-l-2">
-                          {attachment.title}
-                        </p>
-                      </Link>
-                    )
-                  )}
+                <div className="mt-4 pt-4 border-t border-slate-200 dark:border-slate-800">
+                  <div className="flex items-center gap-2 mb-3 px-2">
+                    <FileDown size={16} className="text-brand-red-500" />
+                    <h4 className="text-sm font-bold text-brand-red-500">
+                      Attachments & Resources
+                    </h4>
+                  </div>
+                  <div className="space-y-2">
+                    {section?.attachments?.map(
+                      (attachment: TAttachment, index: number) => (
+                        <Link
+                          href={attachment.url}
+                          target="_blank"
+                          key={index}
+                          className="w-full flex items-center gap-3 p-3 rounded-lg bg-blue-50 dark:bg-blue-950/20 hover:bg-blue-100 dark:hover:bg-blue-950/30 border-2 border-transparent hover:border-blue-500 transition-all duration-200 group"
+                        >
+                          <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-blue-500 text-white flex items-center justify-center group-hover:scale-110 transition-transform">
+                            <FileDown size={16} />
+                          </div>
+                          <span className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex-1">
+                            {attachment.title}
+                          </span>
+                          <svg className="w-4 h-4 text-slate-400 group-hover:text-blue-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                          </svg>
+                        </Link>
+                      )
+                    )}
+                  </div>
                 </div>
               ) : null}
             </AccordionContent>
           </AccordionItem>
         ))}
       </Accordion>
+      </div>
     </div>
   ) : null;
 };

@@ -64,9 +64,9 @@ const CourseIdPage = async ({ params }: { params: { courseId: string } }) => {
 
   return (
     <ProtectedRoute user={user}>
-      <div className="min-h-screen bg-slate-50 dark:bg-slate-950">
-        {/* Video Player Section - Full Width */}
-        <div className="w-full bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800">
+      <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white dark:from-slate-950 dark:to-slate-900">
+        {/* Video Player Section - Full Width, No Padding */}
+        <div className="w-full bg-slate-950 dark:bg-black shadow-2xl">
           <WatchScreen
             user={user}
             course={course}
@@ -76,8 +76,8 @@ const CourseIdPage = async ({ params }: { params: { courseId: string } }) => {
           />
         </div>
 
-        {/* Course Community Section - Contained Width */}
-        <div className="w-full py-8 lg:py-12">
+        {/* Course Community Section - Contained Width with Better Spacing */}
+        <div className="w-full py-12 lg:py-16">
           <CourseCommunity
             course={course}
             user={user}

@@ -195,12 +195,13 @@ export default function ResumeRequestPage() {
                         value={formData.email}
                         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                         required
+                        dir="ltr"
                         className="border-2 border-slate-200 dark:border-slate-800"
                       />
                     </div>
                   </div>
 
-                  <div>
+                  <div className="max-w-xs">
                     <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                       {t('form.phone')} <span className="text-red-500">*</span>
                     </label>
@@ -210,6 +211,7 @@ export default function ResumeRequestPage() {
                       value={formData.phone}
                       onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                       required
+                      dir="ltr"
                       className="border-2 border-slate-200 dark:border-slate-800"
                     />
                   </div>
@@ -388,6 +390,10 @@ export default function ResumeRequestPage() {
                 <li className="flex items-start gap-3">
                   <CheckCircle2 className="w-5 h-5 text-green-600 dark:text-green-400 flex-shrink-0 mt-0.5" />
                   <span className="text-slate-700 dark:text-slate-300">{t('includes.germanCV')}</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <CheckCircle2 className="w-5 h-5 text-green-600 dark:text-green-400 flex-shrink-0 mt-0.5" />
+                  <span className="text-slate-700 dark:text-slate-300">{t('includes.motivationLetter')}</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <CheckCircle2 className="w-5 h-5 text-green-600 dark:text-green-400 flex-shrink-0 mt-0.5" />

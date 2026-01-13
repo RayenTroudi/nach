@@ -18,6 +18,7 @@ export interface IResumeRequest extends Document {
   status: "pending" | "in_progress" | "completed" | "rejected";
   adminNotes?: string;
   completedResumeUrl?: string;
+  completedMotivationLetterUrl?: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -66,6 +67,7 @@ const ResumeRequestSchema = new Schema<IResumeRequest>(
     },
     adminNotes: String,
     completedResumeUrl: String,
+    completedMotivationLetterUrl: String,
   },
   { timestamps: true }
 );

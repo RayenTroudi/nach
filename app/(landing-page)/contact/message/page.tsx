@@ -207,6 +207,7 @@ export default function SendMessagePage() {
                           }
                           placeholder={t('form.emailPlaceholder')}
                           required
+                          dir="ltr"
                         />
                       </div>
                     </div>

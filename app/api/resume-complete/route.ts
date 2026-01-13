@@ -15,7 +15,7 @@ export async function POST(request: Request) {
     }
 
     const body = await request.json();
-    const { requestId, completedResumeUrl } = body;
+    const { requestId, completedResumeUrl, completedMotivationLetterUrl } = body;
 
     if (!requestId || !completedResumeUrl) {
       return NextResponse.json(
@@ -24,13 +24,19 @@ export async function POST(request: Request) {
       );
     }
 
-    // Update the resume request with the completed resume URL
+    // Update the resume request with the completed resume and motivation letter URLs
+    const updateData: any = {
+      completedResumeUrl: completedResumeUrl,
+      status: "completed",
+    };
+
+    if (completedMotivationLetterUrl) {
+      updateData.completedMotivationLetterUrl = completedMotivationLetterUrl;
+    }
+
     const updatedRequest = await ResumeRequestModel.findByIdAndUpdate(
       requestId,
-      {
-        completedResumeUrl: completedResumeUrl,
-        status: "completed",
-      },
+      updateData,
       { new: true }
     );
 

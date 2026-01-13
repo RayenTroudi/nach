@@ -40,7 +40,7 @@ interface ResumeRequest {
 }
 
 export default function AdminResumePaymentsPage() {
-  const t = useTranslations('dashboard.admin');
+  const t = useTranslations('dashboard.admin.resumePayments');
   const [requests, setRequests] = useState<ResumeRequest[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState<"all" | "pending" | "paid" | "rejected">("pending");
@@ -201,10 +201,10 @@ export default function AdminResumePaymentsPage() {
           {/* Header */}
           <div className="mb-8">
             <h1 className="text-3xl font-bold text-slate-950 dark:text-slate-200 mb-2">
-              Resume Payment Proofs
+              {t('title')}
             </h1>
             <p className="text-slate-600 dark:text-slate-400">
-              Review and approve payment proofs for resume creation requests
+              {t('subtitle')}
             </p>
           </div>
 
@@ -215,28 +215,28 @@ export default function AdminResumePaymentsPage() {
               onClick={() => setStatusFilter("all")}
               className="rounded-full"
             >
-              All ({requests.length})
+              {t('all')} ({requests.length})
             </Button>
             <Button
               variant={statusFilter === "pending" ? "default" : "outline"}
               onClick={() => setStatusFilter("pending")}
               className="rounded-full"
             >
-              Pending ({requests.filter(r => r.paymentStatus === "pending").length})
+              {t('pending')} ({requests.filter(r => r.paymentStatus === "pending").length})
             </Button>
             <Button
               variant={statusFilter === "paid" ? "default" : "outline"}
               onClick={() => setStatusFilter("paid")}
               className="rounded-full"
             >
-              Approved ({requests.filter(r => r.paymentStatus === "paid").length})
+              {t('approved')} ({requests.filter(r => r.paymentStatus === "paid").length})
             </Button>
             <Button
               variant={statusFilter === "rejected" ? "default" : "outline"}
               onClick={() => setStatusFilter("rejected")}
               className="rounded-full"
             >
-              Rejected ({requests.filter(r => r.paymentStatus === "rejected").length})
+              {t('rejected')} ({requests.filter(r => r.paymentStatus === "rejected").length})
             </Button>
           </div>
 
@@ -249,13 +249,10 @@ export default function AdminResumePaymentsPage() {
             <div className="text-center py-20">
               <FileText className="w-16 h-16 mx-auto mb-4 text-slate-400" />
               <h3 className="text-xl font-semibold text-slate-950 dark:text-slate-200 mb-2">
-                No payment proofs found
+                {t('noRequestsFound')}
               </h3>
               <p className="text-slate-600 dark:text-slate-400">
-                {statusFilter === "pending"
-                  ? "No pending payment approvals at the moment"
-                  : `No ${statusFilter} payment proofs found`
-                }
+                {t('noRequestsDesc')}
               </p>
             </div>
           ) : (
@@ -297,7 +294,7 @@ export default function AdminResumePaymentsPage() {
                           {request.targetRole && (
                             <div className="flex items-center gap-2">
                               <FileText className="w-4 h-4" />
-                              <span>Target: {request.targetRole}</span>
+                              <span>{t('targetRole')}: {request.targetRole}</span>
                             </div>
                           )}
                           <div className="flex items-center gap-2">
@@ -320,7 +317,7 @@ export default function AdminResumePaymentsPage() {
                         onClick={() => handleViewRequest(request)}
                       >
                         <Eye className="w-4 h-4 mr-2" />
-                        View Details
+                        {t('viewDetails')}
                       </Button>
                     </div>
                   </div>
@@ -333,35 +330,35 @@ export default function AdminResumePaymentsPage() {
           <Dialog open={isViewDialogOpen} onOpenChange={setIsViewDialogOpen}>
           <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
-              <DialogTitle>{t('resumePayments.detailsTitle')}</DialogTitle>
+              <DialogTitle>{t('detailsTitle')}</DialogTitle>
             </DialogHeader>
 
             {selectedRequest && (
               <div className="space-y-6">
                 {/* Student Info */}
                 <div>
-                  <h3 className="font-semibold mb-3">Student Information</h3>
+                  <h3 className="font-semibold mb-3">{t('studentInfo')}</h3>
                   <div className="space-y-2 text-sm">
                     <div className="flex justify-between">
-                      <span className="text-slate-600">Name:</span>
+                      <span className="text-slate-600">{t('name')}:</span>
                       <span className="font-medium">{selectedRequest.name}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-slate-600">Email:</span>
+                      <span className="text-slate-600">{t('email')}:</span>
                       <span className="font-medium">{selectedRequest.email}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-slate-600">Phone:</span>
+                      <span className="text-slate-600">{t('phone')}:</span>
                       <span className="font-medium">{selectedRequest.phone}</span>
                     </div>
                     {selectedRequest.targetRole && (
                       <div className="flex justify-between">
-                        <span className="text-slate-600">Target Role:</span>
+                        <span className="text-slate-600">{t('targetRole')}:</span>
                         <span className="font-medium">{selectedRequest.targetRole}</span>
                       </div>
                     )}
                     <div className="flex justify-between">
-                      <span className="text-slate-600">Status:</span>
+                      <span className="text-slate-600">{t('status')}:</span>
                       <Badge className={getStatusColor(selectedRequest.paymentStatus)}>
                         {selectedRequest.paymentStatus}
                       </Badge>
@@ -373,10 +370,10 @@ export default function AdminResumePaymentsPage() {
 
                 {/* Payment Details */}
                 <div>
-                  <h3 className="font-semibold mb-3">Payment Information</h3>
+                  <h3 className="font-semibold mb-3">{t('paymentInfo')}</h3>
                   <div className="space-y-2 text-sm">
                     <div className="flex justify-between">
-                      <span className="text-slate-600">Amount:</span>
+                      <span className="text-slate-600">{t('amount')}:</span>
                       <span className="font-medium">{selectedRequest.price} TND</span>
                     </div>
                   </div>
@@ -387,7 +384,7 @@ export default function AdminResumePaymentsPage() {
                   <>
                     <Separator />
                     <div>
-                      <h3 className="font-semibold mb-3">Payment Proof</h3>
+                      <h3 className="font-semibold mb-3">{t('paymentProof')}</h3>
                       <div className="border rounded-lg overflow-hidden">
                         <Image
                           src={selectedRequest.paymentProofUrl}
@@ -403,7 +400,7 @@ export default function AdminResumePaymentsPage() {
                         rel="noopener noreferrer"
                         className="text-sm text-blue-600 hover:underline mt-2 inline-block"
                       >
-                        View full size →
+                        {t('viewFullSize')} →
                       </a>
                     </div>
                   </>
@@ -412,7 +409,7 @@ export default function AdminResumePaymentsPage() {
                     <Separator />
                     <div className="text-center py-8 bg-slate-50 dark:bg-slate-800 rounded-lg">
                       <FileText className="w-12 h-12 text-slate-300 dark:text-slate-600 mx-auto mb-2" />
-                      <p className="text-slate-600 dark:text-slate-400">No payment proof uploaded yet</p>
+                      <p className="text-slate-600 dark:text-slate-400">{t('noProofUploaded')}</p>
                       <p className="text-xs text-slate-500 mt-2">Payment proof URL: {String(selectedRequest.paymentProofUrl || 'null')}</p>
                     </div>
                   </>
@@ -423,11 +420,11 @@ export default function AdminResumePaymentsPage() {
                   <>
                     <Separator />
                     <div>
-                      <h3 className="font-semibold mb-2">Admin Notes (Optional)</h3>
+                      <h3 className="font-semibold mb-2">{t('adminNotes')}</h3>
                       <Textarea
                         value={adminNotes}
                         onChange={(e) => setAdminNotes(e.target.value)}
-                        placeholder="Add any notes about this payment..."
+                        placeholder={t('adminNotesPlaceholder')}
                         rows={3}
                       />
                     </div>
@@ -444,7 +441,7 @@ export default function AdminResumePaymentsPage() {
                         onClick={() => setIsViewDialogOpen(false)}
                         disabled={actionLoading}
                       >
-                        Close
+                        {t('close')}
                       </Button>
                       <Button
                         variant="destructive"
@@ -452,7 +449,7 @@ export default function AdminResumePaymentsPage() {
                         disabled={actionLoading}
                       >
                         <X className="w-4 h-4 mr-2" />
-                        Reject
+                        {t('reject')}
                       </Button>
                       <Button
                         onClick={handleApprovePayment}
@@ -464,8 +461,9 @@ export default function AdminResumePaymentsPage() {
                         ) : (
                           <>
                             <Check className="w-4 h-4 mr-2" />
-                            Approve
+                            {t('approve')}
                           </>
+                        )}
                         )}
                       </Button>
                     </div>

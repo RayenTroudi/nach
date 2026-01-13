@@ -31,6 +31,7 @@ interface ResumeRequest {
   paymentStatus: "pending" | "paid" | "rejected";
   status: "pending" | "in_progress" | "completed" | "rejected";
   completedResumeUrl?: string;
+  completedMotivationLetterUrl?: string;
   createdAt: string;
 }
 
@@ -42,6 +43,7 @@ export default function TeacherResumeRequestsPage() {
   const [isUploadDialogOpen, setIsUploadDialogOpen] = useState(false);
   const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
   const [uploadedUrl, setUploadedUrl] = useState<string | null>(null);
+  const [uploadedMotivationLetterUrl, setUploadedMotivationLetterUrl] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [filterStatus, setFilterStatus] = useState<string>("all");
 
@@ -66,6 +68,7 @@ export default function TeacherResumeRequestsPage() {
   const handleUploadResume = (request: ResumeRequest) => {
     setSelectedRequest(request);
     setUploadedUrl(null);
+    setUploadedMotivationLetterUrl(null);
     setIsUploadDialogOpen(true);
   };
 
@@ -99,11 +102,13 @@ export default function TeacherResumeRequestsPage() {
       await axios.post("/api/resume-complete", {
         requestId: selectedRequest._id,
         completedResumeUrl: uploadedUrl,
+        completedMotivationLetterUrl: uploadedMotivationLetterUrl,
       });
 
-      toast.success("Resume delivered successfully!");
+      toast.success("Resume and motivation letter delivered successfully!");
       setIsUploadDialogOpen(false);
       setUploadedUrl(null);
+      setUploadedMotivationLetterUrl(null);
       fetchRequests();
     } catch (error) {
       toast.error("Failed to submit resume");
@@ -168,8 +173,8 @@ export default function TeacherResumeRequestsPage() {
               <FileText className="w-8 h-8 text-green-600" />
             </div>
             <div>
-              <h1 className="text-3xl font-bold text-slate-950 dark:text-white">Resume Requests</h1>
-              <p className="text-slate-600 dark:text-slate-400">Create and deliver professional resumes</p>
+              <h1 className="text-3xl font-bold text-slate-950 dark:text-white">{t('title')}</h1>
+              <p className="text-slate-600 dark:text-slate-400">{t('subtitle')}</p>
             </div>
           </div>
 
@@ -180,28 +185,28 @@ export default function TeacherResumeRequestsPage() {
               onClick={() => setFilterStatus("all")}
               className="rounded-full"
             >
-              All ({filteredRequests.length})
+              {t('all')} ({filteredRequests.length})
             </Button>
             <Button
               variant={filterStatus === "pending" ? "default" : "outline"}
               onClick={() => setFilterStatus("pending")}
               className="rounded-full"
             >
-              To Start ({requests.filter(r => r.status === "pending" && r.paymentStatus === "paid").length})
+              {t('toStart')} ({requests.filter(r => r.status === "pending" && r.paymentStatus === "paid").length})
             </Button>
             <Button
               variant={filterStatus === "in_progress" ? "default" : "outline"}
               onClick={() => setFilterStatus("in_progress")}
               className="rounded-full"
             >
-              In Progress ({requests.filter(r => r.status === "in_progress").length})
+              {t('inProgress')} ({requests.filter(r => r.status === "in_progress").length})
             </Button>
             <Button
               variant={filterStatus === "completed" ? "default" : "outline"}
               onClick={() => setFilterStatus("completed")}
               className="rounded-full"
             >
-              Completed ({requests.filter(r => r.status === "completed").length})
+              {t('completed')} ({requests.filter(r => r.status === "completed").length})
             </Button>
           </div>
         </div>
@@ -212,10 +217,10 @@ export default function TeacherResumeRequestsPage() {
             <CardContent className="p-12 text-center">
               <FileText className="w-16 h-16 text-slate-400 mx-auto mb-4" />
               <h3 className="text-xl font-semibold text-slate-950 dark:text-white mb-2">
-                No Resume Requests
+                {t('noRequests')}
               </h3>
               <p className="text-slate-600 dark:text-slate-400">
-                There are no approved resume requests at the moment
+                {t('noRequestsDesc')}
               </p>
             </CardContent>
           </Card>
@@ -250,7 +255,7 @@ export default function TeacherResumeRequestsPage() {
                         onClick={() => handleViewDetails(request)}
                       >
                         <Eye className="w-4 h-4 mr-2" />
-                        View Details
+                        {t('viewDetails')}
                       </Button>
                       {request.status === "pending" && (
                         <Button
@@ -258,7 +263,7 @@ export default function TeacherResumeRequestsPage() {
                           className="bg-blue-600 hover:bg-blue-700"
                           onClick={() => handleStartWorking(request)}
                         >
-                          Start Working
+                          {t('startWorking')}
                         </Button>
                       )}
                       {request.status === "completed" ? (
@@ -268,7 +273,7 @@ export default function TeacherResumeRequestsPage() {
                           disabled
                         >
                           <CheckCircle2 className="w-4 h-4 mr-2" />
-                          Delivered
+                          {t('delivered')}
                         </Button>
                       ) : request.status === "in_progress" && (
                         <Button
@@ -277,7 +282,7 @@ export default function TeacherResumeRequestsPage() {
                           onClick={() => handleUploadResume(request)}
                         >
                           <Upload className="w-4 h-4 mr-2" />
-                          Upload Resume
+                          {t('uploadResume')}
                         </Button>
                       )}
                     </div>
@@ -290,59 +295,103 @@ export default function TeacherResumeRequestsPage() {
 
         {/* Upload Dialog */}
         <Dialog open={isUploadDialogOpen} onOpenChange={setIsUploadDialogOpen}>
-          <DialogContent className="max-w-2xl">
+          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle className="text-2xl flex items-center gap-2">
                 <FileText className="w-6 h-6 text-green-600" />
-                Upload Completed Resume
+                {t('uploadDialogTitle')}
               </DialogTitle>
             </DialogHeader>
 
-            <div className="space-y-4">
+            <div className="space-y-6">
               <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
                 <p className="text-sm text-blue-800 dark:text-blue-200">
-                  <strong>Student:</strong> {selectedRequest?.name}
+                  <strong>{t('student')}:</strong> {selectedRequest?.name}
                 </p>
                 <p className="text-sm text-blue-800 dark:text-blue-200">
-                  <strong>Target Role:</strong> {selectedRequest?.targetRole}
+                  <strong>{t('targetRole')}:</strong> {selectedRequest?.targetRole}
                 </p>
               </div>
 
-              {!uploadedUrl ? (
-                <div className="border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-lg overflow-hidden">
-                  <UploadDropzone
-                    endpoint="resumeDocument"
-                    onClientUploadComplete={(res) => {
-                      if (res && res[0]) {
-                        setUploadedUrl(res[0].url);
-                        toast.success("Resume uploaded successfully");
-                      }
-                    }}
-                    onUploadError={(error: Error) => {
-                      toast.error(`Upload failed: ${error.message}`);
-                    }}
-                  />
-                </div>
-              ) : (
-                <div className="border-2 border-green-200 dark:border-green-800 bg-green-50 dark:bg-green-900/20 rounded-lg p-4">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <CheckCircle2 className="w-5 h-5 text-green-600" />
-                      <div>
-                        <p className="font-medium text-slate-950 dark:text-white">Resume uploaded</p>
-                        <p className="text-sm text-slate-600 dark:text-slate-400">Ready to deliver</p>
-                      </div>
-                    </div>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setUploadedUrl(null)}
-                    >
-                      Change
-                    </Button>
+              {/* Resume Upload */}
+              <div className="space-y-2">
+                <h4 className="font-semibold text-slate-950 dark:text-white">{t('resumeCV')} {t('required')}</h4>
+                {!uploadedUrl ? (
+                  <div className="border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-lg overflow-hidden">
+                    <UploadDropzone
+                      endpoint="resumeDocument"
+                      onClientUploadComplete={(res) => {
+                        if (res && res[0]) {
+                          setUploadedUrl(res[0].url);
+                          toast.success(t('resumeUploadSuccess'));
+                        }
+                      }}
+                      onUploadError={(error: Error) => {
+                        toast.error(`${t('uploadFailed')}: ${error.message}`);
+                      }}
+                    />
                   </div>
-                </div>
-              )}
+                ) : (
+                  <div className="border-2 border-green-200 dark:border-green-800 bg-green-50 dark:bg-green-900/20 rounded-lg p-4">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <CheckCircle2 className="w-5 h-5 text-green-600" />
+                        <div>
+                          <p className="font-medium text-slate-950 dark:text-white">{t('resumeUploaded')}</p>
+                          <p className="text-sm text-slate-600 dark:text-slate-400">{t('readyToDeliver')}</p>
+                        </div>
+                      </div>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setUploadedUrl(null)}
+                      >
+                        {t('change')}
+                      </Button>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Motivation Letter Upload */}
+              <div className="space-y-2">
+                <h4 className="font-semibold text-slate-950 dark:text-white">{t('motivationLetter')}</h4>
+                {!uploadedMotivationLetterUrl ? (
+                  <div className="border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-lg overflow-hidden">
+                    <UploadDropzone
+                      endpoint="resumeDocument"
+                      onClientUploadComplete={(res) => {
+                        if (res && res[0]) {
+                          setUploadedMotivationLetterUrl(res[0].url);
+                          toast.success(t('motivationLetterUploadSuccess'));
+                        }
+                      }}
+                      onUploadError={(error: Error) => {
+                        toast.error(`${t('uploadFailed')}: ${error.message}`);
+                      }}
+                    />
+                  </div>
+                ) : (
+                  <div className="border-2 border-green-200 dark:border-green-800 bg-green-50 dark:bg-green-900/20 rounded-lg p-4">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <CheckCircle2 className="w-5 h-5 text-green-600" />
+                        <div>
+                          <p className="font-medium text-slate-950 dark:text-white">{t('motivationLetterUploaded')}</p>
+                          <p className="text-sm text-slate-600 dark:text-slate-400">{t('readyToDeliver')}</p>
+                        </div>
+                      </div>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setUploadedMotivationLetterUrl(null)}
+                      >
+                        {t('change')}
+                      </Button>
+                    </div>
+                  </div>
+                )}
+              </div>
 
               <Button
                 className="w-full bg-green-600 hover:bg-green-700"
@@ -352,12 +401,12 @@ export default function TeacherResumeRequestsPage() {
                 {isSubmitting ? (
                   <>
                     <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                    Delivering...
+                    {t('delivering')}
                   </>
                 ) : (
                   <>
                     <CheckCircle2 className="w-4 h-4 mr-2" />
-                    Deliver Resume to Student
+                    {t('deliverToStudent')}
                   </>
                 )}
               </Button>
@@ -369,14 +418,14 @@ export default function TeacherResumeRequestsPage() {
         <Dialog open={isViewDialogOpen} onOpenChange={setIsViewDialogOpen}>
           <DialogContent className="max-w-3xl max-h-[80vh] overflow-y-auto">
             <DialogHeader>
-              <DialogTitle className="text-2xl">{t('resumeRequests.detailsTitle')}</DialogTitle>
+              <DialogTitle className="text-2xl">{t('detailsTitle')}</DialogTitle>
             </DialogHeader>
 
             {selectedRequest && (
               <div className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="text-sm font-medium text-slate-600 dark:text-slate-400">Name</label>
+                    <label className="text-sm font-medium text-slate-600 dark:text-slate-400">{t('name')}</label>
                     <p className="text-slate-950 dark:text-white">{selectedRequest.name}</p>
                   </div>
                   <div>

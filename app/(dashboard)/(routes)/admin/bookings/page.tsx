@@ -255,28 +255,28 @@ export default function AdminBookingsPage() {
               onClick={() => setStatusFilter("all")}
               className="rounded-full"
             >
-              All ({allBookings.length})
+              {t('all')} ({allBookings.length})
             </Button>
             <Button
               variant={statusFilter === "pending" ? "default" : "outline"}
               onClick={() => setStatusFilter("pending")}
               className="rounded-full"
             >
-              Pending ({allBookings.filter(b => b.paymentStatus === "pending").length})
+              {t('pending')} ({allBookings.filter(b => b.paymentStatus === "pending").length})
             </Button>
             <Button
               variant={statusFilter === "paid" ? "default" : "outline"}
               onClick={() => setStatusFilter("paid")}
               className="rounded-full"
             >
-              Approved ({allBookings.filter(b => b.paymentStatus === "paid").length})
+              {t('approved')} ({allBookings.filter(b => b.paymentStatus === "paid").length})
             </Button>
             <Button
               variant={statusFilter === "free" ? "default" : "outline"}
               onClick={() => setStatusFilter("free")}
               className="rounded-full"
             >
-              Free ({allBookings.filter(b => b.paymentStatus === "free").length})
+              {t('free')} ({allBookings.filter(b => b.paymentStatus === "free").length})
             </Button>
           </div>
 
@@ -289,13 +289,10 @@ export default function AdminBookingsPage() {
             <div className="text-center py-20">
               <Calendar className="w-16 h-16 mx-auto mb-4 text-slate-400" />
               <h3 className="text-xl font-semibold text-slate-950 dark:text-slate-200 mb-2">
-                No bookings found
+                {t('noBookingsFound')}
               </h3>
               <p className="text-slate-600 dark:text-slate-400">
-                {statusFilter === "pending" 
-                  ? "No pending payment approvals at the moment"
-                  : `No ${statusFilter} bookings found`
-                }
+                {t('noBookingsDesc')}
               </p>
             </div>
           ) : (
@@ -376,7 +373,7 @@ export default function AdminBookingsPage() {
                         onClick={() => handleViewBooking(booking)}
                       >
                         <Eye className="w-4 h-4 mr-2" />
-                        View Details
+                        {t('viewDetails')}
                       </Button>
                     </div>
                   </div>
@@ -389,8 +386,8 @@ export default function AdminBookingsPage() {
           {pagination.totalPages > 1 && (
             <div className="flex items-center justify-between mt-8">
               <p className="text-sm text-slate-600 dark:text-slate-400">
-                Page {pagination.currentPage} of {pagination.totalPages} 
-                ({pagination.totalBookings} total bookings)
+                {t('page')} {pagination.currentPage} {t('of')} {pagination.totalPages} 
+                ({pagination.totalBookings} {t('totalBookings')})
               </p>
               <div className="flex gap-2">
                 <Button
@@ -400,7 +397,7 @@ export default function AdminBookingsPage() {
                   disabled={pagination.currentPage === 1}
                 >
                   <ChevronLeft className="w-4 h-4" />
-                  Previous
+                  {t('previous')}
                 </Button>
                 <Button
                   variant="outline"
@@ -408,7 +405,7 @@ export default function AdminBookingsPage() {
                   onClick={() => fetchBookings(pagination.currentPage + 1)}
                   disabled={!pagination.hasMore}
                 >
-                  Next
+                  {t('next')}
                   <ChevronRight className="w-4 h-4" />
                 </Button>
               </div>
@@ -420,14 +417,14 @@ export default function AdminBookingsPage() {
         <Dialog open={isViewDialogOpen} onOpenChange={setIsViewDialogOpen}>
           <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
-              <DialogTitle>Booking Details</DialogTitle>
+              <DialogTitle>{t('detailsTitle')}</DialogTitle>
             </DialogHeader>
 
             {selectedBooking && (
               <div className="space-y-6">
                 {/* User Info */}
                 <div>
-                  <h3 className="font-semibold mb-3">Student Information</h3>
+                  <h3 className="font-semibold mb-3">{t('studentInfo')}</h3>
                   <div className="flex items-center gap-3 mb-2">
                     {selectedBooking.userId.picture ? (
                       <Image
@@ -455,24 +452,24 @@ export default function AdminBookingsPage() {
 
                 {/* Meeting Details */}
                 <div>
-                  <h3 className="font-semibold mb-3">Meeting Details</h3>
+                  <h3 className="font-semibold mb-3">{t('meetingDetails')}</h3>
                   <div className="space-y-2 text-sm">
                     <div className="flex justify-between">
-                      <span className="text-slate-600">Date:</span>
+                      <span className="text-slate-600">{t('date')}:</span>
                       <span className="font-medium">{formatDate(selectedBooking.startAt)}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-slate-600">Time:</span>
+                      <span className="text-slate-600">{t('time')}:</span>
                       <span className="font-medium">
                         {formatTime(selectedBooking.startAt)} - {formatTime(selectedBooking.endAt)}
                       </span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-slate-600">Timezone:</span>
+                      <span className="text-slate-600">{t('timezone')}:</span>
                       <span className="font-medium">{selectedBooking.timezone}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-slate-600">Status:</span>
+                      <span className="text-slate-600">{t('status')}:</span>
                       <Badge className={getStatusColor(selectedBooking.paymentStatus)}>
                         {selectedBooking.paymentStatus}
                       </Badge>
@@ -484,14 +481,14 @@ export default function AdminBookingsPage() {
 
                 {/* Payment Details */}
                 <div>
-                  <h3 className="font-semibold mb-3">Payment Information</h3>
+                  <h3 className="font-semibold mb-3">{t('paymentInfo')}</h3>
                   <div className="space-y-2 text-sm">
                     <div className="flex justify-between">
-                      <span className="text-slate-600">Amount:</span>
+                      <span className="text-slate-600">{t('amount')}:</span>
                       <span className="font-medium">{selectedBooking.price || 0} TND</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-slate-600">Payment Method:</span>
+                      <span className="text-slate-600">{t('paymentMethod')}:</span>
                       <span className="font-medium capitalize">
                         {selectedBooking.paymentMethod?.replace('_', ' ') || 'N/A'}
                       </span>
@@ -504,7 +501,7 @@ export default function AdminBookingsPage() {
                   <>
                     <Separator />
                     <div>
-                      <h3 className="font-semibold mb-3">Payment Proof</h3>
+                      <h3 className="font-semibold mb-3">{t('paymentProof')}</h3>
                       <div className="border rounded-lg overflow-hidden">
                         <Image
                           src={selectedBooking.paymentProof}
@@ -520,7 +517,7 @@ export default function AdminBookingsPage() {
                         rel="noopener noreferrer"
                         className="text-sm text-blue-600 hover:underline mt-2 inline-block"
                       >
-                        View full size →
+                        {t('viewFullSize')} →
                       </a>
                     </div>
                   </>
@@ -531,7 +528,7 @@ export default function AdminBookingsPage() {
                   <>
                     <Separator />
                     <div>
-                      <h3 className="font-semibold mb-2">Student Notes</h3>
+                      <h3 className="font-semibold mb-2">{t('studentNotes')}</h3>
                       <p className="text-sm text-slate-600 bg-slate-50 dark:bg-slate-900 p-3 rounded">
                         {selectedBooking.notes}
                       </p>
@@ -541,11 +538,11 @@ export default function AdminBookingsPage() {
 
                 {/* Admin Notes */}
                 <div>
-                  <h3 className="font-semibold mb-2">Admin Notes (Optional)</h3>
+                  <h3 className="font-semibold mb-2">{t('adminNotes')}</h3>
                   <Textarea
                     value={adminNotes}
                     onChange={(e) => setAdminNotes(e.target.value)}
-                    placeholder="Add any notes about this booking..."
+                    placeholder={t('adminNotesPlaceholder')}
                     rows={3}
                   />
                 </div>
@@ -558,7 +555,7 @@ export default function AdminBookingsPage() {
                       onClick={() => setIsViewDialogOpen(false)}
                       disabled={actionLoading}
                     >
-                      Cancel
+                      {t('cancel')}
                     </Button>
                     <Button
                       variant="destructive"
@@ -566,7 +563,7 @@ export default function AdminBookingsPage() {
                       disabled={actionLoading}
                     >
                       <X className="w-4 h-4 mr-2" />
-                      Reject
+                      {t('reject')}
                     </Button>
                     <Button
                       onClick={handleApprove}
@@ -578,7 +575,7 @@ export default function AdminBookingsPage() {
                       ) : (
                         <>
                           <Check className="w-4 h-4 mr-2" />
-                          Approve & Send Meeting Link
+                          {t('approveAndSendLink')}
                         </>
                       )}
                     </Button>

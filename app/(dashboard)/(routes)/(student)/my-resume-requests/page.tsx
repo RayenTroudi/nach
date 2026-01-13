@@ -21,6 +21,7 @@ interface ResumeRequest {
   paymentProofUrl?: string;
   adminNotes?: string;
   completedResumeUrl?: string;
+  completedMotivationLetterUrl?: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -233,10 +234,10 @@ export default function MyResumeRequestsPage() {
 
                   {request.status === "completed" && request.completedResumeUrl && (
                     <div className="bg-green-50 dark:bg-green-900/20 border-2 border-green-200 dark:border-green-800 rounded-lg p-4">
-                      <div className="flex items-center justify-between">
-                        <p className="text-sm text-green-800 dark:text-green-200">
-                          ✅ Your professional resume is ready! Download it below.
-                        </p>
+                      <p className="text-sm text-green-800 dark:text-green-200 mb-4">
+                        ✅ Your professional documents are ready! Download them below.
+                      </p>
+                      <div className="flex flex-wrap gap-3">
                         <a
                           href={request.completedResumeUrl}
                           target="_blank"
@@ -247,6 +248,18 @@ export default function MyResumeRequestsPage() {
                             Download Resume
                           </Button>
                         </a>
+                        {request.completedMotivationLetterUrl && (
+                          <a
+                            href={request.completedMotivationLetterUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <Button className="bg-blue-600 hover:bg-blue-700 text-white">
+                              <Download className="w-4 h-4 mr-2" />
+                              Download Motivation Letter
+                            </Button>
+                          </a>
+                        )}
                       </div>
                     </div>
                   )}

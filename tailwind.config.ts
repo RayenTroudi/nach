@@ -244,6 +244,10 @@ const config = withUt({
       );
     },
   ],
+  plugins: [
+    // Add RTL support plugin
+    require('tailwindcss-rtl'),
+  ],
 }) satisfies Config;
 
 // This plugin adds each Tailwind color as a global CSS variable, e.g. var(--gray-200).

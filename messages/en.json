@@ -743,7 +743,10 @@
     "duration23Days": "2-3 business days",
     "availabilityWeekdays": "Mon-Fri, 9 AM - 6 PM CET",
     "availabilityExtended": "Mon-Sat, 10 AM - 8 PM CET",
-    "availability247": "24/7 Submissions"
+    "availability247": "24/7 Submissions",
+    "preferEmail": "Prefer Email?",
+    "sendEmailAt": "Send us an email at",
+    "averageResponseTime": "Average response time: 12 hours"
   },
   "coursesSection": {
     "title": "Featured",

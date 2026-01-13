@@ -12,5 +12,6 @@
     "Roadmaps",
     "Signout",
     "Welearn"
-  ]
+  ],
+  "github.copilot.nextEditSuggestions.enabled": true
 }

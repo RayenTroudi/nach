@@ -68,3 +68,72 @@ export function getBorderRadiusEnd(locale: Locale, size: string): string {
     ? `rounded-l-${size}` 
     : `rounded-r-${size}`;
 }
+
+/**
+ * Hook to use RTL status (client-side)
+ */
+export function useRTL(): boolean {
+  const { useLocale } = require('next-intl');
+  const locale = useLocale();
+  return isRTL(locale);
+}
+
+/**
+ * Get icon rotation for RTL (for directional icons like arrows)
+ */
+export function getIconRotation(locale: Locale, shouldFlip: boolean = true): string {
+  if (!shouldFlip) return '';
+  return isRTL(locale) ? 'rotate-180' : '';
+}
+
+/**
+ * Get border side class for RTL
+ */
+export function getBorderStart(locale: Locale, width: string = '2'): string {
+  return isRTL(locale) ? `border-r-${width}` : `border-l-${width}`;
+}
+
+export function getBorderEnd(locale: Locale, width: string = '2'): string {
+  return isRTL(locale) ? `border-l-${width}` : `border-r-${width}`;
+}
+
+/**
+ * Get positioning class for RTL (for absolute/fixed elements)
+ */
+export function getPositionStart(locale: Locale, value: string): string {
+  return isRTL(locale) ? `right-${value}` : `left-${value}`;
+}
+
+export function getPositionEnd(locale: Locale, value: string): string {
+  return isRTL(locale) ? `left-${value}` : `right-${value}`;
+}
+
+/**
+ * Conditional RTL class helper
+ */
+export function rtlClass(ltrClass: string, rtlClass: string, locale: Locale): string {
+  return isRTL(locale) ? rtlClass : ltrClass;
+}
+
+/**
+ * Get transform-origin for RTL-aware animations
+ */
+export function getTransformOrigin(locale: Locale, ltrOrigin: string, rtlOrigin: string): string {
+  return isRTL(locale) ? rtlOrigin : ltrOrigin;
+}
+
+/**
+ * Convert physical properties to logical properties (for Tailwind CSS)
+ * This is a migration helper - prefer using logical properties directly
+ */
+export function toLogicalClass(className: string): string {
+  return className
+    .replace(/\bml-/g, 'ms-')
+    .replace(/\bmr-/g, 'me-')
+    .replace(/\bpl-/g, 'ps-')
+    .replace(/\bpr-/g, 'pe-')
+    .replace(/\b-ml-/g, '-ms-')
+    .replace(/\b-mr-/g, '-me-')
+    .replace(/\b-pl-/g, '-ps-')
+    .replace(/\b-pr-/g, '-pe-');
+}

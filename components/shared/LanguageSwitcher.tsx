@@ -13,6 +13,7 @@ import { useRouter } from "next/navigation";
 import { useLocale } from "next-intl";
 import { Languages, Check } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { isRTL } from "@/lib/utils/rtl";
 
 const languages = [
   { code: 'ar', name: 'العربية', nativeName: 'العربية' },
@@ -25,6 +26,7 @@ export function LanguageSwitcher() {
   const locale = useLocale();
   const [isPending, startTransition] = useTransition();
   const [currentLocale, setCurrentLocale] = useState(locale || 'ar');
+  const isRtl = isRTL(locale as 'ar' | 'en' | 'de');
 
   useEffect(() => {
     setCurrentLocale(locale || 'ar');
@@ -50,12 +52,12 @@ export function LanguageSwitcher() {
           name="language-switcher"
           variant="ghost"
           className={cn(
-            "ml-2 hover:bg-slate-200/50 dark:hover:bg-slate-900/50 px-3 py-2 transition-all",
+            "ms-2 hover:bg-slate-200/50 dark:hover:bg-slate-900/50 px-3 py-2 transition-all",
             isPending && "opacity-50 cursor-not-allowed"
           )}
           disabled={isPending}
         >
-          <Languages className="w-[18px] h-[18px] mr-1.5" />
+          <Languages className={cn("w-[18px] h-[18px]", isRtl ? "ml-1.5" : "mr-1.5")} />
           <span className="text-sm font-medium uppercase tracking-wider">
             {currentLanguage.code}
           </span>

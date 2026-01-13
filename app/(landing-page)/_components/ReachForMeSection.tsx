@@ -4,10 +4,14 @@ import { Card } from "@/components/ui/card";
 import { Calendar, Phone, MessageSquare, Clock, CheckCircle2 } from "lucide-react";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
+import { isRTL } from "@/lib/utils/rtl";
+import { cn } from "@/lib/utils";
 
 export default function ReachForMeSection() {
   const t = useTranslations('reachOut');
+  const locale = useLocale();
+  const rtl = isRTL(locale as 'ar' | 'en' | 'de');
 
   const contactOptions = [
     {
@@ -129,12 +133,12 @@ export default function ReachForMeSection() {
 
                   {/* Meta Info */}
                   <div className="space-y-2 mb-6">
-                    <div className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
-                      <Clock className="w-4 h-4" />
+                    <div className={cn("flex items-center gap-3 text-sm text-slate-600 dark:text-slate-400", rtl && "flex-row-reverse")}>
+                      <Clock className="w-4 h-4 flex-shrink-0" />
                       <span>{option.duration}</span>
                     </div>
-                    <div className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
-                      <Calendar className="w-4 h-4" />
+                    <div className={cn("flex items-center gap-3 text-sm text-slate-600 dark:text-slate-400", rtl && "flex-row-reverse")}>
+                      <Calendar className="w-4 h-4 flex-shrink-0" />
                       <span>{option.availability}</span>
                     </div>
                   </div>
@@ -142,7 +146,7 @@ export default function ReachForMeSection() {
                   {/* Features */}
                   <ul className="space-y-2 mb-6">
                     {option.features.map((feature, i) => (
-                      <li key={i} className="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300">
+                      <li key={i} className={cn("flex items-center gap-3 text-sm text-slate-700 dark:text-slate-300", rtl && "flex-row-reverse")}>
                         <CheckCircle2 className="w-4 h-4 text-green-500 flex-shrink-0" />
                         <span>{feature}</span>
                       </li>
@@ -156,7 +160,7 @@ export default function ReachForMeSection() {
                       size="lg"
                     >
                       {option.action}
-                      <Icon className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
+                      <Icon className={cn("w-5 h-5 group-hover:translate-x-1 transition-transform", rtl ? "mr-2 group-hover:-translate-x-1" : "ml-2")} />
                     </Button>
                   </Link>
                 </Card>
@@ -173,10 +177,10 @@ export default function ReachForMeSection() {
           className="text-center bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-8"
         >
           <h3 className="text-2xl font-bold text-white mb-3">
-            Prefer Email?
+            {t('preferEmail')}
           </h3>
           <p className="text-slate-300 mb-6">
-            Send us an email at{" "}
+            {t('sendEmailAt')}{" "}
             <a
               href="mailto:support@nachdeutschland.de"
               className="text-brand-red-400 hover:text-brand-red-300 font-semibold underline"
@@ -185,7 +189,7 @@ export default function ReachForMeSection() {
             </a>
           </p>
           <p className="text-sm text-slate-400">
-            Average response time: 12 hours
+            {t('averageResponseTime')}
           </p>
         </motion.div>
       </div>

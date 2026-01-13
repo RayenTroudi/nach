@@ -743,7 +743,10 @@
     "duration23Days": "2-3 أيام عمل",
     "availabilityWeekdays": "من الاثنين إلى الجمعة، 9 صباحاً - 6 مساءً CET",
     "availabilityExtended": "من الاثنين إلى السبت، 10 صباحاً - 8 مساءً CET",
-    "availability247": "تقديم على مدار الساعة"
+    "availability247": "تقديم على مدار الساعة",
+    "preferEmail": "تفضل البريد الإلكتروني؟",
+    "sendEmailAt": "أرسل لنا بريداً إلكترونياً على",
+    "averageResponseTime": "متوسط وقت الاستجابة: 12 ساعة"
   },
   "coursesSection": {
     "title": "دورات",

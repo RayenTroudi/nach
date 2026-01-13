@@ -743,7 +743,10 @@
     "duration23Days": "2-3 Werktage",
     "availabilityWeekdays": "Mo-Fr, 9-18 Uhr MEZ",
     "availabilityExtended": "Mo-Sa, 10-20 Uhr MEZ",
-    "availability247": "24/7 Einreichungen"
+    "availability247": "24/7 Einreichungen",
+    "preferEmail": "Lieber per E-Mail?",
+    "sendEmailAt": "Senden Sie uns eine E-Mail an",
+    "averageResponseTime": "Durchschnittliche Antwortzeit: 12 Stunden"
   },
   "coursesSection": {
     "title": "Vorgestellte",

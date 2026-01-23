@@ -328,7 +328,7 @@ export default function AdminResumePaymentsPage() {
 
           {/* View Payment Proof Dialog */}
           <Dialog open={isViewDialogOpen} onOpenChange={setIsViewDialogOpen}>
-          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+            <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>{t('detailsTitle')}</DialogTitle>
             </DialogHeader>
@@ -472,7 +472,6 @@ export default function AdminResumePaymentsPage() {
             )}
           </DialogContent>
         </Dialog>
-        </div>
       </div>
     </div>
   );

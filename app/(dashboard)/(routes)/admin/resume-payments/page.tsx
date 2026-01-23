@@ -472,6 +472,7 @@ export default function AdminResumePaymentsPage() {
             )}
           </DialogContent>
         </Dialog>
+        </div>
       </div>
     </div>
   );

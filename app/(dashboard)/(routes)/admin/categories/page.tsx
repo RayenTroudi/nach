@@ -2,6 +2,7 @@
 
 export const dynamic = 'force-dynamic';
 
+import { useTranslations } from "next-intl";
 import { LeftSideBar, Spinner } from "@/components/shared";
 import { getAllCategories } from "@/lib/actions";
 import { ICategory } from "@/lib/models/category.model";
@@ -49,6 +50,7 @@ const formSchema = z.object({
 });
 
 const CategoriesPage = () => {
+  const t = useTranslations("dashboard.admin.categories");
   const [categories, setCategories] = useState<ICategory[]>([]);
   const [editCategoryId, setEditCategoryId] = useState<string | null>(null);
   const [categoryName, setCategoryName] = useState<string | null>(null);
@@ -141,7 +143,7 @@ const CategoriesPage = () => {
   const columns: ColumnDef<ICategory>[] = [
     {
       accessorKey: "name",
-      header: "Category",
+      header: () => t('category'),
       cell: ({ row }) => {
         if (!row.original) {
           return null;
@@ -180,7 +182,7 @@ const CategoriesPage = () => {
                       form.reset();
                     }}
                   >
-                    cancel
+                    {t('cancel')}
                   </Button>
                   <Button
                     type="submit"
@@ -195,7 +197,7 @@ const CategoriesPage = () => {
                     {isSubmitting ? (
                       <Spinner size={20} className="text-slate-500" />
                     ) : (
-                      "Save"
+                      t('save')
                     )}
                   </Button>
                 </div>
@@ -209,7 +211,7 @@ const CategoriesPage = () => {
     },
     {
       accessorKey: "Courses",
-      header: "Courses",
+      header: () => t('courses'),
       cell: ({ row }) => (
         <>
           {!row.original.courses.length ? (
@@ -221,7 +223,7 @@ const CategoriesPage = () => {
               <p className="text-brand-red-500 text-lg font-bold">
                 {row.original.courses.length}
               </p>
-              <p className="text-slate-400">courses</p>
+              <p className="text-slate-400">{t('coursesCount')}</p>
             </div>
           )}
         </>
@@ -229,7 +231,7 @@ const CategoriesPage = () => {
     },
     {
       accessorKey: "Actions",
-      header: "Actions",
+      header: () => t('actions'),
       cell: ({ row }) => (
         <div className="space-x-2 flex items-center">
           <Button
@@ -269,7 +271,7 @@ const CategoriesPage = () => {
           <>
             <div className="flex gap-4 items-center justify-between">
               <h1 className="text-3xl text-slate-950 dark:text-slate-200 font-bold">
-                Categories
+                {t('title')}
               </h1>
               <AlertDialog>
                 <AlertDialogTrigger className="flex items-center gap-x-2 bg-brand-red-500 text-slate-50 font-semibold px-4 py-2 rounded-md cursor-pointer">
@@ -277,11 +279,11 @@ const CategoriesPage = () => {
                     size={20}
                     className="flex-shrink-0 text-slate-50"
                   />
-                  <p className="hidden md:block">New category</p>
+                  <p className="hidden md:block">{t('newCategory')}</p>
                 </AlertDialogTrigger>
 
                 <AlertDialogContent>
-                  <AlertDialogTitle>New category</AlertDialogTitle>
+                  <AlertDialogTitle>{t('newCategory')}</AlertDialogTitle>
                   <Form {...form}>
                     <form
                       onSubmit={form.handleSubmit(createNewCategory)}
@@ -309,9 +311,9 @@ const CategoriesPage = () => {
                           type="submit"
                           className="bg-brand-red-500 hover:bg-brand-red-600 text-slate-50"
                         >
-                          Add
+                          {t('add')}
                         </AlertDialogAction>
-                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogCancel>{t('cancel')}</AlertDialogCancel>
                       </div>
                     </form>
                   </Form>
@@ -327,11 +329,11 @@ const CategoriesPage = () => {
             <AlertDialog>
               <AlertDialogTrigger className="w-full md:w-1/2  flex items-center justify-center gap-x-2 bg-brand-red-500 hover:bg-brand-red-600 text-slate-50 font-semibold px-4 py-2 rounded-md cursor-pointer">
                 <PlusCircle size={20} className="flex-shrink-0 text-slate-50" />
-                <p className="">New category</p>
+                <p className="">{t('newCategory')}</p>
               </AlertDialogTrigger>
 
               <AlertDialogContent>
-                <AlertDialogTitle>New category</AlertDialogTitle>
+                <AlertDialogTitle>{t('newCategory')}</AlertDialogTitle>
                 <Form {...form}>
                   <form
                     onSubmit={form.handleSubmit(createNewCategory)}
@@ -359,9 +361,9 @@ const CategoriesPage = () => {
                         type="submit"
                         className="bg-brand-red-500 hover:bg-brand-red-600 text-slate-50"
                       >
-                        Add
+                        {t('add')}
                       </AlertDialogAction>
-                      <AlertDialogCancel>Cancel</AlertDialogCancel>
+                      <AlertDialogCancel>{t('cancel')}</AlertDialogCancel>
                     </div>
                   </form>
                 </Form>

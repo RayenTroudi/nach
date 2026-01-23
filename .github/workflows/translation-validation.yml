@@ -1,0 +1,81 @@
+name: Translation Validation
+
+on:
+  pull_request:
+    paths:
+      - 'app/**'
+      - 'components/**'
+      - 'messages/**'
+      - 'scripts/validate-translations.ts'
+  push:
+    branches:
+      - main
+      - develop
+    paths:
+      - 'app/**'
+      - 'components/**'
+      - 'messages/**'
+
+jobs:
+  validate-translations:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Validate translation completeness
+        run: npm run validate:translations
+      
+      - name: Extract missing translations (on failure)
+        if: failure()
+        run: npm run translate:extract
+      
+      - name: Upload missing translations report
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: missing-translations
+          path: scripts/missing-translations.json
+      
+      - name: Comment PR with missing translations
+        if: failure() && github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const missing = JSON.parse(fs.readFileSync('scripts/missing-translations.json', 'utf8'));
+            
+            const comment = `## ❌ Translation Validation Failed
+            
+            Missing translations detected:
+            
+            - **English (EN)**: ${missing.missingInEn.length} keys
+            - **German (DE)**: ${missing.missingInDe.length} keys
+            
+            Please complete all translations before merging.
+            
+            ### Commands to fix:
+            \`\`\`bash
+            npm run translate:check    # Check current status
+            npm run translate:extract  # Extract missing keys
+            \`\`\`
+            
+            See the workflow artifacts for the complete list of missing keys.
+            `;
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });

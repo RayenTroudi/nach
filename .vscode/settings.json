@@ -13,5 +13,8 @@
     "Signout",
     "Welearn"
   ],
-  "github.copilot.nextEditSuggestions.enabled": true
+  "github.copilot.nextEditSuggestions.enabled": true,
+  "chat.tools.terminal.autoApprove": {
+    "npx tsx": true
+  }
 }

@@ -8,7 +8,7 @@ import { LeftSideBar } from "@/components/shared";
 import { useTranslations } from "next-intl";
 
 const MyConsultationsPage = () => {
-  const t = useTranslations('dashboard.admin.consultations');
+  const t = useTranslations('admin.consultations');
   const { userId, isLoaded } = useAuth();
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);

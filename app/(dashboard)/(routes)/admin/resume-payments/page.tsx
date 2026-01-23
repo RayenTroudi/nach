@@ -464,7 +464,6 @@ export default function AdminResumePaymentsPage() {
                             {t('approve')}
                           </>
                         )}
-                        )}
                       </Button>
                     </div>
                   </>

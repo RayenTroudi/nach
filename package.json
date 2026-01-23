@@ -4,10 +4,15 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "npm run validate:translations && next build",
     "start": "next start",
     "lint": "next lint",
-    "seed": "tsx scripts/seed.ts"
+    "seed": "tsx scripts/seed.ts",
+    "validate:translations": "tsx scripts/validate-translations.ts",
+    "translate:check": "tsx scripts/validate-translations.ts",
+    "translate:extract": "tsx scripts/extract-missing.ts",
+    "translate:types": "tsx scripts/generate-translation-types.ts",
+    "translate:scan": "tsx scripts/scan-hardcoded-strings.ts"
   },
   "dependencies": {
     "@clerk/nextjs": "^4.29.6",

@@ -1,0 +1,29 @@
+#!/usr/bin/env node
+/**
+ * Git Pre-commit Hook for Translation Validation
+ * Prevents commits with incomplete translations
+ */
+
+const { execSync } = require('child_process');
+const path = require('path');
+const fs = require('fs');
+
+console.log('🔍 Checking translation completeness before commit...\n');
+
+try {
+  // Run validation script
+  execSync('npx tsx scripts/validate-translations.ts', {
+    stdio: 'inherit',
+    cwd: path.resolve(__dirname, '..')
+  });
+  
+  console.log('\n✅ Translation validation passed! Proceeding with commit.\n');
+  process.exit(0);
+  
+} catch (error) {
+  console.error('\n❌ Translation validation failed!');
+  console.error('Please complete all missing translations before committing.');
+  console.error('\nRun: npm run translate:check');
+  console.error('Or: npm run translate:extract\n');
+  process.exit(1);
+}

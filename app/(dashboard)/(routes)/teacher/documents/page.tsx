@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useTranslations } from "next-intl";
 import {
   FileText,
   Upload,
@@ -74,6 +75,7 @@ interface Document {
 }
 
 export default function TeacherDocumentsPage() {
+  const t = useTranslations("dashboard.teacher.documents");
   const [documents, setDocuments] = useState<Document[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
@@ -297,17 +299,17 @@ export default function TeacherDocumentsPage() {
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
         <div>
           <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-50">
-            My Documents
+            {t('myDocuments')}
           </h1>
           <p className="text-slate-600 dark:text-slate-400 mt-1">
-            Manage and upload educational documents for students
+            {t('manageAndUpload')}
           </p>
         </div>
         <Dialog open={isUploadModalOpen} onOpenChange={setIsUploadModalOpen}>
           <DialogTrigger asChild>
             <Button className="bg-brand-red-500 hover:bg-brand-red-600">
               <Plus className="w-4 h-4 mr-2" />
-              Upload Document
+              {t('uploadDocumentButton')}
             </Button>
           </DialogTrigger>
           <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
@@ -473,7 +475,7 @@ export default function TeacherDocumentsPage() {
             <div className="flex-1 relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
               <Input
-                placeholder="Search documents..."
+                placeholder={t('searchPlaceholder')}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="pl-10"
@@ -485,7 +487,7 @@ export default function TeacherDocumentsPage() {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="All">All Categories</SelectItem>
+                <SelectItem value="All">{t('allCategories')}</SelectItem>
                 {CATEGORIES.map((cat) => (
                   <SelectItem key={cat} value={cat}>
                     {cat}
@@ -503,12 +505,12 @@ export default function TeacherDocumentsPage() {
           <CardContent className="py-12 text-center">
             <FileText className="w-12 h-12 mx-auto text-slate-400 mb-4" />
             <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-50 mb-2">
-              No documents found
+              {t('noDocumentsFound')}
             </h3>
             <p className="text-slate-600 dark:text-slate-400 mb-4">
               {searchTerm || categoryFilter !== "All"
-                ? "Try adjusting your filters"
-                : "Upload your first document to get started"}
+                ? t('tryAdjustingFilters')
+                : t('uploadFirstDocument')}
             </p>
           </CardContent>
         </Card>

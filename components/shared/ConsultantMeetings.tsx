@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { Calendar, Clock, DollarSign, User, Video, CheckCircle2, XCircle, AlertCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
@@ -37,6 +38,7 @@ interface ConsultantMeetingsProps {
 type FilterType = "upcoming" | "past" | "all";
 
 const ConsultantMeetings = ({ bookings }: ConsultantMeetingsProps) => {
+  const t = useTranslations("admin.consultations");
   const [filter, setFilter] = useState<FilterType>("upcoming");
   const router = useRouter();
 
@@ -177,7 +179,7 @@ const ConsultantMeetings = ({ bookings }: ConsultantMeetingsProps) => {
               : "text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100"
           }`}
         >
-          Upcoming ({bookings.filter((b) => new Date(b.endAt) > now && b.paymentStatus === "paid").length})
+          {t('upcoming')} ({bookings.filter((b) => new Date(b.endAt) > now && b.paymentStatus === "paid").length})
         </button>
         <button
           onClick={() => setFilter("past")}
@@ -187,7 +189,7 @@ const ConsultantMeetings = ({ bookings }: ConsultantMeetingsProps) => {
               : "text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100"
           }`}
         >
-          Past ({bookings.filter((b) => new Date(b.endAt) <= now).length})
+          {t('past')} ({bookings.filter((b) => new Date(b.endAt) <= now).length})
         </button>
         <button
           onClick={() => setFilter("all")}
@@ -197,7 +199,7 @@ const ConsultantMeetings = ({ bookings }: ConsultantMeetingsProps) => {
               : "text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100"
           }`}
         >
-          All ({bookings.length})
+          {t('all')} ({bookings.length})
         </button>
       </div>
 
@@ -205,13 +207,13 @@ const ConsultantMeetings = ({ bookings }: ConsultantMeetingsProps) => {
       {filteredBookings.length === 0 ? (
         <div className="flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-slate-200 p-12 dark:border-slate-800">
           <Video className="mb-4 h-12 w-12 text-slate-400" />
-          <h3 className="mb-2 text-lg font-semibold">No consultations found</h3>
+          <h3 className="mb-2 text-lg font-semibold">{t('noConsultationsFound')}</h3>
           <p className="text-center text-sm text-slate-500">
             {filter === "upcoming"
-              ? "You don't have any upcoming consultations yet."
+              ? t('noUpcomingConsultations')
               : filter === "past"
-              ? "You don't have any past consultations."
-              : "You don't have any consultations yet."}
+              ? t('noPastConsultations')
+              : t('noConsultationsYet')}
           </p>
         </div>
       ) : (

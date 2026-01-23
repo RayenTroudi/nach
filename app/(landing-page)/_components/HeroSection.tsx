@@ -38,39 +38,40 @@ export default function HeroSection() {
       {/* German Flag Accent - Enhanced */}
       <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-black via-brand-red-500 to-brand-gold-500 shadow-lg" />
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-32">
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-6 sm:pb-8 md:pb-10 lg:pb-12">
         <div className="max-w-5xl mx-auto text-center">
           {/* Main Content */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
-            className="space-y-10"
+            className="space-y-1"
           >
-            {/* Headline with enhanced styling */}
-            <div className="space-y-6">
+            {/* Logo and Headline */}
+            <div>
               <motion.div
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.2, duration: 0.6 }}
-                className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-brand-red-50 to-brand-gold-50 dark:from-brand-red-950/30 dark:to-brand-gold-950/30 rounded-full border border-brand-red-200/50 dark:border-brand-red-800/50 shadow-lg"
+                className="flex justify-center -mb-4"
               >
-                <Sparkles className="w-5 h-5 text-brand-gold-500" />
-                <span className="text-sm font-semibold bg-gradient-to-r from-brand-red-600 to-brand-gold-600 bg-clip-text text-transparent">
-                  Your Gateway to Germany
-                </span>
+                <Image
+                  src="/images/nobgLogo.png"
+                  alt="Talel Deutschland Services"
+                  width={1400}
+                  height={420}
+                  className="w-auto h-64 sm:h-80 md:h-[28rem] lg:h-[32rem] object-contain drop-shadow-2xl"
+                  priority
+                />
               </motion.div>
 
-              <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-extrabold leading-[1.1] tracking-tight">
-                <span className="block mb-3 bg-gradient-to-r from-brand-red-600 via-brand-red-500 to-brand-gold-500 bg-clip-text text-transparent">
-                  {t('mainHeading')}
-                </span>
-                <span className="block text-slate-900 dark:text-white">
+              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-tight tracking-tight">
+                <span className="block text-slate-900 dark:text-white mb-2">
                   {t('subHeading')}
                 </span>
               </h1>
               
-              <p className="text-xl sm:text-2xl md:text-3xl text-slate-600 dark:text-slate-300 max-w-3xl mx-auto font-light leading-relaxed">
+              <p className="text-xl sm:text-2xl md:text-3xl text-slate-600 dark:text-slate-300 max-w-3xl mx-auto font-light leading-relaxed -mt-2">
                 {t('description')}
               </p>
             </div>

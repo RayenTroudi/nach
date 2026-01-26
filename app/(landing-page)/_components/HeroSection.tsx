@@ -104,52 +104,6 @@ export default function HeroSection() {
                 {t('explorePathways')}
               </NavigationButton>
             </motion.div>
-
-            {/* Enhanced Trust Indicators - Card Style */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.6, duration: 0.6 }}
-              className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 max-w-4xl mx-auto pt-8"
-            >
-              {[
-                { 
-                  icon: CheckCircle2, 
-                  text: t('visaApproval'),
-                  gradient: "from-green-500 to-emerald-500"
-                },
-                { 
-                  icon: GraduationCap, 
-                  text: t('expertInstructors'),
-                  gradient: "from-blue-500 to-cyan-500"
-                },
-                { 
-                  icon: Briefcase, 
-                  text: t('jobPlacement'),
-                  gradient: "from-purple-500 to-pink-500"
-                },
-              ].map((item, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.7 + index * 0.1 }}
-                  whileHover={{ scale: 1.05, y: -5 }}
-                  className="group relative p-6 bg-white dark:bg-slate-900 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 border border-slate-200 dark:border-slate-800"
-                >
-                  <div className="flex flex-col items-center gap-3 text-center">
-                    <div className={`p-3 rounded-xl bg-gradient-to-br ${item.gradient} shadow-lg`}>
-                      <item.icon className="w-6 h-6 text-white" />
-                    </div>
-                    <span className="text-sm sm:text-base font-semibold text-slate-700 dark:text-slate-300">
-                      {item.text}
-                    </span>
-                  </div>
-                  {/* Hover effect glow */}
-                  <div className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${item.gradient} opacity-0 group-hover:opacity-10 transition-opacity duration-300 pointer-events-none`} />
-                </motion.div>
-              ))}
-            </motion.div>
           </motion.div>
         </div>
       </div>

@@ -20,18 +20,38 @@ import { useTranslations } from "next-intl";
 interface ResumeRequest {
   _id: string;
   name: string;
+  firstName?: string;
+  lastName?: string;
   email: string;
+  birthDate?: string;
+  address?: string;
   phone: string;
+  driverLicense?: string;
+  germanLevel?: string;
+  frenchLevel?: string;
+  englishLevel?: string;
+  hasBac?: string;
+  bacObtainedDate?: string;
+  bacStudiedDate?: string;
+  bacSection?: string;
+  bacHighSchool?: string;
+  bacCity?: string;
+  postBacStudies?: string;
+  internships?: string;
+  trainings?: string;
+  desiredTraining?: string;
   currentRole?: string;
   targetRole?: string;
   experience?: string;
   education?: string;
   skills?: string;
   additionalInfo?: string;
+  documentUrl?: string;
   paymentStatus: "pending" | "paid" | "rejected";
   status: "pending" | "in_progress" | "completed" | "rejected";
   completedResumeUrl?: string;
   completedMotivationLetterUrl?: string;
+  completedMotivationLetter2Url?: string;
   createdAt: string;
 }
 
@@ -44,6 +64,7 @@ export default function TeacherResumeRequestsPage() {
   const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
   const [uploadedUrl, setUploadedUrl] = useState<string | null>(null);
   const [uploadedMotivationLetterUrl, setUploadedMotivationLetterUrl] = useState<string | null>(null);
+  const [uploadedMotivationLetter2Url, setUploadedMotivationLetter2Url] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [filterStatus, setFilterStatus] = useState<string>("all");
 
@@ -69,6 +90,7 @@ export default function TeacherResumeRequestsPage() {
     setSelectedRequest(request);
     setUploadedUrl(null);
     setUploadedMotivationLetterUrl(null);
+    setUploadedMotivationLetter2Url(null);
     setIsUploadDialogOpen(true);
   };
 
@@ -99,10 +121,18 @@ export default function TeacherResumeRequestsPage() {
 
     setIsSubmitting(true);
     try {
+      console.log("Submitting documents:", {
+        requestId: selectedRequest._id,
+        completedResumeUrl: uploadedUrl,
+        completedMotivationLetterUrl: uploadedMotivationLetterUrl,
+        completedMotivationLetter2Url: uploadedMotivationLetter2Url,
+      });
+
       await axios.post("/api/resume-complete", {
         requestId: selectedRequest._id,
         completedResumeUrl: uploadedUrl,
         completedMotivationLetterUrl: uploadedMotivationLetterUrl,
+        completedMotivationLetter2Url: uploadedMotivationLetter2Url,
       });
 
       toast.success("Resume and motivation letter delivered successfully!");
@@ -393,6 +423,46 @@ export default function TeacherResumeRequestsPage() {
                 )}
               </div>
 
+              {/* Second Motivation Letter Upload */}
+              <div className="space-y-2">
+                <h4 className="font-semibold text-slate-950 dark:text-white">{t('motivationLetter2')}</h4>
+                {!uploadedMotivationLetter2Url ? (
+                  <div className="border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-lg overflow-hidden">
+                    <UploadDropzone
+                      endpoint="resumeDocument"
+                      onClientUploadComplete={(res) => {
+                        if (res && res[0]) {
+                          setUploadedMotivationLetter2Url(res[0].url);
+                          toast.success(t('motivationLetter2UploadSuccess'));
+                        }
+                      }}
+                      onUploadError={(error: Error) => {
+                        toast.error(`${t('uploadFailed')}: ${error.message}`);
+                      }}
+                    />
+                  </div>
+                ) : (
+                  <div className="border-2 border-green-200 dark:border-green-800 bg-green-50 dark:bg-green-900/20 rounded-lg p-4">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <CheckCircle2 className="w-5 h-5 text-green-600" />
+                        <div>
+                          <p className="font-medium text-slate-950 dark:text-white">{t('motivationLetter2Uploaded')}</p>
+                          <p className="text-sm text-slate-600 dark:text-slate-400">{t('readyToDeliver')}</p>
+                        </div>
+                      </div>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setUploadedMotivationLetter2Url(null)}
+                      >
+                        {t('change')}
+                      </Button>
+                    </div>
+                  </div>
+                )}
+              </div>
+
               <Button
                 className="w-full bg-green-600 hover:bg-green-700"
                 onClick={handleSubmitResume}
@@ -416,54 +486,260 @@ export default function TeacherResumeRequestsPage() {
 
         {/* View Details Dialog */}
         <Dialog open={isViewDialogOpen} onOpenChange={setIsViewDialogOpen}>
-          <DialogContent className="max-w-3xl max-h-[80vh] overflow-y-auto">
+          <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle className="text-2xl">{t('detailsTitle')}</DialogTitle>
             </DialogHeader>
 
             {selectedRequest && (
-              <div className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="text-sm font-medium text-slate-600 dark:text-slate-400">{t('name')}</label>
-                    <p className="text-slate-950 dark:text-white">{selectedRequest.name}</p>
+              <div className="space-y-6">
+                {/* Training Selection */}
+                {selectedRequest.desiredTraining && (
+                  <div className="bg-green-50 dark:bg-green-900/20 p-4 rounded-lg">
+                    <label className="text-sm font-medium text-slate-600 dark:text-slate-400 block mb-1">
+                      {t('details.desiredTraining')}
+                    </label>
+                    <p className="text-lg font-semibold text-slate-950 dark:text-white">{selectedRequest.desiredTraining}</p>
                   </div>
-                  <div>
-                    <label className="text-sm font-medium text-slate-600 dark:text-slate-400">Email</label>
-                    <p className="text-slate-950 dark:text-white">{selectedRequest.email}</p>
-                  </div>
-                  <div>
-                    <label className="text-sm font-medium text-slate-600 dark:text-slate-400">Phone</label>
-                    <p className="text-slate-950 dark:text-white">{selectedRequest.phone}</p>
-                  </div>
-                  <div>
-                    <label className="text-sm font-medium text-slate-600 dark:text-slate-400">Target Role</label>
-                    <p className="text-slate-950 dark:text-white">{selectedRequest.targetRole || "N/A"}</p>
-                  </div>
-                  <div>
-                    <label className="text-sm font-medium text-slate-600 dark:text-slate-400">Current Role</label>
-                    <p className="text-slate-950 dark:text-white">{selectedRequest.currentRole || "N/A"}</p>
-                  </div>
-                  <div>
-                    <label className="text-sm font-medium text-slate-600 dark:text-slate-400">Experience</label>
-                    <p className="text-slate-950 dark:text-white">{selectedRequest.experience || "N/A"}</p>
-                  </div>
-                </div>
+                )}
 
+                {/* Personal Information */}
                 <div>
-                  <label className="text-sm font-medium text-slate-600 dark:text-slate-400">Education</label>
-                  <p className="text-slate-950 dark:text-white whitespace-pre-wrap">{selectedRequest.education || "N/A"}</p>
+                  <h3 className="text-lg font-semibold text-slate-950 dark:text-white mb-3 border-b pb-2">
+                    {t('details.personalInfo')}
+                  </h3>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="text-sm font-medium text-slate-600 dark:text-slate-400">{t('details.firstName')}</label>
+                      <p className="text-slate-950 dark:text-white">{selectedRequest.firstName || selectedRequest.name.split(' ')[0] || "N/A"}</p>
+                    </div>
+                    <div>
+                      <label className="text-sm font-medium text-slate-600 dark:text-slate-400">{t('details.lastName')}</label>
+                      <p className="text-slate-950 dark:text-white">{selectedRequest.lastName || selectedRequest.name.split(' ').slice(1).join(' ') || "N/A"}</p>
+                    </div>
+                    <div>
+                      <label className="text-sm font-medium text-slate-600 dark:text-slate-400">{t('details.email')}</label>
+                      <p className="text-slate-950 dark:text-white break-all">{selectedRequest.email}</p>
+                    </div>
+                    <div>
+                      <label className="text-sm font-medium text-slate-600 dark:text-slate-400">{t('details.phone')}</label>
+                      <p className="text-slate-950 dark:text-white">{selectedRequest.phone}</p>
+                    </div>
+                    {selectedRequest.birthDate && (
+                      <div>
+                        <label className="text-sm font-medium text-slate-600 dark:text-slate-400">{t('details.birthDate')}</label>
+                        <p className="text-slate-950 dark:text-white">{new Date(selectedRequest.birthDate).toLocaleDateString()}</p>
+                      </div>
+                    )}
+                    {selectedRequest.address && (
+                      <div>
+                        <label className="text-sm font-medium text-slate-600 dark:text-slate-400">{t('details.address')}</label>
+                        <p className="text-slate-950 dark:text-white">{selectedRequest.address}</p>
+                      </div>
+                    )}
+                    {selectedRequest.driverLicense && (
+                      <div>
+                        <label className="text-sm font-medium text-slate-600 dark:text-slate-400">{t('details.driverLicense')}</label>
+                        <p className="text-slate-950 dark:text-white capitalize">{selectedRequest.driverLicense}</p>
+                      </div>
+                    )}
+                  </div>
                 </div>
 
+                {/* Language Levels */}
+                {(selectedRequest.germanLevel || selectedRequest.frenchLevel || selectedRequest.englishLevel) && (
+                  <div>
+                    <h3 className="text-lg font-semibold text-slate-950 dark:text-white mb-3 border-b pb-2">
+                      {t('details.languageLevels')}
+                    </h3>
+                    <div className="grid grid-cols-3 gap-4">
+                      {selectedRequest.germanLevel && (
+                        <div>
+                          <label className="text-sm font-medium text-slate-600 dark:text-slate-400">{t('details.german')}</label>
+                          <p className="text-slate-950 dark:text-white font-semibold">{selectedRequest.germanLevel}</p>
+                        </div>
+                      )}
+                      {selectedRequest.frenchLevel && (
+                        <div>
+                          <label className="text-sm font-medium text-slate-600 dark:text-slate-400">{t('details.french')}</label>
+                          <p className="text-slate-950 dark:text-white font-semibold">{selectedRequest.frenchLevel}</p>
+                        </div>
+                      )}
+                      {selectedRequest.englishLevel && (
+                        <div>
+                          <label className="text-sm font-medium text-slate-600 dark:text-slate-400">{t('details.english')}</label>
+                          <p className="text-slate-950 dark:text-white font-semibold">{selectedRequest.englishLevel}</p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {/* Baccalaureate Education */}
+                {selectedRequest.hasBac && (
+                  <div>
+                    <h3 className="text-lg font-semibold text-slate-950 dark:text-white mb-3 border-b pb-2">
+                      {t('details.bacEducation')}
+                    </h3>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="text-sm font-medium text-slate-600 dark:text-slate-400">{t('details.hasBac')}</label>
+                        <p className="text-slate-950 dark:text-white capitalize">{selectedRequest.hasBac}</p>
+                      </div>
+                      {selectedRequest.bacObtainedDate && (
+                        <div>
+                          <label className="text-sm font-medium text-slate-600 dark:text-slate-400">{t('details.bacObtainedDate')}</label>
+                          <p className="text-slate-950 dark:text-white">{new Date(selectedRequest.bacObtainedDate).toLocaleDateString()}</p>
+                        </div>
+                      )}
+                      {selectedRequest.bacStudiedDate && (
+                        <div>
+                          <label className="text-sm font-medium text-slate-600 dark:text-slate-400">{t('details.bacStudiedDate')}</label>
+                          <p className="text-slate-950 dark:text-white">{new Date(selectedRequest.bacStudiedDate).toLocaleDateString()}</p>
+                        </div>
+                      )}
+                      {selectedRequest.bacSection && (
+                        <div>
+                          <label className="text-sm font-medium text-slate-600 dark:text-slate-400">{t('details.bacSection')}</label>
+                          <p className="text-slate-950 dark:text-white">{selectedRequest.bacSection}</p>
+                        </div>
+                      )}
+                      {selectedRequest.bacHighSchool && (
+                        <div>
+                          <label className="text-sm font-medium text-slate-600 dark:text-slate-400">{t('details.bacHighSchool')}</label>
+                          <p className="text-slate-950 dark:text-white">{selectedRequest.bacHighSchool}</p>
+                        </div>
+                      )}
+                      {selectedRequest.bacCity && (
+                        <div>
+                          <label className="text-sm font-medium text-slate-600 dark:text-slate-400">{t('details.bacCity')}</label>
+                          <p className="text-slate-950 dark:text-white">{selectedRequest.bacCity}</p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {/* Post-Bac Studies & Experience */}
+                {(selectedRequest.postBacStudies || selectedRequest.internships || selectedRequest.trainings) && (
+                  <div>
+                    <h3 className="text-lg font-semibold text-slate-950 dark:text-white mb-3 border-b pb-2">
+                      {t('details.postBacExperience')}
+                    </h3>
+                    {selectedRequest.postBacStudies && (
+                      <div className="mb-4">
+                        <label className="text-sm font-medium text-slate-600 dark:text-slate-400 block mb-1">
+                          {t('details.postBacStudies')}
+                        </label>
+                        <p className="text-slate-950 dark:text-white whitespace-pre-wrap bg-slate-50 dark:bg-slate-900 p-3 rounded">
+                          {selectedRequest.postBacStudies}
+                        </p>
+                      </div>
+                    )}
+                    {selectedRequest.internships && (
+                      <div className="mb-4">
+                        <label className="text-sm font-medium text-slate-600 dark:text-slate-400 block mb-1">
+                          {t('details.internships')}
+                        </label>
+                        <p className="text-slate-950 dark:text-white whitespace-pre-wrap bg-slate-50 dark:bg-slate-900 p-3 rounded">
+                          {selectedRequest.internships}
+                        </p>
+                      </div>
+                    )}
+                    {selectedRequest.trainings && (
+                      <div>
+                        <label className="text-sm font-medium text-slate-600 dark:text-slate-400 block mb-1">
+                          {t('details.trainings')}
+                        </label>
+                        <p className="text-slate-950 dark:text-white whitespace-pre-wrap bg-slate-50 dark:bg-slate-900 p-3 rounded">
+                          {selectedRequest.trainings}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {/* Professional Details */}
                 <div>
-                  <label className="text-sm font-medium text-slate-600 dark:text-slate-400">Skills</label>
-                  <p className="text-slate-950 dark:text-white whitespace-pre-wrap">{selectedRequest.skills || "N/A"}</p>
+                  <h3 className="text-lg font-semibold text-slate-950 dark:text-white mb-3 border-b pb-2">
+                    {t('details.professionalDetails')}
+                  </h3>
+                  <div className="grid grid-cols-2 gap-4 mb-4">
+                    {selectedRequest.currentRole && (
+                      <div>
+                        <label className="text-sm font-medium text-slate-600 dark:text-slate-400">{t('details.currentRole')}</label>
+                        <p className="text-slate-950 dark:text-white">{selectedRequest.currentRole}</p>
+                      </div>
+                    )}
+                    {selectedRequest.targetRole && (
+                      <div>
+                        <label className="text-sm font-medium text-slate-600 dark:text-slate-400">{t('details.targetRole')}</label>
+                        <p className="text-slate-950 dark:text-white">{selectedRequest.targetRole}</p>
+                      </div>
+                    )}
+                  </div>
+                  
+                  {selectedRequest.experience && (
+                    <div className="mb-4">
+                      <label className="text-sm font-medium text-slate-600 dark:text-slate-400 block mb-1">
+                        {t('details.experience')}
+                      </label>
+                      <p className="text-slate-950 dark:text-white whitespace-pre-wrap bg-slate-50 dark:bg-slate-900 p-3 rounded">
+                        {selectedRequest.experience}
+                      </p>
+                    </div>
+                  )}
+
+                  {selectedRequest.education && (
+                    <div className="mb-4">
+                      <label className="text-sm font-medium text-slate-600 dark:text-slate-400 block mb-1">
+                        {t('details.education')}
+                      </label>
+                      <p className="text-slate-950 dark:text-white whitespace-pre-wrap bg-slate-50 dark:bg-slate-900 p-3 rounded">
+                        {selectedRequest.education}
+                      </p>
+                    </div>
+                  )}
+
+                  {selectedRequest.skills && (
+                    <div>
+                      <label className="text-sm font-medium text-slate-600 dark:text-slate-400 block mb-1">
+                        {t('details.skills')}
+                      </label>
+                      <p className="text-slate-950 dark:text-white whitespace-pre-wrap bg-slate-50 dark:bg-slate-900 p-3 rounded">
+                        {selectedRequest.skills}
+                      </p>
+                    </div>
+                  )}
                 </div>
 
+                {/* Additional Information */}
                 {selectedRequest.additionalInfo && (
                   <div>
-                    <label className="text-sm font-medium text-slate-600 dark:text-slate-400">Additional Information</label>
-                    <p className="text-slate-950 dark:text-white whitespace-pre-wrap">{selectedRequest.additionalInfo}</p>
+                    <h3 className="text-lg font-semibold text-slate-950 dark:text-white mb-3 border-b pb-2">
+                      {t('details.additionalInfo')}
+                    </h3>
+                    <p className="text-slate-950 dark:text-white whitespace-pre-wrap bg-slate-50 dark:bg-slate-900 p-3 rounded">
+                      {selectedRequest.additionalInfo}
+                    </p>
+                  </div>
+                )}
+
+                {/* Document */}
+                {selectedRequest.documentUrl && (
+                  <div>
+                    <h3 className="text-lg font-semibold text-slate-950 dark:text-white mb-3 border-b pb-2">
+                      {t('details.supportingDocument')}
+                    </h3>
+                    <a
+                      href={selectedRequest.documentUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 text-green-600 hover:text-green-700 dark:text-green-400 dark:hover:text-green-300"
+                    >
+                      <FileText className="w-4 h-4" />
+                      {t('details.viewDocument')}
+                    </a>
                   </div>
                 )}
               </div>

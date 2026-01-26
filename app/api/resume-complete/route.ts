@@ -15,7 +15,9 @@ export async function POST(request: Request) {
     }
 
     const body = await request.json();
-    const { requestId, completedResumeUrl, completedMotivationLetterUrl } = body;
+    const { requestId, completedResumeUrl, completedMotivationLetterUrl, completedMotivationLetter2Url } = body;
+
+    console.log("Resume complete API - Received data:", { requestId, completedResumeUrl, completedMotivationLetterUrl, completedMotivationLetter2Url });
 
     if (!requestId || !completedResumeUrl) {
       return NextResponse.json(
@@ -34,11 +36,19 @@ export async function POST(request: Request) {
       updateData.completedMotivationLetterUrl = completedMotivationLetterUrl;
     }
 
+    if (completedMotivationLetter2Url) {
+      updateData.completedMotivationLetter2Url = completedMotivationLetter2Url;
+    }
+
+    console.log("Resume complete API - Update data:", updateData);
+
     const updatedRequest = await ResumeRequestModel.findByIdAndUpdate(
       requestId,
       updateData,
       { new: true }
     );
+
+    console.log("Resume complete API - Updated document:", updatedRequest);
 
     if (!updatedRequest) {
       return NextResponse.json(

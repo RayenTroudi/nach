@@ -22,6 +22,7 @@ interface ResumeRequest {
   adminNotes?: string;
   completedResumeUrl?: string;
   completedMotivationLetterUrl?: string;
+  completedMotivationLetter2Url?: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -43,6 +44,7 @@ export default function MyResumeRequestsPage() {
       
       if (response.ok) {
         const data = await response.json();
+        console.log("Resume requests data:", data.resumeRequests);
         setRequests(data.resumeRequests || []);
       } else {
         setRequests([]);
@@ -256,7 +258,19 @@ export default function MyResumeRequestsPage() {
                           >
                             <Button className="bg-blue-600 hover:bg-blue-700 text-white">
                               <Download className="w-4 h-4 mr-2" />
-                              Download Motivation Letter
+                              Download Motivation Letter 1
+                            </Button>
+                          </a>
+                        )}
+                        {request.completedMotivationLetter2Url && (
+                          <a
+                            href={request.completedMotivationLetter2Url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <Button className="bg-purple-600 hover:bg-purple-700 text-white">
+                              <Download className="w-4 h-4 mr-2" />
+                              Download Motivation Letter 2
                             </Button>
                           </a>
                         )}

@@ -2,10 +2,30 @@
 import { useTheme } from "@/contexts/ThemeProvider";
 import { SignIn } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
-import React, { Suspense } from "react";
+import React, { Suspense, useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 
 const SigninPage = () => {
   const { mode } = useTheme();
+  const searchParams = useSearchParams();
+  const [redirectUrl, setRedirectUrl] = useState<string>("/");
+
+  useEffect(() => {
+    // Check if there's saved form data to redirect back to resume page
+    if (typeof window !== "undefined") {
+      const savedFormData = localStorage.getItem("resumeFormData");
+      if (savedFormData) {
+        setRedirectUrl("/contact/resume");
+      }
+    }
+    
+    // Or check if redirect URL is in query params
+    const redirect = searchParams?.get("redirect");
+    if (redirect) {
+      setRedirectUrl(redirect);
+    }
+  }, [searchParams]);
+
   return (
     <div className="w-full flex items-center justify-center min-h-[600px] p-4">
       <Suspense fallback={
@@ -39,6 +59,7 @@ const SigninPage = () => {
           routing="path"
           path="/sign-in"
           signUpUrl="/sign-up"
+          afterSignInUrl={redirectUrl}
         />
       </Suspense>
     </div>

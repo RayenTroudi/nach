@@ -36,6 +36,8 @@ interface ResumeRequest {
   status: "pending" | "in_progress" | "completed" | "rejected";
   adminNotes?: string;
   completedResumeUrl?: string;
+  completedMotivationLetterUrl?: string;
+  completedMotivationLetter2Url?: string;
   createdAt: string;
 }
 
@@ -271,7 +273,7 @@ export default function MyResumePage() {
                   {request.status === "completed" && request.completedResumeUrl && (
                     <>
                       <Separator />
-                      <div className="flex justify-between items-center bg-green-50 dark:bg-green-900/10 p-4 rounded-lg">
+                      <div className="bg-green-50 dark:bg-green-900/10 p-4 rounded-lg space-y-4">
                         <div>
                           <p className="font-semibold text-green-900 dark:text-green-100">
                             {t("yourResumeReady")}
@@ -280,17 +282,45 @@ export default function MyResumePage() {
                             {t("downloadAndApply")}
                           </p>
                         </div>
-                        <a
-                          href={request.completedResumeUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          download
-                        >
-                          <Button className="bg-green-600 hover:bg-green-700">
-                            <Download className="w-4 h-4 mr-2" />
-                            {t("downloadResume")}
-                          </Button>
-                        </a>
+                        <div className="flex flex-wrap gap-3">
+                          <a
+                            href={request.completedResumeUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            download
+                          >
+                            <Button className="bg-green-600 hover:bg-green-700">
+                              <Download className="w-4 h-4 mr-2" />
+                              {t("downloadResume")}
+                            </Button>
+                          </a>
+                          {request.completedMotivationLetterUrl && (
+                            <a
+                              href={request.completedMotivationLetterUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              download
+                            >
+                              <Button className="bg-blue-600 hover:bg-blue-700">
+                                <Download className="w-4 h-4 mr-2" />
+                                {t("downloadMotivationLetter1")}
+                              </Button>
+                            </a>
+                          )}
+                          {request.completedMotivationLetter2Url && (
+                            <a
+                              href={request.completedMotivationLetter2Url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              download
+                            >
+                              <Button className="bg-purple-600 hover:bg-purple-700">
+                                <Download className="w-4 h-4 mr-2" />
+                                {t("downloadMotivationLetter2")}
+                              </Button>
+                            </a>
+                          )}
+                        </div>
                       </div>
                     </>
                   )}

@@ -2,10 +2,29 @@
 import { useTheme } from "@/contexts/ThemeProvider";
 import { SignUp } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 
 const SignUpPage = () => {
   const { mode } = useTheme();
+  const searchParams = useSearchParams();
+  const [redirectUrl, setRedirectUrl] = useState<string>("/");
+
+  useEffect(() => {
+    // Check if there's saved form data to redirect back to resume page
+    if (typeof window !== "undefined") {
+      const savedFormData = localStorage.getItem("resumeFormData");
+      if (savedFormData) {
+        setRedirectUrl("/contact/resume");
+      }
+    }
+    
+    // Or check if redirect URL is in query params
+    const redirect = searchParams?.get("redirect");
+    if (redirect) {
+      setRedirectUrl(redirect);
+    }
+  }, [searchParams]);
 
   return (
     <div className="w-full flex items-center justify-center min-h-[600px] p-4">
@@ -35,6 +54,7 @@ const SignUpPage = () => {
         signInUrl="/sign-in"
         routing="path"
         path="/sign-up"
+        afterSignUpUrl={redirectUrl}
       />
     </div>
   );

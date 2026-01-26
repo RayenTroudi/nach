@@ -9,16 +9,49 @@ export async function POST(req: NextRequest) {
     const { userId } = auth();
     const body = await req.json();
 
-    const { name, email, phone, currentRole, targetRole, experience, education, skills, additionalInfo, documentUrl } = body;
+    console.log("Received resume request data:", JSON.stringify(body, null, 2));
 
-    if (!name || !email || !phone) {
+    const { 
+      desiredTraining,
+      lastName,
+      firstName,
+      email,
+      birthDate,
+      address,
+      phone,
+      driverLicense,
+      germanLevel,
+      frenchLevel,
+      englishLevel,
+      hasBac,
+      bacObtainedDate,
+      bacStudiedDate,
+      bacSection,
+      bacHighSchool,
+      bacCity,
+      postBacStudies,
+      internships,
+      trainings,
+      currentRole,
+      targetRole,
+      experience,
+      education,
+      skills,
+      additionalInfo,
+      documentUrl
+    } = body;
+
+    if (!firstName || !lastName || !email || !phone) {
       return NextResponse.json(
-        { error: "Name, email, and phone are required" },
+        { error: "First name, last name, email, and phone are required" },
         { status: 400 }
       );
     }
 
     await connectToDatabase();
+
+    // Combine firstName and lastName for backward compatibility
+    const name = `${firstName} ${lastName}`.trim();
 
     // Find or create the MongoDB user if logged in
     let mongoUserId = null;
@@ -30,8 +63,8 @@ export async function POST(req: NextRequest) {
         user = await UserModel.create({
           clerkId: userId,
           email: email,
-          firstName: name.split(' ')[0] || name,
-          lastName: name.split(' ').slice(1).join(' ') || '',
+          firstName: firstName,
+          lastName: lastName,
           username: email.split('@')[0],
           picture: '',
         });
@@ -43,8 +76,26 @@ export async function POST(req: NextRequest) {
     const resumeRequest = await ResumeRequestModel.create({
       userId: mongoUserId,
       name,
+      firstName,
+      lastName,
       email,
+      birthDate,
+      address,
       phone,
+      driverLicense,
+      germanLevel,
+      frenchLevel,
+      englishLevel,
+      hasBac,
+      bacObtainedDate,
+      bacStudiedDate,
+      bacSection,
+      bacHighSchool,
+      bacCity,
+      postBacStudies,
+      internships,
+      trainings,
+      desiredTraining,
       currentRole,
       targetRole,
       experience,
@@ -56,6 +107,8 @@ export async function POST(req: NextRequest) {
       paymentStatus: "pending",
       status: "pending",
     });
+
+    console.log("Created resume request:", JSON.stringify(resumeRequest, null, 2));
 
     return NextResponse.json({
       success: true,
@@ -83,6 +136,11 @@ export async function GET(req: NextRequest) {
     const resumeRequests = await ResumeRequestModel.find()
       .sort({ createdAt: -1 })
       .lean();
+
+    console.log("Fetched resume requests count:", resumeRequests.length);
+    if (resumeRequests.length > 0) {
+      console.log("First resume request sample:", JSON.stringify(resumeRequests[0], null, 2));
+    }
 
     return NextResponse.json({ 
       success: true,

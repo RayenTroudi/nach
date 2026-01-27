@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Container } from "@/components/shared";
+import { Container, Spinner } from "@/components/shared";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -11,7 +11,7 @@ import MeetingPayment from "@/components/shared/MeetingPayment";
 import { MessageSquare, Clock, CheckCircle2, FileText, ArrowLeft, Upload } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 import { useAuth } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import {
@@ -25,6 +25,7 @@ const STORAGE_KEY = "resumeFormData";
 
 export default function ResumeRequestPage() {
   const t = useTranslations('contact.resume');
+  const locale = useLocale();
   const { userId, isLoaded } = useAuth();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
@@ -814,13 +815,10 @@ export default function ResumeRequestPage() {
                     className="flex-1 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white py-6 text-lg"
                   >
                     {loading ? (
-                      <>
-                        <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
-                        {t('submitting')}
-                      </>
+                      <Spinner size={20} className="text-white" />
                     ) : (
                       <>
-                        <Upload className="w-5 h-5 mr-2" />
+                        <Upload className={`w-5 h-5 ${locale === 'ar' ? 'ml-2' : 'mr-2'}`} />
                         {t('continueToPayment')}
                       </>
                     )}

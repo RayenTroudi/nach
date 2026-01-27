@@ -4,7 +4,8 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { MapPin, Briefcase, Clock, ExternalLink, Loader2, Search, Filter, X, Building2 } from "lucide-react";
+import { MapPin, Briefcase, Clock, ExternalLink, Search, Filter, X, Building2 } from "lucide-react";
+import { Spinner } from "@/components/shared";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslations } from "next-intl";
 
@@ -147,7 +148,7 @@ export default function AusbildungSection() {
               disabled={loading}
             >
               {loading ? (
-                <Loader2 className="w-5 h-5 animate-spin" />
+                <Spinner size={20} />
               ) : (
                 <>
                   <Search className="w-5 h-5 mr-2" />
@@ -248,7 +249,7 @@ export default function AusbildungSection() {
         {/* Loading State */}
         {loading && (
           <div className="flex flex-col items-center justify-center py-12">
-            <Loader2 className="w-12 h-12 animate-spin text-brand-red-500 mb-4" />
+            <Spinner size={48} className="text-brand-red-500 mb-4" />
             <p className="text-slate-600 dark:text-slate-400">{t('loadingOpportunities')}</p>
           </div>
         )}

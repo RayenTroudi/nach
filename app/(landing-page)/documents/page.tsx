@@ -53,7 +53,11 @@ interface Document {
   fileName: string;
   fileSize: number;
   downloads: number;
-  uploadedBy: string;
+  uploadedBy: {
+    _id: string;
+    firstName: string;
+    lastName: string;
+  } | string;
   createdAt: string;
   updatedAt: string;
 }
@@ -189,11 +193,10 @@ export default function DocumentsPage() {
         {/* Header */}
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-5xl font-bold text-slate-900 dark:text-slate-50 mb-4">
-            Document Library
+            {t('title')}
           </h1>
           <p className="text-lg text-slate-600 dark:text-slate-300 max-w-2xl mx-auto">
-            Download essential documents, guides, and templates for your journey
-            to Germany
+            {t('subtitle')}
           </p>
         </div>
 
@@ -344,7 +347,9 @@ export default function DocumentsPage() {
 
                     {/* Footer */}
                     <div className="mt-4 pt-4 border-t text-xs text-slate-500 dark:text-slate-400">
-                      {t('uploadedBy')}: {doc.uploadedBy}
+                      {t('uploadedBy')}: {typeof doc.uploadedBy === 'string' 
+                        ? doc.uploadedBy 
+                        : `${doc.uploadedBy.firstName} ${doc.uploadedBy.lastName}`}
                     </div>
                   </CardContent>
                 </Card>

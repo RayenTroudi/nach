@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { Loader2 } from "lucide-react";
+import Spinner from "./Spinner";
 
 interface NavigationButtonProps {
   href: string;
@@ -37,10 +37,7 @@ export default function NavigationButton({
       className={className}
     >
       {isNavigating ? (
-        <>
-          <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-          Loading...
-        </>
+        <Spinner size={20} />
       ) : (
         children
       )}

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Course } from "@/components/shared";
+import { Course, Spinner } from "@/components/shared";
 import { TCourse } from "@/types/models.types";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -17,7 +17,6 @@ import {
   Star,
   Users,
   Clock,
-  Loader2,
 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { CourseTypeEnum, CourseLevelEnum } from "@/lib/enums";
@@ -139,7 +138,7 @@ export default function CoursesContent() {
       <div className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-slate-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 flex items-center justify-center">
         <div className="text-center">
           <div className="relative">
-            <Loader2 className="w-16 h-16 animate-spin text-brand-red-500 mx-auto mb-4" />
+            <Spinner size={64} className="text-brand-red-500 mx-auto mb-4" />
             <div className="absolute inset-0 w-16 h-16 border-4 border-brand-red-200 dark:border-brand-red-900 rounded-full mx-auto"></div>
           </div>
           <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-50 mb-2">
@@ -344,7 +343,7 @@ export default function CoursesContent() {
           {/* Loading State */}
           {loading && (
             <div className="flex flex-col items-center justify-center py-20">
-              <Loader2 className="w-12 h-12 animate-spin text-brand-red-500 mb-4" />
+              <Spinner size={48} className="text-brand-red-500 mb-4" />
               <p className="text-slate-600 dark:text-slate-400">{t('results.loadingCourses')}</p>
             </div>
           )}

@@ -13,7 +13,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { FileText, User, Mail, Phone, Briefcase, Download, Clock, CheckCircle2, XCircle, Loader2 } from "lucide-react";
+import { FileText, User, Mail, Phone, Briefcase, Download, Clock, CheckCircle2, XCircle } from "lucide-react";
+import { Spinner } from "@/components/shared";
 import { toast } from "sonner";
 import Link from "next/link";
 import LeftSideBar from "@/components/shared/LeftSideBar";
@@ -100,7 +101,7 @@ export default function AdminResumeRequestsPage() {
       case "in_progress":
         return (
           <Badge className="bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-200">
-            <Loader2 className="w-3 h-3 mr-1 animate-spin" />
+            <Spinner size={12} className="mr-1" />
             In Progress
           </Badge>
         );
@@ -171,7 +172,7 @@ export default function AdminResumeRequestsPage() {
       <div className="flex h-screen">
         <LeftSideBar />
         <div className="flex-1 flex items-center justify-center">
-          <Loader2 className="w-8 h-8 animate-spin text-brand-red-500" />
+          <Spinner size={32} />
         </div>
       </div>
     );

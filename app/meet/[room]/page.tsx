@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { Loader2, AlertCircle, Video, Calendar, User, ExternalLink } from "lucide-react";
+import { AlertCircle, Video, Calendar, User, ExternalLink } from "lucide-react";
+import { Spinner } from "@/components/shared";
 import { Button } from "@/components/ui/button";
 import { useUser } from "@clerk/nextjs";
 import { useTranslations } from "next-intl";
@@ -120,7 +121,7 @@ const MeetingPage = () => {
             <div className="absolute inset-0 flex items-center justify-center">
               <div className="w-20 h-20 border-4 border-brand-red-500/20 rounded-full"></div>
             </div>
-            <Loader2 className="w-12 h-12 animate-spin text-brand-red-500 mx-auto relative z-10" />
+            <Spinner size={48} className="mx-auto relative z-10" />
           </div>
           <h2 className="text-2xl font-bold text-white mb-2">{t('loading.title')}</h2>
           <p className="text-slate-400">{t('loading.subtitle')}</p>

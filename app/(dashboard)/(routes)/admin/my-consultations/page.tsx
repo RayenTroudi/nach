@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { useAuth } from "@clerk/nextjs";
-import { Loader2, Video } from "lucide-react";
+import { Video } from "lucide-react";
+import { Spinner } from "@/components/shared";
 import ConsultantMeetings from "@/components/shared/ConsultantMeetings";
 import { LeftSideBar } from "@/components/shared";
 import { useTranslations } from "next-intl";
@@ -36,7 +37,7 @@ const MyConsultationsPage = () => {
   if (!isLoaded || loading) {
     return (
       <div className="flex h-screen items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-brand-red-500" />
+        <Spinner size={32} />
       </div>
     );
   }

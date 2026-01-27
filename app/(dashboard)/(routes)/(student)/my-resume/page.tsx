@@ -10,9 +10,9 @@ import {
   CheckCircle2, 
   XCircle,
   AlertCircle,
-  Plus,
-  Loader2
+  Plus
 } from "lucide-react";
+import { Spinner } from "@/components/shared";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -95,7 +95,7 @@ export default function MyResumePage() {
       case "in_progress":
         return (
           <Badge className="bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/20">
-            <Loader2 className="w-3 h-3 mr-1 animate-spin" />
+            <Spinner size={12} className="mr-1" />
             {t("inProgress")}
           </Badge>
         );
@@ -142,7 +142,7 @@ export default function MyResumePage() {
       case "in_progress":
         return (
           <div className="flex items-start gap-2 text-sm text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/10 p-3 rounded border border-blue-200 dark:border-blue-800">
-            <Loader2 className="w-4 h-4 mt-0.5 flex-shrink-0 animate-spin" />
+            <Spinner size={16} className="mt-0.5 flex-shrink-0" />
             <p>{t("crafting")}</p>
           </div>
         );
@@ -195,7 +195,7 @@ export default function MyResumePage() {
         {/* Loading State */}
         {isLoading ? (
           <div className="flex justify-center items-center py-20">
-            <Loader2 className="w-8 h-8 animate-spin text-brand-red-500" />
+            <Spinner size={32} />
           </div>
         ) : requests.length === 0 ? (
           /* Empty State */

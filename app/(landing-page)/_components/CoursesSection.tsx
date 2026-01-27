@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { BookOpen, Users, Clock, Star, GraduationCap } from "lucide-react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { TCourse } from "@/types/models.types";
 import { Course } from "@/components/shared";
 
@@ -14,6 +14,8 @@ interface CoursesSectionProps {
 
 export default function CoursesSection({ courses }: CoursesSectionProps) {
   const t = useTranslations('coursesSection');
+  const locale = useLocale();
+  const isRTL = locale === 'ar';
   const [mounted, setMounted] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("All");
 
@@ -94,7 +96,7 @@ export default function CoursesSection({ courses }: CoursesSectionProps) {
                 }`}
                 onClick={() => setSelectedCategory(cat.name)}
               >
-                <span className={`w-2 h-2 rounded-full ${cat.color} mr-2`} />
+                <span className={`w-2 h-2 rounded-full ${cat.color} ${isRTL ? 'ml-2' : 'mr-2'}`} />
                 {cat.label}
               </Button>
             </motion.div>

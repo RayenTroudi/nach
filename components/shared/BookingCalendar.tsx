@@ -5,7 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Calendar } from "@/components/ui/calendar";
 import { useToast } from "@/components/ui/use-toast";
-import { Loader2, Clock, CalendarIcon } from "lucide-react";
+import { Clock, CalendarIcon } from "lucide-react";
+import { Spinner } from "./Spinner";
 import { cn } from "@/lib/utils";
 import MeetingPayment from "./MeetingPayment";
 import { useTranslations } from "next-intl";
@@ -197,7 +198,7 @@ const BookingCalendar = ({
 
         {loading ? (
           <div className="flex items-center justify-center py-12">
-            <Loader2 className="w-8 h-8 animate-spin text-muted-foreground" />
+            <Spinner size={32} className="text-muted-foreground" />
           </div>
         ) : slots.length === 0 ? (
           <div className="text-center py-12 text-muted-foreground">
@@ -270,7 +271,7 @@ const BookingCalendar = ({
           >
             {booking ? (
               <>
-                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                <Spinner size={16} className="mr-2" />
                 {t('booking')}
               </>
             ) : requiresPayment && price > 0 ? (

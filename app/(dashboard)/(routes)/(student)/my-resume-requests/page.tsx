@@ -5,7 +5,8 @@ import { useUser } from "@clerk/nextjs";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { FileText, Clock, CheckCircle2, XCircle, Loader2, Download, Plus } from "lucide-react";
+import { FileText, Clock, CheckCircle2, XCircle, Download, Plus } from "lucide-react";
+import { Spinner } from "@/components/shared";
 import { toast } from "sonner";
 import Link from "next/link";
 
@@ -69,7 +70,7 @@ export default function MyResumeRequestsPage() {
       case "in_progress":
         return (
           <Badge className="bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-200">
-            <Loader2 className="w-3 h-3 mr-1 animate-spin" />
+            <Spinner size={12} className="mr-1" />
             Being Created
           </Badge>
         );
@@ -103,7 +104,7 @@ export default function MyResumeRequestsPage() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-950">
-        <Loader2 className="w-8 h-8 animate-spin text-brand-red-500" />
+        <Spinner size={32} />
       </div>
     );
   }

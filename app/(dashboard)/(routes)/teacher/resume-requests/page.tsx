@@ -4,7 +4,8 @@ import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { FileText, Upload, Loader2, CheckCircle2, Eye } from "lucide-react";
+import { FileText, Upload, CheckCircle2, Eye } from "lucide-react";
+import { Spinner } from "@/components/shared";
 import { toast } from "sonner";
 import {
   Dialog,
@@ -185,7 +186,7 @@ export default function TeacherResumeRequestsPage() {
       <div className="flex gap-6 min-h-screen bg-slate-50 dark:bg-slate-950">
         <LeftSideBar />
         <div className="flex-1 flex items-center justify-center">
-          <Loader2 className="w-8 h-8 animate-spin text-brand-red-500" />
+          <Spinner size={32} />
         </div>
       </div>
     );
@@ -470,7 +471,7 @@ export default function TeacherResumeRequestsPage() {
               >
                 {isSubmitting ? (
                   <>
-                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    <Spinner size={16} className="mr-2" />
                     {t('delivering')}
                   </>
                 ) : (

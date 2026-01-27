@@ -6,7 +6,7 @@ import { Download, FileText, Eye, Calendar } from "lucide-react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 
 interface Document {
   _id: string;
@@ -29,6 +29,8 @@ interface DocumentsSectionProps {
 
 export default function DocumentsSection({ documents }: DocumentsSectionProps) {
   const t = useTranslations('documentsSection');
+  const locale = useLocale();
+  const isRTL = locale === 'ar';
   const [mounted, setMounted] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("All");
 
@@ -123,7 +125,7 @@ export default function DocumentsSection({ documents }: DocumentsSectionProps) {
                 }`}
                 onClick={() => setSelectedCategory(cat.name)}
               >
-                <span className={`w-2 h-2 rounded-full ${cat.color} mr-2`} />
+                <span className={`w-2 h-2 rounded-full ${cat.color} ${isRTL ? 'ml-2' : 'mr-2'}`} />
                 {cat.label}
               </Button>
             </motion.div>

@@ -192,7 +192,7 @@ export default function ResumeRequestPage() {
             {requestId && (
               <MeetingPayment
                 bookingId={requestId}
-                amount={49}
+                amount={100}
                 onSuccess={handlePaymentSuccess}
                 apiEndpoint="/api/resume-payment"
               />
@@ -800,6 +800,7 @@ export default function ResumeRequestPage() {
                     <div>
                       <h4 className="font-semibold text-lg text-slate-950 dark:text-white">{t('serviceFee')}</h4>
                       <p className="text-sm text-slate-600 dark:text-slate-400">{t('paymentRequired')}</p>
+                      <p className="text-sm font-medium text-green-700 dark:text-green-400 mt-2">{t('offerIncludes')}</p>
                     </div>
                     <div className="text-right">
                       <div className="text-3xl font-bold text-green-600 dark:text-green-400">{t('price')}</div>

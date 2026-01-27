@@ -28,7 +28,7 @@ const Footer = () => {
             <ul className="col-span-2 lg:col-span-3 flex justify-start gap-6 lg:justify-end">
               <li>
                 <a
-                  href="#"
+                  href="https://www.facebook.com/talel.mysterio198"
                   rel="noreferrer"
                   target="_blank"
                   className="text-gray-700 transition hover:opacity-75 dark:text-gray-200"
@@ -52,7 +52,7 @@ const Footer = () => {
 
               <li>
                 <a
-                  href="#"
+                  href="https://www.instagram.com/talel.jouini/"
                   rel="noreferrer"
                   target="_blank"
                   className="text-gray-700 transition hover:opacity-75 dark:text-gray-200"

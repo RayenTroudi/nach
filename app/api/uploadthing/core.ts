@@ -31,7 +31,7 @@ export const ourFileRouter = {
     .onUploadComplete(() => {}),
 
   documentUpload: f({ 
-    pdf: { maxFileSize: "200MB", maxFileCount: 1 }
+    pdf: { maxFileSize: "256MB", maxFileCount: 1 }
   })
     .middleware(() => handleAuth())
     .onUploadComplete(() => {}),

@@ -65,18 +65,8 @@ export const teacherRoutes = [
     labelKey: "navigation.chatRooms",
     href: "/teacher/chat-rooms",
   },
-  {
-    icon: BarChart2,
-    labelKey: "navigation.statistics",
-    href: "/teacher/statistics",
-  },
 ];
 export const adminRoutes = [
-  {
-    icon: Table,
-    labelKey: "navigation.categories",
-    href: "/admin/categories",
-  },
   {
     icon: FileText,
     labelKey: "navigation.paymentProofs",
@@ -96,10 +86,5 @@ export const adminRoutes = [
     icon: Video,
     labelKey: "navigation.myConsultations",
     href: "/admin/my-consultations",
-  },
-  {
-    icon: BarChart2,
-    labelKey: "navigation.statistics",
-    href: "/admin/statistics",
   },
 ];

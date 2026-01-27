@@ -7,7 +7,6 @@ import {
   Logo,
   MobileSideBar,
   Navbar,
-  ShoppingCard,
 } from "./";
 import MobileSignupSignInButtons from "./MobileSignupSignInButtons";
 import { getUserByClerkId } from "@/lib/actions";
@@ -37,7 +36,7 @@ const Header = async () => {
 
   return (
     <header className="z-50 border-b border-input flex items-center justify-between px-4 h-[80px] w-screen bg-transparent">
-      {/* Left: Logo */}
+      {/* Logo */}
       <div className="flex items-center gap-x-4">
         <Logo />
       </div>
@@ -45,7 +44,7 @@ const Header = async () => {
       {/* Spacer */}
       <div className="flex-1"></div>
 
-      {/* Right: Navbar + Auth Buttons + Actions */}
+      {/* Navbar + Auth Buttons + Actions */}
       <div className="flex items-center gap-x-4">
         {/* Navbar Items */}
         {userId ? <Navbar isUserAdmin={mongoDbUser?.isAdmin || false} /> : null}
@@ -58,15 +57,14 @@ const Header = async () => {
 
         <HeaderContent>
           <div className="flex items-center gap-x-4">
-            <ShoppingCard />
-            <ThemeSwitcher />
-            <LanguageSwitcher />
-            <SignedIn>
-              <ClerkUserButton />
-            </SignedIn>
             <MobileSideBar isAdmin={mongoDbUser?.isAdmin || false}>
               {!userId ? <MobileSignupSignInButtons /> : <SignoutButton />}
             </MobileSideBar>
+            <SignedIn>
+              <ClerkUserButton />
+            </SignedIn>
+            <LanguageSwitcher />
+            <ThemeSwitcher />
           </div>
         </HeaderContent>
       </div>

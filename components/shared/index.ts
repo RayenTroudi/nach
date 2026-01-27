@@ -10,7 +10,6 @@ export { default as Info } from "@/components/shared/Info";
 export { default as InfoHeader } from "@/components/shared/InfoHeader";
 export { default as Logo } from "@/components/shared/Logo";
 export { default as Search } from "@/components/shared/search/Search";
-export { default as ShoppingCard } from "@/components/shared/ShoppingCard";
 export { default as SkeletonCmponent } from "@/components/shared/SkeletonCmponent";
 export { default as Skill } from "@/components/shared/Skill";
 export { default as Statistic } from "@/components/shared/Statistic";

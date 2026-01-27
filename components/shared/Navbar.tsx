@@ -11,7 +11,7 @@ import { useTheme } from "@/contexts/ThemeProvider";
 import ThemeSwitcher from "./ThemeSwitcher";
 import { Separator } from "../ui/separator";
 import ClerkUserButton from "./ClerkUserButton";
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 
 import { motion } from "framer-motion";
 
@@ -27,16 +27,19 @@ const transition = {
 const Navbar = ({ isUserAdmin }: { isUserAdmin: boolean }) => {
   const pathname = usePathname();
   const t = useTranslations('navigation');
+  const locale = useLocale();
   const isTeacher = pathname?.startsWith("/teacher");
   const isSection = pathname?.includes("/section");
   const isAdmin = pathname?.includes("/admin");
+  const isRTL = locale === 'ar';
+  
   return (
-    <div className="flex items-center gap-1 ">
+    <div className={`flex items-center ${isRTL ? 'gap-x-reverse gap-1 flex-row-reverse' : 'gap-1'}`}>
       {isTeacher || isSection || isAdmin ? (
-        <div className="flex items-center gap-x-2">
+        <div className={`flex items-center ${isRTL ? 'gap-x-reverse gap-x-2 flex-row-reverse' : 'gap-x-2'}`}>
           <Link
             href="/"
-            className="text-slate-950 dark:text-slate-200 font-bold text-sm hover:text-brand-red-500 ease-in-out duration-100"
+            className="text-slate-950 dark:text-slate-200 font-bold text-sm hover:text-brand-red-500 ease-in-out duration-100 whitespace-nowrap"
           >
             {t('student')}
           </Link>
@@ -47,12 +50,12 @@ const Navbar = ({ isUserAdmin }: { isUserAdmin: boolean }) => {
           <MobileSideBar isAdmin={isUserAdmin} />
         </div>
       ) : (
-        <div className="flex items-center gap-x-2">
+        <div className={`flex items-center ${isRTL ? 'gap-x-reverse gap-x-2 flex-row-reverse' : 'gap-x-2'}`}>
           {isUserAdmin ? (
             <>
               <Link
                 href="/admin/dashboard/"
-                className="font-bold text-sm text-brand-red-500 ease-in-out duration-100 hidden lg:block"
+                className="font-bold text-sm text-brand-red-500 ease-in-out duration-100 hidden lg:block whitespace-nowrap"
               >
                 {t('admin')}
               </Link>
@@ -62,8 +65,8 @@ const Navbar = ({ isUserAdmin }: { isUserAdmin: boolean }) => {
               />
               {/* Admins can access instructor features */}
               <Link href="/teacher/courses" className="hidden lg:block">
-                <p className="text-slate-950 dark:text-slate-200 font-bold text-[14px] cursor-pointer  relative">
-                  <span className="primary-color hover:border-b-2 hover:border-brand-red-500 ease-in-out duration-100">
+                <p className="text-slate-950 dark:text-slate-200 font-bold text-[14px] cursor-pointer relative">
+                  <span className="primary-color hover:border-b-2 hover:border-brand-red-500 ease-in-out duration-100 whitespace-nowrap">
                     {t('instructor')}
                   </span>
                 </p>
@@ -77,7 +80,7 @@ const Navbar = ({ isUserAdmin }: { isUserAdmin: boolean }) => {
 
           <Link
             href="/my-learning"
-            className="text-slate-950 dark:text-slate-200 font-medium text-[14px] cursor-pointer relative hidden md:block"
+            className="text-slate-950 dark:text-slate-200 font-medium text-[14px] cursor-pointer relative hidden md:block whitespace-nowrap"
           >
             <span className="hover:primary-color ease-in-out duration-100">
               {t('myLearning')}

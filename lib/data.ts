@@ -5,7 +5,6 @@ import {
   Home,
   MessagesSquare,
   Settings,
-  ShoppingCart,
   Table,
   FileText,
   Calendar,
@@ -33,11 +32,6 @@ export const studentRoutes = [
     icon: FileCheck,
     labelKey: "navigation.myResume",
     href: "/my-resume",
-  },
-  {
-    icon: ShoppingCart,
-    labelKey: "navigation.myCart",
-    href: "/cart",
   },
   {
     icon: MessagesSquare,

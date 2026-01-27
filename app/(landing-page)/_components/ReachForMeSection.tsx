@@ -117,38 +117,38 @@ export default function ReachForMeSection() {
               >
                 <Card className="p-8 h-full bg-white/95 dark:bg-slate-800/95 backdrop-blur-sm hover:shadow-2xl transition-all duration-300 border-2 border-transparent hover:border-brand-red-300 dark:hover:border-brand-red-700 group">
                   {/* Icon */}
-                  <div className={`inline-flex p-4 ${option.bgColor} rounded-xl mb-6 group-hover:scale-110 transition-transform duration-300`}>
+                  <div className={cn("inline-flex p-4 rounded-xl mb-6 group-hover:scale-110 transition-transform duration-300", option.bgColor, rtl && "float-right")}>
                     <Icon className={`w-8 h-8 ${option.iconColor}`} />
                   </div>
 
                   {/* Title */}
-                  <h3 className="text-2xl font-bold text-slate-900 dark:text-slate-50 mb-3">
+                  <h3 className={cn("text-2xl font-bold text-slate-900 dark:text-slate-50 mb-3", rtl && "text-right clear-right")}>
                     {option.title}
                   </h3>
 
                   {/* Description */}
-                  <p className="text-slate-600 dark:text-slate-400 mb-6">
+                  <p className={cn("text-slate-600 dark:text-slate-400 mb-6", rtl && "text-right")}>
                     {option.description}
                   </p>
 
                   {/* Meta Info */}
                   <div className="space-y-2 mb-6">
-                    <div className={cn("flex items-center gap-3 text-sm text-slate-600 dark:text-slate-400", rtl && "flex-row-reverse")}>
+                    <div className="flex items-center gap-3 text-sm text-slate-600 dark:text-slate-400" dir={rtl ? "rtl" : "ltr"}>
                       <Clock className="w-4 h-4 flex-shrink-0" />
-                      <span>{option.duration}</span>
+                      <span className="flex-1">{option.duration}</span>
                     </div>
-                    <div className={cn("flex items-center gap-3 text-sm text-slate-600 dark:text-slate-400", rtl && "flex-row-reverse")}>
+                    <div className="flex items-center gap-3 text-sm text-slate-600 dark:text-slate-400" dir={rtl ? "rtl" : "ltr"}>
                       <Calendar className="w-4 h-4 flex-shrink-0" />
-                      <span>{option.availability}</span>
+                      <span className="flex-1">{option.availability}</span>
                     </div>
                   </div>
 
                   {/* Features */}
                   <ul className="space-y-2 mb-6">
                     {option.features.map((feature, i) => (
-                      <li key={i} className={cn("flex items-center gap-3 text-sm text-slate-700 dark:text-slate-300", rtl && "flex-row-reverse")}>
+                      <li key={i} className="flex items-center gap-3 text-sm text-slate-700 dark:text-slate-300" dir={rtl ? "rtl" : "ltr"}>
                         <CheckCircle2 className="w-4 h-4 text-green-500 flex-shrink-0" />
-                        <span>{feature}</span>
+                        <span className="flex-1">{feature}</span>
                       </li>
                     ))}
                   </ul>

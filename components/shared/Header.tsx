@@ -37,12 +37,9 @@ const Header = async () => {
 
   return (
     <header className="z-50 border-b border-input flex items-center justify-between px-4 h-[80px] w-screen bg-transparent">
-      {/* Left: Logo + Category Filter */}
+      {/* Left: Logo */}
       <div className="flex items-center gap-x-4">
         <Logo />
-        <HeaderContent>
-          <CategoryFilter />
-        </HeaderContent>
       </div>
 
       {/* Spacer */}

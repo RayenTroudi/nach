@@ -12,7 +12,6 @@ import DocumentsSection from "./_components/DocumentsSection";
 import FrequentQuestionsSection from "./_components/FrequentQuestionsSection";
 import AusbildungSection from "./_components/AusbildungSection";
 import ReachForMeSection from "./_components/ReachForMeSection";
-import FinalCTASection from "./_components/FinalCTASection";
 import { TCategory, TCourse, TUser } from "@/types/models.types";
 import { auth } from "@clerk/nextjs";
 import DocumentModel from "@/lib/models/document.model";
@@ -68,9 +67,6 @@ const LandingPage = async () => {
 
       {/* Reach For Me Section - Replaces "Success Stories" */}
       <ReachForMeSection />
-
-      {/* Final CTA */}
-      <FinalCTASection />
     </div>
   );
 };

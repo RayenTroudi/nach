@@ -1410,7 +1410,11 @@
     "type": "النوع",
     "fullTime": "دوام كامل",
     "partTime": "دوام جزئي",
-    "apprenticeship": "تدريب مهني"
+    "apprenticeship": "تدريب مهني",
+    "viewAllOnAusbildung": "عرض الكل على ausbildung.de",
+    "resultsCount": "تم العثور على {count} فرصة",
+    "resultsFor": "لـ",
+    "resultsIn": "في"
   },
   "meeting": {
     "unableToJoin": "تعذر الانضمام إلى الاجتماع",

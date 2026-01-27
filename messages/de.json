@@ -1406,7 +1406,11 @@
     "type": "Typ",
     "fullTime": "Vollzeit",
     "partTime": "Teilzeit",
-    "apprenticeship": "Ausbildung"
+    "apprenticeship": "Ausbildung",
+    "viewAllOnAusbildung": "Alle auf ausbildung.de anzeigen",
+    "resultsCount": "{count} Möglichkeiten gefunden",
+    "resultsFor": "für",
+    "resultsIn": "in"
   },
   "meeting": {
     "unableToJoin": "Meeting kann nicht betreten werden",

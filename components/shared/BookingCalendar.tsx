@@ -6,7 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Calendar } from "@/components/ui/calendar";
 import { useToast } from "@/components/ui/use-toast";
 import { Clock, CalendarIcon } from "lucide-react";
-import { Spinner } from "./Spinner";
+import Spinner from "./Spinner";
 import { cn } from "@/lib/utils";
 import MeetingPayment from "./MeetingPayment";
 import { useTranslations } from "next-intl";

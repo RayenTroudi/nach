@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
   FileText,
@@ -96,7 +96,7 @@ export default function DocumentsPage() {
   ];
 
   // Fetch documents and bundles
-  const fetchDocuments = async () => {
+  const fetchDocuments = useCallback(async () => {
     try {
       setLoading(true);
       const params = new URLSearchParams({
@@ -127,12 +127,11 @@ export default function DocumentsPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [currentPage, categoryFilter, sortBy, searchTerm]);
 
   useEffect(() => {
     fetchDocuments();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentPage, categoryFilter, sortBy]);
+  }, [fetchDocuments]);
 
   // Search with debounce
   useEffect(() => {
@@ -148,6 +147,11 @@ export default function DocumentsPage() {
   // Handle download
   const handleDownload = async (doc: DocumentItem) => {
     try {
+      if (!doc.fileUrl) {
+        toast.error(t('downloadFailed'));
+        return;
+      }
+
       // Track download
       await fetch(`/api/documents/${doc._id}/download`, {
         method: "POST",
@@ -159,7 +163,7 @@ export default function DocumentsPage() {
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = doc.fileName;
+      a.download = doc.fileName || 'document';
       document.body.appendChild(a);
       a.click();
       window.URL.revokeObjectURL(url);

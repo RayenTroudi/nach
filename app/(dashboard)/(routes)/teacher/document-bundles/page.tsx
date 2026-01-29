@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useTranslations } from "next-intl";
 import {
   FolderOpen,
@@ -82,7 +82,7 @@ export default function DocumentBundlesPage() {
   });
 
   // Fetch bundles and available documents
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     try {
       setLoading(true);
       const [bundlesRes, documentsRes] = await Promise.all([
@@ -105,11 +105,11 @@ export default function DocumentBundlesPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [t]);
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [fetchData]);
 
   // Filter bundles
   const filteredBundles = bundles.filter((bundle) =>

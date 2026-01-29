@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useSearchParams } from "next/navigation";
 import {
   FileText,
@@ -71,22 +71,7 @@ export default function MyDocumentsPage() {
   const [activeTab, setActiveTab] = useState("all");
   const [expandedBundles, setExpandedBundles] = useState<Set<string>>(new Set());
 
-  useEffect(() => {
-    fetchPurchases();
-  }, []);
-
-  // Auto-expand bundle from URL param
-  useEffect(() => {
-    const bundleId = searchParams.get("bundle");
-    if (bundleId) {
-      setExpandedBundles(new Set([bundleId]));
-      setTimeout(() => {
-        document.getElementById(`bundle-${bundleId}`)?.scrollIntoView({ behavior: "smooth" });
-      }, 100);
-    }
-  }, [searchParams]);
-
-  const fetchPurchases = async () => {
+  const fetchPurchases = useCallback(async () => {
     try {
       setLoading(true);
       const response = await fetch("/api/document-purchases");
@@ -100,7 +85,22 @@ export default function MyDocumentsPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    fetchPurchases();
+  }, [fetchPurchases]);
+
+  // Auto-expand bundle from URL param
+  useEffect(() => {
+    const bundleId = searchParams.get("bundle");
+    if (bundleId) {
+      setExpandedBundles(new Set([bundleId]));
+      setTimeout(() => {
+        document.getElementById(`bundle-${bundleId}`)?.scrollIntoView({ behavior: "smooth" });
+      }, 100);
+    }
+  }, [searchParams]);
 
   const handleDownload = async (fileUrl: string, fileName: string) => {
     try {

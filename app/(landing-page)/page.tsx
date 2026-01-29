@@ -56,7 +56,7 @@ const LandingPage = async () => {
       .lean();
     
     // Combine and add itemType
-    const allItems = [
+    const allItems: Array<any & { itemType: string; createdAt: string | Date }> = [
       ...docs.map((doc) => ({ ...doc, itemType: "document" })),
       ...bundles.map((bundle) => ({ ...bundle, itemType: "bundle" }))
     ];

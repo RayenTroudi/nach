@@ -33,6 +33,10 @@ const VideoPlayer = ({ video, isLoading, poster }: Props) => {
     );
   }
 
+  // Determine if this is an UploadThing video or Mux video
+  const isUploadThingVideo = video.videoUrl.startsWith('https://utfs.io/');
+  const proxiedUrl = isUploadThingVideo ? getProxiedVideoUrl(video.videoUrl) : video.videoUrl;
+
   return isMounted ? (
     <div className="w-full lg:flex-1 bg-slate-50 dark:bg-slate-950 border-b lg:border-b-0 lg:border-r border-slate-200 dark:border-slate-800">
       <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
@@ -43,10 +47,13 @@ const VideoPlayer = ({ video, isLoading, poster }: Props) => {
             </div>
           ) : (
             <MuxPlayer
-              src={getProxiedVideoUrl(video.videoUrl)}
+              // For UploadThing videos, use src. For Mux videos, use playbackId
+              {...(isUploadThingVideo 
+                ? { src: proxiedUrl } 
+                : { playbackId: video.muxData?.playbackId }
+              )}
               poster={poster}
               streamType="on-demand"
-              playbackId={video.muxData?.playbackId}
               metadata={{
                 video_id: video._id?.toString(),
                 video_title: video.title,

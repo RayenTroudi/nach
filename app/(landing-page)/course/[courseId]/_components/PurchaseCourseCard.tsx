@@ -172,14 +172,20 @@ const PurchaseCourseCard = ({
             )}
             
             <MuxPlayer
-              src={getProxiedVideoUrl(
-                videoToPreview
-                  ? videoToPreview.videoUrl
-                  : allFreeVideos[0]?.videoUrl || course?.thumbnail || ""
+              {...((videoToPreview?.videoUrl || allFreeVideos[0]?.videoUrl || "").startsWith('https://utfs.io/') 
+                ? { 
+                    src: getProxiedVideoUrl(
+                      videoToPreview
+                        ? videoToPreview.videoUrl
+                        : allFreeVideos[0]?.videoUrl || ""
+                    ) 
+                  } 
+                : { 
+                    playbackId: videoToPreview?.muxData?.playbackId || allFreeVideos[0]?.muxData?.playbackId 
+                  }
               )}
               poster={course?.thumbnail!}
               streamType="on-demand"
-              playbackId={videoToPreview?.muxData?.playbackId || allFreeVideos[0]?.muxData?.playbackId}
               metadata={{
                 video_id: videoToPreview?._id?.toString() || allFreeVideos[0]?._id?.toString(),
                 video_title: videoToPreview?.title || allFreeVideos[0]?.title || course?.title,

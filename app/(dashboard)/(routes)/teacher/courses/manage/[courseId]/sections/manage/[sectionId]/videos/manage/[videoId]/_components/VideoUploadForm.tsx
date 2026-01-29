@@ -106,9 +106,11 @@ const VideoUploadForm = ({ video }: Props) => {
       {!edit && video.videoUrl ? (
         <div className="w-full h-full relative aspect-video">
           <MuxPlayer
-            src={getProxiedVideoUrl(video.videoUrl)}
+            {...(video.videoUrl.startsWith('https://utfs.io/') 
+              ? { src: getProxiedVideoUrl(video.videoUrl) } 
+              : { playbackId: video.muxData?.playbackId }
+            )}
             streamType="on-demand"
-            playbackId={video.muxData?.playbackId}
             metadata={{
               video_id: video._id?.toString(),
               video_title: video.title,
@@ -125,9 +127,11 @@ const VideoUploadForm = ({ video }: Props) => {
         <>
           {videoUrl ? (
             <MuxPlayer
-              src={getProxiedVideoUrl(videoUrl)}
+              {...(videoUrl.startsWith('https://utfs.io/') 
+                ? { src: getProxiedVideoUrl(videoUrl) } 
+                : { playbackId: video.muxData?.playbackId }
+              )}
               streamType="on-demand"
-              playbackId={video.muxData?.playbackId}
               metadata={{
                 video_id: video._id?.toString(),
                 video_title: video.title,

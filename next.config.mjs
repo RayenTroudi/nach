@@ -24,11 +24,15 @@ const nextConfig = {
           },
           {
             key: 'Access-Control-Allow-Methods',
-            value: 'GET, OPTIONS',
+            value: 'GET, HEAD, OPTIONS',
           },
           {
             key: 'Access-Control-Allow-Headers',
             value: 'Range, Content-Type, Content-Length',
+          },
+          {
+            key: 'Access-Control-Expose-Headers',
+            value: 'Content-Range, Content-Length, Accept-Ranges',
           },
           {
             key: 'Accept-Ranges',

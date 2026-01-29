@@ -45,7 +45,7 @@ export async function GET(request: Request) {
 
     // First, fetch bundles to get all document IDs that are part of bundles
     console.log("[Storefront API] Fetching bundles...");
-    let allBundles = [];
+    let allBundles: any[] = [];
     try {
       allBundles = await DocumentBundle.find({ isPublished: true })
         .select('documents')

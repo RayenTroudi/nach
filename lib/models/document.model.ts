@@ -12,6 +12,11 @@ export interface IDocument extends Document {
   uploadedBy: Schema.Types.ObjectId;
   isPublic: boolean;
   downloads: number;
+  // Pricing fields for individual document sales
+  price?: number;
+  currency?: string;
+  isForSale?: boolean;
+  purchases?: Schema.Types.ObjectId[]; // References to DocumentPurchase
   createdAt: Date;
   updatedAt: Date;
 }
@@ -72,6 +77,27 @@ const DocumentSchema = new Schema(
       type: Number,
       default: 0,
     },
+    // Pricing fields for individual document sales
+    price: {
+      type: Number,
+      default: 0,
+    },
+    currency: {
+      type: String,
+      enum: ['usd', 'tnd'],
+      default: 'usd',
+    },
+    isForSale: {
+      type: Boolean,
+      default: false,
+    },
+    purchases: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "DocumentPurchase",
+        default: [],
+      },
+    ],
   },
   {
     timestamps: true,

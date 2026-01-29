@@ -40,3 +40,4 @@ export { default as BookMeetingButton } from "@/components/shared/BookMeetingBut
 export { default as BookingCalendar } from "@/components/shared/BookingCalendar";
 export { default as MyMeetings } from "@/components/shared/MyMeetings";
 export { default as ConsultantMeetings } from "@/components/shared/ConsultantMeetings";
+export { PurchaseModal } from "@/components/shared/PurchaseModal";

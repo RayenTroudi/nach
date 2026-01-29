@@ -15,6 +15,7 @@ import ReachForMeSection from "./_components/ReachForMeSection";
 import { TCategory, TCourse, TUser } from "@/types/models.types";
 import { auth } from "@clerk/nextjs";
 import DocumentModel from "@/lib/models/document.model";
+import DocumentBundle from "@/lib/models/document-bundle.model";
 import { connectToDatabase } from "@/lib/mongoose";
 import { CourseTypeEnum } from "@/lib/enums";
 
@@ -25,7 +26,7 @@ const LandingPage = async () => {
   let categories: TCategory[] = [];
   let courses: TCourse[] = [];
   let regularCourses: TCourse[] = [];
-  let documents: any[] = [];
+  let items: any[] = [];
   
   try {
     categories = await getAllCategories();
@@ -36,14 +37,36 @@ const LandingPage = async () => {
       (course) => course.courseType === CourseTypeEnum.Regular
     );
     
-    // Fetch documents
+    // Fetch documents and bundles using storefront logic
     await connectToDatabase();
-    const docs = await DocumentModel.find({ isPublic: true })
+    
+    // Fetch public documents
+    const docs = await DocumentModel.find({ isPublic: true, isForSale: true })
       .populate("uploadedBy", "firstName lastName")
       .sort({ createdAt: -1 })
-      .limit(6)
+      .limit(3)
       .lean();
-    documents = JSON.parse(JSON.stringify(docs));
+    
+    // Fetch published bundles
+    const bundles = await DocumentBundle.find({ isPublished: true })
+      .populate("uploadedBy", "firstName lastName")
+      .populate("documents", "title fileName")
+      .sort({ createdAt: -1 })
+      .limit(3)
+      .lean();
+    
+    // Combine and add itemType
+    const allItems = [
+      ...docs.map((doc) => ({ ...doc, itemType: "document" })),
+      ...bundles.map((bundle) => ({ ...bundle, itemType: "bundle" }))
+    ];
+    
+    // Sort by createdAt and limit to 6 total items
+    items = allItems
+      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+      .slice(0, 6);
+    
+    items = JSON.parse(JSON.stringify(items));
   } catch (error: any) {
     console.error("Error fetching data:", error);
   }
@@ -57,7 +80,7 @@ const LandingPage = async () => {
       <CoursesSection courses={regularCourses} />
 
       {/* Documents Section - Replaces "Featured Courses" */}
-      <DocumentsSection documents={documents} />
+      <DocumentsSection documents={items} />
 
       {/* Frequent Questions Section with Related Courses - Replaces "Your German Pathway" */}
       <FrequentQuestionsSection courses={courses} />

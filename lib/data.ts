@@ -10,6 +10,9 @@ import {
   Calendar,
   Video,
   FileCheck,
+  FolderOpen,
+  Package,
+  ShoppingBag,
 } from "lucide-react";
 
 export const studentRoutes = [
@@ -34,6 +37,11 @@ export const studentRoutes = [
     href: "/my-resume",
   },
   {
+    icon: Package,
+    labelKey: "navigation.myDocuments",
+    href: "/student/my-documents",
+  },
+  {
     icon: MessagesSquare,
     labelKey: "navigation.chatRooms",
     href: "/chat-rooms",
@@ -56,6 +64,11 @@ export const teacherRoutes = [
     href: "/teacher/documents",
   },
   {
+    icon: FolderOpen,
+    labelKey: "navigation.documentBundles",
+    href: "/teacher/document-bundles",
+  },
+  {
     icon: FileCheck,
     labelKey: "navigation.resumeRequests",
     href: "/teacher/resume-requests",
@@ -71,6 +84,11 @@ export const adminRoutes = [
     icon: FileText,
     labelKey: "navigation.paymentProofs",
     href: "/admin/payment-proofs",
+  },
+  {
+    icon: ShoppingBag,
+    labelKey: "navigation.documentPurchases",
+    href: "/admin/document-purchases",
   },
   {
     icon: Calendar,

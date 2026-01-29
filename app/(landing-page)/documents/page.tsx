@@ -10,6 +10,8 @@ import {
   Filter,
   ChevronLeft,
   ChevronRight,
+  FolderOpen,
+  Package,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -44,15 +46,24 @@ const CATEGORIES = [
   "Other",
 ];
 
-interface Document {
+interface DocumentItem {
   _id: string;
   title: string;
   description: string;
   category: string;
-  fileUrl: string;
-  fileName: string;
-  fileSize: number;
-  downloads: number;
+  itemType?: "document" | "bundle";
+  // Document fields
+  fileUrl?: string;
+  fileName?: string;
+  fileSize?: number;
+  downloads?: number;
+  // Bundle fields
+  price?: number;
+  currency?: string;
+  documents?: Array<{
+    _id: string;
+    title: string;
+  }>;
   uploadedBy: {
     _id: string;
     firstName: string;
@@ -67,7 +78,7 @@ export default function DocumentsPage() {
   const router = useRouter();
   const t = useTranslations('documentsPage');
 
-  const [documents, setDocuments] = useState<Document[]>([]);
+  const [items, setItems] = useState<DocumentItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("All");
@@ -84,7 +95,7 @@ export default function DocumentsPage() {
     { value: "title", label: t('sortOptions.title') },
   ];
 
-  // Fetch documents
+  // Fetch documents and bundles
   const fetchDocuments = async () => {
     try {
       setLoading(true);
@@ -102,16 +113,17 @@ export default function DocumentsPage() {
         params.append("search", searchTerm);
       }
 
-      const response = await fetch(`/api/documents?${params.toString()}`);
-      if (!response.ok) throw new Error("Failed to fetch documents");
+      // Use storefront API to get both documents and bundles
+      const response = await fetch(`/api/storefront?${params.toString()}`);
+      if (!response.ok) throw new Error("Failed to fetch items");
 
       const data = await response.json();
-      setDocuments(data.documents);
+      setItems(data.items || []);
       setTotalPages(data.pagination.totalPages);
       setTotal(data.pagination.total);
     } catch (error) {
-      console.error("Error fetching documents:", error);
-      toast.error("Failed to load documents");
+      console.error("Error fetching items:", error);
+      toast.error("Failed to load items");
     } finally {
       setLoading(false);
     }
@@ -134,7 +146,7 @@ export default function DocumentsPage() {
   }, [searchTerm]);
 
   // Handle download
-  const handleDownload = async (doc: Document) => {
+  const handleDownload = async (doc: DocumentItem) => {
     try {
       // Track download
       await fetch(`/api/documents/${doc._id}/download`, {
@@ -234,7 +246,7 @@ export default function DocumentsPage() {
             {/* Sort and Results */}
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mt-4 pt-4 border-t">
               <p className="text-sm text-slate-600 dark:text-slate-400">
-                {t('showing', { count: documents.length, total })}
+                {t('showing', { count: items.length, total })}
               </p>
               <Select value={sortBy} onValueChange={setSortBy}>
                 <SelectTrigger className="w-full sm:w-48">
@@ -257,11 +269,14 @@ export default function DocumentsPage() {
           <div className="flex items-center justify-center py-20">
             <Loader />
           </div>
-        ) : documents.length === 0 ? (
+        ) : items.length === 0 ? (
           /* Empty State */
           <Card>
             <CardContent className="py-20 text-center">
-              <FileText className="w-16 h-16 mx-auto text-slate-400 mb-4" />
+              <div className="flex items-center justify-center gap-4 mb-4">
+                <FileText className="w-16 h-16 text-slate-400" />
+                <FolderOpen className="w-16 h-16 text-slate-400" />
+              </div>
               <h3 className="text-xl font-semibold text-slate-900 dark:text-slate-50 mb-2">
                 {t('noDocumentsFound')}
               </h3>
@@ -285,71 +300,98 @@ export default function DocumentsPage() {
           </Card>
         ) : (
           <>
-            {/* Documents Grid */}
+            {/* Documents & Bundles Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-              {documents.map((doc) => (
+              {items.map((item) => (
                 <Card
-                  key={doc._id}
+                  key={item._id}
                   className="hover:shadow-lg transition-shadow group"
                 >
                   <CardHeader>
                     <div className="flex items-start gap-3">
                       <div className="p-3 bg-brand-red-50 dark:bg-brand-red-900/20 rounded-lg group-hover:bg-brand-red-100 dark:group-hover:bg-brand-red-900/30 transition-colors">
-                        <FileText className="w-6 h-6 text-brand-red-500" />
+                        {item.itemType === "bundle" ? (
+                          <FolderOpen className="w-6 h-6 text-brand-red-500" />
+                        ) : (
+                          <FileText className="w-6 h-6 text-brand-red-500" />
+                        )}
                       </div>
                       <div className="flex-1 min-w-0">
                         <Badge
                           variant="outline"
-                          className={`mb-2 ${getCategoryColor(doc.category)}`}
+                          className={`mb-2 ${getCategoryColor(item.category)}`}
                         >
-                          {doc.category}
+                          {item.category}
                         </Badge>
                         <CardTitle className="text-lg line-clamp-2">
-                          {doc.title}
+                          {item.title}
                         </CardTitle>
                       </div>
                     </div>
                   </CardHeader>
                   <CardContent>
                     <CardDescription className="line-clamp-3 mb-4">
-                      {doc.description || t('noDescription')}
+                      {item.description || t('noDescription')}
                     </CardDescription>
 
                     {/* Meta Info */}
-                    <div className="flex items-center justify-between text-xs text-slate-600 dark:text-slate-400 mb-4 pb-4 border-b">
-                      <div className="flex items-center gap-1">
-                        <Download className="w-3 h-3" />
-                        {doc.downloads} {t('downloads')}
+                    {item.itemType === "bundle" ? (
+                      <div className="flex items-center justify-between text-xs text-slate-600 dark:text-slate-400 mb-4 pb-4 border-b">
+                        <div className="flex items-center gap-1">
+                          <Package className="w-3 h-3" />
+                          {item.documents?.length || 0} {t('documents')}
+                        </div>
+                        <span className="font-semibold text-brand-red-600">
+                          {item.price} {item.currency || 'EUR'}
+                        </span>
                       </div>
-                      <span>{formatFileSize(doc.fileSize)}</span>
-                    </div>
+                    ) : (
+                      <div className="flex items-center justify-between text-xs text-slate-600 dark:text-slate-400 mb-4 pb-4 border-b">
+                        <div className="flex items-center gap-1">
+                          <Download className="w-3 h-3" />
+                          {item.downloads || 0} {t('downloads')}
+                        </div>
+                        <span>{formatFileSize(item.fileSize || 0)}</span>
+                      </div>
+                    )}
 
                     {/* Actions */}
-                    <div className="grid grid-cols-2 gap-2">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handlePreview(doc.fileUrl)}
-                        className="w-full"
-                      >
-                        <Eye className="w-4 h-4 mr-1" />
-                        {t('preview')}
-                      </Button>
+                    {item.itemType === "bundle" ? (
                       <Button
                         size="sm"
-                        onClick={() => handleDownload(doc)}
+                        onClick={() => router.push(`/storefront?item=${item._id}&type=bundle`)}
                         className="w-full bg-brand-red-500 hover:bg-brand-red-600"
                       >
-                        <Download className="w-4 h-4 mr-1" />
-                        {t('download')}
+                        <Package className="w-4 h-4 mr-1" />
+                        {t('viewBundle')}
                       </Button>
-                    </div>
+                    ) : (
+                      <div className="grid grid-cols-2 gap-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handlePreview(item.fileUrl!)}
+                          className="w-full"
+                        >
+                          <Eye className="w-4 h-4 mr-1" />
+                          {t('preview')}
+                        </Button>
+                        <Button
+                          size="sm"
+                          onClick={() => handleDownload(item)}
+                          className="w-full bg-brand-red-500 hover:bg-brand-red-600"
+                        >
+                          <Download className="w-4 h-4 mr-1" />
+                          {t('download')}
+                        </Button>
+                      </div>
+                    )}
 
                     {/* Footer */}
                     <div className="mt-4 pt-4 border-t text-xs text-slate-500 dark:text-slate-400">
-                      {t('uploadedBy')}: {typeof doc.uploadedBy === 'string' 
-                        ? doc.uploadedBy 
-                        : `${doc.uploadedBy.firstName} ${doc.uploadedBy.lastName}`}
+                      {t('uploadedBy')}: {typeof item.uploadedBy === 'string' 
+                        ? item.uploadedBy 
+                        : `${item.uploadedBy.firstName} ${item.uploadedBy.lastName}`}
                     </div>
                   </CardContent>
                 </Card>

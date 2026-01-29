@@ -13,11 +13,12 @@ export async function GET(request: Request) {
     const page = parseInt(searchParams.get("page") || "1");
     const limit = parseInt(searchParams.get("limit") || "20");
     const sort = searchParams.get("sort") || "newest"; // newest, downloads, title
+    const includePrivate = searchParams.get("includePrivate") === "true";
 
     await connectToDatabase();
 
-    // Build query
-    const query: any = { isPublic: true };
+    // Build query - include private documents only if explicitly requested
+    const query: any = includePrivate ? {} : { isPublic: true };
     
     if (category && category !== "All") {
       query.category = category;

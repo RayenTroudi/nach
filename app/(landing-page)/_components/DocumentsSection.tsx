@@ -1,22 +1,51 @@
 "use client";
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { Download, FileText, Eye, Calendar } from "lucide-react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
+import { Separator } from "@/components/ui/separator";
+import { Download, FileText, Eye, Calendar, FolderOpen, Package, ShoppingCart, Lock } from "lucide-react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
 import { useTranslations, useLocale } from "next-intl";
+import { useUser } from "@clerk/nextjs";
+import Image from "next/image";
+import { scnToast } from "@/components/ui/use-toast";
+import { toast } from "sonner";
+import BankTransferUpload from "@/app/(landing-page)/course/[courseId]/_components/BankTransferUpload";
 
-interface Document {
+interface DocumentItem {
   _id: string;
   title: string;
   description?: string;
-  fileUrl: string;
-  fileName: string;
   category: string;
-  downloads: number;
   createdAt: string;
+  itemType?: "document" | "bundle";
+  // Document fields
+  fileUrl?: string;
+  fileName?: string;
+  downloads?: number;
+  // Bundle fields
+  price?: number;
+  currency?: string;
+  documents?: Array<{
+    _id: string;
+    title: string;
+  }>;
   uploadedBy: {
     firstName: string;
     lastName: string;
@@ -24,15 +53,26 @@ interface Document {
 }
 
 interface DocumentsSectionProps {
-  documents: Document[];
+  documents: DocumentItem[];
 }
 
 export default function DocumentsSection({ documents }: DocumentsSectionProps) {
   const t = useTranslations('documentsSection');
+  const tStorefront = useTranslations('storefront');
   const locale = useLocale();
   const isRTL = locale === 'ar';
+  const router = useRouter();
+  const { user, isSignedIn } = useUser();
   const [mounted, setMounted] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("All");
+  
+  // Bundle preview dialog state
+  const [previewBundle, setPreviewBundle] = useState<DocumentItem | null>(null);
+  const [isBundlePreviewOpen, setIsBundlePreviewOpen] = useState(false);
+  
+  // Purchase dialog state
+  const [selectedItem, setSelectedItem] = useState<DocumentItem | null>(null);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   // Avoid hydration mismatch by only rendering dates on client
   useEffect(() => {
@@ -63,27 +103,53 @@ export default function DocumentsSection({ documents }: DocumentsSectionProps) {
     });
   };
 
-  const handleDownload = async (doc: Document) => {
-    try {
-      // Track download
-      await fetch(`/api/documents/${doc._id}/download`, {
-        method: "POST",
-      });
+  const handleDownload = async (item: DocumentItem) => {
+    // For documents, handle download
+    if (item.itemType === "document") {
+      if (!item.fileUrl || !item.fileName) return;
+      
+      try {
+        // Track download
+        await fetch(`/api/documents/${item._id}/download`, {
+          method: "POST",
+        });
 
-      // Download file
-      const response = await fetch(doc.fileUrl);
-      const blob = await response.blob();
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = doc.fileName;
-      document.body.appendChild(a);
-      a.click();
-      window.URL.revokeObjectURL(url);
-      document.body.removeChild(a);
-    } catch (error) {
-      console.error("Download failed:", error);
+        // Download file
+        const response = await fetch(item.fileUrl);
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = item.fileName;
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+      } catch (error) {
+        console.error("Download failed:", error);
+      }
     }
+  };
+  
+  const handleBundlePreview = (item: DocumentItem) => {
+    setPreviewBundle(item);
+    setIsBundlePreviewOpen(true);
+  };
+  
+  const handlePurchase = (item: DocumentItem) => {
+    if (!isSignedIn) {
+      toast.error(tStorefront("signInRequired"));
+      router.push("/sign-in");
+      return;
+    }
+    setSelectedItem(item);
+    setIsDialogOpen(true);
+  };
+  
+  const formatPrice = (price: number, currency: string) => {
+    if (price === 0) return tStorefront("free");
+    const symbol = currency === "usd" ? "$" : currency === "tnd" ? "TND" : currency;
+    return `${symbol}${price}`;
   };
 
   return (
@@ -145,67 +211,141 @@ export default function DocumentsSection({ documents }: DocumentsSectionProps) {
           </div>
         ) : (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredDocuments.slice(0, 6).map((doc, idx) => (
+            {filteredDocuments.slice(0, 6).map((item, idx) => {
+              const isFree = !item.price || item.price === 0;
+              const purchased = false; // On homepage, we don't track purchases
+              
+              return (
             <motion.div
-              key={doc._id}
+              key={item._id}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: idx * 0.1 }}
             >
-              <Card className="p-6 hover:shadow-lg transition-all duration-300 border-2 hover:border-brand-red-200 dark:hover:border-brand-red-800 group">
-                <div className="flex items-start justify-between mb-4">
-                  <div className="p-3 bg-brand-red-50 dark:bg-brand-red-900/20 rounded-lg group-hover:bg-brand-red-100 dark:group-hover:bg-brand-red-900/40 transition-colors">
-                    <FileText className="w-6 h-6 text-brand-red-600 dark:text-brand-red-400" />
+              <Card className="hover:shadow-lg transition-shadow group relative">
+                <CardHeader>
+                  <div className="flex items-start gap-3">
+                    <div
+                      className={`p-3 rounded-lg group-hover:brightness-110 transition-all ${
+                        item.itemType === "bundle"
+                          ? "bg-purple-50 dark:bg-purple-900/20"
+                          : "bg-brand-red-50 dark:bg-brand-red-900/20"
+                      }`}
+                    >
+                      {item.itemType === "bundle" ? (
+                        <FolderOpen
+                          className={`w-6 h-6 ${
+                            item.itemType === "bundle"
+                              ? "text-purple-500"
+                              : "text-brand-red-500"
+                          }`}
+                        />
+                      ) : (
+                        <FileText className="w-6 h-6 text-brand-red-500" />
+                      )}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 mb-2">
+                        <Badge variant="outline">
+                          {item.category}
+                        </Badge>
+                        {item.itemType === "bundle" && (
+                          <Badge variant="secondary" className="text-xs">
+                            Bundle
+                          </Badge>
+                        )}
+                      </div>
+                      <h3 className="text-lg font-semibold line-clamp-2">
+                        {item.title}
+                      </h3>
+                    </div>
                   </div>
-                  <Badge variant="secondary" className="text-xs">
-                    {doc.category}
-                  </Badge>
-                </div>
+                </CardHeader>
+                
+                <div className="px-6 pb-6">
+                  {item.description && (
+                    <p className="text-sm text-slate-600 dark:text-slate-400 mb-4 line-clamp-3">
+                      {item.description}
+                    </p>
+                  )}
 
-                <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-50 mb-2 line-clamp-2">
-                  {doc.title}
-                </h3>
-
-                {doc.description && (
-                  <p className="text-sm text-slate-600 dark:text-slate-400 mb-4 line-clamp-2">
-                    {doc.description}
-                  </p>
-                )}
-
-                <div className="flex items-center gap-4 text-sm text-slate-500 dark:text-slate-400 mb-4">
-                  <div className="flex items-center gap-1">
-                    <Download className="w-4 h-4" />
-                    <span>{doc.downloads}</span>
+                  {/* Meta Info */}
+                  <div className="flex items-center justify-between text-xs text-slate-600 dark:text-slate-400 mb-4 pb-4 border-b">
+                    {item.itemType === "document" ? (
+                      <>
+                        <div className="flex items-center gap-1">
+                          <Download className="w-3 h-3" />
+                          {item.downloads || 0} {t("downloads")}
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <Calendar className="w-3 h-3" />
+                          <span suppressHydrationWarning>
+                            {formatDate(item.createdAt)}
+                          </span>
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <div className="flex items-center gap-1">
+                          <FileText className="w-3 h-3" />
+                          {item.documents?.length || 0} {t("documents")}
+                        </div>
+                        <span>Bundle</span>
+                      </>
+                    )}
                   </div>
-                  <div className="flex items-center gap-1">
-                    <Calendar className="w-4 h-4" />
-                    <span suppressHydrationWarning>
-                      {formatDate(doc.createdAt)}
-                    </span>
-                  </div>
-                </div>
 
-                <div className="flex gap-2">
-                  <Button
-                    size="sm"
-                    className="flex-1 bg-brand-red-500 hover:bg-brand-red-600"
-                    onClick={() => handleDownload(doc)}
-                  >
-                    <Download className="w-4 h-4 mr-2" />
-                    {t('download')}
-                  </Button>
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    onClick={() => window.open(doc.fileUrl, "_blank")}
-                  >
-                    <Eye className="w-4 h-4" />
-                  </Button>
+                  {/* Price */}
+                  {item.itemType === "bundle" && (
+                    <div className="mb-4 pb-4 border-b">
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm text-slate-600 dark:text-slate-400">
+                          {tStorefront("price")}:
+                        </span>
+                        <span className="text-xl font-bold text-brand-red-500">
+                          {isFree ? "Free" : `${item.price} ${item.currency?.toUpperCase() || 'EUR'}`}
+                        </span>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Actions */}
+                  {item.itemType === "bundle" ? (
+                    <div className="space-y-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleBundlePreview(item)}
+                        className="w-full"
+                      >
+                        <Eye className="w-4 h-4 mr-1" />
+                        {tStorefront("previewContents")}
+                      </Button>
+                      <Button
+                        size="sm"
+                        onClick={() => handlePurchase(item)}
+                        className="w-full bg-brand-red-500 hover:bg-brand-red-600"
+                      >
+                        <ShoppingCart className="w-4 h-4 mr-1" />
+                        {tStorefront("buyNow")}
+                      </Button>
+                    </div>
+                  ) : (
+                    <Button
+                      size="sm"
+                      className="w-full bg-brand-red-500 hover:bg-brand-red-600"
+                      onClick={() => handleDownload(item)}
+                    >
+                      <Download className="w-4 h-4 mr-2" />
+                      {t("download")}
+                    </Button>
+                  )}
                 </div>
               </Card>
             </motion.div>
-          ))}
+              );
+            })}
           </div>
         )}
 
@@ -222,6 +362,163 @@ export default function DocumentsSection({ documents }: DocumentsSectionProps) {
           </Link>
         </div>
       </div>
+      
+      {/* Bundle Preview Dialog */}
+      {previewBundle && (
+        <Dialog open={isBundlePreviewOpen} onOpenChange={setIsBundlePreviewOpen}>
+          <DialogContent className="sm:max-w-[600px] max-h-[80vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2">
+                <FolderOpen className="w-5 h-5 text-brand-red-500" />
+                {previewBundle.title}
+              </DialogTitle>
+              <DialogDescription>
+                {tStorefront("bundlePreviewDescription")}
+              </DialogDescription>
+            </DialogHeader>
+            
+            <div className="space-y-4 py-4">
+              {/* Bundle Info */}
+              <div className="bg-slate-50 dark:bg-slate-900 p-4 rounded-lg space-y-2">
+                <div className="flex justify-between items-center">
+                  <span className="text-sm font-medium text-slate-700 dark:text-slate-300">
+                    {tStorefront("totalDocuments")}:
+                  </span>
+                  <span className="text-lg font-bold text-brand-red-500">
+                    {previewBundle.documents?.length || 0}
+                  </span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-sm font-medium text-slate-700 dark:text-slate-300">
+                    {tStorefront("price")}:
+                  </span>
+                  <span className="text-lg font-bold text-brand-red-500">
+                    {formatPrice(previewBundle.price || 0, previewBundle.currency || 'EUR')}
+                  </span>
+                </div>
+              </div>
+
+              {/* Documents List */}
+              <div className="space-y-2">
+                <h4 className="font-semibold text-sm text-slate-700 dark:text-slate-300">
+                  {tStorefront("documentsInBundle")}:
+                </h4>
+                <div className="space-y-2 max-h-[300px] overflow-y-auto">
+                  {previewBundle.documents && previewBundle.documents.length > 0 ? (
+                    previewBundle.documents.map((doc) => (
+                      <div
+                        key={doc._id}
+                        className="flex items-center gap-3 p-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg"
+                      >
+                        <div className="flex-shrink-0 w-8 h-8 bg-brand-red-100 dark:bg-brand-red-900/20 rounded flex items-center justify-center">
+                          <FileText className="w-4 h-4 text-brand-red-500" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-medium text-slate-900 dark:text-slate-100 truncate">
+                            {doc.title}
+                          </p>
+                        </div>
+                        <Lock className="w-4 h-4 text-slate-400" />
+                      </div>
+                    ))
+                  ) : (
+                    <p className="text-sm text-slate-500 dark:text-slate-400 text-center py-4">
+                      {tStorefront("noDocumentsInBundle")}
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              {/* Call to Action */}
+              <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">
+                <p className="text-sm text-blue-900 dark:text-blue-100 mb-3">
+                  {tStorefront("bundlePurchasePrompt")}
+                </p>
+                <Button
+                  onClick={() => {
+                    setIsBundlePreviewOpen(false);
+                    handlePurchase(previewBundle);
+                  }}
+                  className="w-full bg-brand-red-500 hover:bg-brand-red-600"
+                >
+                  <ShoppingCart className="w-4 h-4 mr-2" />
+                  {tStorefront("buyNow")} - {formatPrice(previewBundle.price || 0, previewBundle.currency || 'EUR')}
+                </Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
+      )}
+      
+      {/* Purchase Dialog */}
+      {selectedItem && (
+        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+          <DialogContent className="sm:max-w-[425px] md:max-w-[700px] p-6 bg-slate-100 dark:bg-slate-950 max-h-[90vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle>{tStorefront("completePurchase")}</DialogTitle>
+              <DialogDescription>{tStorefront("choosePaymentMethod")}</DialogDescription>
+            </DialogHeader>
+            
+            <div className="flex flex-col gap-y-4">
+              {/* Item Details */}
+              <div className="flex gap-x-3 p-4 bg-white dark:bg-slate-900 rounded-lg">
+                <div className="w-[100px] h-[75px] bg-slate-200 dark:bg-slate-800 rounded-sm flex items-center justify-center">
+                  {selectedItem.itemType === "bundle" ? (
+                    <FolderOpen className="w-8 h-8 text-slate-400" />
+                  ) : (
+                    <FileText className="w-8 h-8 text-slate-400" />
+                  )}
+                </div>
+                <div className="flex flex-1 flex-col gap-y-1">
+                  <h3 className="text-sm md:text-base font-semibold">
+                    {selectedItem.title}
+                  </h3>
+                  <div className="flex items-center gap-x-2">
+                    <Image
+                      src={"/images/default_profile.avif"}
+                      width={20}
+                      height={20}
+                      alt="instructor"
+                      className="rounded-full object-cover"
+                    />
+                    <p className="text-xs text-slate-600 dark:text-slate-400">
+                      {selectedItem.uploadedBy.firstName} {selectedItem.uploadedBy.lastName}
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-x-2 mt-1">
+                    <p className="text-xl font-bold text-brand-red-500">
+                      {((selectedItem.price || 0) * 3.3).toFixed(2)} TND
+                    </p>
+                    <Image
+                      src={"/icons/tunisia-flag.svg"}
+                      width={24}
+                      height={24}
+                      alt="tunisia"
+                      className="object-cover rounded-none"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <Separator />
+
+              <BankTransferUpload
+                courseIds={[selectedItem._id]}
+                amount={(selectedItem.price || 0) * 3.3}
+                onSuccess={() => {
+                  setIsDialogOpen(false);
+                  scnToast({
+                    variant: "success",
+                    title: tStorefront("uploadSuccessful"),
+                    description: tStorefront("uploadSuccessfulDesc"),
+                  });
+                  router.refresh();
+                }}
+              />
+            </div>
+          </DialogContent>
+        </Dialog>
+      )}
     </section>
   );
 }

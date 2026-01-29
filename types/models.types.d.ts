@@ -194,3 +194,55 @@ export type TMuxData = {
   playbackId?: string;
   video: TVideo;
 };
+
+export type TDocument = {
+  _id: string;
+  title: string;
+  description?: string;
+  fileUrl: string;
+  fileName: string;
+  fileType: string;
+  fileSize: number;
+  category: string;
+  tags?: string[];
+  uploadedBy: TUser;
+  isPublic: boolean;
+  downloads: number;
+  price?: number;
+  currency?: string;
+  isForSale?: boolean;
+  purchases?: TDocumentPurchase[];
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+export type TDocumentBundle = {
+  _id: string;
+  title: string;
+  description?: string;
+  price: number;
+  currency: string;
+  thumbnail?: string;
+  documents: TDocument[];
+  uploadedBy: TUser;
+  isPublished: boolean;
+  category: string;
+  tags?: string[];
+  purchases?: TDocumentPurchase[];
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+export type TDocumentPurchase = {
+  _id: string;
+  userId: TUser;
+  itemType: "document" | "bundle";
+  itemId: string;
+  amount: number;
+  currency: string;
+  paymentMethod?: "stripe" | "bank_transfer";
+  paymentStatus: "pending" | "completed" | "rejected";
+  paymentProofUrl?: string;
+  createdAt: Date;
+  updatedAt: Date;
+};

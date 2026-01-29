@@ -36,6 +36,16 @@ export const ourFileRouter = {
     .middleware(() => handleAuth())
     .onUploadComplete(() => {}),
 
+  bundleDocuments: f({ 
+    pdf: { maxFileSize: "256MB", maxFileCount: 50 },
+    image: { maxFileSize: "16MB", maxFileCount: 50 },
+    video: { maxFileSize: "512MB", maxFileCount: 50 },
+    audio: { maxFileSize: "64MB", maxFileCount: 50 },
+    text: { maxFileSize: "16MB", maxFileCount: 50 },
+  })
+    .middleware(() => handleAuth())
+    .onUploadComplete(() => {}),
+
   resumeDocument: f({ 
     pdf: { maxFileSize: "16MB", maxFileCount: 1 }
   })

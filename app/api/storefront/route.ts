@@ -44,9 +44,11 @@ export async function GET(request: Request) {
       .select('documents')
       .lean();
     
-    const bundledDocumentIds = allBundles.flatMap(bundle => 
-      bundle.documents.map((doc: any) => doc.toString())
-    );
+    const bundledDocumentIds = allBundles
+      .filter(bundle => bundle.documents && Array.isArray(bundle.documents))
+      .flatMap(bundle => 
+        bundle.documents.map((doc: any) => doc.toString())
+      );
 
     // Fetch documents if type is null or 'document'
     let documents: any[] = [];
@@ -54,9 +56,13 @@ export async function GET(request: Request) {
     if (!type || type === "document") {
       // Show all public documents (both free and for sale) that are NOT part of any bundle
       const docQuery: any = { 
-        isPublic: true,
-        _id: { $nin: bundledDocumentIds } // Exclude documents that are in bundles
+        isPublic: true
       };
+      
+      // Only add $nin filter if there are bundled documents
+      if (bundledDocumentIds.length > 0) {
+        docQuery._id = { $nin: bundledDocumentIds };
+      }
       
       if (category && category !== "All") {
         docQuery.category = category;

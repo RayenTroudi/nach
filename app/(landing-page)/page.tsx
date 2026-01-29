@@ -49,15 +49,21 @@ const LandingPage = async () => {
       .lean();
     
     // Get all document IDs that are part of bundles
-    const bundledDocumentIds = bundles.flatMap(bundle => 
-      bundle.documents.map((doc: any) => doc._id.toString())
-    );
+    const bundledDocumentIds = bundles
+      .filter(bundle => bundle.documents && Array.isArray(bundle.documents))
+      .flatMap(bundle => 
+        bundle.documents.map((doc: any) => doc._id.toString())
+      );
     
     // Fetch all public documents (both free and for sale) that are NOT part of any bundle
-    const docs = await DocumentModel.find({ 
-      isPublic: true,
-      _id: { $nin: bundledDocumentIds } // Exclude documents that are in bundles
-    })
+    const docQuery: any = { isPublic: true };
+    
+    // Only add $nin filter if there are bundled documents
+    if (bundledDocumentIds.length > 0) {
+      docQuery._id = { $nin: bundledDocumentIds };
+    }
+    
+    const docs = await DocumentModel.find(docQuery)
       .populate("uploadedBy", "firstName lastName")
       .sort({ createdAt: -1 })
       .limit(3)

@@ -50,7 +50,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { TDocumentBundle, TDocument } from "@/types/models.types";
 import { FileUpload } from "@/components/shared";
 import { ourFileRouter } from "@/app/api/uploadthing/core";
-import { generateUploadButton } from "@uploadthing/react";
+import { useUploadThing } from "@/lib/upload-thing";
 
 const CATEGORIES = [
   "Visa",
@@ -64,6 +64,7 @@ const CATEGORIES = [
 
 export default function DocumentBundlesPage() {
   const t = useTranslations("teacherDocumentBundles");
+  const { startUpload, isUploading } = useUploadThing("bundleDocuments");
   const [bundles, setBundles] = useState<TDocumentBundle[]>([]);
   const [documents, setDocuments] = useState<TDocument[]>([]);
   const [loading, setLoading] = useState(true);
@@ -261,42 +262,67 @@ export default function DocumentBundlesPage() {
     const uploadedIds: string[] = [];
 
     try {
-      for (const file of files) {
-        // For now, create documents with placeholder URLs
-        // This will work until we get the UploadThing integration properly fixed
-        const mockFileUrl = `https://example.com/uploads/${Date.now()}-${file.name}`;
+      // Split files into batches of 30 to avoid hitting limits
+      const BATCH_SIZE = 30;
+      const batches: File[][] = [];
+      
+      for (let i = 0; i < files.length; i += BATCH_SIZE) {
+        batches.push(files.slice(i, i + BATCH_SIZE));
+      }
+
+      // Upload each batch
+      for (let batchIndex = 0; batchIndex < batches.length; batchIndex++) {
+        const batch = batches[batchIndex];
+        toast.info(`Uploading batch ${batchIndex + 1}/${batches.length} (${batch.length} files)...`);
         
-        // Create document with the placeholder file URL
-        const documentData = {
-          title: file.name.replace(/\.[^/.]+$/, ''),
-          description: `Auto-uploaded for bundle: ${formData.title || 'New Bundle'}`,
-          fileUrl: mockFileUrl,
-          fileName: file.name,
-          fileType: file.type || 'application/octet-stream',
-          fileSize: file.size,
-          category: formData.category,
-          tags: [],
-          isPublic: false, // Bundle documents should not be shown publicly
-          isForSale: false,
-          price: 0,
-          currency: 'usd',
-        };
-
-        const documentResponse = await fetch('/api/documents', {
-          method: 'POST',
-          headers: { 
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(documentData),
-        });
-
-        if (!documentResponse.ok) {
-          const errorData = await documentResponse.json();
-          throw new Error(errorData.error || `Failed to create document for ${file.name}`);
+        // Upload files to UploadThing using the bundleDocuments endpoint
+        const uploadedFiles = await startUpload(batch);
+        
+        if (!uploadedFiles || uploadedFiles.length === 0) {
+          throw new Error(`Failed to upload batch ${batchIndex + 1}`);
         }
 
-        const documentResult = await documentResponse.json();
-        uploadedIds.push(documentResult.document._id);
+        // Create document records for each uploaded file
+        for (let i = 0; i < batch.length; i++) {
+          const file = batch[i];
+          const uploadedFile = uploadedFiles[i];
+          
+          if (!uploadedFile || !uploadedFile.url) {
+            console.error(`No URL for file ${file.name}`);
+            continue;
+          }
+          
+          const documentData = {
+            title: file.name.replace(/\.[^/.]+$/, ''),
+            description: `Auto-uploaded for bundle: ${formData.title || 'New Bundle'}`,
+            fileUrl: uploadedFile.url,
+            fileName: file.name,
+            fileType: file.type || 'application/octet-stream',
+            fileSize: file.size,
+            category: formData.category,
+            tags: [],
+            isPublic: false, // Bundle documents should not be shown publicly
+            isForSale: false,
+            price: 0,
+            currency: 'usd',
+          };
+
+          const documentResponse = await fetch('/api/documents', {
+            method: 'POST',
+            headers: { 
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(documentData),
+          });
+
+          if (!documentResponse.ok) {
+            const errorData = await documentResponse.json();
+            throw new Error(errorData.error || `Failed to create document for ${file.name}`);
+          }
+
+          const documentResult = await documentResponse.json();
+          uploadedIds.push(documentResult.document._id);
+        }
       }
 
       // Add uploaded documents to selected documents

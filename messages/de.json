@@ -66,7 +66,11 @@
     "bookings": "Buchungen",
     "student": "Student",
     "admin": "Admin",
-    "instructor": "Lehrer"
+    "instructor": "Lehrer",
+    "myDocuments": "Meine Dokumente",
+    "documentBundles": "Dokumentenpakete",
+    "documentPurchases": "Dokumentenkäufe",
+    "storefront": "Storefront"
   },
   "auth": {
     "signIn": "Anmelden",

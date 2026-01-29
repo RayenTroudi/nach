@@ -2220,6 +2220,8 @@
     "publishSuccess": "تم نشر الحزمة بنجاح",
     "unpublishSuccess": "تم إلغاء نشر الحزمة بنجاح",
     "noDocuments": "لا توجد مستندات متاحة",
-    "noDescription": "لم يتم تقديم وصف"
+    "noDescription": "لم يتم تقديم وصف",
+    "uploadFilesLabel": "رفع ملفات متعددة",
+    "uploadFilesHint": "ارفع ملفات PDF أو Word أو نصية أو صور. سيتم إضافتها تلقائيًا إلى هذه الحزمة."
   }
 }

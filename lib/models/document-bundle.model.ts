@@ -8,7 +8,7 @@ export interface IDocumentBundle extends Document {
   title: string;
   description?: string;
   price: number;
-  currency: string; // 'usd' or 'tnd'
+  currency: string; // 'usd', 'tnd', or 'eur'
   thumbnail?: string;
   documents: Schema.Types.ObjectId[]; // References to Document model
   uploadedBy: Schema.Types.ObjectId; // Reference to User (instructor)
@@ -39,7 +39,7 @@ const DocumentBundleSchema = new Schema(
     currency: {
       type: String,
       required: true,
-      enum: ['usd', 'tnd'],
+      enum: ['usd', 'tnd', 'eur'],
       default: 'usd',
     },
     thumbnail: {

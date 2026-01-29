@@ -1,6 +1,8 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import Carousel from "react-multi-carousel";
+import "react-multi-carousel/lib/styles.css";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -39,6 +41,7 @@ interface DocumentItem {
   fileUrl?: string;
   fileName?: string;
   downloads?: number;
+  isForSale?: boolean;
   // Bundle fields
   price?: number;
   currency?: string;
@@ -65,6 +68,7 @@ export default function DocumentsSection({ documents }: DocumentsSectionProps) {
   const { user, isSignedIn } = useUser();
   const [mounted, setMounted] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("All");
+  const [carouselRef, setCarouselRef] = useState<any>(null);
   
   // Bundle preview dialog state
   const [previewBundle, setPreviewBundle] = useState<DocumentItem | null>(null);
@@ -198,7 +202,7 @@ export default function DocumentsSection({ documents }: DocumentsSectionProps) {
           ))}
         </div>
 
-        {/* Documents Grid */}
+        {/* Documents Carousel */}
         {filteredDocuments.length === 0 ? (
           <div className="text-center py-12">
             <FileText className="w-16 h-16 mx-auto text-slate-300 dark:text-slate-700 mb-4" />
@@ -210,20 +214,82 @@ export default function DocumentsSection({ documents }: DocumentsSectionProps) {
             </p>
           </div>
         ) : (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredDocuments.slice(0, 6).map((item, idx) => {
-              const isFree = !item.price || item.price === 0;
-              const purchased = false; // On homepage, we don't track purchases
-              
-              return (
-            <motion.div
-              key={item._id}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: idx * 0.1 }}
+          <div className="relative">
+            <Carousel
+              ref={setCarouselRef}
+              responsive={{
+                superLargeDesktop: {
+                  breakpoint: { max: 4000, min: 1536 },
+                  items: 4,
+                  slidesToSlide: 1,
+                },
+                desktop: {
+                  breakpoint: { max: 1536, min: 1024 },
+                  items: 3,
+                  slidesToSlide: 1,
+                },
+                tablet: {
+                  breakpoint: { max: 1024, min: 640 },
+                  items: 2,
+                  slidesToSlide: 1,
+                },
+                mobile: {
+                  breakpoint: { max: 640, min: 0 },
+                  items: 1,
+                  slidesToSlide: 1,
+                },
+              }}
+              autoPlay={false}
+              infinite={false}
+              customLeftArrow={
+                <button
+                  className={`absolute left-0 top-1/2 -translate-y-1/2 z-10 p-2 rounded-full bg-white dark:bg-slate-900 shadow-lg hover:shadow-xl transition-shadow ${isRTL ? 'left-auto right-0' : ''}`}
+                  onClick={() => carouselRef?.previous?.()}
+                  aria-label="Previous slide"
+                >
+                  <svg
+                    className="w-6 h-6"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    style={{ transform: isRTL ? 'scaleX(-1)' : 'none' }}
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                  </svg>
+                </button>
+              }
+              customRightArrow={
+                <button
+                  className={`absolute right-0 top-1/2 -translate-y-1/2 z-10 p-2 rounded-full bg-white dark:bg-slate-900 shadow-lg hover:shadow-xl transition-shadow ${isRTL ? 'right-auto left-0' : ''}`}
+                  onClick={() => carouselRef?.next?.()}
+                  aria-label="Next slide"
+                >
+                  <svg
+                    className="w-6 h-6"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    style={{ transform: isRTL ? 'scaleX(-1)' : 'none' }}
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </button>
+              }
+              itemClass="px-3"
             >
-              <Card className="hover:shadow-lg transition-shadow group relative">
+              {filteredDocuments.map((item, idx) => {
+                const isFree = !item.price || item.price === 0;
+                const purchased = false; // On homepage, we don't track purchases
+                
+                return (
+                  <motion.div
+                    key={item._id}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: idx * 0.1 }}
+                  >
+                    <Card className="hover:shadow-lg transition-shadow group relative">
                 <CardHeader>
                   <div className="flex items-start gap-3">
                     <div
@@ -309,6 +375,19 @@ export default function DocumentsSection({ documents }: DocumentsSectionProps) {
                       </div>
                     </div>
                   )}
+                  
+                  {item.itemType === "document" && item.isForSale && (
+                    <div className="mb-4 pb-4 border-b">
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm text-slate-600 dark:text-slate-400">
+                          {tStorefront("price")}:
+                        </span>
+                        <span className="text-xl font-bold text-brand-red-500">
+                          {`${item.price} ${item.currency?.toUpperCase() || 'EUR'}`}
+                        </span>
+                      </div>
+                    </div>
+                  )}
 
                   {/* Actions */}
                   {item.itemType === "bundle" ? (
@@ -331,6 +410,15 @@ export default function DocumentsSection({ documents }: DocumentsSectionProps) {
                         {tStorefront("buyNow")}
                       </Button>
                     </div>
+                  ) : item.isForSale ? (
+                    <Button
+                      size="sm"
+                      className="w-full bg-brand-red-500 hover:bg-brand-red-600"
+                      onClick={() => handlePurchase(item)}
+                    >
+                      <ShoppingCart className="w-4 h-4 mr-2" />
+                      {tStorefront("buyNow")}
+                    </Button>
                   ) : (
                     <Button
                       size="sm"
@@ -344,11 +432,11 @@ export default function DocumentsSection({ documents }: DocumentsSectionProps) {
                 </div>
               </Card>
             </motion.div>
-              );
-            })}
+                );
+              })}
+            </Carousel>
           </div>
         )}
-
         {/* View All Button */}
         <div className="text-center mt-12">
           <Link href="/documents">

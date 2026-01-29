@@ -84,7 +84,7 @@ const DocumentSchema = new Schema(
     },
     currency: {
       type: String,
-      enum: ['usd', 'tnd'],
+      enum: ['usd', 'tnd', 'eur'],
       default: 'usd',
     },
     isForSale: {

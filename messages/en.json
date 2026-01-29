@@ -2216,6 +2216,8 @@
     "publishSuccess": "Bundle published successfully",
     "unpublishSuccess": "Bundle unpublished successfully",
     "noDocuments": "No documents available",
-    "noDescription": "No description provided"
+    "noDescription": "No description provided",
+    "uploadFilesLabel": "Upload Multiple Files",
+    "uploadFilesHint": "Upload PDF, Word, text, or image files. They will be automatically added to this bundle."
   }
 }

@@ -40,8 +40,8 @@ const LandingPage = async () => {
     // Fetch documents and bundles using storefront logic
     await connectToDatabase();
     
-    // Fetch public documents
-    const docs = await DocumentModel.find({ isPublic: true, isForSale: true })
+    // Fetch all public documents (both free and for sale)
+    const docs = await DocumentModel.find({ isPublic: true })
       .populate("uploadedBy", "firstName lastName")
       .sort({ createdAt: -1 })
       .limit(3)

@@ -73,7 +73,7 @@ export async function PUT(
     }
 
     const body = await request.json();
-    const { title, description, category, tags, isPublic } = body;
+    const { title, description, category, tags, isPublic, isForSale, price, currency } = body;
 
     // Update document
     const updatedDocument = await DocumentModel.findByIdAndUpdate(
@@ -84,6 +84,9 @@ export async function PUT(
         ...(category && { category }),
         ...(tags && { tags }),
         ...(isPublic !== undefined && { isPublic }),
+        ...(isForSale !== undefined && { isForSale }),
+        ...(price !== undefined && { price }),
+        ...(currency && { currency }),
       },
       { new: true }
     )

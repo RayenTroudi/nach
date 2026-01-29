@@ -12,6 +12,8 @@ import {
   ChevronRight,
   FolderOpen,
   Package,
+  ShoppingCart,
+  Lock,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -23,6 +25,13 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
+import {
   Select,
   SelectContent,
   SelectItem,
@@ -30,10 +39,15 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
 import { Container } from "@/components/shared";
 import Loader from "@/components/shared/Loader";
 import { toast } from "sonner";
 import { useTranslations } from 'next-intl';
+import { useUser } from "@clerk/nextjs";
+import Image from "next/image";
+import { scnToast } from "@/components/ui/use-toast";
+import BankTransferUpload from "@/app/(landing-page)/course/[courseId]/_components/BankTransferUpload";
 
 const CATEGORIES = [
   "All",
@@ -57,6 +71,7 @@ interface DocumentItem {
   fileName?: string;
   fileSize?: number;
   downloads?: number;
+  isForSale?: boolean;
   // Bundle fields
   price?: number;
   currency?: string;
@@ -77,6 +92,8 @@ export default function DocumentsPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const t = useTranslations('documentsPage');
+  const tStorefront = useTranslations('storefront');
+  const { user, isSignedIn } = useUser();
 
   const [items, setItems] = useState<DocumentItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -86,6 +103,12 @@ export default function DocumentsPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [total, setTotal] = useState(0);
+  
+  // Bundle preview and purchase dialog states
+  const [previewBundle, setPreviewBundle] = useState<DocumentItem | null>(null);
+  const [isBundlePreviewOpen, setIsBundlePreviewOpen] = useState(false);
+  const [selectedItem, setSelectedItem] = useState<DocumentItem | null>(null);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const ITEMS_PER_PAGE = 12;
   
@@ -180,6 +203,29 @@ export default function DocumentsPage() {
   // Handle preview
   const handlePreview = (fileUrl: string) => {
     window.open(fileUrl, "_blank");
+  };
+  
+  // Handle bundle preview
+  const handleBundlePreview = (item: DocumentItem) => {
+    setPreviewBundle(item);
+    setIsBundlePreviewOpen(true);
+  };
+  
+  // Handle purchase
+  const handlePurchase = (item: DocumentItem) => {
+    if (!isSignedIn) {
+      toast.error(tStorefront("signInRequired"));
+      router.push("/sign-in");
+      return;
+    }
+    setSelectedItem(item);
+    setIsDialogOpen(true);
+  };
+  
+  // Format price
+  const formatPrice = (price: number, currency: string) => {
+    if (price === 0) return tStorefront("free");
+    return `${price} ${currency.toUpperCase()}`;
   };
 
   // Format file size
@@ -346,7 +392,17 @@ export default function DocumentsPage() {
                           {item.documents?.length || 0} {t('documents')}
                         </div>
                         <span className="font-semibold text-brand-red-600">
-                          {item.price} {item.currency || 'EUR'}
+                          {item.price} {item.currency?.toUpperCase() || 'EUR'}
+                        </span>
+                      </div>
+                    ) : item.isForSale ? (
+                      <div className="flex items-center justify-between text-xs text-slate-600 dark:text-slate-400 mb-4 pb-4 border-b">
+                        <div className="flex items-center gap-1">
+                          <Download className="w-3 h-3" />
+                          {item.downloads || 0} {t('downloads')}
+                        </div>
+                        <span className="font-semibold text-brand-red-600">
+                          {item.price} {item.currency?.toUpperCase() || 'EUR'}
                         </span>
                       </div>
                     ) : (
@@ -355,21 +411,48 @@ export default function DocumentsPage() {
                           <Download className="w-3 h-3" />
                           {item.downloads || 0} {t('downloads')}
                         </div>
-                        <span>{formatFileSize(item.fileSize || 0)}</span>
+                        <div className="flex items-center gap-2">
+                          <Badge variant="secondary" className="bg-green-100 text-green-700 border-green-200">
+                            {tStorefront("free")}
+                          </Badge>
+                          <span>{formatFileSize(item.fileSize || 0)}</span>
+                        </div>
                       </div>
                     )}
 
                     {/* Actions */}
                     {item.itemType === "bundle" ? (
+                      <div className="space-y-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleBundlePreview(item)}
+                          className="w-full"
+                        >
+                          <Eye className="w-4 h-4 mr-1" />
+                          {tStorefront("previewContents")}
+                        </Button>
+                        <Button
+                          size="sm"
+                          onClick={() => handlePurchase(item)}
+                          className="w-full bg-brand-red-500 hover:bg-brand-red-600"
+                        >
+                          <ShoppingCart className="w-4 h-4 mr-1" />
+                          {tStorefront("buyNow")}
+                        </Button>
+                      </div>
+                    ) : item.isForSale ? (
+                      // Document for sale - show only purchase button
                       <Button
                         size="sm"
-                        onClick={() => router.push(`/storefront?item=${item._id}&type=bundle`)}
+                        onClick={() => handlePurchase(item)}
                         className="w-full bg-brand-red-500 hover:bg-brand-red-600"
                       >
-                        <Package className="w-4 h-4 mr-1" />
-                        {t('viewBundle')}
+                        <ShoppingCart className="w-4 h-4 mr-1" />
+                        {tStorefront("buyNow")}
                       </Button>
                     ) : (
+                      // Free document - show preview and download
                       <div className="grid grid-cols-2 gap-2">
                         <Button
                           variant="outline"
@@ -460,6 +543,165 @@ export default function DocumentsPage() {
           </>
         )}
       </Container>
+      
+      {/* Bundle Preview Dialog */}
+      {previewBundle && (
+        <Dialog open={isBundlePreviewOpen} onOpenChange={setIsBundlePreviewOpen}>
+          <DialogContent className="sm:max-w-[600px] max-h-[80vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2">
+                <FolderOpen className="w-5 h-5 text-brand-red-500" />
+                {previewBundle.title}
+              </DialogTitle>
+              <DialogDescription>
+                {tStorefront("bundlePreviewDescription")}
+              </DialogDescription>
+            </DialogHeader>
+            
+            <div className="space-y-4 py-4">
+              {/* Bundle Info */}
+              <div className="bg-slate-50 dark:bg-slate-900 p-4 rounded-lg space-y-2">
+                <div className="flex justify-between items-center">
+                  <span className="text-sm font-medium text-slate-700 dark:text-slate-300">
+                    {tStorefront("totalDocuments")}:
+                  </span>
+                  <span className="text-lg font-bold text-brand-red-500">
+                    {previewBundle.documents?.length || 0}
+                  </span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-sm font-medium text-slate-700 dark:text-slate-300">
+                    {tStorefront("price")}:
+                  </span>
+                  <span className="text-lg font-bold text-brand-red-500">
+                    {formatPrice(previewBundle.price || 0, previewBundle.currency || 'EUR')}
+                  </span>
+                </div>
+              </div>
+
+              {/* Documents List */}
+              <div className="space-y-2">
+                <h4 className="font-semibold text-sm text-slate-700 dark:text-slate-300">
+                  {tStorefront("documentsInBundle")}:
+                </h4>
+                <div className="space-y-2 max-h-[300px] overflow-y-auto">
+                  {previewBundle.documents && previewBundle.documents.length > 0 ? (
+                    previewBundle.documents.map((doc) => (
+                      <div
+                        key={doc._id}
+                        className="flex items-center gap-3 p-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg"
+                      >
+                        <div className="flex-shrink-0 w-8 h-8 bg-brand-red-100 dark:bg-brand-red-900/20 rounded flex items-center justify-center">
+                          <FileText className="w-4 h-4 text-brand-red-500" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-medium text-slate-900 dark:text-slate-100 truncate">
+                            {doc.title}
+                          </p>
+                        </div>
+                        <Lock className="w-4 h-4 text-slate-400" />
+                      </div>
+                    ))
+                  ) : (
+                    <p className="text-sm text-slate-500 dark:text-slate-400 text-center py-4">
+                      {tStorefront("noDocumentsInBundle")}
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              {/* Call to Action */}
+              <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">
+                <p className="text-sm text-blue-900 dark:text-blue-100 mb-3">
+                  {tStorefront("bundlePurchasePrompt")}
+                </p>
+                <Button
+                  onClick={() => {
+                    setIsBundlePreviewOpen(false);
+                    handlePurchase(previewBundle);
+                  }}
+                  className="w-full bg-brand-red-500 hover:bg-brand-red-600"
+                >
+                  <ShoppingCart className="w-4 h-4 mr-2" />
+                  {tStorefront("buyNow")} - {formatPrice(previewBundle.price || 0, previewBundle.currency || 'EUR')}
+                </Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
+      )}
+      
+      {/* Purchase Dialog */}
+      {selectedItem && (
+        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+          <DialogContent className="sm:max-w-[425px] md:max-w-[700px] p-6 bg-slate-100 dark:bg-slate-950 max-h-[90vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle>{tStorefront("completePurchase")}</DialogTitle>
+              <DialogDescription>{tStorefront("choosePaymentMethod")}</DialogDescription>
+            </DialogHeader>
+            
+            <div className="flex flex-col gap-y-4">
+              {/* Item Details */}
+              <div className="flex gap-x-3 p-4 bg-white dark:bg-slate-900 rounded-lg">
+                <div className="w-[100px] h-[75px] bg-slate-200 dark:bg-slate-800 rounded-sm flex items-center justify-center">
+                  {selectedItem.itemType === "bundle" ? (
+                    <FolderOpen className="w-8 h-8 text-slate-400" />
+                  ) : (
+                    <FileText className="w-8 h-8 text-slate-400" />
+                  )}
+                </div>
+                <div className="flex flex-1 flex-col gap-y-1">
+                  <h3 className="text-sm md:text-base font-semibold">
+                    {selectedItem.title}
+                  </h3>
+                  <div className="flex items-center gap-x-2">
+                    <Image
+                      src={"/images/default_profile.avif"}
+                      width={20}
+                      height={20}
+                      alt="instructor"
+                      className="rounded-full object-cover"
+                    />
+                    <p className="text-xs text-slate-600 dark:text-slate-400">
+                      {typeof selectedItem.uploadedBy === 'string' 
+                        ? selectedItem.uploadedBy 
+                        : `${selectedItem.uploadedBy.firstName} ${selectedItem.uploadedBy.lastName}`}
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-x-2 mt-1">
+                    <p className="text-xl font-bold text-brand-red-500">
+                      {((selectedItem.price || 0) * 3.3).toFixed(2)} TND
+                    </p>
+                    <Image
+                      src={"/icons/tunisia-flag.svg"}
+                      width={24}
+                      height={24}
+                      alt="tunisia"
+                      className="object-cover rounded-none"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <Separator />
+
+              <BankTransferUpload
+                courseIds={[selectedItem._id]}
+                amount={(selectedItem.price || 0) * 3.3}
+                onSuccess={() => {
+                  setIsDialogOpen(false);
+                  scnToast({
+                    variant: "success",
+                    title: tStorefront("uploadSuccessful"),
+                    description: tStorefront("uploadSuccessfulDesc"),
+                  });
+                  router.refresh();
+                }}
+              />
+            </div>
+          </DialogContent>
+        </Dialog>
+      )}
     </div>
   );
 }

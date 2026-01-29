@@ -43,7 +43,8 @@ export async function GET(request: Request) {
     let documents: any[] = [];
     let documentsTotal = 0;
     if (!type || type === "document") {
-      const docQuery: any = { isPublic: true, isForSale: true };
+      // Show all public documents (both free and for sale)
+      const docQuery: any = { isPublic: true };
       
       if (category && category !== "All") {
         docQuery.category = category;

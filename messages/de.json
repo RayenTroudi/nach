@@ -2216,6 +2216,8 @@
     "publishSuccess": "Paket erfolgreich veröffentlicht",
     "unpublishSuccess": "Veröffentlichung des Pakets erfolgreich aufgehoben",
     "noDocuments": "Keine Dokumente verfügbar",
-    "noDescription": "Keine Beschreibung angegeben"
+    "noDescription": "Keine Beschreibung angegeben",
+    "uploadFilesLabel": "Mehrere Dateien hochladen",
+    "uploadFilesHint": "Laden Sie PDF-, Word-, Text- oder Bilddateien hoch. Sie werden automatisch zu diesem Paket hinzugefügt."
   }
 }

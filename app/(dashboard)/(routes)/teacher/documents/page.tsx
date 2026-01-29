@@ -66,6 +66,9 @@ interface Document {
   tags: string[];
   downloads: number;
   isPublic: boolean;
+  isForSale: boolean;
+  price?: number;
+  currency?: string;
   createdAt: string;
   updatedAt: string;
   uploadedBy: {
@@ -80,6 +83,7 @@ export default function TeacherDocumentsPage() {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("All");
+  const [visibilityFilter, setVisibilityFilter] = useState("All"); // All, Public, Private
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editingDocument, setEditingDocument] = useState<Document | null>(null);
@@ -95,13 +99,16 @@ export default function TeacherDocumentsPage() {
     category: "Guide",
     tags: "",
     isPublic: true,
+    isForSale: false,
+    price: 0,
+    currency: "eur",
   });
 
   // Fetch documents
   const fetchDocuments = async () => {
     try {
       setLoading(true);
-      const response = await fetch("/api/documents?limit=100");
+      const response = await fetch("/api/documents?limit=100&includePrivate=true");
       if (!response.ok) throw new Error("Failed to fetch documents");
       const data = await response.json();
       setDocuments(data.documents);
@@ -124,7 +131,11 @@ export default function TeacherDocumentsPage() {
       doc.description?.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCategory =
       categoryFilter === "All" || doc.category === categoryFilter;
-    return matchesSearch && matchesCategory;
+    const matchesVisibility =
+      visibilityFilter === "All" ||
+      (visibilityFilter === "Public" && doc.isPublic) ||
+      (visibilityFilter === "Private" && !doc.isPublic);
+    return matchesSearch && matchesCategory && matchesVisibility;
   });
 
   // Handle form submission
@@ -163,6 +174,9 @@ export default function TeacherDocumentsPage() {
         category: "Guide",
         tags: "",
         isPublic: true,
+        isForSale: false,
+        price: 0,
+        currency: "eur",
       });
       fetchDocuments();
     } catch (error: any) {
@@ -186,6 +200,9 @@ export default function TeacherDocumentsPage() {
           category: formData.category,
           tags: formData.tags.split(",").map((tag) => tag.trim()).filter(Boolean),
           isPublic: formData.isPublic,
+          isForSale: formData.isForSale,
+          price: formData.isForSale ? formData.price : 0,
+          currency: formData.currency,
         }),
       });
 
@@ -233,6 +250,9 @@ export default function TeacherDocumentsPage() {
       category: doc.category,
       tags: doc.tags.join(", "),
       isPublic: doc.isPublic,
+      isForSale: doc.isForSale || false,
+      price: doc.price || 0,
+      currency: doc.currency || "eur",
     });
     setIsEditModalOpen(true);
   };
@@ -435,6 +455,61 @@ export default function TeacherDocumentsPage() {
               <div className="flex items-center gap-2">
                 <input
                   type="checkbox"
+                  id="isForSale"
+                  checked={formData.isForSale}
+                  onChange={(e) =>
+                    setFormData({ ...formData, isForSale: e.target.checked })
+                  }
+                  className="w-4 h-4"
+                />
+                <label htmlFor="isForSale" className="text-sm">
+                  Make this document available for sale
+                </label>
+              </div>
+
+              {formData.isForSale && (
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-sm font-medium mb-2 block">
+                      Price *
+                    </label>
+                    <Input
+                      type="number"
+                      min="0"
+                      step="0.01"
+                      value={formData.price}
+                      onChange={(e) =>
+                        setFormData({ ...formData, price: parseFloat(e.target.value) || 0 })
+                      }
+                      required={formData.isForSale}
+                    />
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium mb-2 block">
+                      Currency *
+                    </label>
+                    <Select
+                      value={formData.currency}
+                      onValueChange={(value) =>
+                        setFormData({ ...formData, currency: value })
+                      }
+                    >
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="eur">EUR (€)</SelectItem>
+                        <SelectItem value="usd">USD ($)</SelectItem>
+                        <SelectItem value="tnd">TND</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+              )}
+
+              <div className="flex items-center gap-2">
+                <input
+                  type="checkbox"
                   id="isPublic"
                   checked={formData.isPublic}
                   onChange={(e) =>
@@ -493,6 +568,16 @@ export default function TeacherDocumentsPage() {
                     {cat}
                   </SelectItem>
                 ))}
+              </SelectContent>
+            </Select>
+            <Select value={visibilityFilter} onValueChange={setVisibilityFilter}>
+              <SelectTrigger className="w-full md:w-48">
+                <SelectValue placeholder="Visibility" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="All">All Documents</SelectItem>
+                <SelectItem value="Public">Public Only</SelectItem>
+                <SelectItem value="Private">Private Only</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -649,6 +734,61 @@ export default function TeacherDocumentsPage() {
                 }
               />
             </div>
+
+            <div className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                id="editIsForSale"
+                checked={formData.isForSale}
+                onChange={(e) =>
+                  setFormData({ ...formData, isForSale: e.target.checked })
+                }
+                className="w-4 h-4"
+              />
+              <label htmlFor="editIsForSale" className="text-sm">
+                Make this document available for sale
+              </label>
+            </div>
+
+            {formData.isForSale && (
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="text-sm font-medium mb-2 block">
+                    Price *
+                  </label>
+                  <Input
+                    type="number"
+                    min="0"
+                    step="0.01"
+                    value={formData.price}
+                    onChange={(e) =>
+                      setFormData({ ...formData, price: parseFloat(e.target.value) || 0 })
+                    }
+                    required={formData.isForSale}
+                  />
+                </div>
+                <div>
+                  <label className="text-sm font-medium mb-2 block">
+                    Currency *
+                  </label>
+                  <Select
+                    value={formData.currency}
+                    onValueChange={(value) =>
+                      setFormData({ ...formData, currency: value })
+                    }
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="eur">EUR (€)</SelectItem>
+                      <SelectItem value="usd">USD ($)</SelectItem>
+                      <SelectItem value="tnd">TND</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+            )}
 
             <div className="flex items-center gap-2">
               <input

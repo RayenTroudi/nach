@@ -124,6 +124,9 @@ export async function POST(request: Request) {
       category,
       tags,
       isPublic = true,
+      isForSale = false,
+      price = 0,
+      currency = "eur",
     } = body;
 
     // Validation
@@ -162,6 +165,9 @@ export async function POST(request: Request) {
       tags: tags || [],
       uploadedBy: user._id,
       isPublic,
+      isForSale,
+      price,
+      currency,
       downloads: 0,
     });
 

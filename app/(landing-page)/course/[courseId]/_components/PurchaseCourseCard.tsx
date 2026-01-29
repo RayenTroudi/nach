@@ -26,6 +26,7 @@ import { useCart } from "@/contexts/CartContext";
 // import { useWishlist } from "@/contexts/WishlistContext"; // TODO: Create WishlistContext
 import BankTransferUpload from "./BankTransferUpload";
 import MuxPlayer from "@mux/mux-player-react";
+import { getProxiedVideoUrl } from "@/lib/utils/video-url-helper";
 
 interface Props {
   course: TCourse;
@@ -171,11 +172,11 @@ const PurchaseCourseCard = ({
             )}
             
             <MuxPlayer
-              src={
+              src={getProxiedVideoUrl(
                 videoToPreview
-                  ? videoToPreview.videoUrl!
+                  ? videoToPreview.videoUrl
                   : allFreeVideos[0]?.videoUrl || course?.thumbnail || ""
-              }
+              )}
               poster={course?.thumbnail!}
               streamType="on-demand"
               playbackId={videoToPreview?.muxData?.playbackId || allFreeVideos[0]?.muxData?.playbackId}

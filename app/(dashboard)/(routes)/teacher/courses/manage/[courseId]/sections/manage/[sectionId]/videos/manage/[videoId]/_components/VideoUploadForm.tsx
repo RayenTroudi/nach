@@ -3,6 +3,7 @@ import React, { useState } from "react";
 
 import { z } from "zod";
 import MuxPlayer from "@mux/mux-player-react";
+import { getProxiedVideoUrl } from "@/lib/utils/video-url-helper";
 
 import { PencilLineIcon, XCircle } from "lucide-react";
 import { FileUpload, Spinner } from "@/components/shared";
@@ -105,7 +106,7 @@ const VideoUploadForm = ({ video }: Props) => {
       {!edit && video.videoUrl ? (
         <div className="w-full h-full relative aspect-video">
           <MuxPlayer
-            src={video.videoUrl!}
+            src={getProxiedVideoUrl(video.videoUrl)}
             streamType="on-demand"
             playbackId={video.muxData?.playbackId}
             metadata={{
@@ -124,7 +125,7 @@ const VideoUploadForm = ({ video }: Props) => {
         <>
           {videoUrl ? (
             <MuxPlayer
-              src={video.videoUrl!}
+              src={getProxiedVideoUrl(videoUrl)}
               streamType="on-demand"
               playbackId={video.muxData?.playbackId}
               metadata={{

@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Play, Pause, Volume2, VolumeX, Maximize, X } from "lucide-react";
 import { TCourse } from "@/types/models.types";
 import { motion, AnimatePresence } from "framer-motion";
+import { getProxiedVideoUrl } from "@/lib/utils/video-url-helper";
 
 interface FAQVideoPlayerProps {
   course: TCourse;
@@ -59,12 +60,13 @@ export default function FAQVideoPlayer({ course, onClose, autoPlay = false }: FA
         {/* Video Element - Reel Mode (9:16 aspect ratio) */}
         <video
           ref={setVideoRef}
-          src={course.faqVideo}
+          src={getProxiedVideoUrl(course.faqVideo)}
           className="w-full aspect-[9/16] object-cover"
           onEnded={handleVideoEnd}
           onClick={togglePlay}
           autoPlay={autoPlay}
           loop={false}
+          crossOrigin="anonymous"
         />
 
         {/* Overlay Controls */}

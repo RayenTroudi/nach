@@ -3,6 +3,7 @@ import { TVideo } from "@/types/models.types";
 import { useEffect, useState } from "react";
 import MuxPlayer from "@mux/mux-player-react";
 import Spinner from "./Spinner";
+import { getProxiedVideoUrl } from "@/lib/utils/video-url-helper";
 
 interface Props {
   video: TVideo;
@@ -42,7 +43,7 @@ const VideoPlayer = ({ video, isLoading, poster }: Props) => {
             </div>
           ) : (
             <MuxPlayer
-              src={video.videoUrl}
+              src={getProxiedVideoUrl(video.videoUrl)}
               poster={poster}
               streamType="on-demand"
               playbackId={video.muxData?.playbackId}

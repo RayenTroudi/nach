@@ -7,6 +7,7 @@ import { updateCourse } from "@/lib/actions/course.action";
 import { usePathname, useRouter } from "next/navigation";
 import { scnToast } from "@/components/ui/use-toast";
 import { TCourse } from "@/types/models.types";
+import { getProxiedVideoUrl } from "@/lib/utils/video-url-helper";
 
 interface Props {
   course: TCourse;
@@ -59,10 +60,11 @@ const FAQVideoForm = ({ course }: Props) => {
           </div>
           <div className="aspect-video rounded-lg overflow-hidden bg-slate-900">
             <video
-              src={course.faqVideo}
+              src={getProxiedVideoUrl(course.faqVideo)}
               controls
               controlsList="nodownload"
               className="w-full h-full"
+              crossOrigin="anonymous"
             >
               Your browser does not support the video tag.
             </video>

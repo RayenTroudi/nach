@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/mongoose";
 import DocumentModel from "@/lib/models/document.model";
 import DocumentBundle from "@/lib/models/document-bundle.model";
+import "@/lib/models/user.model"; // Import to register User model for populate
 
 /**
  * GET /api/storefront
@@ -44,16 +45,28 @@ export async function GET(request: Request) {
 
     // First, fetch bundles to get all document IDs that are part of bundles
     console.log("[Storefront API] Fetching bundles...");
-    const allBundles = await DocumentBundle.find({ isPublished: true })
-      .select('documents')
-      .lean();
-    
-    console.log("[Storefront API] Found bundles:", allBundles.length);
+    let allBundles = [];
+    try {
+      allBundles = await DocumentBundle.find({ isPublished: true })
+        .select('documents')
+        .lean();
+      console.log("[Storefront API] Found bundles:", allBundles.length);
+    } catch (bundleError: any) {
+      console.error("[Storefront API] Error fetching bundles:", bundleError.message);
+      // Continue without bundle filtering if bundles fail
+      allBundles = [];
+    }
     
     const bundledDocumentIds = allBundles
       .filter(bundle => bundle.documents && Array.isArray(bundle.documents))
       .flatMap(bundle => 
-        bundle.documents.map((doc: any) => doc?.toString?.() || doc)
+        bundle.documents.map((doc: any) => {
+          try {
+            return doc?.toString?.() || doc;
+          } catch (e) {
+            return null;
+          }
+        })
       )
       .filter(id => id); // Remove any null/undefined values
     

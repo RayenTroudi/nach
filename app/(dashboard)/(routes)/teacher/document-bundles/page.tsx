@@ -276,7 +276,7 @@ export default function DocumentBundlesPage() {
           fileSize: file.size,
           category: formData.category,
           tags: [],
-          isPublic: true,
+          isPublic: false, // Bundle documents should not be shown publicly
           isForSale: false,
           price: 0,
           currency: 'usd',

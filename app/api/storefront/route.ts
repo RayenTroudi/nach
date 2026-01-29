@@ -39,12 +39,24 @@ export async function GET(request: Request) {
 
     const skip = (page - 1) * limit;
 
+    // First, fetch bundles to get all document IDs that are part of bundles
+    const allBundles = await DocumentBundle.find({ isPublished: true })
+      .select('documents')
+      .lean();
+    
+    const bundledDocumentIds = allBundles.flatMap(bundle => 
+      bundle.documents.map((doc: any) => doc.toString())
+    );
+
     // Fetch documents if type is null or 'document'
     let documents: any[] = [];
     let documentsTotal = 0;
     if (!type || type === "document") {
-      // Show all public documents (both free and for sale)
-      const docQuery: any = { isPublic: true };
+      // Show all public documents (both free and for sale) that are NOT part of any bundle
+      const docQuery: any = { 
+        isPublic: true,
+        _id: { $nin: bundledDocumentIds } // Exclude documents that are in bundles
+      };
       
       if (category && category !== "All") {
         docQuery.category = category;

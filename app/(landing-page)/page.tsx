@@ -40,17 +40,25 @@ const LandingPage = async () => {
     // Fetch documents and bundles using storefront logic
     await connectToDatabase();
     
-    // Fetch all public documents (both free and for sale)
-    const docs = await DocumentModel.find({ isPublic: true })
+    // Fetch published bundles first
+    const bundles = await DocumentBundle.find({ isPublished: true })
       .populate("uploadedBy", "firstName lastName")
+      .populate("documents", "title fileName")
       .sort({ createdAt: -1 })
       .limit(3)
       .lean();
     
-    // Fetch published bundles
-    const bundles = await DocumentBundle.find({ isPublished: true })
+    // Get all document IDs that are part of bundles
+    const bundledDocumentIds = bundles.flatMap(bundle => 
+      bundle.documents.map((doc: any) => doc._id.toString())
+    );
+    
+    // Fetch all public documents (both free and for sale) that are NOT part of any bundle
+    const docs = await DocumentModel.find({ 
+      isPublic: true,
+      _id: { $nin: bundledDocumentIds } // Exclude documents that are in bundles
+    })
       .populate("uploadedBy", "firstName lastName")
-      .populate("documents", "title fileName")
       .sort({ createdAt: -1 })
       .limit(3)
       .lean();

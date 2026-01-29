@@ -2,7 +2,8 @@ import { Schema, model, models, Document } from "mongoose";
 
 export interface IPaymentProof extends Document {
   userId: Schema.Types.ObjectId;
-  courseIds: string[];
+  itemType: "course" | "document" | "bundle";
+  itemIds: string[];
   amount: number;
   proofUrl: string;
   fileName: string;
@@ -25,7 +26,13 @@ const PaymentProofSchema = new Schema(
       ref: "User",
       required: true,
     },
-    courseIds: {
+    itemType: {
+      type: String,
+      enum: ["course", "document", "bundle"],
+      required: true,
+      default: "course",
+    },
+    itemIds: {
       type: [String],
       required: true,
     },
@@ -82,6 +89,7 @@ const PaymentProofSchema = new Schema(
 // Index for faster queries
 PaymentProofSchema.index({ userId: 1, status: 1 });
 PaymentProofSchema.index({ status: 1, uploadedAt: -1 });
+PaymentProofSchema.index({ itemType: 1, status: 1 });
 
 const PaymentProof = models.PaymentProof || model<IPaymentProof>("PaymentProof", PaymentProofSchema);
 

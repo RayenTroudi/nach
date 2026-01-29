@@ -8,11 +8,16 @@ export interface IDocumentPurchase extends Document {
   userId: Schema.Types.ObjectId; // Reference to User
   itemType: "document" | "bundle"; // Type of purchase
   itemId: Schema.Types.ObjectId; // Reference to Document or DocumentBundle
+  itemModelName: "Document" | "DocumentBundle"; // Model name for population
   amount: number;
   currency: string;
   paymentMethod?: "stripe" | "bank_transfer";
   paymentStatus: "pending" | "completed" | "rejected";
   paymentProofUrl?: string;
+  notes?: string; // Student notes
+  adminNotes?: string; // Admin notes for rejection reason
+  reviewedBy?: Schema.Types.ObjectId; // Admin who reviewed
+  reviewedAt?: Date;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -29,10 +34,15 @@ export const DocumentPurchaseSchema = new Schema(
       enum: ["document", "bundle"],
       required: true,
     },
+    itemModelName: {
+      type: String,
+      enum: ["Document", "DocumentBundle"],
+      required: true,
+    },
     itemId: {
       type: Schema.Types.ObjectId,
       required: true,
-      refPath: "itemType", // Dynamic reference based on itemType
+      refPath: "itemModelName", // Dynamic reference based on itemModelName
     },
     amount: {
       type: Number,
@@ -55,6 +65,21 @@ export const DocumentPurchaseSchema = new Schema(
     },
     paymentProofUrl: {
       type: String,
+    },
+    notes: {
+      type: String,
+      default: "",
+    },
+    adminNotes: {
+      type: String,
+      default: "",
+    },
+    reviewedBy: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+    },
+    reviewedAt: {
+      type: Date,
     },
   },
   { timestamps: true }

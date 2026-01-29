@@ -13,6 +13,8 @@ export interface IUser extends Document {
   interests?: string[];
   createdCourses?: Schema.Types.ObjectId[];
   enrolledCourses?: Schema.Types.ObjectId[];
+  purchasedDocuments?: Schema.Types.ObjectId[];
+  purchasedDocumentBundles?: Schema.Types.ObjectId[];
   ownChatRooms?: Schema.Types.ObjectId[];
   joinedChatRooms?: Schema.Types.ObjectId[];
   withdrawTransactions?: Schema.Types.ObjectId[];
@@ -81,6 +83,20 @@ export const UserSchema = new Schema(
       {
         type: Schema.Types.ObjectId,
         ref: "Course",
+        default: [],
+      },
+    ],
+    purchasedDocuments: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Document",
+        default: [],
+      },
+    ],
+    purchasedDocumentBundles: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "DocumentBundle",
         default: [],
       },
     ],

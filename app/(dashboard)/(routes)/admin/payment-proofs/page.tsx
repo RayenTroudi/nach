@@ -38,7 +38,9 @@ interface PaymentProof {
     email: string;
     picture?: string;
   };
-  courseIds: string[];
+  courseIds?: string[]; // For backward compatibility
+  itemIds?: string[];
+  itemType: "course" | "document" | "bundle";
   amount: number;
   proofUrl: string;
   fileName: string;
@@ -58,6 +60,12 @@ interface PaymentProof {
     _id: string;
     title: string;
     thumbnail: string;
+    price: number;
+  }>;
+  items?: Array<{
+    _id: string;
+    title: string;
+    thumbnail?: string;
     price: number;
   }>;
 }
@@ -311,12 +319,33 @@ export default function PaymentProofsAdminPage() {
                   </div>
                 </div>
 
-                {/* Amount & Courses */}
+                {/* Amount & Items */}
                 <div className="flex-1">
                   <p className="text-2xl font-bold text-brand-red-500 mb-2">
                     {proof.amount.toFixed(2)} DT
                   </p>
-                  {proof.courses && proof.courses.length > 0 && (
+                  
+                  {/* Display items based on type */}
+                  {proof.items && proof.items.length > 0 && (
+                    <div className="space-y-1">
+                      <p className="text-xs font-semibold text-slate-600 dark:text-slate-400 flex items-center gap-1">
+                        <BookOpen className="w-3 h-3" />
+                        {proof.itemType === "course" 
+                          ? t('courses') 
+                          : proof.itemType === "bundle" 
+                          ? "Document Bundles"
+                          : "Documents"} ({proof.items.length}):
+                      </p>
+                      {proof.items.map((item) => (
+                        <p key={item._id} className="text-sm">
+                          {item.title}
+                        </p>
+                      ))}
+                    </div>
+                  )}
+                  
+                  {/* Backward compatibility with courses */}
+                  {!proof.items && proof.courses && proof.courses.length > 0 && (
                     <div className="space-y-1">
                       <p className="text-xs font-semibold text-slate-600 dark:text-slate-400 flex items-center gap-1">
                         <BookOpen className="w-3 h-3" />
@@ -329,6 +358,7 @@ export default function PaymentProofsAdminPage() {
                       ))}
                     </div>
                   )}
+                  
                   {proof.notes && (
                     <div className="mt-2 text-sm">
                       <p className="font-semibold">{t('studentNotes')}</p>

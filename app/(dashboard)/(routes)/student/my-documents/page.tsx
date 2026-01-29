@@ -23,7 +23,7 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Container } from "@/components/shared";
+import { Container, LeftSideBar } from "@/components/shared";
 import Loader from "@/components/shared/Loader";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
@@ -378,15 +378,17 @@ export default function MyDocumentsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white dark:from-slate-900 dark:to-slate-950 py-12">
-      <Container>
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-slate-50 mb-2">
-            {t("title")}
-          </h1>
-          <p className="text-slate-600 dark:text-slate-300">{t("subtitle")}</p>
-        </div>
+    <div className="flex min-h-screen">
+      <LeftSideBar />
+      <div className="flex-1 min-h-screen bg-gradient-to-b from-slate-50 to-white dark:from-slate-900 dark:to-slate-950 py-12">
+        <Container>
+          {/* Header */}
+          <div className="mb-8">
+            <h1 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-slate-50 mb-2">
+              {t("title")}
+            </h1>
+            <p className="text-slate-600 dark:text-slate-300">{t("subtitle")}</p>
+          </div>
 
         {/* Loading State */}
         {loading ? (
@@ -461,6 +463,7 @@ export default function MyDocumentsPage() {
           </Tabs>
         )}
       </Container>
+      </div>
     </div>
   );
 }

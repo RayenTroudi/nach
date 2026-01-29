@@ -43,6 +43,7 @@ export async function createDocumentPurchase(params: {
     const purchase = await DocumentPurchase.create({
       userId: user._id,
       itemType: params.itemType,
+      itemModelName: params.itemType === "bundle" ? "DocumentBundle" : "Document",
       itemId: params.itemId,
       amount: params.amount,
       currency: params.currency,

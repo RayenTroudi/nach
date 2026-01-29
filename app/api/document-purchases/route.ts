@@ -24,9 +24,9 @@ export async function GET(request: Request) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
+    // Get all purchases (pending, completed, rejected) so student can see status
     const purchases = await DocumentPurchase.find({
       userId: user._id,
-      paymentStatus: "completed",
     })
       .populate({
         path: "itemId",
@@ -79,7 +79,7 @@ export async function POST(request: Request) {
     }
 
     const body = await request.json();
-    const { itemType, itemId, paymentProofUrl } = body;
+    const { itemType, itemId, proofUrl, amount, notes } = body;
 
     // Validate
     if (!itemType || !itemId) {
@@ -98,7 +98,7 @@ export async function POST(request: Request) {
 
     if (existing) {
       return NextResponse.json(
-        { error: "Item already purchased" },
+        { error: "Item already purchased or pending approval" },
         { status: 400 }
       );
     }
@@ -122,12 +122,14 @@ export async function POST(request: Request) {
     const purchase = await DocumentPurchase.create({
       userId: user._id,
       itemType,
+      itemModelName: itemType === "bundle" ? "DocumentBundle" : "Document",
       itemId,
-      amount: item.price || 0,
+      amount: amount || item.price || 0,
       currency: item.currency || "usd",
       paymentMethod: "bank_transfer",
-      paymentStatus: item.price > 0 ? "pending" : "completed",
-      paymentProofUrl,
+      paymentStatus: (amount || item.price) > 0 ? "pending" : "completed",
+      paymentProofUrl: proofUrl,
+      notes: notes || "",
     });
 
     // Add purchase to item
@@ -149,6 +151,7 @@ export async function POST(request: Request) {
       .lean();
 
     return NextResponse.json({
+      success: true,
       message: "Purchase created successfully",
       purchase: populatedPurchase,
     });

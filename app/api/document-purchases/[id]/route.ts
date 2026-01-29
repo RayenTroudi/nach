@@ -92,11 +92,11 @@ export async function PATCH(
     }
 
     const body = await request.json();
-    const { paymentStatus } = body;
+    const { paymentStatus, adminNotes } = body;
 
-    if (!paymentStatus) {
+    if (!paymentStatus || !['completed', 'rejected'].includes(paymentStatus)) {
       return NextResponse.json(
-        { error: "Payment status is required" },
+        { error: "Payment status must be 'completed' or 'rejected'" },
         { status: 400 }
       );
     }
@@ -106,13 +106,44 @@ export async function PATCH(
       return NextResponse.json({ error: "Purchase not found" }, { status: 404 });
     }
 
+    // Update payment status and admin info
     purchase.paymentStatus = paymentStatus;
+    purchase.adminNotes = adminNotes || "";
+    purchase.reviewedBy = user._id;
+    purchase.reviewedAt = new Date();
     await purchase.save();
+
+    // If approved, grant access to the user
+    if (paymentStatus === "completed") {
+      const purchaseUser = await UserModel.findById(purchase.userId);
+      if (purchaseUser) {
+        if (purchase.itemType === "document") {
+          if (!purchaseUser.purchasedDocuments) {
+            purchaseUser.purchasedDocuments = [];
+          }
+          if (!purchaseUser.purchasedDocuments.includes(purchase.itemId)) {
+            purchaseUser.purchasedDocuments.push(purchase.itemId);
+          }
+        } else if (purchase.itemType === "bundle") {
+          if (!purchaseUser.purchasedDocumentBundles) {
+            purchaseUser.purchasedDocumentBundles = [];
+          }
+          if (!purchaseUser.purchasedDocumentBundles.includes(purchase.itemId)) {
+            purchaseUser.purchasedDocumentBundles.push(purchase.itemId);
+          }
+        }
+        await purchaseUser.save();
+      }
+    }
 
     const updatedPurchase = await DocumentPurchase.findById(purchase._id)
       .populate({
         path: "userId",
         select: "firstName lastName email picture",
+      })
+      .populate({
+        path: "reviewedBy",
+        select: "firstName lastName email",
       })
       .populate({
         path: "itemId",
@@ -121,6 +152,7 @@ export async function PATCH(
       .lean();
 
     return NextResponse.json({
+      success: true,
       message: "Purchase updated successfully",
       purchase: updatedPurchase,
     });

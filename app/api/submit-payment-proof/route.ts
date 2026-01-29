@@ -53,20 +53,23 @@ export async function POST(request: Request) {
     const body = await request.json();
     console.log("🔵 Request body:", body);
     
-    const { proofUrl, courseIds, amount, notes } = body;
+    const { proofUrl, itemType = "course", itemIds, courseIds, amount, notes } = body;
+
+    // Support both old courseIds and new itemIds for backward compatibility
+    const finalItemIds = itemIds || courseIds;
 
     // Validate required fields
-    if (!proofUrl || !courseIds || !amount) {
+    if (!proofUrl || !finalItemIds || !amount) {
       return NextResponse.json(
         { success: false, error: "Missing required fields" },
         { status: 400 }
       );
     }
 
-    // Validate courseIds is an array
-    if (!Array.isArray(courseIds) || courseIds.length === 0) {
+    // Validate itemIds is an array
+    if (!Array.isArray(finalItemIds) || finalItemIds.length === 0) {
       return NextResponse.json(
-        { success: false, error: "Invalid course IDs" },
+        { success: false, error: "Invalid item IDs" },
         { status: 400 }
       );
     }
@@ -88,7 +91,8 @@ export async function POST(request: Request) {
     // Create database record
     const paymentProof = await PaymentProof.create({
       userId: user._id,
-      courseIds: courseIds,
+      itemType: itemType,
+      itemIds: finalItemIds,
       amount: Number(amount),
       proofUrl: proofUrl,
       fileName: proofUrl.split('/').pop() || 'payment-proof',

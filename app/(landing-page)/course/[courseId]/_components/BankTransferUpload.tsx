@@ -13,12 +13,16 @@ interface BankTransferUploadProps {
   courseIds: string[];
   amount: number;
   onSuccess?: () => void;
+  itemType?: "course" | "document" | "bundle" | "resume";
+  itemId?: string;
 }
 
 export default function BankTransferUpload({
   courseIds,
   amount,
   onSuccess,
+  itemType = "course",
+  itemId,
 }: BankTransferUploadProps) {
   const t = useTranslations('course.bankTransfer');
   const [uploadedUrl, setUploadedUrl] = useState<string | null>(null);
@@ -39,12 +43,34 @@ export default function BankTransferUpload({
     try {
       setIsSubmitting(true);
 
-      const response = await axios.post("/api/submit-payment-proof", {
-        proofUrl: uploadedUrl,
-        courseIds: courseIds,
-        amount: amount,
-        notes: notes,
-      });
+      let response;
+      
+      // Route to the correct API based on item type
+      if (itemType === "document" || itemType === "bundle") {
+        // Document/Bundle purchases go to document-purchases API
+        response = await axios.post("/api/document-purchases", {
+          itemType: itemType,
+          itemId: itemId || courseIds[0],
+          proofUrl: uploadedUrl,
+          amount: amount,
+          notes: notes,
+        });
+      } else if (itemType === "resume") {
+        // Resume payment goes to resume-payment API
+        response = await axios.post("/api/resume-payment", {
+          resumeRequestId: itemId || courseIds[0],
+          proofUrl: uploadedUrl,
+          notes: notes,
+        });
+      } else {
+        // Course purchases go to submit-payment-proof API
+        response = await axios.post("/api/submit-payment-proof", {
+          proofUrl: uploadedUrl,
+          courseIds: courseIds,
+          amount: amount,
+          notes: notes,
+        });
+      }
 
       if (response.data.success) {
         setUploadStatus("success");

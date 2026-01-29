@@ -46,7 +46,7 @@ import {
 import { Separator } from "@/components/ui/separator";
 import Image from "next/image";
 import { scnToast } from "@/components/ui/use-toast";
-import BankTransferUpload from "@/app/(landing-page)/course/[courseId]/_components/BankTransferUpload";
+import BankTransferUpload from "../course/[courseId]/_components/BankTransferUpload";
 
 const CATEGORIES = [
   "All",
@@ -632,80 +632,26 @@ export default function StorefrontPage() {
       {/* Purchase Dialog */}
       {selectedItem && (
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogContent className="sm:max-w-[425px] md:max-w-[700px] p-6 bg-slate-100 dark:bg-slate-950 max-h-[90vh] overflow-y-auto">
+          <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
             <DialogHeader>
-              <DialogTitle>{t("completePurchase")}</DialogTitle>
-              <DialogDescription>{t("choosePaymentMethod")}</DialogDescription>
+              <DialogTitle>{t("purchaseTitle")}</DialogTitle>
             </DialogHeader>
-            
-            <div className="flex flex-col gap-y-4">
-              {/* Item Details */}
-              <div className="flex gap-x-3 p-4 bg-white dark:bg-slate-900 rounded-lg">
-                {selectedItem.thumbnail ? (
-                  <Image
-                    src={selectedItem.thumbnail}
-                    alt={selectedItem.title}
-                    width={100}
-                    height={75}
-                    className="rounded-sm object-cover"
-                  />
-                ) : (
-                  <div className="w-[100px] h-[75px] bg-slate-200 dark:bg-slate-800 rounded-sm flex items-center justify-center">
-                    {selectedItem.itemType === "bundle" ? (
-                      <FolderOpen className="w-8 h-8 text-slate-400" />
-                    ) : (
-                      <FileText className="w-8 h-8 text-slate-400" />
-                    )}
-                  </div>
-                )}
-                <div className="flex flex-1 flex-col gap-y-1">
-                  <h3 className="text-sm md:text-base font-semibold">
-                    {selectedItem.title}
-                  </h3>
-                  <div className="flex items-center gap-x-2">
-                    <Image
-                      src={selectedItem.uploadedBy.picture || "/images/default_profile.avif"}
-                      width={20}
-                      height={20}
-                      alt="instructor"
-                      className="rounded-full object-cover"
-                    />
-                    <p className="text-xs text-slate-600 dark:text-slate-400">
-                      {selectedItem.uploadedBy.firstName} {selectedItem.uploadedBy.lastName}
-                    </p>
-                  </div>
-                  <div className="flex items-center gap-x-2 mt-1">
-                    <p className="text-xl font-bold text-brand-red-500">
-                      {(selectedItem.price * 3.3).toFixed(2)} TND
-                    </p>
-                    <Image
-                      src={"/icons/tunisia-flag.svg"}
-                      width={24}
-                      height={24}
-                      alt="tunisia"
-                      className="object-cover rounded-none"
-                    />
-                  </div>
-                </div>
-              </div>
-
-              <Separator />
-
-              <BankTransferUpload
-                courseIds={[selectedItem._id]}
-                amount={selectedItem.price * 3.3}
-                onSuccess={() => {
-                  setIsDialogOpen(false);
-                  scnToast({
-                    variant: "success",
-                    title: t("uploadSuccessful"),
-                    description: t("uploadSuccessfulDesc"),
-                  });
-                  fetchPurchasedItems();
-                  router.refresh();
-                }}
-              />
-            </div>
+            <BankTransferUpload
+              courseIds={[selectedItem._id]}
+              amount={selectedItem.price || 0}
+              itemType={selectedItem.itemType as "document" | "bundle"}
+              itemId={selectedItem._id}
+              onSuccess={() => {
+                scnToast({
+                  variant: "success",
+                  title: t("uploadSuccessful"),
+                  description: t("uploadSuccessfulDesc"),
+                });
+                setIsDialogOpen(false);
+                fetchPurchasedItems();
+                router.refresh();
+              }}
+            />
           </DialogContent>
         </Dialog>
       )}

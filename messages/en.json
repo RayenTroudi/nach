@@ -2052,6 +2052,7 @@
     "choosePaymentMethod": "Choose your payment method and complete the transaction",
     "uploadSuccessful": "Payment proof uploaded successfully!",
     "uploadSuccessfulDesc": "Your purchase is being processed. You'll be notified once approved.",
+    "purchaseTitle": "Complete Your Purchase",
     "previewContents": "Preview Contents",
     "bundlePreviewDescription": "View the documents included in this bundle. Purchase to unlock access.",
     "totalDocuments": "Total Documents",

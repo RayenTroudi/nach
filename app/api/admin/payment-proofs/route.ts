@@ -4,6 +4,8 @@ import { connectToDatabase } from "@/lib/mongoose";
 import PaymentProof from "@/lib/models/payment-proof.model";
 import User from "@/lib/models/user.model";
 import Course from "@/lib/models/course.model";
+import DocumentModel from "@/lib/models/document.model";
+import DocumentBundle from "@/lib/models/document-bundle.model";
 import { getUserByClerkId } from "@/lib/actions/user.action";
 import { sendEmail } from "@/lib/actions/email.action";
 
@@ -51,15 +53,30 @@ export async function GET(request: Request) {
     const total = await PaymentProof.countDocuments(query);
 
     // Get course details for each proof
-    const proofsWithCourses = await Promise.all(
+    const proofsWithItems = await Promise.all(
       proofs.map(async (proof) => {
-        const courses = await Course.find({
-          _id: { $in: proof.courseIds },
-        }).select("title thumbnail price");
+        let items = [];
+        
+        // Handle different item types
+        if (proof.itemType === "course") {
+          items = await Course.find({
+            _id: { $in: proof.itemIds || proof.courseIds },
+          }).select("title thumbnail price");
+        } else if (proof.itemType === "document") {
+          items = await DocumentModel.find({
+            _id: { $in: proof.itemIds },
+          }).select("title price");
+        } else if (proof.itemType === "bundle") {
+          items = await DocumentBundle.find({
+            _id: { $in: proof.itemIds },
+          }).select("title price");
+        }
 
         return {
           ...proof.toObject(),
-          courses,
+          items,
+          // Keep courses for backward compatibility
+          courses: proof.itemType === "course" ? items : [],
         };
       })
     );
@@ -67,7 +84,7 @@ export async function GET(request: Request) {
     return NextResponse.json({
       success: true,
       data: {
-        proofs: proofsWithCourses,
+        proofs: proofsWithItems,
         pagination: {
           page,
           limit,
@@ -140,63 +157,94 @@ export async function POST(request: Request) {
     console.log(`✅ Payment proof ${status}:`, {
       proofId,
       userId: proof.userId._id,
-      courseIds: proof.courseIds,
+      itemType: proof.itemType,
+      itemIds: proof.itemIds || proof.courseIds,
       reviewedBy: admin._id,
     });
 
-    // If approved, enroll user in courses
+    // If approved, grant access based on item type
     if (status === "approved") {
       try {
         const user = await User.findById(proof.userId._id);
+        const itemIds = proof.itemIds || proof.courseIds;
         
-        // Add courses to user's enrolled courses
-        for (const courseId of proof.courseIds) {
-          if (!user.enrolledCourses) {
-            user.enrolledCourses = [];
+        if (proof.itemType === "course") {
+          // Add courses to user's enrolled courses
+          for (const courseId of itemIds) {
+            if (!user.enrolledCourses) {
+              user.enrolledCourses = [];
+            }
+            
+            if (!user.enrolledCourses.includes(courseId)) {
+              user.enrolledCourses.push(courseId);
+            }
+
+            // Add user to course's students
+            const course = await Course.findById(courseId);
+            if (course) {
+              if (!course.students) {
+                course.students = [];
+              }
+              if (!course.students.includes(user._id)) {
+                course.students.push(user._id);
+                await course.save();
+              }
+            }
+          }
+        } else if (proof.itemType === "document") {
+          // Add documents to user's purchased documents
+          if (!user.purchasedDocuments) {
+            user.purchasedDocuments = [];
           }
           
-          if (!user.enrolledCourses.includes(courseId)) {
-            user.enrolledCourses.push(courseId);
-          }
-
-          // Add user to course's students
-          const course = await Course.findById(courseId);
-          if (course) {
-            if (!course.students) {
-              course.students = [];
+          for (const docId of itemIds) {
+            if (!user.purchasedDocuments.includes(docId)) {
+              user.purchasedDocuments.push(docId);
             }
-            if (!course.students.includes(user._id)) {
-              course.students.push(user._id);
-              await course.save();
+          }
+        } else if (proof.itemType === "bundle") {
+          // Add bundles to user's purchased document bundles
+          if (!user.purchasedDocumentBundles) {
+            user.purchasedDocumentBundles = [];
+          }
+          
+          for (const bundleId of itemIds) {
+            if (!user.purchasedDocumentBundles.includes(bundleId)) {
+              user.purchasedDocumentBundles.push(bundleId);
             }
           }
         }
         
         await user.save();
 
-        console.log("✅ User enrolled in courses:", {
+        console.log(`✅ User granted access to ${proof.itemType}(s):`, {
           userId: user._id,
-          courseIds: proof.courseIds,
+          itemIds,
         });
 
         // Send approval email
         if (process.env.RESEND_API_KEY) {
+          const itemTypeName = proof.itemType === "course" ? "course" : proof.itemType === "bundle" ? "document bundle" : "document";
+          const accessLink = proof.itemType === "course" 
+            ? `${process.env.NEXT_PUBLIC_SERVER_URL}/my-learning`
+            : `${process.env.NEXT_PUBLIC_SERVER_URL}/student/my-documents`;
+            
           await sendEmail({
             to: user.email,
-            subject: "Payment Approved - Course Access Granted",
+            subject: `Payment Approved - ${itemTypeName.charAt(0).toUpperCase() + itemTypeName.slice(1)} Access Granted`,
             html: `
               <h2>Payment Approved!</h2>
               <p>Hi ${user.firstName},</p>
-              <p>Your payment has been verified and approved. You now have access to your course(s)!</p>
+              <p>Your payment has been verified and approved. You now have access to your ${itemTypeName}(s)!</p>
               <p>Amount: ${proof.amount} TND</p>
-              <p>You can start learning now at: <a href="${process.env.NEXT_PUBLIC_SERVER_URL}/my-learning">My Learning</a></p>
+              <p>Access your ${itemTypeName}(s) at: <a href="${accessLink}">${proof.itemType === "course" ? "My Learning" : "My Documents"}</a></p>
               ${adminNotes ? `<p><strong>Note from admin:</strong> ${adminNotes}</p>` : ""}
               <p>Best regards,<br/>The Team</p>
             `,
           });
         }
       } catch (enrollError) {
-        console.error("❌ Error enrolling user:", enrollError);
+        console.error(`❌ Error granting access to ${proof.itemType}:`, enrollError);
         // Continue even if enrollment fails - admin can manually fix
       }
     }

@@ -2056,6 +2056,7 @@
     "choosePaymentMethod": "اختر طريقة الدفع وأكمل المعاملة",
     "uploadSuccessful": "تم تحميل إثبات الدفع بنجاح!",
     "uploadSuccessfulDesc": "يتم معالجة عملية الشراء الخاصة بك. سيتم إعلامك عند الموافقة.",
+    "purchaseTitle": "إتمام عملية الشراء",
     "previewContents": "معاينة المحتويات",
     "bundlePreviewDescription": "اعرض المستندات المضمنة في هذه الحزمة. قم بالشراء لفتح الوصول.",
     "totalDocuments": "إجمالي المستندات",

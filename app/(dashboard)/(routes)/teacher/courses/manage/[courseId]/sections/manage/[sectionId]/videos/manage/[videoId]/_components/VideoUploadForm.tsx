@@ -105,32 +105,20 @@ const VideoUploadForm = ({ video }: Props) => {
       </div>
       {!edit && video.videoUrl ? (
         <div className="w-full h-full relative aspect-video">
-          <MuxPlayer
-            {...(video.videoUrl.startsWith('https://utfs.io/') 
-              ? { src: getProxiedVideoUrl(video.videoUrl) } 
-              : { playbackId: video.muxData?.playbackId }
-            )}
-            streamType="on-demand"
-            metadata={{
-              video_id: video._id?.toString(),
-              video_title: video.title,
-            }}
-            accentColor="#DD0000"
-            style={{ 
-              width: '100%', 
-              height: '100%',
-              '--media-object-fit': 'cover',
-            } as React.CSSProperties}
-          />
-        </div>
-      ) : (
-        <>
-          {videoUrl ? (
+          {video.videoUrl.startsWith('https://utfs.io/') ? (
+            <video
+              src={getProxiedVideoUrl(video.videoUrl)}
+              controls
+              className="w-full h-full object-cover bg-black"
+              controlsList="nodownload"
+              crossOrigin="anonymous"
+              preload="metadata"
+            >
+              Your browser does not support the video tag.
+            </video>
+          ) : (
             <MuxPlayer
-              {...(videoUrl.startsWith('https://utfs.io/') 
-                ? { src: getProxiedVideoUrl(videoUrl) } 
-                : { playbackId: video.muxData?.playbackId }
-              )}
+              playbackId={video.muxData?.playbackId}
               streamType="on-demand"
               metadata={{
                 video_id: video._id?.toString(),
@@ -143,6 +131,38 @@ const VideoUploadForm = ({ video }: Props) => {
                 '--media-object-fit': 'cover',
               } as React.CSSProperties}
             />
+          )}
+        </div>
+      ) : (
+        <>
+          {videoUrl ? (
+            videoUrl.startsWith('https://utfs.io/') ? (
+              <video
+                src={getProxiedVideoUrl(videoUrl)}
+                controls
+                className="w-full h-full object-cover bg-black"
+                controlsList="nodownload"
+                crossOrigin="anonymous"
+                preload="metadata"
+              >
+                Your browser does not support the video tag.
+              </video>
+            ) : (
+              <MuxPlayer
+                playbackId={video.muxData?.playbackId}
+                streamType="on-demand"
+                metadata={{
+                  video_id: video._id?.toString(),
+                  video_title: video.title,
+                }}
+                accentColor="#DD0000"
+                style={{ 
+                  width: '100%', 
+                  height: '100%',
+                  '--media-object-fit': 'cover',
+                } as React.CSSProperties}
+              />
+            )
           ) : (
             <>
               {isSaving ? (

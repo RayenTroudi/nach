@@ -1,4 +1,5 @@
 "use client";
+
 import { TVideo } from "@/types/models.types";
 import { useEffect, useState } from "react";
 import MuxPlayer from "@mux/mux-player-react";
@@ -11,7 +12,7 @@ interface Props {
   poster: string;
 }
 
-const VideoPlayer = ({ video, isLoading, poster }: Props) => {
+const VideoPlayerWrapper = ({ video, isLoading, poster }: Props) => {
   const [isMounted, setIsMounted] = useState<boolean>(false);
 
   useEffect(() => setIsMounted(true), []);
@@ -50,7 +51,7 @@ const VideoPlayer = ({ video, isLoading, poster }: Props) => {
               src={getProxiedVideoUrl(video.videoUrl)}
               poster={poster}
               controls
-              className="w-full h-full object-cover bg-black"
+              className="w-full h-full object-cover"
               controlsList="nodownload"
               crossOrigin="anonymous"
               preload="metadata"
@@ -81,4 +82,4 @@ const VideoPlayer = ({ video, isLoading, poster }: Props) => {
   ) : null;
 };
 
-export default VideoPlayer;
+export default VideoPlayerWrapper;

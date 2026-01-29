@@ -152,59 +152,74 @@ const PurchaseCourseCard = ({
             {/* Check if there's a valid video to display */}
             {(videoToPreview?.videoUrl || allFreeVideos[0]?.videoUrl) ? (
               <>
-                {/* Play Icon Overlay - Shows when video is paused */}
-                {!isVideoPlaying && (
-                  <div 
-                    className="absolute inset-0 z-10 flex items-center justify-center bg-black/20 group-hover:bg-black/30 transition-all duration-300 cursor-pointer"
-                    onClick={() => {
-                      const videoElement = document.querySelector('mux-player') as any;
-                      if (videoElement) {
-                        videoElement.play();
-                        setIsVideoPlaying(true);
-                      }
-                    }}
+                {/* Determine if we should use HTML5 video or MuxPlayer */}
+                {(videoToPreview?.videoUrl || allFreeVideos[0]?.videoUrl || "").startsWith('https://utfs.io/') ? (
+                  // Use HTML5 video for UploadThing videos
+                  <video
+                    src={getProxiedVideoUrl(
+                      videoToPreview
+                        ? videoToPreview.videoUrl
+                        : allFreeVideos[0]?.videoUrl || ""
+                    )}
+                    poster={course?.thumbnail!}
+                    controls
+                    className="w-full h-full object-cover bg-black"
+                    controlsList="nodownload"
+                    crossOrigin="anonymous"
+                    preload="metadata"
+                    onPlay={() => setIsVideoPlaying(true)}
+                    onPause={() => setIsVideoPlaying(false)}
+                    onEnded={() => setIsVideoPlaying(false)}
                   >
-                    <div className="transform group-hover:scale-110 transition-transform duration-300">
-                      <PlayCircle 
-                        className="w-20 h-20 text-white drop-shadow-2xl opacity-90 group-hover:opacity-100" 
-                        strokeWidth={1.5}
-                        fill="rgba(221, 0, 0, 0.8)"
-                      />
-                    </div>
-                  </div>
+                    Your browser does not support the video tag.
+                  </video>
+                ) : (
+                  // Use MuxPlayer for Mux videos
+                  <>
+                    {/* Play Icon Overlay - Shows when video is paused */}
+                    {!isVideoPlaying && (
+                      <div 
+                        className="absolute inset-0 z-10 flex items-center justify-center bg-black/20 group-hover:bg-black/30 transition-all duration-300 cursor-pointer"
+                        onClick={() => {
+                          const videoElement = document.querySelector('mux-player') as any;
+                          if (videoElement) {
+                            videoElement.play();
+                            setIsVideoPlaying(true);
+                          }
+                        }}
+                      >
+                        <div className="transform group-hover:scale-110 transition-transform duration-300">
+                          <PlayCircle 
+                            className="w-20 h-20 text-white drop-shadow-2xl opacity-90 group-hover:opacity-100" 
+                            strokeWidth={1.5}
+                            fill="rgba(221, 0, 0, 0.8)"
+                          />
+                        </div>
+                      </div>
+                    )}
+                    
+                    <MuxPlayer
+                      playbackId={videoToPreview?.muxData?.playbackId || allFreeVideos[0]?.muxData?.playbackId}
+                      poster={course?.thumbnail!}
+                      streamType="on-demand"
+                      metadata={{
+                        video_id: videoToPreview?._id?.toString() || allFreeVideos[0]?._id?.toString(),
+                        video_title: videoToPreview?.title || allFreeVideos[0]?.title || course?.title,
+                        course_id: course?._id?.toString(),
+                      }}
+                      accentColor="#DD0000"
+                      style={{ 
+                        width: '100%', 
+                        height: '100%', 
+                        borderRadius: 0,
+                        '--media-object-fit': 'cover',
+                      } as React.CSSProperties}
+                      onPlay={() => setIsVideoPlaying(true)}
+                      onPause={() => setIsVideoPlaying(false)}
+                      onEnded={() => setIsVideoPlaying(false)}
+                    />
+                  </>
                 )}
-                
-                <MuxPlayer
-                  {...((videoToPreview?.videoUrl || allFreeVideos[0]?.videoUrl || "").startsWith('https://utfs.io/') 
-                    ? { 
-                        src: getProxiedVideoUrl(
-                          videoToPreview
-                            ? videoToPreview.videoUrl
-                            : allFreeVideos[0]?.videoUrl || ""
-                        ) 
-                      } 
-                    : { 
-                        playbackId: videoToPreview?.muxData?.playbackId || allFreeVideos[0]?.muxData?.playbackId 
-                      }
-                  )}
-                  poster={course?.thumbnail!}
-                  streamType="on-demand"
-                  metadata={{
-                    video_id: videoToPreview?._id?.toString() || allFreeVideos[0]?._id?.toString(),
-                    video_title: videoToPreview?.title || allFreeVideos[0]?.title || course?.title,
-                    course_id: course?._id?.toString(),
-                  }}
-                  accentColor="#DD0000"
-                  style={{ 
-                    width: '100%', 
-                    height: '100%', 
-                    borderRadius: 0,
-                    '--media-object-fit': 'cover',
-                  } as React.CSSProperties}
-                  onPlay={() => setIsVideoPlaying(true)}
-                  onPause={() => setIsVideoPlaying(false)}
-                  onEnded={() => setIsVideoPlaying(false)}
-                />
               </>
             ) : (
               // Show thumbnail image when no video is available

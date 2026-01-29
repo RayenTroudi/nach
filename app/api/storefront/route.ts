@@ -17,7 +17,10 @@ export async function GET(request: Request) {
     const sort = searchParams.get("sort") || "newest"; // newest, price-low, price-high, title
     const type = searchParams.get("type"); // 'document', 'bundle', or null for both
 
+    console.log("[Storefront API] Starting request with params:", { category, search, page, limit, sort, type });
+
     await connectToDatabase();
+    console.log("[Storefront API] Database connected");
 
     // Build sort query
     let sortQuery: any = {};
@@ -40,15 +43,21 @@ export async function GET(request: Request) {
     const skip = (page - 1) * limit;
 
     // First, fetch bundles to get all document IDs that are part of bundles
+    console.log("[Storefront API] Fetching bundles...");
     const allBundles = await DocumentBundle.find({ isPublished: true })
       .select('documents')
       .lean();
     
+    console.log("[Storefront API] Found bundles:", allBundles.length);
+    
     const bundledDocumentIds = allBundles
       .filter(bundle => bundle.documents && Array.isArray(bundle.documents))
       .flatMap(bundle => 
-        bundle.documents.map((doc: any) => doc.toString())
-      );
+        bundle.documents.map((doc: any) => doc?.toString?.() || doc)
+      )
+      .filter(id => id); // Remove any null/undefined values
+    
+    console.log("[Storefront API] Bundled document IDs:", bundledDocumentIds.length);
 
     // Fetch documents if type is null or 'document'
     let documents: any[] = [];
@@ -63,6 +72,8 @@ export async function GET(request: Request) {
       if (bundledDocumentIds.length > 0) {
         docQuery._id = { $nin: bundledDocumentIds };
       }
+      
+      console.log("[Storefront API] Document query:", JSON.stringify(docQuery));
       
       if (category && category !== "All") {
         docQuery.category = category;
@@ -84,6 +95,7 @@ export async function GET(request: Request) {
         DocumentModel.countDocuments(docQuery),
       ]);
 
+      console.log("[Storefront API] Found documents:", docs.length);
       documents = docs.map((doc) => ({ ...doc, itemType: "document" }));
       documentsTotal = docsCount;
     }
@@ -106,6 +118,7 @@ export async function GET(request: Request) {
         ];
       }
 
+      console.log("[Storefront API] Bundle query:", JSON.stringify(bundleQuery));
       const [bdls, bdlsCount] = await Promise.all([
         DocumentBundle.find(bundleQuery)
           .populate("uploadedBy", "firstName lastName picture")
@@ -115,12 +128,14 @@ export async function GET(request: Request) {
         DocumentBundle.countDocuments(bundleQuery),
       ]);
 
+      console.log("[Storefront API] Found bundles:", bdls.length);
       bundles = bdls.map((bundle) => ({ ...bundle, itemType: "bundle" }));
       bundlesTotal = bdlsCount;
     }
 
     // Combine and sort
     let items = [...documents, ...bundles];
+    console.log("[Storefront API] Total items before pagination:", items.length);
     
     // Re-sort combined items
     switch (sort) {
@@ -144,6 +159,7 @@ export async function GET(request: Request) {
     const totalPages = Math.ceil(total / limit);
     const paginatedItems = items.slice(skip, skip + limit);
 
+    console.log("[Storefront API] Returning:", { paginatedItems: paginatedItems.length, total, totalPages });
     return NextResponse.json({
       items: paginatedItems,
       pagination: {
@@ -156,9 +172,11 @@ export async function GET(request: Request) {
       },
     });
   } catch (error: any) {
-    console.error("Error fetching storefront items:", error);
+    console.error("[Storefront API] ERROR:", error);
+    console.error("[Storefront API] ERROR Stack:", error.stack);
+    console.error("[Storefront API] ERROR Message:", error.message);
     return NextResponse.json(
-      { error: "Failed to fetch storefront items" },
+      { error: "Failed to fetch storefront items", details: error.message },
       { status: 500 }
     );
   }

@@ -34,24 +34,23 @@ export async function GET(request: NextRequest) {
       headers: fetchHeaders,
     });
 
+    // If UploadThing returns an error, return it
     if (!videoResponse.ok) {
-      return NextResponse.json(
-        { error: 'Failed to fetch video' },
-        { status: videoResponse.status }
-      );
+      console.error('UploadThing fetch error:', videoResponse.status, videoResponse.statusText);
+      return new NextResponse(null, { 
+        status: videoResponse.status,
+        statusText: videoResponse.statusText
+      });
     }
 
-    // Get the content type and length
+    // Get the content type and length from UploadThing response
     const contentType = videoResponse.headers.get('content-type') || 'video/mp4';
     const contentLength = videoResponse.headers.get('content-length');
     const contentRange = videoResponse.headers.get('content-range');
     const acceptRanges = videoResponse.headers.get('accept-ranges') || 'bytes';
 
-    // Stream the video data
-    const videoBuffer = await videoResponse.arrayBuffer();
-
-    // Create response with proper headers for video streaming
-    const headers = new Headers({
+    // Create response headers for video streaming
+    const responseHeaders = new Headers({
       'Content-Type': contentType,
       'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Methods': 'GET, HEAD, OPTIONS',
@@ -62,19 +61,20 @@ export async function GET(request: NextRequest) {
     });
 
     if (contentLength) {
-      headers.set('Content-Length', contentLength);
+      responseHeaders.set('Content-Length', contentLength);
     }
 
     if (contentRange) {
-      headers.set('Content-Range', contentRange);
+      responseHeaders.set('Content-Range', contentRange);
     }
 
-    // Return partial content if range was requested
-    const status = range ? 206 : 200;
+    // Determine the status code based on the upstream response
+    const status = videoResponse.status;
 
-    return new NextResponse(videoBuffer, {
+    // Stream the response body directly from UploadThing
+    return new NextResponse(videoResponse.body, {
       status,
-      headers,
+      headers: responseHeaders,
     });
   } catch (error) {
     console.error('Video proxy error:', error);

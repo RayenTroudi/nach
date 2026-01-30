@@ -1,31 +1,46 @@
 "use client";
 
-import { useState } from "react";
-import { Card } from "@/components/ui/card";
+import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
-import { Play, Pause, Volume2, VolumeX, Maximize, X } from "lucide-react";
+import { Play, Pause, Volume2, VolumeX, X, ChevronLeft, ChevronRight } from "lucide-react";
 import { TCourse } from "@/types/models.types";
 import { motion, AnimatePresence } from "framer-motion";
-import { getProxiedVideoUrl } from "@/lib/utils/video-url-helper";
+import Image from "next/image";
 
 interface FAQVideoPlayerProps {
   course: TCourse;
+  courses?: TCourse[];
   onClose?: () => void;
   autoPlay?: boolean;
+  onCourseChange?: (course: TCourse) => void;
 }
 
-export default function FAQVideoPlayer({ course, onClose, autoPlay = false }: FAQVideoPlayerProps) {
+export default function FAQVideoPlayer({ 
+  course, 
+  courses = [], 
+  onClose, 
+  autoPlay = false,
+  onCourseChange 
+}: FAQVideoPlayerProps) {
   const [isPlaying, setIsPlaying] = useState(autoPlay);
   const [isMuted, setIsMuted] = useState(false);
-  const [isFullscreen, setIsFullscreen] = useState(false);
   const [videoRef, setVideoRef] = useState<HTMLVideoElement | null>(null);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [showInfo, setShowInfo] = useState(true);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  // Find current course index
+  useEffect(() => {
+    const index = courses.findIndex(c => c._id === course._id);
+    if (index !== -1) setCurrentIndex(index);
+  }, [course, courses]);
 
   const togglePlay = () => {
     if (videoRef) {
       if (isPlaying) {
         videoRef.pause();
       } else {
-        videoRef.play();
+        videoRef.play().catch(err => console.error("Playback error:", err));
       }
       setIsPlaying(!isPlaying);
     }
@@ -38,131 +53,154 @@ export default function FAQVideoPlayer({ course, onClose, autoPlay = false }: FA
     }
   };
 
-  const toggleFullscreen = () => {
-    if (videoRef) {
-      if (!document.fullscreenElement) {
-        videoRef.requestFullscreen();
-        setIsFullscreen(true);
-      } else {
-        document.exitFullscreen();
-        setIsFullscreen(false);
-      }
+  const handleVideoEnd = () => {
+    // Auto advance to next video
+    if (currentIndex < courses.length - 1) {
+      handleNext();
+    } else {
+      setIsPlaying(false);
     }
   };
 
-  const handleVideoEnd = () => {
-    setIsPlaying(false);
+  const handlePrevious = () => {
+    if (currentIndex > 0 && courses[currentIndex - 1]) {
+      setIsPlaying(false);
+      onCourseChange?.(courses[currentIndex - 1]);
+    }
   };
 
+  const handleNext = () => {
+    if (currentIndex < courses.length - 1 && courses[currentIndex + 1]) {
+      setIsPlaying(false);
+      onCourseChange?.(courses[currentIndex + 1]);
+    }
+  };
+
+  // Keyboard navigation
+  useEffect(() => {
+    const handleKeyPress = (e: KeyboardEvent) => {
+      if (e.key === "ArrowLeft") handlePrevious();
+      if (e.key === "ArrowRight") handleNext();
+      if (e.key === " ") {
+        e.preventDefault();
+        togglePlay();
+      }
+    };
+    window.addEventListener("keydown", handleKeyPress);
+    return () => window.removeEventListener("keydown", handleKeyPress);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentIndex, courses.length]);
+
+  // Auto-hide info after 3 seconds
+  useEffect(() => {
+    if (showInfo && isPlaying) {
+      const timer = setTimeout(() => setShowInfo(false), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [showInfo, isPlaying]);
+
   return (
-    <Card className="overflow-hidden bg-slate-900 border-slate-700 max-w-md mx-auto">
-      <div className="relative group">
-        {/* Video Element - Reel Mode (9:16 aspect ratio) */}
-        <video
-          ref={setVideoRef}
-          src={getProxiedVideoUrl(course.faqVideo)}
-          className="w-full aspect-[9/16] object-cover"
-          onEnded={handleVideoEnd}
-          onClick={togglePlay}
-          autoPlay={autoPlay}
-          loop={false}
-          crossOrigin="anonymous"
-        />
+    <div 
+      ref={containerRef}
+      className="relative w-full h-full bg-black overflow-hidden"
+      onClick={onClose}
+    >
+      {/* Main Video - Instagram Feed Style */}
+      <div className="relative w-full h-full flex items-center justify-center">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={course._id}
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            transition={{ duration: 0.3 }}
+            className="w-full h-full flex items-center justify-center"
+          >
+            {/* Video Element */}
+            <video
+              ref={setVideoRef}
+              src={course.faqVideo}
+              className="w-full h-full object-contain"
+              onEnded={handleVideoEnd}
+              onClick={(e) => {
+                e.stopPropagation();
+                togglePlay();
+              }}
+              autoPlay={autoPlay}
+              loop={false}
+              playsInline
+              preload="metadata"
+              onLoadedData={() => {
+                if (autoPlay && videoRef) {
+                  videoRef.play().catch(err => console.error("Auto-play failed:", err));
+                }
+              }}
+            />
+          </motion.div>
+        </AnimatePresence>
 
-        {/* Overlay Controls */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
-          <div className="absolute bottom-0 left-0 right-0 p-4 pointer-events-auto">
-            {/* Control Bar */}
-            <div className="flex items-center gap-3">
-              {/* Play/Pause Button */}
+        {/* Close Button - Top Right */}
+        <Button
+          size="icon"
+          variant="ghost"
+          className="absolute top-4 right-4 z-50 h-10 w-10 bg-black/50 backdrop-blur-sm hover:bg-black/70 text-white rounded-full"
+          onClick={onClose}
+        >
+          <X className="w-5 h-5" />
+        </Button>
+
+        {/* Navigation Arrows */}
+        {courses.length > 1 && (
+          <>
+            {/* Previous */}
+            {currentIndex > 0 && (
               <Button
                 size="icon"
                 variant="ghost"
-                className="text-white hover:bg-white/20"
-                onClick={togglePlay}
+                className="absolute left-4 top-1/2 -translate-y-1/2 z-40 h-12 w-12 bg-black/50 backdrop-blur-sm hover:bg-black/70 text-white rounded-full opacity-0 hover:opacity-100 transition-opacity"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handlePrevious();
+                }}
               >
-                {isPlaying ? (
-                  <Pause className="w-5 h-5" />
-                ) : (
-                  <Play className="w-5 h-5" />
-                )}
+                <ChevronLeft className="w-6 h-6" />
               </Button>
+            )}
 
-              {/* Mute Button */}
+            {/* Next */}
+            {currentIndex < courses.length - 1 && (
               <Button
                 size="icon"
                 variant="ghost"
-                className="text-white hover:bg-white/20"
-                onClick={toggleMute}
+                className="absolute right-4 top-1/2 -translate-y-1/2 z-40 h-12 w-12 bg-black/50 backdrop-blur-sm hover:bg-black/70 text-white rounded-full opacity-0 hover:opacity-100 transition-opacity"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleNext();
+                }}
               >
-                {isMuted ? (
-                  <VolumeX className="w-5 h-5" />
-                ) : (
-                  <Volume2 className="w-5 h-5" />
-                )}
+                <ChevronRight className="w-6 h-6" />
               </Button>
-
-              {/* Title */}
-              <div className="flex-1 text-white font-medium truncate">
-                {course.title}
-              </div>
-
-              {/* Fullscreen Button */}
-              <Button
-                size="icon"
-                variant="ghost"
-                className="text-white hover:bg-white/20"
-                onClick={toggleFullscreen}
-              >
-                <Maximize className="w-5 h-5" />
-              </Button>
-
-              {/* Close Button (if onClose provided) */}
-              {onClose && (
-                <Button
-                  size="icon"
-                  variant="ghost"
-                  className="text-white hover:bg-white/20"
-                  onClick={onClose}
-                >
-                  <X className="w-5 h-5" />
-                </Button>
-              )}
-            </div>
-          </div>
-        </div>
+            )}
+          </>
+        )}
 
         {/* Play Button Overlay (when paused) */}
         {!isPlaying && (
-          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-            <motion.div
-              initial={{ scale: 0.8, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              className="bg-brand-red-500 rounded-full p-6 pointer-events-auto cursor-pointer"
-              onClick={togglePlay}
-            >
-              <Play className="w-12 h-12 text-white ml-1" />
-            </motion.div>
-          </div>
+          <motion.div
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            className="absolute inset-0 flex items-center justify-center z-30"
+            onClick={(e) => {
+              e.stopPropagation();
+              togglePlay();
+            }}
+          >
+            <div className="bg-white/20 backdrop-blur-md rounded-full p-6 cursor-pointer hover:bg-white/30 transition-all">
+              <Play className="w-16 h-16 text-white ml-1" />
+            </div>
+          </motion.div>
         )}
       </div>
-
-      {/* Video Info */}
-      <div className="p-4 bg-slate-800">
-        <h3 className="text-lg font-semibold text-white mb-2">
-          {course.title}
-        </h3>
-        {course.description && (
-          <p className="text-sm text-slate-300 line-clamp-2">
-            {course.description}
-          </p>
-        )}
-        <div className="mt-3 text-sm">
-          <span className="text-slate-400">
-            by {course.instructor?.firstName} {course.instructor?.lastName}
-          </span>
-        </div>
-      </div>
-    </Card>
+    </div>
   );
 }

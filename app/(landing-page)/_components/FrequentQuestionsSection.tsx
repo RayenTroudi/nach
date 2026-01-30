@@ -46,35 +46,28 @@ export default function FrequentQuestionsSection({ courses }: FrequentQuestionsP
             {t('subtitle')}
           </p>
 
-          {/* Video Player Modal */}
+          {/* Video Player Modal - Instagram Style Full Screen */}
           <AnimatePresence>
             {selectedCourse && (
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4"
-                onClick={() => setSelectedCourse(null)}
+                className="fixed inset-0 bg-black z-50"
               >
-                <motion.div
-                  initial={{ scale: 0.9, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  exit={{ scale: 0.9, opacity: 0 }}
-                  className="w-full max-w-4xl"
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  <FAQVideoPlayer
-                    course={selectedCourse}
-                    onClose={() => setSelectedCourse(null)}
-                    autoPlay={true}
-                  />
-                </motion.div>
+                <FAQVideoPlayer
+                  course={selectedCourse}
+                  courses={faqCourses}
+                  onClose={() => setSelectedCourse(null)}
+                  onCourseChange={setSelectedCourse}
+                  autoPlay={true}
+                />
               </motion.div>
             )}
           </AnimatePresence>
 
           {/* Courses Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
             {faqCourses.length > 0 ? (
               faqCourses.map((course, idx) => (
                 <motion.div
@@ -88,12 +81,12 @@ export default function FrequentQuestionsSection({ courses }: FrequentQuestionsP
                     className="h-full hover:shadow-lg transition-all duration-300 border-2 hover:border-brand-red-200 dark:hover:border-brand-red-800 cursor-pointer group overflow-hidden"
                     onClick={() => setSelectedCourse(course)}
                   >
-                    <div className="relative w-full aspect-[9/16]">
+                    <div className="relative w-full aspect-[3/4] overflow-hidden">
                       <Image
                         src={course.thumbnail || "/images/placeholder-course.jpg"}
                         alt={course.title}
                         fill
-                        className="object-cover group-hover:scale-110 transition-transform duration-300"
+                        className="object-cover"
                       />
                       {/* Play Button Overlay */}
                       <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
@@ -102,29 +95,13 @@ export default function FrequentQuestionsSection({ courses }: FrequentQuestionsP
                         </div>
                       </div>
                     </div>
-                    <div className="p-6">
-                      <h4 className="font-semibold text-lg text-slate-900 dark:text-slate-50 line-clamp-2 mb-2 group-hover:text-brand-red-600 dark:group-hover:text-brand-red-400 transition-colors">
+                    <div className="p-3">
+                      <h4 className="font-semibold text-sm text-slate-900 dark:text-slate-50 line-clamp-2 mb-1 group-hover:text-brand-red-600 dark:group-hover:text-brand-red-400 transition-colors">
                         {course.title}
                       </h4>
-                      <p className="text-sm text-slate-600 dark:text-slate-400 line-clamp-2 mb-4">
-                        {course.description}
-                      </p>
-                      <div className="flex items-center justify-between">
-                        <span className="text-xs text-slate-500 dark:text-slate-400">
-                          {course.instructor?.firstName} {course.instructor?.lastName}
-                        </span>
-                        <Button
-                          size="sm"
-                          className="bg-brand-red-500 hover:bg-brand-red-600"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setSelectedCourse(course);
-                          }}
-                        >
-                          <Play className="w-4 h-4 mr-1" />
-                          {t('watchVideo')}
-                        </Button>
-                      </div>
+                      <span className="text-xs text-slate-500 dark:text-slate-400 block mt-2">
+                        {course.instructor?.firstName} {course.instructor?.lastName}
+                      </span>
                     </div>
                   </Card>
                 </motion.div>

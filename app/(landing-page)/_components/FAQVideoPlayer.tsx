@@ -168,8 +168,7 @@ export default function FAQVideoPlayer({
                   }
                 }}
               />
-            )}}}
-            />
+            )}
           </motion.div>
         </AnimatePresence>
 

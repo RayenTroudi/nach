@@ -539,7 +539,18 @@
       "chatRooms": {
         "enrollInCourse": "Once you enroll in a regular course, you will be automatically added to that course's learning room",
         "noChatRooms": "No chat rooms available",
-        "title": "Learning Rooms"
+        "title": "Messages",
+        "conversations": "conversations",
+        "searchPlaceholder": "Search conversations...",
+        "filterAll": "All",
+        "filterPrivate": "Private",
+        "filterGroup": "Group",
+        "noConversations": "No conversations found",
+        "tryAdjustingFilters": "Try adjusting your filters",
+        "selectConversation": "Select a Conversation",
+        "chooseChat": "Choose a chat from the sidebar to start messaging",
+        "instructor": "Instructor",
+        "online": "Online"
       },
       "manage": {
         "bioPlaceholder": "Bio",
@@ -1778,7 +1789,13 @@
     },
     "messageInput": {
       "errorTitle": "Error",
-      "placeholder": "e.g Hey I have an error in section N° can some one help me?"
+      "placeholder": "Type your message here..."
+    }
+  },
+  "shared": {
+    "messageInput": {
+      "errorTitle": "Error",
+      "placeholder": "Type your message here..."
     },
     "meetingPayment": {
       "submitted": "Payment Proof Submitted!",

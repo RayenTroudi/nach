@@ -20,6 +20,8 @@ import {
 } from "./course.action";
 import { startTrackUserCourseProgress } from "./user-progress.action";
 import { TCourse } from "@/types/models.types";
+import { createPrivateChatRoom } from "./private-chat-room.action";
+import { CourseTypeEnum } from "../enums";
 
 export const createPurchase = async (params: CreatePurchaseParams) => {
   try {
@@ -62,6 +64,21 @@ export const createPurchase = async (params: CreatePurchaseParams) => {
       course?.currency === "usd" ? course?.price! : course?.price! / 3.3;
 
     await depositToUserWallet(course.instructor._id, amount);
+
+    // Create private chat room with instructor for regular courses
+    if (course.courseType === CourseTypeEnum.Regular) {
+      try {
+        await createPrivateChatRoom({
+          courseId: params.courseId,
+          studentId: params.userId,
+          instructorId: course.instructor._id,
+        });
+        console.log("Private chat room created for course purchase");
+      } catch (chatError: any) {
+        console.log("Warning: Failed to create private chat room:", chatError.message);
+        // Don't fail the purchase if chat room creation fails
+      }
+    }
 
     return JSON.parse(JSON.stringify(purchase));
   } catch (error: any) {

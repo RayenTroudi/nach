@@ -27,6 +27,8 @@ import { deleteUserComments } from "./comment.action";
 import { pushStudentToChatRoom } from "./course-chat-room";
 import CourseChatRoom from "../models/course-chat-room.model";
 import ChatRoomMessage from "../models/chat-room-message.model";
+import PrivateChatRoom from "../models/private-chat-room.model";
+import PrivateChatMessage from "../models/private-chat-message.model";
 import { TagType } from "../utils";
 import { redirect } from "next/navigation";
 // WithdrawTransaction model removed - Stripe-related
@@ -124,9 +126,11 @@ export const getUserByClerkId = async (params: GetUserByClerkIdParams) => {
   try {
     connectToDatabase();
 
-    // Removed WithdrawTransaction.find() - Stripe-related
+    // Initialize models for Mongoose to recognize them
     await CourseChatRoom.find();
     await ChatRoomMessage.find();
+    await PrivateChatRoom.find();
+    await PrivateChatMessage.find();
     const user = await User.findOne({ clerkId: params.clerkId })
       .populate({
         path: "createdCourses",
@@ -189,6 +193,23 @@ export const getUserByClerkId = async (params: GetUserByClerkIdParams) => {
           {
             path: "messages",
             model: "ChatRoomMessage",
+            populate: {
+              path: "senderId",
+              model: "User",
+            },
+          },
+        ],
+      })
+      .populate({
+        path: "privateChatRooms",
+        model: "PrivateChatRoom",
+        populate: [
+          { path: "student", model: "User" },
+          { path: "instructor", model: "User" },
+          { path: "courseId", model: "Course" },
+          {
+            path: "messages",
+            model: "PrivateChatMessage",
             populate: {
               path: "senderId",
               model: "User",
@@ -336,6 +357,21 @@ export const joinChatRoom = async (userId: string, chatRoomId: string) => {
     await pushStudentToChatRoom({ chatRoomId, studentId: userId });
   } catch (error: any) {
     console.log("Error in pushOwnChatRoomToUser: ", error.message);
+    throw new Error(error.message);
+  }
+};
+
+export const pushPrivateChatRoomToUser = async (
+  userId: string,
+  privateChatRoomId: string
+) => {
+  try {
+    await connectToDatabase();
+    await User.findByIdAndUpdate(userId, {
+      $push: { privateChatRooms: privateChatRoomId },
+    });
+  } catch (error: any) {
+    console.log("Error in pushPrivateChatRoomToUser: ", error.message);
     throw new Error(error.message);
   }
 };

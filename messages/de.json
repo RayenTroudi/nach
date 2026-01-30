@@ -539,7 +539,18 @@
       "chatRooms": {
         "enrollInCourse": "Sobald Sie sich in einen regulären Kurs einschreiben, werden Sie automatisch zum Lernraum dieses Kurses hinzugefügt",
         "noChatRooms": "Keine Chaträume verfügbar",
-        "title": "Lernräume"
+        "title": "Nachrichten",
+        "conversations": "Unterhaltungen",
+        "searchPlaceholder": "Unterhaltungen durchsuchen...",
+        "filterAll": "Alle",
+        "filterPrivate": "Privat",
+        "filterGroup": "Gruppe",
+        "noConversations": "Keine Unterhaltungen gefunden",
+        "tryAdjustingFilters": "Versuchen Sie, Ihre Filter anzupassen",
+        "selectConversation": "Wählen Sie eine Unterhaltung",
+        "chooseChat": "Wählen Sie einen Chat aus der Seitenleiste, um mit dem Schreiben zu beginnen",
+        "instructor": "Dozent",
+        "online": "Online"
       },
       "manage": {
         "bioPlaceholder": "Biografie",
@@ -1778,7 +1789,13 @@
     },
     "messageInput": {
       "errorTitle": "Fehler",
-      "placeholder": "z.B. Hallo, ich habe einen Fehler in Abschnitt N°, kann mir jemand helfen?"
+      "placeholder": "Geben Sie hier Ihre Nachricht ein..."
+    }
+  },
+  "shared": {
+    "messageInput": {
+      "errorTitle": "Fehler",
+      "placeholder": "Geben Sie hier Ihre Nachricht ein..."
     },
     "meetingPayment": {
       "submitted": "Zahlungsnachweis eingereicht!",

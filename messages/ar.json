@@ -636,9 +636,20 @@
         "checkoutWithFlouci": "الدفع باستخدام Flouci"
       },
       "chatRooms": {
-        "title": "غرف التعلم",
+        "title": "الرسائل",
         "noChatRooms": "لا توجد غرف دردشة متاحة",
-        "enrollInCourse": "بمجرد التسجيل في دورة منتظمة، سيتم ضمك تلقائيًا إلى غرفة التعلم الخاصة بتلك الدورة"
+        "enrollInCourse": "بمجرد التسجيل في دورة منتظمة، سيتم ضمك تلقائيًا إلى غرفة التعلم الخاصة بتلك الدورة",
+        "conversations": "محادثات",
+        "searchPlaceholder": "البحث في المحادثات...",
+        "filterAll": "الكل",
+        "filterPrivate": "خاص",
+        "filterGroup": "مجموعة",
+        "noConversations": "لم يتم العثور على محادثات",
+        "tryAdjustingFilters": "حاول تعديل الفلاتر",
+        "selectConversation": "اختر محادثة",
+        "chooseChat": "اختر دردشة من الشريط الجانبي لبدء المراسلة",
+        "instructor": "مدرس",
+        "online": "متصل"
       },
       "manage": {
         "clickToChange": "انقر لتغيير صورة الملف الشخصي",
@@ -1782,7 +1793,13 @@
     },
     "messageInput": {
       "errorTitle": "خطأ",
-      "placeholder": "مثلاً، مرحباً لدي خطأ في القسم رقم، هل يمكن لأحد مساعدتي؟"
+      "placeholder": "اكتب رسالتك هنا..."
+    }
+  },
+  "shared": {
+    "messageInput": {
+      "errorTitle": "خطأ",
+      "placeholder": "اكتب رسالتك هنا..."
     },
     "meetingPayment": {
       "submitted": "تم تقديم إثبات الدفع!",

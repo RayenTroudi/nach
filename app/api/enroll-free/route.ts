@@ -3,6 +3,8 @@ import { connectToDatabase } from "@/lib/mongoose";
 import Course from "@/lib/models/course.model";
 import User from "@/lib/models/user.model";
 import { NextResponse } from "next/server";
+import { createPrivateChatRoom } from "@/lib/actions/private-chat-room.action";
+import { CourseTypeEnum } from "@/lib/enums";
 
 export async function POST(request: Request) {
   try {
@@ -70,6 +72,21 @@ export async function POST(request: Request) {
     }
     user.enrolledCourses.push(course._id);
     await user.save();
+
+    // Create private chat room with instructor for regular courses
+    if (course.courseType === CourseTypeEnum.Regular) {
+      try {
+        await createPrivateChatRoom({
+          courseId: course._id.toString(),
+          studentId: user._id.toString(),
+          instructorId: course.instructor.toString(),
+        });
+        console.log("Private chat room created for free course enrollment");
+      } catch (chatError: any) {
+        console.log("Warning: Failed to create private chat room:", chatError.message);
+        // Don't fail the enrollment if chat room creation fails
+      }
+    }
 
     return NextResponse.json(
       {

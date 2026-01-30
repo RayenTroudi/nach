@@ -4,6 +4,7 @@ import { TUser } from "@/types/models.types";
 import { auth } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
 import React from "react";
+import { combineAndNormalizeChatRooms } from "@/lib/utils/chat-utils";
 
 const StudentChatRoomsPage = async () => {
   const { userId } = auth();
@@ -15,7 +16,15 @@ const StudentChatRoomsPage = async () => {
   try {
     user = await getUserByClerkId({ clerkId: userId! });
   } catch (error: any) {}
-  return <ChatRooms chatRooms={user.joinedChatRooms ?? []} user={user} />;
+  
+  // Combine and normalize group chat rooms and private chat rooms
+  const allChatRooms = combineAndNormalizeChatRooms(
+    user.joinedChatRooms ?? [],
+    user.privateChatRooms ?? [],
+    user._id
+  );
+  
+  return <ChatRooms chatRooms={allChatRooms} user={user} />;
 };
 
 export default StudentChatRoomsPage;

@@ -17,6 +17,7 @@ export interface IUser extends Document {
   purchasedDocumentBundles?: Schema.Types.ObjectId[];
   ownChatRooms?: Schema.Types.ObjectId[];
   joinedChatRooms?: Schema.Types.ObjectId[];
+  privateChatRooms?: Schema.Types.ObjectId[];
   withdrawTransactions?: Schema.Types.ObjectId[];
   aboutMe?: string;
   socialLinks?: {
@@ -114,6 +115,13 @@ export const UserSchema = new Schema(
         default: [],
       },
     ],
+    privateChatRooms: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "PrivateChatRoom",
+        default: [],
+      },
+    ],
     withdrawTransactions: [
       {
         type: Schema.Types.ObjectId,
@@ -142,6 +150,11 @@ export const UserSchema = new Schema(
   { timestamps: true }
 );
 
-const User = models.User || model("User", UserSchema);
+// Force delete cached model to ensure schema updates are applied
+if (models.User) {
+  delete models.User;
+}
+
+const User = model("User", UserSchema);
 
 export default User;

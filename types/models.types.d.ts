@@ -17,6 +17,7 @@ export type TUser = {
   enrolledCourses?: TCourse[];
   ownChatRooms?: TCourseChatRoom[];
   joinedChatRooms?: TCourseChatRoom[];
+  privateChatRooms?: TPrivateChatRoom[];
   withdrawTransactions?: TWithdrawTransaction[];
   createdAt: Date;
   socialLinks?: {
@@ -45,9 +46,28 @@ export type TCourseChatRoom = {
   cratedAt: Date;
 };
 
+export type TPrivateChatRoom = {
+  _id: string;
+  courseId: TCourse;
+  student: TUser;
+  instructor: TUser;
+  messages?: TPrivateChatMessage[];
+  isActive: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
 export type TChatRoomMessage = {
   _id: string;
   chatRoomId: TCourseChatRoom;
+  senderId: TUser;
+  content: string;
+  createdAt: Date;
+};
+
+export type TPrivateChatMessage = {
+  _id: string;
+  privateChatRoomId: TPrivateChatRoom;
   senderId: TUser;
   content: string;
   createdAt: Date;

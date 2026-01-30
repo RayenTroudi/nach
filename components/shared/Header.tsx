@@ -23,13 +23,15 @@ const Header = async () => {
   const { userId } = auth();
   let mongoDbUser = null;
   try {
-    mongoDbUser = await getUserByClerkId({ clerkId: userId! });
-    console.log("🔍 Header - MongoDB User:", {
-      clerkId: userId,
-      isAdmin: mongoDbUser?.isAdmin,
-      firstName: mongoDbUser?.firstName,
-      email: mongoDbUser?.email,
-    });
+    if (userId) {
+      mongoDbUser = await getUserByClerkId({ clerkId: userId! });
+      console.log("🔍 Header - MongoDB User:", {
+        clerkId: userId,
+        isAdmin: mongoDbUser?.isAdmin,
+        firstName: mongoDbUser?.firstName,
+        email: mongoDbUser?.email,
+      });
+    }
   } catch (error: any) {
     console.log("❌ Header - Error fetching user:", error.message);
   }

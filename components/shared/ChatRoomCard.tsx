@@ -6,6 +6,8 @@ import { Skeleton } from "../ui/skeleton";
 import { AnimatedTooltip } from "../ui/animated-tooltip";
 import OnlineCircle from "./OnlineCircle";
 import { UnreadMessagesType } from "./ChatRooms";
+import { isPrivateChat, getChatRoomDisplayName } from "@/lib/utils/chat-utils";
+import { Users, UserCircle } from "lucide-react";
 
 type Props = {
   unreadMessages: UnreadMessagesType[];
@@ -27,15 +29,21 @@ const ChatRoomCard = ({
   const chatRoomUnreadMessages = unreadMessages.filter(
     (message) => message.roomId === chatRoom._id
   );
+  
+  const isPrivate = isPrivateChat(chatRoom);
+  const otherUser = isPrivate ? chatRoom.students?.[0] : null;
+  
   return (
     <div
-      className={`line-clamp-1 relative w-full min-h-[50px] rounded-sm flex items-center gap-x-4 px-2 py-2 hover:bg-slate-100 dark:hover:bg-slate-900 transition-all duration-300 ease-in-out cursor-pointer
+      className={`
+        relative w-full rounded-lg px-3 py-3 
+        hover:bg-slate-50 dark:hover:bg-slate-800 
+        transition-all duration-200 ease-in-out cursor-pointer
+        group
         ${
-          selectedChatRoom
-            ? selectedChatRoom._id === chatRoom._id
-              ? "bg-slate-100 dark:bg-slate-900"
-              : ""
-            : ""
+          selectedChatRoom && selectedChatRoom._id === chatRoom._id
+            ? "bg-brand-red-50 dark:bg-brand-red-950/20 border-l-4 border-brand-red-500"
+            : "border-l-4 border-transparent"
         }
       `}
       onClick={() => {
@@ -44,79 +52,100 @@ const ChatRoomCard = ({
       }}
     >
       {chatRoomUnreadMessages.length && !selectedChatRoom ? (
-        <div className="absolute text-xs bg-brand-red-500 w-5 h-5 rounded-full flex items-center justify-center text-slate-50 right-2 top-2">
-          {" "}
-          {chatRoomUnreadMessages.length}{" "}
+        <div className="absolute text-xs bg-brand-red-500 w-6 h-6 rounded-full flex items-center justify-center text-white font-semibold right-3 top-3 shadow-lg animate-pulse">
+          {chatRoomUnreadMessages.length}
         </div>
       ) : null}
-      <Avatar className="w-[70px] h-[70px] ">
-        <AvatarImage
-          className="w-[70px] h-[70px]"
-          src={
-            chatRoom.courseId?.thumbnail! ||
-            "/images/default-course-thumbnail.jpg"
-          }
-          alt="Course Thumbnail"
-        />
-        <AvatarFallback className="w-[70px] h-[70px]">
-          <Skeleton className="w-[70px] h-[70px]" />
-        </AvatarFallback>
-      </Avatar>
-      <div className="absolute bottom-4 left-[62px] w-4 h-4 z-50">
-        <OnlineCircle />
-      </div>
+      <div className="flex items-start gap-x-3">
+        <div className="relative flex-shrink-0">
+          <Avatar className="w-14 h-14 ring-2 ring-slate-200 dark:ring-slate-700">
+            <AvatarImage
+              className="w-14 h-14 object-cover"
+              src={
+                isPrivate 
+                  ? (otherUser?.picture || "/images/default_profile.avif")
+                  : (chatRoom.courseId?.thumbnail! || "/images/default-course-thumbnail.jpg")
+              }
+              alt={isPrivate ? "User Profile" : "Course Thumbnail"}
+            />
+            <AvatarFallback className="w-14 h-14">
+              <Skeleton className="w-14 h-14" />
+            </AvatarFallback>
+          </Avatar>
+          <div className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 z-10">
+            <OnlineCircle />
+          </div>
+        </div>
 
-      <div className="flex-1 min-h-full flex flex-col gap-y-2 justify-around text-wrap">
-        <h2 className="font-bold  line-clamp-1">{chatRoom.courseId.title}</h2>
+        <div className="flex-1 min-w-0 flex flex-col gap-y-1">
+          <div className="flex items-center gap-x-2">
+            <h2 className="font-semibold text-sm text-slate-900 dark:text-slate-100 truncate flex-1">
+              {isPrivate ? otherUser?.username : chatRoom.courseId.title}
+            </h2>
+            {isPrivate && (
+              <span className="px-2 py-0.5 text-[10px] font-semibold rounded-full bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 flex-shrink-0">
+                Private
+              </span>
+            )}
+            {!isPrivate && (
+              <span className="px-2 py-0.5 text-[10px] font-semibold rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 flex-shrink-0">
+                Group
+              </span>
+            )}
+          </div>
 
         {chatRoomUnreadMessages.length ? (
-          <p className="text-slate-950 dark:text-slate-50 font-bold truncate text-smw-full !line-clamp-1">
-            {chatRoomUnreadMessages.at(-1)?.unreadMessage.senderId.username} :{" "}
-            {chatRoomUnreadMessages.at(-1)?.unreadMessage.content}{" "}
+          <p className="text-slate-900 dark:text-slate-100 font-semibold truncate text-xs">
+            {chatRoomUnreadMessages.at(-1)?.unreadMessage.senderId.username}: {chatRoomUnreadMessages.at(-1)?.unreadMessage.content}
           </p>
         ) : (
           <>
             {lastMessage ? (
-              <p className="text-slate-500 font-normal truncate text-sm w-full line-clamp-1">
-                {lastMessage.senderId.username} : {lastMessage.content}
+              <p className="text-slate-500 dark:text-slate-400 font-normal truncate text-xs">
+                {lastMessage.senderId.username}: {lastMessage.content}
+              </p>
+            ) : isPrivate ? (
+              <p className="text-slate-400 dark:text-slate-500 font-normal text-xs italic">
+                Start a private conversation
               </p>
             ) : (
               <div className="flex items-center gap-x-2">
-                <Avatar className="w-5 h-5 hidden md:block ">
+                <Avatar className="w-4 h-4">
                   <AvatarImage
-                    className="w-5 h-5 "
+                    className="w-4 h-4"
                     src={chatRoom.instructorAdmin.picture || "/images/default_profile.avif"}
-                    alt="Teacher Avatar"
+                    alt="Instructor Avatar"
                   />
-                  <AvatarFallback className="w-5 h-5 ">
-                    <Skeleton className="w-5 h-5 " />
+                  <AvatarFallback className="w-4 h-4">
+                    <Skeleton className="w-4 h-4" />
                   </AvatarFallback>
                 </Avatar>
-                <p className="text-slate-500 font-bold text-xs">
-                  {" "}
-                  {chatRoom.instructorAdmin.username}{" "}
+                <p className="text-slate-500 dark:text-slate-400 font-medium text-xs">
+                  {chatRoom.instructorAdmin.username}
                 </p>
-                <div className="hidden md:block w-fit px-4 py-0.5 text-xs font-bold rounded-full bg-blue-700/20 text-center text-blue-700">
+                <span className="hidden lg:inline-block px-2 py-0.5 text-[10px] font-semibold rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400">
                   Instructor
-                </div>
+                </span>
               </div>
             )}
           </>
         )}
 
-        <div className="w-full flex flex-row ">
-          <AnimatedTooltip
-            items={
-              chatRoom.students
-                ? chatRoom?.students.length <= 6
-                  ? chatRoom?.students
-                  : chatRoom?.students?.slice(0, 5)
-                : []
-            }
-            otherStyles="w-5 h-5"
-          />
-        </div>
+        {!isPrivate && chatRoom.students && chatRoom.students.length > 0 && (
+          <div className="flex items-center gap-x-1 mt-1">
+            <AnimatedTooltip
+              items={chatRoom.students.slice(0, 5)}
+              otherStyles="w-5 h-5 text-[10px]"
+            />
+            {chatRoom.students.length > 5 && (
+              <span className="text-[10px] text-slate-400 dark:text-slate-500 font-medium ml-1">
+                +{chatRoom.students.length - 5} more
+              </span>
+            )}
+          </div>
+        )}
       </div>
+    </div>
     </div>
   );
 };

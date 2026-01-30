@@ -8,6 +8,8 @@ import DocumentModel from "@/lib/models/document.model";
 import DocumentBundle from "@/lib/models/document-bundle.model";
 import { getUserByClerkId } from "@/lib/actions/user.action";
 import { sendEmail } from "@/lib/actions/email.action";
+import { createPrivateChatRoom } from "@/lib/actions/private-chat-room.action";
+import { CourseTypeEnum } from "@/lib/enums";
 
 // GET: List all payment proofs with filters
 export async function GET(request: Request) {
@@ -180,7 +182,7 @@ export async function POST(request: Request) {
             }
 
             // Add user to course's students
-            const course = await Course.findById(courseId);
+            const course = await Course.findById(courseId).populate("instructor");
             if (course) {
               if (!course.students) {
                 course.students = [];
@@ -188,6 +190,20 @@ export async function POST(request: Request) {
               if (!course.students.includes(user._id)) {
                 course.students.push(user._id);
                 await course.save();
+
+                // Create private chat room with instructor for regular courses
+                if (course.courseType === CourseTypeEnum.Regular) {
+                  try {
+                    await createPrivateChatRoom({
+                      courseId: courseId.toString(),
+                      studentId: user._id.toString(),
+                      instructorId: course.instructor._id?.toString() || course.instructor.toString(),
+                    });
+                    console.log("Private chat room created for bank transfer course purchase");
+                  } catch (chatError: any) {
+                    console.log("Warning: Failed to create private chat room:", chatError.message);
+                  }
+                }
               }
             }
           }

@@ -325,7 +325,7 @@ export const alreadyEnrolled = async (courseId: string, studentId: string) => {
 
     const user = await User.findById(studentId);
     if (!user) throw new Error("User not found");
-    return user?.enrolledCourses?.includes(courseId);
+    return user?.enrolledCourses?.some((id: any) => id.toString() === courseId);
   } catch (error: any) {
     console.log("ALREADY ENROLLED ERROR: ", error.message);
     throw new Error(error.message);

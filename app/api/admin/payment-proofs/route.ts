@@ -277,19 +277,22 @@ export async function POST(request: Request) {
     if (status === "rejected" && process.env.RESEND_API_KEY) {
       try {
         const user = await User.findById(proof.userId._id);
-        await sendEmail({
-          to: user.email,
-          subject: "Payment Verification Issue",
-          html: `
-            <h2>Payment Verification Required</h2>
-            <p>Hi ${user.firstName},</p>
-            <p>We've reviewed your payment proof, but we need additional information or clarification.</p>
-            <p>Amount: ${proof.amount} TND</p>
-            ${adminNotes ? `<p><strong>Reason:</strong> ${adminNotes}</p>` : ""}
-            <p>Please upload a new proof or contact support for assistance.</p>
-            <p>Best regards,<br/>The Team</p>
-          `,
-        });
+        
+        if (user && user.email) {
+          await sendEmail({
+            to: user.email,
+            subject: "Payment Verification Issue",
+            html: `
+              <h2>Payment Verification Required</h2>
+              <p>Hi ${user.firstName},</p>
+              <p>We've reviewed your payment proof, but we need additional information or clarification.</p>
+              <p>Amount: ${proof.amount} TND</p>
+              ${adminNotes ? `<p><strong>Reason:</strong> ${adminNotes}</p>` : ""}
+              <p>Please upload a new proof or contact support for assistance.</p>
+              <p>Best regards,<br/>The Team</p>
+            `,
+          });
+        }
       } catch (emailError) {
         console.error("❌ Error sending rejection email:", emailError);
       }

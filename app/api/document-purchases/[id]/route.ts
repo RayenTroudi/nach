@@ -49,7 +49,7 @@ export async function GET(
       : purchase.userId.toString();
     const isOwner = purchaseUserId === user._id.toString();
     const isAdmin = user.isAdmin;
-    const isInstructor = user.role === "instructor";
+    const isInstructor = user.createdCourses && user.createdCourses.length > 0;
 
     if (!isOwner && !isAdmin && !isInstructor) {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
@@ -87,7 +87,8 @@ export async function PATCH(
     }
 
     // Only admin or instructor can update status
-    if (!user.isAdmin && user.role !== "instructor") {
+    const isInstructor = user.createdCourses && user.createdCourses.length > 0;
+    if (!user.isAdmin && !isInstructor) {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 

@@ -48,9 +48,9 @@ export async function globalSearch(params: SearchParams) {
           findCriteria = { ...findCriteria, ...additionalCriteria };
         }
 
-        const queryResults = await model.find(findCriteria).limit(2);
+        const queryResults = await (model as any).find(findCriteria).limit(2);
         results.push(
-          ...queryResults.map((item) => {
+          ...queryResults.map((item: any) => {
             let picture = "";
             if (type === "course") {
               picture = item.thumbnail;
@@ -78,8 +78,8 @@ export async function globalSearch(params: SearchParams) {
       if (modelInfo.additionalCriteria) {
         findCriteria = { ...findCriteria, ...modelInfo.additionalCriteria };
       }
-      const queryResults = await modelInfo.model.find(findCriteria).limit(8);
-      results = queryResults.map((item) => {
+      const queryResults = await (modelInfo.model as any).find(findCriteria).limit(8);
+      results = queryResults.map((item: any) => {
         let picture = "";
         if (typeLower === "course") {
           picture = item.thumbnail;

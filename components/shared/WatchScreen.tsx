@@ -62,10 +62,8 @@ const WatchScreen = ({
   const onChangeVideoToWatchHandler = (video: TVideo) => {
     setIsLoading(true);
     setVideoToWatch(video);
-    setTimeout(() => {
-      setIsLoading(false);
-      router.refresh();
-    }, 1000);
+    // Remove video immediately without unnecessary delay
+    setIsLoading(false);
   };
 
   useEffect(() => setIsMounted(true), []);

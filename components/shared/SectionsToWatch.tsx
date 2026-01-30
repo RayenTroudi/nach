@@ -113,24 +113,24 @@ const SectionsToWatch = ({
         });
       }
 
+      // Update state immediately and show success
+      setVideoToComplete(null);
+      scnToast({
+        title: "Success",
+        description: `${video.title} marked as ${videoAlreadyCompleted ? 'incomplete' : 'completed'}.`,
+        variant: "success",
+      });
+      
+      // Refresh to update progress data from server
       router.refresh();
     } catch (error: any) {
       console.log("toggleVideoCompleted : ", error.message);
+      setVideoToComplete(null);
       scnToast({
         title: "Error",
         description: "Failed to mark video as completed.",
         variant: "destructive",
       });
-    } finally {
-      setTimeout(() => {
-        setVideoToComplete(null);
-        scnToast({
-          title: "Success",
-          description: `${video.title} marked as completed.`,
-          variant: "success",
-        });
-        router.refresh();
-      }, 500);
     }
   };
 

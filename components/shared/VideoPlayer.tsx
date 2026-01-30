@@ -53,7 +53,7 @@ const VideoPlayer = ({ video, isLoading, poster }: Props) => {
               className="w-full h-full object-cover bg-black"
               controlsList="nodownload"
               crossOrigin="anonymous"
-              preload="metadata"
+              preload="auto"
             >
               Your browser does not support the video tag.
             </video>

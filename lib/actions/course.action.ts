@@ -516,9 +516,17 @@ export const pushStudentToCourse = async (params: ToggleStudentFromCourse) => {
     // Only add student to chat room for regular courses
     if (course.courseType === CourseTypeEnum.Regular) {
       if (course.chatRoom && course.chatRoom._id) {
+        // Add chat room to user's joinedChatRooms array
         await joinChatRoom(studentId, course.chatRoom._id);
+        // Add student to chat room's students array (imported from course-chat-room.ts)
+        const { pushStudentToChatRoom } = await import("./course-chat-room");
+        await pushStudentToChatRoom({
+          chatRoomId: course.chatRoom._id.toString(),
+          studentId: studentId,
+        });
+        console.log("Student added to group chat room successfully");
       } else {
-        console.log("Warning: Regular course has no chat room, skipping joinChatRoom");
+        console.log("Warning: Regular course has no chat room, skipping group chat enrollment");
       }
     }
   } catch (error: any) {

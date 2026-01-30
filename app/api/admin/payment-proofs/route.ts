@@ -168,6 +168,14 @@ export async function POST(request: Request) {
     if (status === "approved") {
       try {
         const user = await User.findById(proof.userId._id);
+        
+        if (!user) {
+          return NextResponse.json(
+            { message: "User not found" },
+            { status: 404 }
+          );
+        }
+        
         const itemIds = proof.itemIds || proof.courseIds;
         
         if (proof.itemType === "course") {

@@ -85,7 +85,7 @@ export default function MyDocumentsPage() {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [t]);
 
   useEffect(() => {
     fetchPurchases();

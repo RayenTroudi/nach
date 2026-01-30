@@ -6,6 +6,7 @@ import { Play, Pause, Volume2, VolumeX, X, ChevronLeft, ChevronRight } from "luc
 import { TCourse } from "@/types/models.types";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
+import { getProxiedVideoUrl } from "@/lib/utils/video-url-helper";
 
 interface FAQVideoPlayerProps {
   course: TCourse;
@@ -27,12 +28,14 @@ export default function FAQVideoPlayer({
   const [videoRef, setVideoRef] = useState<HTMLVideoElement | null>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [showInfo, setShowInfo] = useState(true);
+  const [videoError, setVideoError] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
   // Find current course index
   useEffect(() => {
     const index = courses.findIndex(c => c._id === course._id);
     if (index !== -1) setCurrentIndex(index);
+    setVideoError(false); // Reset error when course changes
   }, [course, courses]);
 
   const togglePlay = () => {
@@ -116,25 +119,56 @@ export default function FAQVideoPlayer({
             transition={{ duration: 0.3 }}
             className="w-full h-full flex items-center justify-center"
           >
-            {/* Video Element */}
-            <video
-              ref={setVideoRef}
-              src={course.faqVideo}
-              className="w-full h-full object-contain"
-              onEnded={handleVideoEnd}
-              onClick={(e) => {
-                e.stopPropagation();
-                togglePlay();
-              }}
-              autoPlay={autoPlay}
-              loop={false}
-              playsInline
-              preload="metadata"
-              onLoadedData={() => {
-                if (autoPlay && videoRef) {
-                  videoRef.play().catch(err => console.error("Auto-play failed:", err));
-                }
-              }}
+            {videoError || !course.faqVideo ? (
+              <div className="w-full h-full flex items-center justify-center bg-slate-900">
+                <div className="text-center p-8">
+                  <div className="text-6xl mb-4">🎥</div>
+                  <h3 className="text-white text-xl font-semibold mb-2">Video Not Available</h3>
+                  <p className="text-slate-400">This video is currently unavailable or has been removed.</p>
+                  {courses.length > 1 && (
+                    <Button
+                      onClick={() => {
+                        if (currentIndex < courses.length - 1) handleNext();
+                        else if (currentIndex > 0) handlePrevious();
+                        else onClose?.();
+                      }}
+                      className="mt-4"
+                    >
+                      {currentIndex < courses.length - 1 ? 'Next Video' : currentIndex > 0 ? 'Previous Video' : 'Close'}
+                    </Button>
+                  )}
+                </div>
+              </div>
+            ) : (
+              <video
+                ref={setVideoRef}
+                src={getProxiedVideoUrl(course.faqVideo)}
+                className="w-full h-full object-contain"
+                onEnded={handleVideoEnd}
+                onError={(e) => {
+                  console.error("Video loading error:", e);
+                  setVideoError(true);
+                  setIsPlaying(false);
+                }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  togglePlay();
+                }}
+                autoPlay={autoPlay}
+                loop={false}
+                playsInline
+                preload="metadata"
+                crossOrigin="anonymous"
+                onLoadedData={() => {
+                  if (autoPlay && videoRef) {
+                    videoRef.play().catch(err => {
+                      console.error("Auto-play failed:", err);
+                      setVideoError(true);
+                    });
+                  }
+                }}
+              />
+            )}}}
             />
           </motion.div>
         </AnimatePresence>

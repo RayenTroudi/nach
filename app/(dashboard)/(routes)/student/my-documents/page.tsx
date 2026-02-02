@@ -4,14 +4,15 @@ import { useState, useEffect, useCallback } from "react";
 import { useSearchParams } from "next/navigation";
 import {
   FileText,
-  Download,
   FolderOpen,
   Package,
   Calendar,
-  Eye,
+  FileOpen,
   CheckCircle,
   Clock,
   XCircle,
+  ChevronRight,
+  Folder,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -28,6 +29,7 @@ import Loader from "@/components/shared/Loader";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
 import { format } from "date-fns";
+import DocumentViewer from "./_components/DocumentViewer";
 
 interface Purchase {
   _id: string;
@@ -70,6 +72,12 @@ export default function MyDocumentsPage() {
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("all");
   const [expandedBundles, setExpandedBundles] = useState<Set<string>>(new Set());
+  const [viewerOpen, setViewerOpen] = useState(false);
+  const [selectedDocument, setSelectedDocument] = useState<{
+    fileUrl: string;
+    fileName: string;
+    title: string;
+  } | null>(null);
 
   const fetchPurchases = useCallback(async () => {
     try {
@@ -102,38 +110,14 @@ export default function MyDocumentsPage() {
     }
   }, [searchParams]);
 
-  const handleDownload = async (fileUrl: string, fileName: string) => {
-    try {
-      const response = await fetch(fileUrl);
-      const blob = await response.blob();
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = fileName;
-      document.body.appendChild(a);
-      a.click();
-      window.URL.revokeObjectURL(url);
-      document.body.removeChild(a);
-      toast.success(t("downloadStarted"));
-    } catch (error) {
-      console.error("Error downloading:", error);
-      toast.error(t("downloadFailed"));
-    }
+  const handleOpenDocument = (fileUrl: string, fileName: string, title: string) => {
+    setSelectedDocument({ fileUrl, fileName, title });
+    setViewerOpen(true);
   };
 
-  const handleDownloadAll = async (documents: Purchase["itemId"]["documents"]) => {
-    if (!documents) return;
-    
-    toast.info(t("downloadingAll"));
-    for (const doc of documents) {
-      await handleDownload(doc.fileUrl, doc.fileName);
-      // Add delay to avoid overwhelming the browser
-      await new Promise(resolve => setTimeout(resolve, 500));
-    }
-  };
-
-  const handlePreview = (fileUrl: string) => {
-    window.open(fileUrl, "_blank");
+  const handleCloseViewer = () => {
+    setViewerOpen(false);
+    setSelectedDocument(null);
   };
 
   const toggleBundle = (bundleId: string) => {
@@ -244,7 +228,7 @@ export default function MyDocumentsPage() {
 
         <CardContent>
           {/* Meta Info */}
-          <div className="grid grid-cols-2 gap-4 mb-4 pb-4 border-b text-sm">
+          <div className="grid grid-cols-1 gap-4 mb-4 pb-4 border-b text-sm">
             <div>
               <p className="text-slate-600 dark:text-slate-400">{t("purchaseDate")}</p>
               <p className="font-medium flex items-center gap-1">
@@ -252,38 +236,19 @@ export default function MyDocumentsPage() {
                 {format(new Date(purchase.createdAt), "MMM dd, yyyy")}
               </p>
             </div>
-            <div>
-              <p className="text-slate-600 dark:text-slate-400">
-                {isBundle ? t("documentsIncluded") : t("fileSize")}
-              </p>
-              <p className="font-medium">
-                {isBundle
-                  ? `${itemId.documents?.length || 0} ${t("files")}`
-                  : formatFileSize(itemId.fileSize || 0)}
-              </p>
-            </div>
           </div>
 
           {/* Single Document Actions */}
           {!isBundle && itemId.fileUrl && (
-            <div className="grid grid-cols-2 gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => handlePreview(itemId.fileUrl!)}
-                disabled={!canAccess}
-              >
-                <Eye className="w-4 h-4 mr-1" />
-                {t("preview")}
-              </Button>
+            <div className="flex">
               <Button
                 size="sm"
-                onClick={() => handleDownload(itemId.fileUrl!, itemId.fileName!)}
+                onClick={() => handleOpenDocument(itemId.fileUrl!, itemId.fileName!, itemId.title)}
                 disabled={!canAccess}
-                className="bg-brand-red-500 hover:bg-brand-red-600"
+                className="flex-1 bg-brand-red-500 hover:bg-brand-red-600"
               >
-                <Download className="w-4 h-4 mr-1" />
-                {t("download")}
+                <FileOpen className="w-4 h-4 mr-2" />
+                {t("openDocument")}
               </Button>
             </div>
           )}
@@ -291,66 +256,39 @@ export default function MyDocumentsPage() {
           {/* Bundle Actions */}
           {isBundle && itemId.documents && (
             <div className="space-y-3">
-              <div className="flex gap-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => toggleBundle(itemId._id)}
-                  disabled={!canAccess}
-                  className="flex-1"
-                >
-                  {isExpanded ? t("hideDocuments") : t("showDocuments")}
-                </Button>
-                <Button
-                  size="sm"
-                  onClick={() => handleDownloadAll(itemId.documents)}
-                  disabled={!canAccess}
-                  className="flex-1 bg-brand-red-500 hover:bg-brand-red-600"
-                >
-                  <Download className="w-4 h-4 mr-1" />
-                  {t("downloadAll")}
-                </Button>
-              </div>
+              <Button
+                size="sm"
+                onClick={() => toggleBundle(itemId._id)}
+                disabled={!canAccess}
+                className="w-full bg-brand-red-500 hover:bg-brand-red-600"
+              >
+                <Folder className="w-4 h-4 mr-2" />
+                {isExpanded ? t("closeBundle") : t("openBundle")}
+              </Button>
 
               {/* Bundle Documents List */}
               {isExpanded && canAccess && (
                 <div className="space-y-2 pt-3 border-t">
-                  <p className="text-sm font-medium text-slate-700 dark:text-slate-300">
-                    {t("documentsInBundle")}:
+                  <p className="text-sm font-medium text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                    <FolderOpen className="w-4 h-4" />
+                    {t("documentsInBundle")} ({itemId.documents.length})
                   </p>
                   {itemId.documents.map((doc) => (
-                    <div
+                    <button
                       key={doc._id}
-                      className="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-900 rounded-lg"
+                      onClick={() => handleOpenDocument(doc.fileUrl, doc.fileName, doc.title)}
+                      className="w-full flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-900 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors group"
                     >
                       <div className="flex items-center gap-3 flex-1 min-w-0">
-                        <FileText className="w-4 h-4 text-slate-400 flex-shrink-0" />
-                        <div className="min-w-0 flex-1">
-                          <p className="text-sm font-medium truncate">
+                        <FileText className="w-5 h-5 text-brand-red-500 flex-shrink-0" />
+                        <div className="min-w-0 flex-1 text-left">
+                          <p className="text-sm font-medium truncate group-hover:text-brand-red-500 transition-colors">
                             {doc.title}
-                          </p>
-                          <p className="text-xs text-slate-600 dark:text-slate-400">
-                            {formatFileSize(doc.fileSize)}
                           </p>
                         </div>
                       </div>
-                      <div className="flex gap-1 flex-shrink-0">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => handlePreview(doc.fileUrl)}
-                        >
-                          <Eye className="w-4 h-4" />
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => handleDownload(doc.fileUrl, doc.fileName)}
-                        >
-                          <Download className="w-4 h-4" />
-                        </Button>
-                      </div>
-                    </div>
+                      <ChevronRight className="w-5 h-5 text-slate-400 group-hover:text-brand-red-500 transition-colors flex-shrink-0" />
+                    </button>
                   ))}
                 </div>
               )}
@@ -464,6 +402,17 @@ export default function MyDocumentsPage() {
         )}
       </Container>
       </div>
+
+      {/* Document Viewer Modal */}
+      {selectedDocument && (
+        <DocumentViewer
+          isOpen={viewerOpen}
+          onClose={handleCloseViewer}
+          fileUrl={selectedDocument.fileUrl}
+          fileName={selectedDocument.fileName}
+          title={selectedDocument.title}
+        />
+      )}
     </div>
   );
 }

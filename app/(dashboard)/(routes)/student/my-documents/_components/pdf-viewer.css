@@ -1,0 +1,63 @@
+/* Custom PDF Viewer Styles */
+.pdf-page canvas {
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  border-radius: 8px;
+  background: white;
+}
+
+/* Enhance text layer for better selection */
+.react-pdf__Page__textContent {
+  user-select: text;
+  cursor: text;
+}
+
+/* Style annotation layer */
+.react-pdf__Page__annotations {
+  user-select: none;
+}
+
+/* Loading animation */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.pdf-loading {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Dark mode adjustments */
+@media (prefers-color-scheme: dark) {
+  .pdf-page canvas {
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.3), 0 2px 4px -2px rgb(0 0 0 / 0.2);
+  }
+}
+
+/* Smooth zoom transitions */
+.react-pdf__Page {
+  transition: transform 0.3s ease-in-out;
+}
+
+/* Better scrollbar for PDF viewer */
+.pdf-viewer-container::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.pdf-viewer-container::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.pdf-viewer-container::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+.pdf-viewer-container::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}

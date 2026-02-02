@@ -235,7 +235,7 @@ export default function StorefrontPage() {
         toast.error(t("downloadFailed"));
       }
     } else if (item.itemType === "bundle") {
-      router.push(`/my-documents?bundle=${item._id}`);
+      router.push(`/student/my-documents?bundle=${item._id}`);
     }
   };
 

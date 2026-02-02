@@ -7,7 +7,6 @@ import {
   FolderOpen,
   Package,
   Calendar,
-  FileOpen,
   CheckCircle,
   Clock,
   XCircle,
@@ -247,7 +246,7 @@ export default function MyDocumentsPage() {
                 disabled={!canAccess}
                 className="flex-1 bg-brand-red-500 hover:bg-brand-red-600"
               >
-                <FileOpen className="w-4 h-4 mr-2" />
+                <FileText className="w-4 h-4 mr-2" />
                 {t("openDocument")}
               </Button>
             </div>

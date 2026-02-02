@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { X, ZoomIn, ZoomOut, RotateCw, ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import Image from "next/image";
 import {
   Dialog,
   DialogContent,
@@ -217,15 +218,22 @@ export default function DocumentViewer({
                 </div>
               ) : isImage ? (
                 <div className="flex items-center justify-center">
-                  <img
-                    src={fileUrl}
-                    alt={fileName}
+                  <div
                     style={{
                       transform: `scale(${scale}) rotate(${rotation}deg)`,
                       transition: "transform 0.2s ease",
                     }}
-                    className="max-w-full max-h-full object-contain shadow-2xl rounded-lg"
-                  />
+                    className="relative"
+                  >
+                    <Image
+                      src={fileUrl}
+                      alt={fileName}
+                      width={800}
+                      height={600}
+                      className="max-w-full max-h-full object-contain shadow-2xl rounded-lg"
+                      unoptimized
+                    />
+                  </div>
                 </div>
               ) : null}
             </div>

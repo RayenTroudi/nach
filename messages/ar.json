@@ -1700,6 +1700,12 @@
     },
     "replyForm": {
       "answerPlaceholder": "أدخل إجابتك..."
+    },
+    "editor": {
+      "copiedToClipboard": "تم النسخ إلى الحافظة"
+    },
+    "combobox": {
+      "searchPlaceholder": "البحث في الإطار..."
     }
   },
   "shared": {
@@ -1751,6 +1757,16 @@
     },
     "combobox": {
       "searchPlaceholder": "ابحث عن إطار العمل..."
+    },
+    "comments": {
+      "detailsPlaceholder": "أدخل المزيد من التفاصيل...",
+      "searchPlaceholder": "ابحث في الأسئلة..."
+    },
+    "feedbackForm": {
+      "feedbackPlaceholder": "يرجى تزويدنا بملاحظات مفصلة حول الدورة هنا..."
+    },
+    "replyForm": {
+      "answerPlaceholder": "أدخل إجابتك..."
     }
   },
   "coursesPage": {
@@ -2265,7 +2281,13 @@
       "noRequests": "لا توجد طلبات سيرة ذاتية",
       "noRequestsDesc": "لا توجد طلبات سيرة ذاتية معتمدة حالياً",
       "startWorking": "بدء العمل",
-      "delivered": "تم التسليم"
+      "delivered": "تم التسليم",
+      "keep": "احتفظ",
+      "update": "تحديث",
+      "existingResume": "السيرة الذاتية الحالية",
+      "existingMotivationLetter": "خطاب التحفيز الحالي",
+      "existingMotivationLetter2": "خطاب التحفيز الثاني الحالي",
+      "viewCurrent": "عرض الحالي"
     },
     "documents": {
       "title": "المستندات الخاصة بي",

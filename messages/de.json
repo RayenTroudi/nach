@@ -1668,6 +1668,66 @@
       "submissionFailedDesc": "Zahlungsnachweis konnte nicht eingereicht werden."
     },
     "bookingCalendar": {
+      "selectDate": "Wählen Sie ein Datum",
+      "availableTimeSlots": "Verfügbare Zeitfenster",
+      "selectedDate": "Ausgewähltes Datum",
+      "noSlots": "Keine verfügbaren Zeitfenster für dieses Datum.",
+      "tryDifferentDate": "Versuchen Sie, ein anderes Datum auszuwählen.",
+      "notesOptional": "Notizen (optional)",
+      "notesPlaceholder": "Fügen Sie Notizen oder Themen hinzu, die Sie besprechen möchten...",
+      "youSelected": "Sie haben ausgewählt:",
+      "duration": "Dauer: 30 Minuten",
+      "price": "Preis:",
+      "booking": "Buchung läuft...",
+      "continueToPayment": "Weiter zur Zahlung",
+      "confirmBooking": "Buchung bestätigen",
+      "paymentRedirect": "Sie werden nach der Buchung zur Zahlung weitergeleitet",
+      "emailReminder": "Sie erhalten E-Mail-Erinnerungen vor dem Meeting",
+      "errorTitle": "Fehler",
+      "errorDesc": "Verfügbare Zeitfenster konnten nicht geladen werden",
+      "errorBookingDesc": "Meeting konnte nicht gebucht werden",
+      "successTitle": "Erfolg! 🎉",
+      "successDesc": "Meeting erfolgreich gebucht. Überprüfen Sie Ihre E-Mails für die Bestätigung.",
+      "slot": "Zeitfenster",
+      "slots": "Zeitfenster"
+    },
+    "comments": {
+      "emailPlaceholder": "max@beispiel.de",
+      "newsletterTitle": "Abonnieren Sie unseren Newsletter"
+    },
+    "editor": {
+      "copiedToClipboard": "In Zwischenablage kopiert"
+    },
+    "combobox": {
+      "searchPlaceholder": "Framework suchen..."
+    },
+    "comments": {
+      "detailsPlaceholder": "Weitere Details eingeben...",
+      "searchPlaceholder": "Fragen durchsuchen..."
+    },
+    "feedbackForm": {
+      "feedbackPlaceholder": "Bitte geben Sie uns ein detailliertes Feedback zum Kurs..."
+    },
+    "replyForm": {
+      "answerPlaceholder": "Geben Sie Ihre Antwort ein..."
+    }
+  },
+  "shared": {
+    "messageInput": {
+      "errorTitle": "Fehler",
+      "placeholder": "Geben Sie hier Ihre Nachricht ein..."
+    },
+    "footer": {
+      "emailPlaceholder": "max@beispiel.de",
+      "newsletterTitle": "Abonnieren Sie unseren Newsletter"
+    },
+    "editor": {
+      "copiedToClipboard": "In Zwischenablage kopiert"
+    },
+    "combobox": {
+      "searchPlaceholder": "Framework suchen..."
+    },
+    "meetingPayment": {
       "submitted": "Zahlungsnachweis eingereicht!",
       "reviewMessage": "Wir werden Ihre Zahlung überprüfen und Ihnen innerhalb von 24-48 Stunden eine Bestätigungs-E-Mail senden.",
       "meetingLinkMessage": "Sie erhalten Ihren Meeting-Link, sobald die Zahlung bestätigt wurde.",
@@ -1701,40 +1761,6 @@
       "uploadFailedDesc": "Datei konnte nicht hochgeladen werden.",
       "submissionFailed": "Einreichung fehlgeschlagen",
       "submissionFailedDesc": "Zahlungsnachweis konnte nicht eingereicht werden."
-    },
-    "footer": {
-      "emailPlaceholder": "max@beispiel.de",
-      "newsletterTitle": "Abonnieren Sie unseren Newsletter"
-    },
-    "editor": {
-      "copiedToClipboard": "In Zwischenablage kopiert"
-    },
-    "combobox": {
-      "searchPlaceholder": "Framework suchen..."
-    },
-    "bookingCalendar": {
-      "selectDate": "Wählen Sie ein Datum",
-      "availableTimeSlots": "Verfügbare Zeitfenster",
-      "selectedDate": "Ausgewähltes Datum",
-      "noSlots": "Keine verfügbaren Zeitfenster für dieses Datum.",
-      "tryDifferentDate": "Versuchen Sie, ein anderes Datum auszuwählen.",
-      "notesOptional": "Notizen (optional)",
-      "notesPlaceholder": "Fügen Sie Notizen oder Themen hinzu, die Sie besprechen möchten...",
-      "youSelected": "Sie haben ausgewählt:",
-      "duration": "Dauer: 30 Minuten",
-      "price": "Preis:",
-      "booking": "Buchung läuft...",
-      "continueToPayment": "Weiter zur Zahlung",
-      "confirmBooking": "Buchung bestätigen",
-      "paymentRedirect": "Sie werden nach der Buchung zur Zahlung weitergeleitet",
-      "emailReminder": "Sie erhalten E-Mail-Erinnerungen vor dem Meeting",
-      "errorTitle": "Fehler",
-      "errorDesc": "Verfügbare Zeitfenster konnten nicht geladen werden",
-      "errorBookingDesc": "Meeting konnte nicht gebucht werden",
-      "successTitle": "Erfolg! 🎉",
-      "successDesc": "Meeting erfolgreich gebucht. Überprüfen Sie Ihre E-Mails für die Bestätigung.",
-      "slot": "Zeitfenster",
-      "slots": "Zeitfenster"
     },
     "comments": {
       "detailsPlaceholder": "Weitere Details eingeben...",
@@ -2123,6 +2149,59 @@
     "uploadFilesHint": "Laden Sie PDF-, Word-, Text- oder Bilddateien hoch. Sie werden automatisch zu diesem Paket hinzugefügt."
   },
   "teacher": {
+    "consultations": {
+      "title": "Meine Beratungen",
+      "subtitle": "Verwalten und überprüfen Sie Ihre gebuchten Beratungen mit Studenten",
+      "upcoming": "Bevorstehend",
+      "past": "Vergangene",
+      "all": "Alle",
+      "noConsultationsFound": "Keine Beratungen gefunden",
+      "noUpcomingConsultations": "Sie haben noch keine bevorstehenden Beratungen.",
+      "noPastConsultations": "Sie haben keine vergangenen Beratungen.",
+      "noConsultationsYet": "Sie haben noch keine Beratungen.",
+      "paymentPending": "Zahlung ausstehend",
+      "cancelled": "Storniert",
+      "completed": "Abgeschlossen",
+      "activeCanJoin": "Aktiv - Kann beitreten",
+      "confirmed": "Bestätigt",
+      "meetingStarted": "Meeting gestartet",
+      "days": "Tage",
+      "minutes": "Minuten",
+      "free": "Kostenlos",
+      "studentNotes": "Studentennotizen:",
+      "yourNotes": "Ihre Notizen:",
+      "startsIn": "Beginnt in:",
+      "joinMeeting": "Zum Meeting",
+      "notAvailableYet": "Noch nicht verfügbar",
+      "waitingForPaymentApproval": "Warten auf Zahlungsbestätigung"
+    },
+    "availability": {
+      "title": "Meine Verfügbarkeit",
+      "subtitle": "Legen Sie Ihre verfügbaren Zeiten für Studentenberatungen fest",
+      "addAvailability": "Verfügbarkeit hinzufügen",
+      "currentAvailability": "Aktuelle Verfügbarkeit",
+      "day": "Tag",
+      "startTime": "Startzeit",
+      "endTime": "Endzeit",
+      "addSlot": "Zeitfenster hinzufügen",
+      "noAvailability": "Noch keine Verfügbarkeit festgelegt. Fügen Sie Ihr erstes Zeitfenster oben hinzu.",
+      "availabilityAdded": "Verfügbarkeit erfolgreich hinzugefügt",
+      "availabilityRemoved": "Verfügbarkeit erfolgreich entfernt",
+      "failedToAdd": "Fehler beim Hinzufügen der Verfügbarkeit",
+      "failedToRemove": "Fehler beim Entfernen der Verfügbarkeit",
+      "sunday": "Sonntag",
+      "monday": "Montag",
+      "tuesday": "Dienstag",
+      "wednesday": "Mittwoch",
+      "thursday": "Donnerstag",
+      "friday": "Freitag",
+      "saturday": "Samstag",
+      "noAvailabilityTitle": "Keine Verfügbarkeit festgelegt",
+      "am": "AM",
+      "pm": "PM",
+      "slot": "Zeitfenster",
+      "slots": "Zeitfenster"
+    },
     "documents": {
       "title": "Meine Dokumente",
       "myDocuments": "Meine Dokumente",
@@ -2261,7 +2340,13 @@
       "noRequests": "Keine Lebenslauf-Anfragen",
       "noRequestsDesc": "Es gibt derzeit keine genehmigten Lebenslauf-Anfragen",
       "startWorking": "Arbeit beginnen",
-      "delivered": "Geliefert"
+      "delivered": "Geliefert",
+      "keep": "Behalten",
+      "update": "Aktualisieren",
+      "existingResume": "Vorhandener Lebenslauf",
+      "existingMotivationLetter": "Vorhandenes Motivationsschreiben",
+      "existingMotivationLetter2": "Vorhandenes zweites Motivationsschreiben",
+      "viewCurrent": "Aktuell anzeigen"
     },
     "courses": {
       "title": "Meine Kurse",

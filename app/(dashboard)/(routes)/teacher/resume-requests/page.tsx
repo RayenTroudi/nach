@@ -66,6 +66,9 @@ export default function TeacherResumeRequestsPage() {
   const [uploadedUrl, setUploadedUrl] = useState<string | null>(null);
   const [uploadedMotivationLetterUrl, setUploadedMotivationLetterUrl] = useState<string | null>(null);
   const [uploadedMotivationLetter2Url, setUploadedMotivationLetter2Url] = useState<string | null>(null);
+  const [keepExistingResume, setKeepExistingResume] = useState(false);
+  const [keepExistingMotivationLetter, setKeepExistingMotivationLetter] = useState(false);
+  const [keepExistingMotivationLetter2, setKeepExistingMotivationLetter2] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [filterStatus, setFilterStatus] = useState<string>("all");
 
@@ -92,6 +95,9 @@ export default function TeacherResumeRequestsPage() {
     setUploadedUrl(null);
     setUploadedMotivationLetterUrl(null);
     setUploadedMotivationLetter2Url(null);
+    setKeepExistingResume(!!request.completedResumeUrl);
+    setKeepExistingMotivationLetter(!!request.completedMotivationLetterUrl);
+    setKeepExistingMotivationLetter2(!!request.completedMotivationLetter2Url);
     setIsUploadDialogOpen(true);
   };
 
@@ -115,7 +121,18 @@ export default function TeacherResumeRequestsPage() {
   };
 
   const handleSubmitResume = async () => {
-    if (!uploadedUrl || !selectedRequest) {
+    // Use existing URLs if keeping them, otherwise use new uploaded ones
+    const finalResumeUrl = keepExistingResume && selectedRequest?.completedResumeUrl 
+      ? selectedRequest.completedResumeUrl 
+      : uploadedUrl;
+    const finalMotivationLetterUrl = keepExistingMotivationLetter && selectedRequest?.completedMotivationLetterUrl
+      ? selectedRequest.completedMotivationLetterUrl
+      : uploadedMotivationLetterUrl;
+    const finalMotivationLetter2Url = keepExistingMotivationLetter2 && selectedRequest?.completedMotivationLetter2Url
+      ? selectedRequest.completedMotivationLetter2Url
+      : uploadedMotivationLetter2Url;
+
+    if (!finalResumeUrl || !selectedRequest) {
       toast.error("Please upload a resume file first");
       return;
     }
@@ -124,22 +141,26 @@ export default function TeacherResumeRequestsPage() {
     try {
       console.log("Submitting documents:", {
         requestId: selectedRequest._id,
-        completedResumeUrl: uploadedUrl,
-        completedMotivationLetterUrl: uploadedMotivationLetterUrl,
-        completedMotivationLetter2Url: uploadedMotivationLetter2Url,
+        completedResumeUrl: finalResumeUrl,
+        completedMotivationLetterUrl: finalMotivationLetterUrl,
+        completedMotivationLetter2Url: finalMotivationLetter2Url,
       });
 
       await axios.post("/api/resume-complete", {
         requestId: selectedRequest._id,
-        completedResumeUrl: uploadedUrl,
-        completedMotivationLetterUrl: uploadedMotivationLetterUrl,
-        completedMotivationLetter2Url: uploadedMotivationLetter2Url,
+        completedResumeUrl: finalResumeUrl,
+        completedMotivationLetterUrl: finalMotivationLetterUrl,
+        completedMotivationLetter2Url: finalMotivationLetter2Url,
       });
 
       toast.success("Resume and motivation letter delivered successfully!");
       setIsUploadDialogOpen(false);
       setUploadedUrl(null);
       setUploadedMotivationLetterUrl(null);
+      setUploadedMotivationLetter2Url(null);
+      setKeepExistingResume(false);
+      setKeepExistingMotivationLetter(false);
+      setKeepExistingMotivationLetter2(false);
       fetchRequests();
     } catch (error) {
       toast.error("Failed to submit resume");
@@ -347,13 +368,57 @@ export default function TeacherResumeRequestsPage() {
               {/* Resume Upload */}
               <div className="space-y-2">
                 <h4 className="font-semibold text-slate-950 dark:text-white">{t('resumeCV')} {t('required')}</h4>
-                {!uploadedUrl ? (
+                
+                {/* Show existing file if available */}
+                {selectedRequest?.completedResumeUrl && (
+                  <div className="mb-3 border-2 border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4">
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center gap-3">
+                        <FileText className="w-5 h-5 text-blue-600" />
+                        <div>
+                          <p className="font-medium text-slate-950 dark:text-white">{t('existingResume')}</p>
+                          <a 
+                            href={selectedRequest.completedResumeUrl} 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="text-sm text-blue-600 hover:underline"
+                          >
+                            {t('viewCurrent')}
+                          </a>
+                        </div>
+                      </div>
+                      <div className="flex gap-2">
+                        <Button
+                          variant={keepExistingResume ? "default" : "outline"}
+                          size="sm"
+                          onClick={() => {
+                            setKeepExistingResume(true);
+                            setUploadedUrl(null);
+                          }}
+                        >
+                          {t('keep')}
+                        </Button>
+                        <Button
+                          variant={!keepExistingResume ? "default" : "outline"}
+                          size="sm"
+                          onClick={() => setKeepExistingResume(false)}
+                        >
+                          {t('update')}
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Only show upload zone if not keeping existing OR no existing file */}
+                {(!keepExistingResume || !selectedRequest?.completedResumeUrl) && !uploadedUrl && (
                   <div className="border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-lg overflow-hidden">
                     <UploadDropzone
                       endpoint="resumeDocument"
                       onClientUploadComplete={(res) => {
                         if (res && res[0]) {
                           setUploadedUrl(res[0].url);
+                          setKeepExistingResume(false);
                           toast.success(t('resumeUploadSuccess'));
                         }
                       }}
@@ -362,7 +427,9 @@ export default function TeacherResumeRequestsPage() {
                       }}
                     />
                   </div>
-                ) : (
+                )}
+                
+                {uploadedUrl && !keepExistingResume && (
                   <div className="border-2 border-green-200 dark:border-green-800 bg-green-50 dark:bg-green-900/20 rounded-lg p-4">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
@@ -387,13 +454,56 @@ export default function TeacherResumeRequestsPage() {
               {/* Motivation Letter Upload */}
               <div className="space-y-2">
                 <h4 className="font-semibold text-slate-950 dark:text-white">{t('motivationLetter')}</h4>
-                {!uploadedMotivationLetterUrl ? (
+                
+                {/* Show existing file if available */}
+                {selectedRequest?.completedMotivationLetterUrl && (
+                  <div className="mb-3 border-2 border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4">
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center gap-3">
+                        <FileText className="w-5 h-5 text-blue-600" />
+                        <div>
+                          <p className="font-medium text-slate-950 dark:text-white">{t('existingMotivationLetter')}</p>
+                          <a 
+                            href={selectedRequest.completedMotivationLetterUrl} 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="text-sm text-blue-600 hover:underline"
+                          >
+                            {t('viewCurrent')}
+                          </a>
+                        </div>
+                      </div>
+                      <div className="flex gap-2">
+                        <Button
+                          variant={keepExistingMotivationLetter ? "default" : "outline"}
+                          size="sm"
+                          onClick={() => {
+                            setKeepExistingMotivationLetter(true);
+                            setUploadedMotivationLetterUrl(null);
+                          }}
+                        >
+                          {t('keep')}
+                        </Button>
+                        <Button
+                          variant={!keepExistingMotivationLetter ? "default" : "outline"}
+                          size="sm"
+                          onClick={() => setKeepExistingMotivationLetter(false)}
+                        >
+                          {t('update')}
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {(!keepExistingMotivationLetter || !selectedRequest?.completedMotivationLetterUrl) && !uploadedMotivationLetterUrl && (
                   <div className="border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-lg overflow-hidden">
                     <UploadDropzone
                       endpoint="resumeDocument"
                       onClientUploadComplete={(res) => {
                         if (res && res[0]) {
                           setUploadedMotivationLetterUrl(res[0].url);
+                          setKeepExistingMotivationLetter(false);
                           toast.success(t('motivationLetterUploadSuccess'));
                         }
                       }}
@@ -402,7 +512,9 @@ export default function TeacherResumeRequestsPage() {
                       }}
                     />
                   </div>
-                ) : (
+                )}
+                
+                {uploadedMotivationLetterUrl && !keepExistingMotivationLetter && (
                   <div className="border-2 border-green-200 dark:border-green-800 bg-green-50 dark:bg-green-900/20 rounded-lg p-4">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
@@ -427,13 +539,56 @@ export default function TeacherResumeRequestsPage() {
               {/* Second Motivation Letter Upload */}
               <div className="space-y-2">
                 <h4 className="font-semibold text-slate-950 dark:text-white">{t('motivationLetter2')}</h4>
-                {!uploadedMotivationLetter2Url ? (
+                
+                {/* Show existing file if available */}
+                {selectedRequest?.completedMotivationLetter2Url && (
+                  <div className="mb-3 border-2 border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4">
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center gap-3">
+                        <FileText className="w-5 h-5 text-blue-600" />
+                        <div>
+                          <p className="font-medium text-slate-950 dark:text-white">{t('existingMotivationLetter2')}</p>
+                          <a 
+                            href={selectedRequest.completedMotivationLetter2Url} 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="text-sm text-blue-600 hover:underline"
+                          >
+                            {t('viewCurrent')}
+                          </a>
+                        </div>
+                      </div>
+                      <div className="flex gap-2">
+                        <Button
+                          variant={keepExistingMotivationLetter2 ? "default" : "outline"}
+                          size="sm"
+                          onClick={() => {
+                            setKeepExistingMotivationLetter2(true);
+                            setUploadedMotivationLetter2Url(null);
+                          }}
+                        >
+                          {t('keep')}
+                        </Button>
+                        <Button
+                          variant={!keepExistingMotivationLetter2 ? "default" : "outline"}
+                          size="sm"
+                          onClick={() => setKeepExistingMotivationLetter2(false)}
+                        >
+                          {t('update')}
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {(!keepExistingMotivationLetter2 || !selectedRequest?.completedMotivationLetter2Url) && !uploadedMotivationLetter2Url && (
                   <div className="border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-lg overflow-hidden">
                     <UploadDropzone
                       endpoint="resumeDocument"
                       onClientUploadComplete={(res) => {
                         if (res && res[0]) {
                           setUploadedMotivationLetter2Url(res[0].url);
+                          setKeepExistingMotivationLetter2(false);
                           toast.success(t('motivationLetter2UploadSuccess'));
                         }
                       }}
@@ -442,7 +597,9 @@ export default function TeacherResumeRequestsPage() {
                       }}
                     />
                   </div>
-                ) : (
+                )}
+                
+                {uploadedMotivationLetter2Url && !keepExistingMotivationLetter2 && (
                   <div className="border-2 border-green-200 dark:border-green-800 bg-green-50 dark:bg-green-900/20 rounded-lg p-4">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">

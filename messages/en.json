@@ -1666,12 +1666,62 @@
       "uploadFailedDesc": "Failed to upload file.",
       "submissionFailed": "Submission Failed",
       "submissionFailedDesc": "Failed to submit payment proof."
+    },
+    "bookingCalendar": {
+      "selectDate": "Select a Date",
+      "availableTimeSlots": "Available Time Slots",
+      "selectedDate": "Selected date",
+      "noSlots": "No available slots for this date.",
+      "tryDifferentDate": "Try selecting a different date.",
+      "notesOptional": "Notes (optional)",
+      "notesPlaceholder": "Add any notes or topics you'd like to discuss...",
+      "youSelected": "You selected:",
+      "duration": "Duration: 30 minutes",
+      "price": "Price:",
+      "booking": "Booking...",
+      "continueToPayment": "Continue to Payment",
+      "confirmBooking": "Confirm Booking",
+      "paymentRedirect": "You'll be redirected to payment after booking",
+      "emailReminder": "You'll receive email reminders before the meeting",
+      "errorTitle": "Error",
+      "errorDesc": "Failed to load available slots",
+      "errorBookingDesc": "Failed to book meeting",
+      "successTitle": "Success! 🎉",
+      "successDesc": "Meeting booked successfully. Check your email for confirmation.",
+      "slot": "slot",
+      "slots": "slots"
+    },
+    "comments": {
+      "detailsPlaceholder": "Enter more details...",
+      "searchPlaceholder": "Search questions..."
+    },
+    "feedbackForm": {
+      "feedbackPlaceholder": "Please provide us with a detailed feedback about the course here ..."
+    },
+    "replyForm": {
+      "answerPlaceholder": "Enter your answer..."
+    },
+    "editor": {
+      "copiedToClipboard": "Copied to clipboard"
+    },
+    "combobox": {
+      "searchPlaceholder": "Search framework..."
     }
   },
   "shared": {
     "messageInput": {
       "errorTitle": "Error",
       "placeholder": "Type your message here..."
+    },
+    "footer": {
+      "emailPlaceholder": "john@rhcp.com",
+      "newsletterTitle": "Subscribe to our newsletter"
+    },
+    "editor": {
+      "copiedToClipboard": "Copied to clipboard"
+    },
+    "combobox": {
+      "searchPlaceholder": "Search framework..."
     },
     "meetingPayment": {
       "submitted": "Payment Proof Submitted!",
@@ -1708,40 +1758,6 @@
       "submissionFailed": "Submission Failed",
       "submissionFailedDesc": "Failed to submit payment proof."
     },
-    "footer": {
-      "emailPlaceholder": "john@rhcp.com",
-      "newsletterTitle": "Subscribe to our newsletter"
-    },
-    "editor": {
-      "copiedToClipboard": "Copied to clipboard"
-    },
-    "combobox": {
-      "searchPlaceholder": "Search framework..."
-    },
-    "bookingCalendar": {
-      "selectDate": "Select a Date",
-      "availableTimeSlots": "Available Time Slots",
-      "selectedDate": "Selected date",
-      "noSlots": "No available slots for this date.",
-      "tryDifferentDate": "Try selecting a different date.",
-      "notesOptional": "Notes (optional)",
-      "notesPlaceholder": "Add any notes or topics you'd like to discuss...",
-      "youSelected": "You selected:",
-      "duration": "Duration: 30 minutes",
-      "price": "Price:",
-      "booking": "Booking...",
-      "continueToPayment": "Continue to Payment",
-      "confirmBooking": "Confirm Booking",
-      "paymentRedirect": "You'll be redirected to payment after booking",
-      "emailReminder": "You'll receive email reminders before the meeting",
-      "errorTitle": "Error",
-      "errorDesc": "Failed to load available slots",
-      "errorBookingDesc": "Failed to book meeting",
-      "successTitle": "Success! 🎉",
-      "successDesc": "Meeting booked successfully. Check your email for confirmation.",
-      "slot": "slot",
-      "slots": "slots"
-    },
     "comments": {
       "detailsPlaceholder": "Enter more details...",
       "searchPlaceholder": "Search questions..."
@@ -1751,6 +1767,19 @@
     },
     "replyForm": {
       "answerPlaceholder": "Enter your answer..."
+    },
+    "editor": {
+      "copiedToClipboard": "Copied to clipboard"
+    },
+    "combobox": {
+      "searchPlaceholder": "Search framework..."
+    },
+    "comments": {
+      "detailsPlaceholder": "Enter more details...",
+      "searchPlaceholder": "Search questions..."
+    },
+    "feedbackForm": {
+      "feedbackPlaceholder": "Please provide us with a detailed feedback about the course here ..."
     }
   },
   "coursesPage": {
@@ -2320,7 +2349,13 @@
       "noRequests": "No Resume Requests",
       "noRequestsDesc": "There are no approved resume requests at the moment",
       "startWorking": "Start Working",
-      "delivered": "Delivered"
+      "delivered": "Delivered",
+      "keep": "Keep",
+      "update": "Update",
+      "existingResume": "Existing Resume",
+      "existingMotivationLetter": "Existing Motivation Letter",
+      "existingMotivationLetter2": "Existing Second Motivation Letter",
+      "viewCurrent": "View Current"
     },
     "courses": {
       "title": "My Courses",

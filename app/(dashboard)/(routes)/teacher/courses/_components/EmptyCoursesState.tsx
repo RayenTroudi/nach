@@ -4,14 +4,20 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import NoCoursesAnimation from "@/components/shared/animations/NoCourses";
 import { PlusCircle } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
+import { usePathname } from "next/navigation";
 
 interface EmptyCoursesStateProps {
   username: string;
 }
 
 export function EmptyCoursesState({ username }: EmptyCoursesStateProps) {
-  const t = useTranslations("dashboard.teacher.courses");
+  const t = useTranslations("teacher.courses");
+  const locale = useLocale();
+  const pathname = usePathname();
+  
+  const pathnameHasLocale = pathname.startsWith('/ar/') || pathname.startsWith('/en/') || pathname.startsWith('/de/');
+  const href = pathnameHasLocale ? `/${locale}/teacher/courses/manage` : '/teacher/courses/manage';
 
   return (
     <div className="w-full flex flex-col gap-6">
@@ -29,7 +35,7 @@ export function EmptyCoursesState({ username }: EmptyCoursesStateProps) {
       <div className="flex flex-col items-center justify-center gap-y-2">
         <NoCoursesAnimation />
         <Link
-          href="/teacher/courses/manage"
+          href={href}
           className="w-full flex items-center justify-center"
         >
           <Button className="w-full  md:w-[400px] flex items-center gap-x-2 h-[48px] bg-brand-red-500 font-semibold hover:bg-brand-red-600 opacity-90 hover:opacity-100 text-slate-50">

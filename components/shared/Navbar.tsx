@@ -28,6 +28,13 @@ const Navbar = ({ isUserAdmin }: { isUserAdmin: boolean }) => {
   const pathname = usePathname();
   const t = useTranslations('navigation');
   const locale = useLocale();
+  
+  // Check if current pathname uses locale
+  const pathnameHasLocale = pathname.startsWith('/ar/') || pathname.startsWith('/en/') || pathname.startsWith('/de/');
+  const getLocalizedHref = (href: string) => {
+    const hasLocale = href.startsWith('/ar/') || href.startsWith('/en/') || href.startsWith('/de/');
+    return pathnameHasLocale && !hasLocale ? `/${locale}${href}` : href;
+  };
   const isTeacher = pathname?.startsWith("/teacher");
   const isSection = pathname?.includes("/section");
   const isAdmin = pathname?.includes("/admin");
@@ -54,7 +61,7 @@ const Navbar = ({ isUserAdmin }: { isUserAdmin: boolean }) => {
           {isUserAdmin ? (
             <>
               <Link
-                href="/admin/dashboard/"
+                href={getLocalizedHref("/admin/dashboard/")}
                 className="font-bold text-sm text-brand-red-500 ease-in-out duration-100 hidden lg:block whitespace-nowrap"
               >
                 {t('admin')}
@@ -64,7 +71,7 @@ const Navbar = ({ isUserAdmin }: { isUserAdmin: boolean }) => {
                 className="h-[20px] hidden lg:block"
               />
               {/* Admins can access instructor features */}
-              <Link href="/teacher/courses" className="hidden lg:block">
+              <Link href={getLocalizedHref("/teacher/courses")} className="hidden lg:block">
                 <p className="text-slate-950 dark:text-slate-200 font-bold text-[14px] cursor-pointer relative">
                   <span className="primary-color hover:border-b-2 hover:border-brand-red-500 ease-in-out duration-100 whitespace-nowrap">
                     {t('instructor')}

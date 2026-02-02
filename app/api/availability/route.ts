@@ -1,19 +1,42 @@
 import { NextResponse } from "next/server";
 import { getAvailableSlots } from "@/lib/actions/booking.action";
+import { connectToDatabase } from "@/lib/mongoose";
+import User from "@/lib/models/user.model";
 
 export const dynamic = "force-dynamic";
 
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
-    const hostId = searchParams.get("hostId");
+    let hostId = searchParams.get("hostId");
     const date = searchParams.get("date");
 
-    if (!hostId || !date) {
+    if (!date) {
       return NextResponse.json(
-        { error: "Missing hostId or date" },
+        { error: "Missing date parameter" },
         { status: 400 }
       );
+    }
+
+    await connectToDatabase();
+
+    // If no hostId provided or if requesting, find Talel Jouini
+    if (!hostId) {
+      const talelJouini = await User.findOne({
+        $or: [
+          { username: /talel.*jouini/i },
+          { username: /jouini.*talel/i },
+        ]
+      });
+
+      if (!talelJouini) {
+        return NextResponse.json(
+          { error: "Consultant not available" },
+          { status: 404 }
+        );
+      }
+
+      hostId = talelJouini._id.toString();
     }
 
     const result = await getAvailableSlots({

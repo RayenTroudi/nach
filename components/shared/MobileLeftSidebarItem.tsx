@@ -6,7 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React, { ForwardRefExoticComponent, RefAttributes } from "react";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 
 interface Props {
   icon: LucideIcon;
@@ -16,17 +16,24 @@ interface Props {
 
 const MobileLeftSidebarItem = ({ icon: Icon, labelKey, href }: Props) => {
   const t = useTranslations();
+  const locale = useLocale();
   const pathname = usePathname();
   const { mode } = useTheme();
-  const isActive = pathname === href || pathname.startsWith(`${href}/`);
+  
+  // Check if the href already includes a locale
+  const hasLocale = href.startsWith('/ar/') || href.startsWith('/en/') || href.startsWith('/de/');
+  
+  // If current pathname includes locale but href doesn't, prepend locale
+  const pathnameHasLocale = pathname.startsWith('/ar/') || pathname.startsWith('/en/') || pathname.startsWith('/de/');
+  const finalHref = pathnameHasLocale && !hasLocale ? `/${locale}${href}` : href;
+  
+  const isActive = pathname === finalHref || pathname.startsWith(`${finalHref}/`);
 
   return (
     <Link
-      href={href}
+      href={finalHref}
       className={`group w-full px-2 py-6 rounded-sm flex items-center justify-start gap-4 h-[30px] hover:bg-brand-red-500 duration-300 ease-in-out ${
-        pathname === href || pathname.startsWith(`${href}/`)
-          ? "bg-brand-red-500"
-          : ""
+        isActive ? "bg-brand-red-500" : ""
       }`}
       onMouseEnter={() => console.log("Hovered")}
     >
@@ -44,9 +51,7 @@ const MobileLeftSidebarItem = ({ icon: Icon, labelKey, href }: Props) => {
       />
       <p
         className={`text-[15px] text-950 dark:text-slate-200 font-semibold group-hover:text-white block ${
-          pathname === href || pathname.startsWith(`${href}/`)
-            ? "text-slate-200"
-            : ""
+          isActive ? "text-slate-200" : ""
         }`}
       >
         {t(labelKey)}

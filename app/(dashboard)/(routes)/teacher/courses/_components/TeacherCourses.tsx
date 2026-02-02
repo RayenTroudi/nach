@@ -1,9 +1,10 @@
 "use client";
 import { useState, useEffect, useCallback } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { Input } from "@/components/ui/input";
+import { useLocale } from "next-intl";
 import {
   Select,
   SelectContent,
@@ -24,11 +25,16 @@ interface Props {
 
 const TeacherCourses: React.FC<Props> = ({ instructor }) => {
   const router = useRouter();
+  const locale = useLocale();
+  const pathname = usePathname();
   const [displayedCourses, setDisplayedCourses] = useState<TCourse[]>([]);
   const [isSearching, setIsSearching] = useState<boolean>(false);
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [courseStatus, setCourseStatus] = useState<string>("all");
   const [isDeleting, setIsDeleting] = useState<boolean>(false);
+  
+  const pathnameHasLocale = pathname.startsWith('/ar/') || pathname.startsWith('/en/') || pathname.startsWith('/de/');
+  const manageHref = pathnameHasLocale ? `/${locale}/teacher/courses/manage` : '/teacher/courses/manage';
 
   const filterCourses = useCallback(() => {
     if (!instructor.createdCourses) return;
@@ -68,7 +74,7 @@ const TeacherCourses: React.FC<Props> = ({ instructor }) => {
           <span className="text-brand-red-500">{instructor.username}&apos;s</span>{" "}
           courses
         </h1>
-        <Link href="/teacher/courses/manage">
+        <Link href={manageHref}>
           <Button className="w-fit md:w-[200px] bg-brand-red-500 hover:bg-brand-red-600 opacity-80 hover:opacity-100 transition duration-300 ease-in-out">
             <PlusCircle size={22} className="md:hidden dark:text-slate-50" />
             <p className="hidden md:block dark:text-slate-50">New Course</p>

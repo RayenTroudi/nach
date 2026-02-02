@@ -74,6 +74,16 @@ export const teacherRoutes = [
     href: "/teacher/resume-requests",
   },
   {
+    icon: Video,
+    labelKey: "navigation.myConsultations",
+    href: "/teacher/my-consultations",
+  },
+  {
+    icon: Calendar,
+    labelKey: "navigation.availability",
+    href: "/teacher/availability",
+  },
+  {
     icon: MessagesSquare,
     labelKey: "navigation.chatRooms",
     href: "/teacher/chat-rooms",
@@ -99,10 +109,5 @@ export const adminRoutes = [
     icon: FileCheck,
     labelKey: "navigation.resumePayments",
     href: "/admin/resume-payments",
-  },
-  {
-    icon: Video,
-    labelKey: "navigation.myConsultations",
-    href: "/admin/my-consultations",
   },
 ];

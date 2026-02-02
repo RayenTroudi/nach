@@ -18,7 +18,7 @@ import { SignedIn } from "@clerk/nextjs";
 import Image from "next/image";
 import Link from "next/link";
 import { useTheme } from "@/contexts/ThemeProvider";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 
 const MobileSideBar = ({
   isAdmin,
@@ -28,8 +28,17 @@ const MobileSideBar = ({
   children?: React.ReactNode;
 }) => {
   const t = useTranslations();
+  const locale = useLocale();
   const { mode } = useTheme();
   const pathname = usePathname();
+  
+  // Check if current pathname uses locale
+  const pathnameHasLocale = pathname.startsWith('/ar/') || pathname.startsWith('/en/') || pathname.startsWith('/de/');
+  const getLocalizedHref = (href: string) => {
+    const hasLocale = href.startsWith('/ar/') || href.startsWith('/en/') || href.startsWith('/de/');
+    return pathnameHasLocale && !hasLocale ? `/${locale}${href}` : href;
+  };
+  
   const isTeacherView =
     pathname?.startsWith("/teacher") || pathname?.includes("/section");
   const isAdminView =
@@ -78,7 +87,7 @@ const MobileSideBar = ({
               {isAdmin && (!pathname.startsWith("/teacher") ||
               pathname.includes("/section")) ? (
                 <Link
-                  href="/teacher/courses"
+                  href={getLocalizedHref("/teacher/courses")}
                   className={`group w-full px-2 py-6 rounded-sm flex items-center justify-start gap-4 h-[30px] hover:bg-brand-red-500 duration-300 ease-in-out ${
                     pathname === "/teacher/courses" ||
                     pathname.startsWith("/teacher/courses")
@@ -116,7 +125,7 @@ const MobileSideBar = ({
                 <>
                   {!pathname.startsWith("/admin") ? (
                     <Link
-                      href="/admin/dashboard"
+                      href={getLocalizedHref("/admin/dashboard")}
                       className={`group w-full px-2 py-6 rounded-sm flex items-center justify-start gap-4 h-[30px] hover:bg-brand-red-500 duration-300 ease-in-out ${
                         pathname === "/admin/dashboard" ||
                         pathname.startsWith("/admin")

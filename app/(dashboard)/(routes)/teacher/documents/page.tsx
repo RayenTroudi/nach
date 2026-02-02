@@ -78,7 +78,7 @@ interface Document {
 }
 
 export default function TeacherDocumentsPage() {
-  const t = useTranslations("dashboard.teacher.documents");
+  const t = useTranslations("teacher.documents");
   const [documents, setDocuments] = useState<Document[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");

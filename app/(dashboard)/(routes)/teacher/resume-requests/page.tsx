@@ -57,7 +57,7 @@ interface ResumeRequest {
 }
 
 export default function TeacherResumeRequestsPage() {
-  const t = useTranslations("dashboard.teacher.resumeRequests");
+  const t = useTranslations("teacher.resumeRequests");
   const [requests, setRequests] = useState<ResumeRequest[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedRequest, setSelectedRequest] = useState<ResumeRequest | null>(null);

@@ -17,9 +17,25 @@ export async function POST(request: Request) {
       );
     }
 
-    // Use the default consultant for all meetings
-    const DEFAULT_CONSULTANT_ID = "691dd26c9196bd0bbf04cf7c"; // Talel Jouini
-    hostId = DEFAULT_CONSULTANT_ID;
+    await connectToDatabase();
+
+    // Find Talel Jouini as the designated consultant/teacher
+    const talelJouini = await User.findOne({
+      $or: [
+        { username: /talel.*jouini/i },
+        { username: /jouini.*talel/i },
+      ]
+    });
+
+    if (!talelJouini) {
+      return NextResponse.json(
+        { error: "Consultant not available" },
+        { status: 404 }
+      );
+    }
+
+    // Use Talel Jouini as the host for all meetings
+    hostId = talelJouini._id.toString();
 
     const result = await createBooking({
       hostId,

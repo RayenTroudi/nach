@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 
 interface Booking {
   _id: string;
@@ -32,6 +32,7 @@ interface MyMeetingsProps {
 
 export default function MyMeetings({ bookings: initialBookings }: MyMeetingsProps) {
   const t = useTranslations("dashboard.student.myMeetings");
+  const locale = useLocale();
   const [bookings, setBookings] = useState<Booking[]>(initialBookings);
   const [filter, setFilter] = useState<"upcoming" | "past" | "all">("upcoming");
 
@@ -49,7 +50,13 @@ export default function MyMeetings({ bookings: initialBookings }: MyMeetingsProp
   });
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString("en-US", {
+    const localeMap: Record<string, string> = {
+      'en': 'en-US',
+      'de': 'de-DE',
+      'ar': 'ar-EG-u-nu-latn'
+    };
+    
+    return new Date(dateString).toLocaleDateString(localeMap[locale] || 'en-US', {
       weekday: "short",
       year: "numeric",
       month: "short",
@@ -58,7 +65,13 @@ export default function MyMeetings({ bookings: initialBookings }: MyMeetingsProp
   };
 
   const formatTime = (dateString: string) => {
-    return new Date(dateString).toLocaleTimeString("en-US", {
+    const localeMap: Record<string, string> = {
+      'en': 'en-US',
+      'de': 'de-DE',
+      'ar': 'ar-EG-u-nu-latn'
+    };
+    
+    return new Date(dateString).toLocaleTimeString(localeMap[locale] || 'en-US', {
       hour: "2-digit",
       minute: "2-digit",
     });
@@ -157,7 +170,7 @@ export default function MyMeetings({ bookings: initialBookings }: MyMeetingsProp
           </div>
         </div>
       </div>
-    );
+    );t(filter)
   }
 
   return (

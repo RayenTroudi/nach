@@ -38,7 +38,7 @@ interface ConsultantMeetingsProps {
 type FilterType = "upcoming" | "past" | "all";
 
 const ConsultantMeetings = ({ bookings }: ConsultantMeetingsProps) => {
-  const t = useTranslations("admin.consultations");
+  const t = useTranslations("teacher.consultations");
   const [filter, setFilter] = useState<FilterType>("upcoming");
   const router = useRouter();
 
@@ -90,7 +90,7 @@ const ConsultantMeetings = ({ bookings }: ConsultantMeetingsProps) => {
       return (
         <span className="flex items-center gap-1 rounded-full bg-yellow-100 px-3 py-1 text-sm font-medium text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200">
           <AlertCircle className="h-4 w-4" />
-          Payment Pending
+          {t('paymentPending')}
         </span>
       );
     }
@@ -99,7 +99,7 @@ const ConsultantMeetings = ({ bookings }: ConsultantMeetingsProps) => {
       return (
         <span className="flex items-center gap-1 rounded-full bg-red-100 px-3 py-1 text-sm font-medium text-red-800 dark:bg-red-900 dark:text-red-200">
           <XCircle className="h-4 w-4" />
-          Cancelled
+          {t('cancelled')}
         </span>
       );
     }
@@ -108,7 +108,7 @@ const ConsultantMeetings = ({ bookings }: ConsultantMeetingsProps) => {
       return (
         <span className="flex items-center gap-1 rounded-full bg-gray-100 px-3 py-1 text-sm font-medium text-gray-800 dark:bg-gray-800 dark:text-gray-200">
           <CheckCircle2 className="h-4 w-4" />
-          Completed
+          {t('completed')}
         </span>
       );
     }
@@ -117,7 +117,7 @@ const ConsultantMeetings = ({ bookings }: ConsultantMeetingsProps) => {
       return (
         <span className="flex items-center gap-1 rounded-full bg-green-100 px-3 py-1 text-sm font-medium text-green-800 dark:bg-green-900 dark:text-green-200">
           <Video className="h-4 w-4" />
-          Active - Can Join
+          {t('activeCanJoin')}
         </span>
       );
     }
@@ -125,7 +125,7 @@ const ConsultantMeetings = ({ bookings }: ConsultantMeetingsProps) => {
     return (
       <span className="flex items-center gap-1 rounded-full bg-blue-100 px-3 py-1 text-sm font-medium text-blue-800 dark:bg-blue-900 dark:text-blue-200">
         <CheckCircle2 className="h-4 w-4" />
-        Confirmed
+        {t('confirmed')}
       </span>
     );
   };
@@ -161,10 +161,10 @@ const ConsultantMeetings = ({ bookings }: ConsultantMeetingsProps) => {
     const hours = Math.floor(diff / (1000 * 60 * 60));
     const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
 
-    if (diff < 0) return "Meeting started";
-    if (hours > 24) return `${Math.floor(hours / 24)} days`;
+    if (diff < 0) return t('meetingStarted');
+    if (hours > 24) return `${Math.floor(hours / 24)} ${t('days')}`;
     if (hours > 0) return `${hours}h ${minutes}m`;
-    return `${minutes} minutes`;
+    return `${minutes} ${t('minutes')}`;
   };
 
   return (
@@ -261,14 +261,14 @@ const ConsultantMeetings = ({ bookings }: ConsultantMeetingsProps) => {
                     </div>
                     <div className="flex items-center gap-2 text-slate-600 dark:text-slate-400">
                       <DollarSign className="h-4 w-4" />
-                      <span>{booking.price === 0 ? "Free" : `$${booking.price}`}</span>
+                      <span>{booking.price === 0 ? t('free') : `$${booking.price}`}</span>
                     </div>
                   </div>
 
                   {/* Student Notes */}
                   {booking.notes && (
                     <div className="rounded-lg bg-slate-50 p-3 dark:bg-slate-900">
-                      <p className="text-sm font-medium text-slate-700 dark:text-slate-300">Student Notes:</p>
+                      <p className="text-sm font-medium text-slate-700 dark:text-slate-300">{t('studentNotes')}</p>
                       <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">{booking.notes}</p>
                     </div>
                   )}
@@ -276,7 +276,7 @@ const ConsultantMeetings = ({ bookings }: ConsultantMeetingsProps) => {
                   {/* Admin Notes */}
                   {booking.adminNotes && (
                     <div className="rounded-lg bg-blue-50 p-3 dark:bg-blue-950">
-                      <p className="text-sm font-medium text-blue-700 dark:text-blue-300">Your Notes:</p>
+                      <p className="text-sm font-medium text-blue-700 dark:text-blue-300">{t('yourNotes')}</p>
                       <p className="mt-1 text-sm text-blue-600 dark:text-blue-400">{booking.adminNotes}</p>
                     </div>
                   )}
@@ -290,7 +290,7 @@ const ConsultantMeetings = ({ bookings }: ConsultantMeetingsProps) => {
                   {/* Time Until Meeting */}
                   {booking.paymentStatus === "paid" && new Date(booking.endAt) > now && (
                     <div className="text-right text-sm text-slate-500">
-                      Starts in: <span className="font-semibold">{getTimeUntilMeeting(booking.startAt)}</span>
+                      {t('startsIn')} <span className="font-semibold">{getTimeUntilMeeting(booking.startAt)}</span>
                     </div>
                   )}
 
@@ -306,14 +306,14 @@ const ConsultantMeetings = ({ bookings }: ConsultantMeetingsProps) => {
                       }`}
                     >
                       <Video className="h-5 w-5" />
-                      {canJoinMeeting(booking) ? "Join Meeting" : "Not Available Yet"}
+                      {canJoinMeeting(booking) ? t('joinMeeting') : t('notAvailableYet')}
                     </button>
                   )}
 
                   {/* Payment Pending Message */}
                   {booking.paymentStatus === "pending" && (
                     <p className="text-sm text-yellow-600 dark:text-yellow-400">
-                      Waiting for payment approval
+                      {t('waitingForPaymentApproval')}
                     </p>
                   )}
                 </div>

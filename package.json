@@ -12,7 +12,8 @@
     "translate:check": "tsx scripts/validate-translations.ts",
     "translate:extract": "tsx scripts/extract-missing.ts",
     "translate:types": "tsx scripts/generate-translation-types.ts",
-    "translate:scan": "tsx scripts/scan-hardcoded-strings.ts"
+    "translate:scan": "tsx scripts/scan-hardcoded-strings.ts",
+    "fix:chat-rooms": "tsx scripts/fix-missing-chat-rooms.ts"
   },
   "dependencies": {
     "@clerk/nextjs": "^4.29.6",

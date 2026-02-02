@@ -73,8 +73,35 @@ export async function POST(request: Request) {
     user.enrolledCourses.push(course._id);
     await user.save();
 
-    // Create private chat room with instructor for regular courses
+    // For regular courses, add student to group chat and create private chat
     if (course.courseType === CourseTypeEnum.Regular) {
+      // Add student to group chat room
+      try {
+        const courseWithChatRoom = await Course.findById(courseId).populate("chatRoom");
+        if (courseWithChatRoom?.chatRoom?._id) {
+          // Import the functions we need
+          const { pushStudentToChatRoom } = await import("@/lib/actions/course-chat-room");
+          const { joinChatRoom } = await import("@/lib/actions/user.action");
+          
+          // Add chat room to user's joinedChatRooms array
+          await joinChatRoom(user._id.toString(), courseWithChatRoom.chatRoom._id.toString());
+          
+          // Add student to chat room's students array
+          await pushStudentToChatRoom({
+            chatRoomId: courseWithChatRoom.chatRoom._id.toString(),
+            studentId: user._id.toString(),
+          });
+          
+          console.log("Student added to group chat room successfully");
+        } else {
+          console.log("Warning: Regular course has no group chat room");
+        }
+      } catch (groupChatError: any) {
+        console.log("Warning: Failed to add student to group chat:", groupChatError.message);
+        // Don't fail the enrollment if group chat enrollment fails
+      }
+
+      // Create private chat room with instructor
       try {
         await createPrivateChatRoom({
           courseId: course._id.toString(),

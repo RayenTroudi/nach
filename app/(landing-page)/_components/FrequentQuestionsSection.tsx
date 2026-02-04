@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { HelpCircle, BookOpen, Play } from "lucide-react";
+import { HelpCircle, BookOpen, Play, ChevronLeft, ChevronRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { TCourse } from "@/types/models.types";
 import Image from "next/image";
@@ -17,12 +17,31 @@ interface FrequentQuestionsProps {
 
 export default function FrequentQuestionsSection({ courses }: FrequentQuestionsProps) {
   const [selectedCourse, setSelectedCourse] = useState<TCourse | null>(null);
+  const [currentIndex, setCurrentIndex] = useState(0);
   const t = useTranslations('faq');
 
   // Filter courses to show only "Most Frequent Questions" type courses
-  const faqCourses = courses.filter(
+  const allFaqCourses = courses.filter(
     (course) => course.courseType === CourseTypeEnum.Most_Frequent_Questions
   );
+
+  // Show 5 videos at a time
+  const videosPerPage = 5;
+  const faqCourses = allFaqCourses.slice(currentIndex, currentIndex + videosPerPage);
+  const hasNext = currentIndex + videosPerPage < allFaqCourses.length;
+  const hasPrev = currentIndex > 0;
+
+  const handleNext = () => {
+    if (hasNext) {
+      setCurrentIndex(currentIndex + videosPerPage);
+    }
+  };
+
+  const handlePrev = () => {
+    if (hasPrev) {
+      setCurrentIndex(Math.max(0, currentIndex - videosPerPage));
+    }
+  };
 
   return (
     <section className="py-20 bg-gradient-to-b from-slate-50 to-white dark:from-slate-900 dark:to-slate-950">
@@ -66,69 +85,79 @@ export default function FrequentQuestionsSection({ courses }: FrequentQuestionsP
             )}
           </AnimatePresence>
 
-          {/* Courses Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-            {faqCourses.length > 0 ? (
-              faqCourses.map((course, idx) => (
-                <motion.div
-                  key={course._id}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: idx * 0.1 }}
-                >
-                  <Card
-                    className="h-full hover:shadow-lg transition-all duration-300 border-2 hover:border-brand-red-200 dark:hover:border-brand-red-800 cursor-pointer group overflow-hidden"
-                    onClick={() => setSelectedCourse(course)}
+          {/* Courses Grid with Navigation */}
+          <div className="relative">
+            {/* Left Arrow */}
+            {hasPrev && (
+              <button
+                onClick={handlePrev}
+                className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 z-10 bg-white dark:bg-slate-800 rounded-full p-3 shadow-lg hover:bg-brand-red-500 hover:text-white transition-all duration-300 border-2 border-slate-200 dark:border-slate-700"
+                aria-label="Previous videos"
+              >
+                <ChevronLeft className="w-6 h-6" />
+              </button>
+            )}
+
+            {/* Right Arrow */}
+            {hasNext && (
+              <button
+                onClick={handleNext}
+                className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 z-10 bg-white dark:bg-slate-800 rounded-full p-3 shadow-lg hover:bg-brand-red-500 hover:text-white transition-all duration-300 border-2 border-slate-200 dark:border-slate-700"
+                aria-label="Next videos"
+              >
+                <ChevronRight className="w-6 h-6" />
+              </button>
+            )}
+
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+              {faqCourses.length > 0 ? (
+                faqCourses.map((course, idx) => (
+                  <motion.div
+                    key={course._id}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: idx * 0.1 }}
                   >
-                    <div className="relative w-full aspect-[3/4] overflow-hidden">
-                      <Image
-                        src={course.thumbnail || "/images/placeholder-course.jpg"}
-                        alt={course.title}
-                        fill
-                        className="object-cover"
-                      />
-                      {/* Play Button Overlay */}
-                      <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <div className="bg-brand-red-500 rounded-full p-4">
-                          <Play className="w-8 h-8 text-white ml-1" />
+                    <Card
+                      className="h-full hover:shadow-lg transition-all duration-300 border-2 hover:border-brand-red-200 dark:hover:border-brand-red-800 cursor-pointer group overflow-hidden"
+                      onClick={() => setSelectedCourse(course)}
+                    >
+                      <div className="relative w-full aspect-[3/4] overflow-hidden">
+                        <Image
+                          src={course.thumbnail || "/images/placeholder-course.jpg"}
+                          alt={course.title}
+                          fill
+                          className="object-cover"
+                        />
+                        {/* Play Button Overlay */}
+                        <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                          <div className="bg-brand-red-500 rounded-full p-4">
+                            <Play className="w-8 h-8 text-white ml-1" />
+                          </div>
                         </div>
                       </div>
-                    </div>
-                    <div className="p-3">
-                      <h4 className="font-semibold text-sm text-slate-900 dark:text-slate-50 line-clamp-2 mb-1 group-hover:text-brand-red-600 dark:group-hover:text-brand-red-400 transition-colors">
-                        {course.title}
-                      </h4>
-                      <span className="text-xs text-slate-500 dark:text-slate-400 block mt-2">
-                        {course.instructor?.firstName} {course.instructor?.lastName}
-                      </span>
-                    </div>
-                  </Card>
-                </motion.div>
-              ))
-            ) : (
-              <div className="col-span-full text-center py-12">
-                <BookOpen className="w-16 h-16 mx-auto text-slate-400 mb-4" />
-                <p className="text-slate-500 dark:text-slate-400 text-lg">
-                  {t('noCoursesAvailable')}
-                </p>
-              </div>
-            )}
-          </div>
-
-          {faqCourses.length > 0 && (
-            <div className="mt-12 text-center">
-              <Link href="/courses">
-                <Button
-                  size="lg"
-                  className="bg-brand-red-500 hover:bg-brand-red-600"
-                >
-                  <BookOpen className="w-5 h-5 mr-2" />
-                  {t('checkBackSoon')}
-                </Button>
-              </Link>
+                      <div className="p-3">
+                        <h4 className="font-semibold text-sm text-slate-900 dark:text-slate-50 line-clamp-2 mb-1 group-hover:text-brand-red-600 dark:group-hover:text-brand-red-400 transition-colors">
+                          {course.title}
+                        </h4>
+                        <span className="text-xs text-slate-500 dark:text-slate-400 block mt-2">
+                          {course.instructor?.firstName} {course.instructor?.lastName}
+                        </span>
+                      </div>
+                    </Card>
+                  </motion.div>
+                ))
+              ) : (
+                <div className="col-span-full text-center py-12">
+                  <BookOpen className="w-16 h-16 mx-auto text-slate-400 mb-4" />
+                  <p className="text-slate-500 dark:text-slate-400 text-lg">
+                    {t('noCoursesAvailable')}
+                  </p>
+                </div>
+              )}
             </div>
-          )}
+          </div>
         </motion.div>
       </div>
     </section>

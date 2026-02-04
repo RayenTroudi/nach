@@ -26,6 +26,7 @@ export default authMiddleware({
   ],
   ignoredRoutes: [
     "/api/webhooks",
+    "/api/ausbildung",
     "/_next/static(.*)",
     "/_next/image(.*)",
     "/favicon.ico",

@@ -176,36 +176,6 @@ export default function CoursesContent() {
               {t('hero.subtitle')}
             </p>
 
-            {/* Stats */}
-            <div className="flex flex-wrap justify-center gap-8 mb-12">
-              {[
-                { icon: BookOpen, label: t('stats.courses'), value: courses.length },
-                { icon: Users, label: t('stats.students'), value: "10,000+" },
-                { icon: Star, label: t('stats.rating'), value: "4.8" },
-                { icon: GraduationCap, label: t('stats.instructors'), value: "50+" },
-              ].map((stat, idx) => (
-                <motion.div
-                  key={stat.label}
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: idx * 0.1 }}
-                  className="flex items-center gap-3"
-                >
-                  <div className="p-3 bg-brand-red-100 dark:bg-brand-red-900/30 rounded-lg">
-                    <stat.icon className="w-6 h-6 text-brand-red-600 dark:text-brand-red-400" />
-                  </div>
-                  <div className="text-left">
-                    <div className="text-2xl font-bold text-slate-900 dark:text-slate-50">
-                      {stat.value}
-                    </div>
-                    <div className="text-sm text-slate-600 dark:text-slate-400">
-                      {stat.label}
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-
             {/* Search Bar */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -232,59 +202,6 @@ export default function CoursesContent() {
                 )}
               </div>
             </motion.div>
-          </motion.div>
-
-          {/* Category Filters */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-            className="flex flex-wrap justify-center gap-3 mb-8"
-          >
-            {categories.map((category) => {
-              const Icon = category.icon;
-              const isActive = selectedCategory === category.id;
-              return (
-                <Button
-                  key={category.id}
-                  variant={isActive ? "default" : "outline"}
-                  onClick={() => setSelectedCategory(category.id)}
-                  className={`${
-                    isActive
-                      ? "bg-brand-red-500 hover:bg-brand-red-600 text-white"
-                      : "border-2 hover:border-brand-red-500"
-                  }`}
-                >
-                  <Icon className="w-4 h-4 mr-2" />
-                  {category.name}
-                </Button>
-              );
-            })}
-
-            <Button
-              variant="outline"
-              onClick={() => setShowFilters(!showFilters)}
-              className="border-2 hover:border-brand-red-500"
-            >
-              <Filter className="w-4 h-4 mr-2" />
-              {t('filters.moreFilters')}
-              {hasActiveFilters && (
-                <Badge className="ml-2 bg-brand-red-500 hover:bg-brand-red-600">
-                  {[searchTerm, selectedCategory !== "all", selectedLevel].filter(Boolean).length}
-                </Badge>
-              )}
-            </Button>
-
-            {hasActiveFilters && (
-              <Button
-                variant="ghost"
-                onClick={clearFilters}
-                className="text-brand-red-600 dark:text-brand-red-400"
-              >
-                <X className="w-4 h-4 mr-2" />
-                {t('filters.clearAll')}
-              </Button>
-            )}
           </motion.div>
 
           {/* Advanced Filters */}

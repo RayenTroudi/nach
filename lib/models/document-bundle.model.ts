@@ -16,6 +16,8 @@ export interface IDocumentBundle extends Document {
   category: string;
   tags?: string[];
   purchases?: Schema.Types.ObjectId[]; // References to DocumentPurchase
+  parentFolder?: Schema.Types.ObjectId; // Reference to parent bundle (folder)
+  isFolder: boolean; // True if this is a folder, false if it's a bundle with files
   createdAt: Date;
   updatedAt: Date;
 }
@@ -88,6 +90,15 @@ const DocumentBundleSchema = new Schema(
         default: [],
       },
     ],
+    parentFolder: {
+      type: Schema.Types.ObjectId,
+      ref: "DocumentBundle",
+      default: null,
+    },
+    isFolder: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 );
@@ -96,6 +107,7 @@ const DocumentBundleSchema = new Schema(
 DocumentBundleSchema.index({ uploadedBy: 1 });
 DocumentBundleSchema.index({ isPublished: 1 });
 DocumentBundleSchema.index({ category: 1 });
+DocumentBundleSchema.index({ parentFolder: 1 });
 
 const DocumentBundle =
   models.DocumentBundle || model<IDocumentBundle>("DocumentBundle", DocumentBundleSchema);

@@ -249,6 +249,12 @@ export type TDocumentBundle = {
   category: string;
   tags?: string[];
   purchases?: TDocumentPurchase[];
+  parentFolder?: string | TDocumentBundle; // Reference to parent folder
+  isFolder: boolean; // True if this is a folder, false if bundle with files
+  isPurchased?: boolean; // Has the current user purchased this?
+  isAccessible?: boolean; // Can the user access the files? (false if locked behind folder purchase)
+  requiresFolderPurchase?: boolean; // Is this locked behind a paid folder?
+  parentFolderPrice?: number; // Price of parent folder if locked
   createdAt: Date;
   updatedAt: Date;
 };

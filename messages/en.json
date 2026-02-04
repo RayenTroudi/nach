@@ -1982,7 +1982,11 @@
     "totalDocuments": "Total Documents",
     "documentsInBundle": "Documents in Bundle",
     "noDocumentsInBundle": "No documents found in this bundle",
-    "bundlePurchasePrompt": "Purchase this bundle to unlock all documents and start your learning journey!"
+    "bundlePurchasePrompt": "Purchase this bundle to unlock all documents and start your learning journey!",
+    "bundlesInside": "Bundles Inside",
+    "noBundlesInFolder": "No bundles in this folder",
+    "folderPurchasePrompt": "Purchase this folder to access all bundles inside",
+    "browseFolder": "Browse Folder"
   },
   "purchaseModal": {
     "title": "Complete Your Purchase",

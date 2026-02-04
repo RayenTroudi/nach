@@ -15,6 +15,10 @@ import {
   Package,
   Upload,
   X,
+  Folder,
+  ChevronRight,
+  Home,
+  FolderPlus,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -68,9 +72,17 @@ export default function DocumentBundlesPage() {
   const [bundles, setBundles] = useState<TDocumentBundle[]>([]);
   const [documents, setDocuments] = useState<TDocument[]>([]);
   const [loading, setLoading] = useState(true);
+  
+  // Folder navigation
+  const [currentFolder, setCurrentFolder] = useState<string | null>(null);
+  const [currentFolderData, setCurrentFolderData] = useState<TDocumentBundle | null>(null);
+  const [breadcrumbs, setBreadcrumbs] = useState<Array<{ id: string | null; name: string }>>([
+    { id: null, name: "Root" }
+  ]);
   const [searchTerm, setSearchTerm] = useState("");
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isCreateFolderModalOpen, setIsCreateFolderModalOpen] = useState(false);
   const [editingBundle, setEditingBundle] = useState<TDocumentBundle | null>(null);
   
   // Multiple file upload state
@@ -89,14 +101,18 @@ export default function DocumentBundlesPage() {
     thumbnail: "",
     selectedDocuments: [] as string[],
     isPublished: true,
+    isFolder: false,
   });
+  
+  const [folderName, setFolderName] = useState("");
 
   // Fetch bundles and available documents
   const fetchData = useCallback(async () => {
     try {
       setLoading(true);
+      const parentParam = currentFolder === null ? 'null' : currentFolder;
       const [bundlesRes, documentsRes] = await Promise.all([
-        fetch("/api/document-bundles"),
+        fetch(`/api/document-bundles?parentFolder=${parentParam}`),
         fetch("/api/documents?limit=100&includePrivate=true"),
       ]);
 
@@ -107,19 +123,108 @@ export default function DocumentBundlesPage() {
       const bundlesData = await bundlesRes.json();
       const documentsData = await documentsRes.json();
 
+      console.log('Fetched bundles:', bundlesData.bundles?.map((b: any) => ({ 
+        id: b._id, 
+        title: b.title, 
+        isFolder: b.isFolder,
+        fullObject: b
+      })));
+
       setBundles(bundlesData.bundles || []);
       setDocuments(documentsData.documents || []);
+      
+      // Get current folder data if we're inside a folder
+      if (currentFolder) {
+        const currentFolderFromList = bundlesData.bundles?.find((b: any) => b._id === currentFolder);
+        if (!currentFolderFromList) {
+          // Fetch it separately if not in list
+          const folderRes = await fetch(`/api/document-bundles/${currentFolder}`);
+          if (folderRes.ok) {
+            const folderData = await folderRes.json();
+            setCurrentFolderData(folderData.bundle);
+          }
+        } else {
+          setCurrentFolderData(currentFolderFromList);
+        }
+      } else {
+        setCurrentFolderData(null);
+      }
     } catch (error) {
       console.error("Error fetching data:", error);
       toast.error(t("loadError"));
     } finally {
       setLoading(false);
     }
-  }, [t]);
+  }, [t, currentFolder]);
 
   useEffect(() => {
     fetchData();
   }, [fetchData]);
+
+  // Navigate to folder
+  const navigateToFolder = (folderId: string | null, folderName: string) => {
+    setCurrentFolder(folderId);
+    if (folderId === null) {
+      setBreadcrumbs([{ id: null, name: "Root" }]);
+    } else {
+      const existingIndex = breadcrumbs.findIndex(b => b.id === folderId);
+      if (existingIndex >= 0) {
+        // Navigate back - truncate breadcrumbs
+        setBreadcrumbs(breadcrumbs.slice(0, existingIndex + 1));
+      } else {
+        // Navigate forward - add to breadcrumbs
+        setBreadcrumbs([...breadcrumbs, { id: folderId, name: folderName }]);
+      }
+    }
+  };
+
+  // Handle folder double-click
+  const handleFolderClick = (bundle: TDocumentBundle) => {
+    if (bundle.isFolder) {
+      navigateToFolder(bundle._id, bundle.title);
+    }
+  };
+
+  // Create new folder
+  const handleCreateFolder = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!folderName.trim()) {
+      toast.error("Folder name is required");
+      return;
+    }
+
+    try {
+      const response = await fetch("/api/document-bundles", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title: folderName,
+          description: "",
+          price: 0,
+          currency: "usd",
+          category: "Guide",
+          tags: [],
+          documentIds: [],
+          isPublished: true,
+          parentFolder: currentFolder,
+          isFolder: true,
+        }),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || "Failed to create folder");
+      }
+
+      toast.success("Folder created successfully");
+      setIsCreateFolderModalOpen(false);
+      setFolderName("");
+      fetchData();
+    } catch (error: any) {
+      console.error("Error creating folder:", error);
+      toast.error(error.message);
+    }
+  };
 
   // Filter bundles
   const filteredBundles = bundles.filter((bundle) =>
@@ -130,23 +235,29 @@ export default function DocumentBundlesPage() {
   const handleCreateBundle = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (formData.selectedDocuments.length === 0) {
+    if (!formData.isFolder && formData.selectedDocuments.length === 0) {
       toast.error(t("selectDocuments"));
       return;
     }
 
     try {
+      // Force price to 0 if inside a paid folder
+      const finalPrice = (currentFolderData && currentFolderData.price > 0) ? 0 : formData.price;
+      
       const response = await fetch("/api/document-bundles", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...formData,
+          price: finalPrice,
           tags: formData.tags
             .split(",")
             .map((tag) => tag.trim())
             .filter(Boolean),
           documentIds: formData.selectedDocuments,
           isPublished: formData.isPublished,
+          parentFolder: currentFolder,
+          isFolder: formData.isFolder,
         }),
       });
 
@@ -250,6 +361,7 @@ export default function DocumentBundlesPage() {
         typeof doc === "string" ? doc : doc._id
       ),
       isPublished: bundle.isPublished,
+      isFolder: bundle.isFolder || false,
     });
     setIsEditModalOpen(true);
   };
@@ -372,6 +484,7 @@ export default function DocumentBundlesPage() {
       thumbnail: "",
       selectedDocuments: [],
       isPublished: true,
+      isFolder: false,
     });
     setUploadedDocuments([]);
     setSelectedFiles([]);
@@ -401,22 +514,91 @@ export default function DocumentBundlesPage() {
               </h1>
               <p className="text-slate-600 dark:text-slate-400 mt-1">
                 {t("subtitle")}
+                {currentFolder && (
+                  <span className="block text-brand-red-500 font-medium mt-1">
+                    📁 Current: {breadcrumbs[breadcrumbs.length - 1]?.name}
+                  </span>
+                )}
               </p>
             </div>
-            <Dialog open={isCreateModalOpen} onOpenChange={setIsCreateModalOpen}>
-              <DialogTrigger asChild>
-                <Button
-                  onClick={() => resetForm()}
-                  className="bg-brand-red-500 hover:bg-brand-red-600"
-                >
-                  <Plus className="h-4 w-4 mr-2" />
-                  {t("createBundle")}
-                </Button>
-              </DialogTrigger>
+            <div className="flex gap-2">
+              <Dialog open={isCreateFolderModalOpen} onOpenChange={setIsCreateFolderModalOpen}>
+                <DialogTrigger asChild>
+                  <Button variant="outline">
+                    <FolderPlus className="h-4 w-4 mr-2" />
+                    New Folder
+                  </Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Create New Folder</DialogTitle>
+                    <DialogDescription>
+                      {currentFolder ? (
+                        <span className="flex items-center gap-1">
+                          Creating folder inside: <strong className="text-brand-red-500">{breadcrumbs[breadcrumbs.length - 1]?.name}</strong>
+                        </span>
+                      ) : (
+                        'Creating folder at root level'
+                      )}
+                    </DialogDescription>
+                  </DialogHeader>
+                  <form onSubmit={handleCreateFolder} className="space-y-4">
+                    <div>
+                      <Label>Folder Name</Label>
+                      <Input
+                        value={folderName}
+                        onChange={(e) => setFolderName(e.target.value)}
+                        placeholder="Enter folder name..."
+                        required
+                      />
+                    </div>
+                    <div className="flex justify-end gap-2">
+                      <Button
+                        type="button"
+                        variant="outline"
+                        onClick={() => setIsCreateFolderModalOpen(false)}
+                      >
+                        Cancel
+                      </Button>
+                      <Button type="submit">Create Folder</Button>
+                    </div>
+                  </form>
+                </DialogContent>
+              </Dialog>
+              <Dialog open={isCreateModalOpen} onOpenChange={setIsCreateModalOpen}>
+                <DialogTrigger asChild>
+                  <Button
+                    onClick={() => resetForm()}
+                    className="bg-brand-red-500 hover:bg-brand-red-600"
+                  >
+                    <Plus className="h-4 w-4 mr-2" />
+                    {t("createBundle")}
+                  </Button>
+                </DialogTrigger>
               <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
                 <DialogHeader>
                   <DialogTitle>{t("createBundle")}</DialogTitle>
-                  <DialogDescription>{t("createDescription")}</DialogDescription>
+                  <DialogDescription>
+                    {currentFolder ? (
+                      <div className="space-y-2">
+                        <span className="flex items-center gap-1">
+                          Creating bundle inside: <strong className="text-brand-red-500">{breadcrumbs[breadcrumbs.length - 1]?.name}</strong>
+                        </span>
+                        {currentFolderData && currentFolderData.price > 0 && (
+                          <div className="p-3 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg text-sm">
+                            <p className="text-amber-800 dark:text-amber-200 font-medium">
+                              ⚠️ This folder is for sale (${currentFolderData.price})
+                            </p>
+                            <p className="text-amber-700 dark:text-amber-300 mt-1">
+                              Bundles inside will be included in the folder purchase. Students must buy the folder to access this bundle.
+                            </p>
+                          </div>
+                        )}
+                      </div>
+                    ) : (
+                      t("createDescription")
+                    )}
+                  </DialogDescription>
                 </DialogHeader>
                 <form onSubmit={handleCreateBundle} className="space-y-4">
                   <div>
@@ -450,12 +632,18 @@ export default function DocumentBundlesPage() {
                         type="number"
                         step="0.01"
                         min="0"
-                        value={formData.price}
+                        value={currentFolderData && currentFolderData.price > 0 ? 0 : formData.price}
                         onChange={(e) =>
                           setFormData({ ...formData, price: parseFloat(e.target.value) })
                         }
+                        disabled={currentFolderData ? currentFolderData.price > 0 : false}
                         required
                       />
+                      {currentFolderData && currentFolderData.price > 0 && (
+                        <p className="text-xs text-amber-600 mt-1">
+                          Price is locked - included in folder purchase
+                        </p>
+                      )}
                     </div>
                     <div>
                       <Label>{t("currencyLabel")}</Label>
@@ -696,6 +884,27 @@ export default function DocumentBundlesPage() {
               </DialogContent>
             </Dialog>
           </div>
+          </div>
+
+          {/* Breadcrumbs Navigation */}
+          <div className="flex items-center gap-2 text-sm">
+            {breadcrumbs.map((crumb, index) => (
+              <div key={crumb.id || 'root'} className="flex items-center gap-2">
+                {index > 0 && <ChevronRight className="h-4 w-4 text-slate-400" />}
+                <button
+                  onClick={() => navigateToFolder(crumb.id, crumb.name)}
+                  className={`flex items-center gap-1 px-2 py-1 rounded hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors ${
+                    index === breadcrumbs.length - 1
+                      ? 'text-brand-red-600 dark:text-brand-red-400 font-medium'
+                      : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100'
+                  }`}
+                >
+                  {index === 0 ? <Home className="h-4 w-4" /> : <Folder className="h-4 w-4" />}
+                  <span>{crumb.name}</span>
+                </button>
+              </div>
+            ))}
+          </div>
 
           {/* Search */}
           <div className="flex items-center gap-4">
@@ -748,13 +957,35 @@ export default function DocumentBundlesPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredBundles.map((bundle) => {
                 const borderClass = !bundle.isPublished ? 'border-2 border-amber-300 dark:border-amber-600' : '';
+                // Check if it's a folder - either explicitly marked or has no documents
+                const isFolder = bundle.isFolder === true;
+                
+                console.log('Bundle:', bundle.title, 'isFolder:', bundle.isFolder, 'type:', typeof bundle.isFolder);
+                
+                const handleEditClick = (bundle: TDocumentBundle) => {
+                  openEditModal(bundle);
+                };
+
                 return (
-                <Card key={bundle._id} className={`hover:shadow-lg transition-shadow ${borderClass}`}>
+                <Card 
+                  key={bundle._id} 
+                  className={`hover:shadow-lg transition-shadow ${borderClass} ${isFolder ? 'cursor-pointer' : ''}`}
+                  onDoubleClick={(e) => {
+                    if (isFolder) {
+                      e.preventDefault();
+                      handleFolderClick(bundle);
+                    }
+                  }}
+                >
                   <CardHeader>
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
                         <CardTitle className="text-lg flex items-center gap-2">
-                          <FolderOpen className="h-5 w-5" />
+                          {isFolder ? (
+                            <Folder className="h-5 w-5 text-blue-500" />
+                          ) : (
+                            <FolderOpen className="h-5 w-5" />
+                          )}
                           {bundle.title}
                           {!bundle.isPublished && (
                             <Badge variant="outline" className="ml-2 text-amber-600 border-amber-600">
@@ -763,52 +994,90 @@ export default function DocumentBundlesPage() {
                           )}
                         </CardTitle>
                         <CardDescription className="mt-2">
-                          {bundle.description || t("noDescription")}
+                          {isFolder ? 'Folder' : (bundle.description || t("noDescription"))}
                         </CardDescription>
                       </div>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => handleTogglePublish(bundle._id, bundle.isPublished)}
-                        title={bundle.isPublished ? t("unpublish") : t("publish")}
-                      >
-                        {bundle.isPublished ? (
-                          <Eye className="h-4 w-4 text-green-600" />
-                        ) : (
-                          <EyeOff className="h-4 w-4 text-slate-400" />
-                        )}
-                      </Button>
+                      {!isFolder && (
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => handleTogglePublish(bundle._id, bundle.isPublished)}
+                          title={bundle.isPublished ? t("unpublish") : t("publish")}
+                        >
+                          {bundle.isPublished ? (
+                            <Eye className="h-4 w-4 text-green-600" />
+                          ) : (
+                            <EyeOff className="h-4 w-4 text-slate-400" />
+                          )}
+                        </Button>
+                      )}
                     </div>
                   </CardHeader>
                   <CardContent className="space-y-4">
-                    <div className="flex items-center justify-between">
-                      <Badge variant="secondary">{bundle.category}</Badge>
-                      <div className="flex items-center gap-1 text-lg font-bold text-brand-red-500">
-                        <DollarSign className="h-5 w-5" />
-                        {bundle.price} {bundle.currency.toUpperCase()}
-                      </div>
-                    </div>
+                    {isFolder ? (
+                      <>
+                        <div className="text-center py-8">
+                          <Folder className="h-16 w-16 mx-auto text-blue-400 mb-2" />
+                          <p className="text-sm text-slate-600 dark:text-slate-400">
+                            Double-click to open
+                          </p>
+                        </div>
+                        <div className="flex gap-2 pt-4 border-t">
+                          <Button
+                            variant="outline"
+                            className="flex-1"
+                            size="sm"
+                            onClick={() => handleFolderClick(bundle)}
+                          >
+                            Open
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="icon"
+                            onClick={() => handleEditClick(bundle)}
+                          >
+                            <Edit className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="icon"
+                            onClick={() => handleDeleteBundle(bundle._id)}
+                            className="text-red-500 hover:bg-red-50 dark:hover:bg-red-950"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <div className="flex items-center justify-between">
+                          <Badge variant="secondary">{bundle.category}</Badge>
+                          <div className="flex items-center gap-1 text-lg font-bold text-brand-red-500">
+                            <DollarSign className="h-5 w-5" />
+                            {bundle.price} {bundle.currency.toUpperCase()}
+                          </div>
+                        </div>
 
-                    <div className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
-                      <FileText className="h-4 w-4" />
-                      {bundle.documents?.length || 0} {t("documents")}
-                    </div>
+                        <div className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
+                          <FileText className="h-4 w-4" />
+                          {bundle.documents?.length || 0} {t("documents")}
+                        </div>
 
-                    {bundle.tags && bundle.tags.length > 0 && (
-                      <div className="flex flex-wrap gap-1">
-                        {bundle.tags.slice(0, 3).map((tag, idx) => (
-                          <Badge key={idx} variant="outline" className="text-xs">
-                            {tag}
-                          </Badge>
-                        ))}
-                      </div>
-                    )}
+                        {bundle.tags && bundle.tags.length > 0 && (
+                          <div className="flex flex-wrap gap-1">
+                            {bundle.tags.slice(0, 3).map((tag, idx) => (
+                              <Badge key={idx} variant="outline" className="text-xs">
+                                {tag}
+                              </Badge>
+                            ))}
+                          </div>
+                        )}
 
                     <div className="flex gap-2 pt-4 border-t">
                       <Button
                         variant="outline"
                         size="sm"
-                        onClick={() => openEditModal(bundle)}
+                        onClick={() => handleEditClick(bundle)}
                         className="flex-1"
                       >
                         <Edit className="h-4 w-4 mr-1" />
@@ -824,6 +1093,8 @@ export default function DocumentBundlesPage() {
                         {t("delete")}
                       </Button>
                     </div>
+                    </>
+                    )}
                   </CardContent>
                 </Card>
               );

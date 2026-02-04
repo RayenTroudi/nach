@@ -2,6 +2,9 @@ import { NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/mongoose";
 import DocumentModel from "@/lib/models/document.model";
 import DocumentBundle from "@/lib/models/document-bundle.model";
+import DocumentPurchase from "@/lib/models/document-purchase.model";
+import UserModel from "@/lib/models/user.model";
+import { auth } from "@clerk/nextjs";
 import "@/lib/models/user.model"; // Import to register User model for populate
 
 /**
@@ -17,8 +20,9 @@ export async function GET(request: Request) {
     const limit = parseInt(searchParams.get("limit") || "12");
     const sort = searchParams.get("sort") || "newest"; // newest, price-low, price-high, title
     const type = searchParams.get("type"); // 'document', 'bundle', or null for both
+    const parentFolder = searchParams.get("parentFolder"); // 'null' for root, folder ID for inside folder
 
-    console.log("[Storefront API] Starting request with params:", { category, search, page, limit, sort, type });
+    console.log("[Storefront API] Starting request with params:", { category, search, page, limit, sort, type, parentFolder });
 
     await connectToDatabase();
     console.log("[Storefront API] Database connected");
@@ -119,6 +123,13 @@ export async function GET(request: Request) {
     if (!type || type === "bundle") {
       const bundleQuery: any = { isPublished: true };
       
+      // Filter by parent folder
+      if (parentFolder === "null" || parentFolder === null) {
+        bundleQuery.parentFolder = null; // Root level items
+      } else if (parentFolder) {
+        bundleQuery.parentFolder = parentFolder; // Items inside specific folder
+      }
+      
       if (category && category !== "All") {
         bundleQuery.category = category;
       }
@@ -136,14 +147,130 @@ export async function GET(request: Request) {
         DocumentBundle.find(bundleQuery)
           .populate("uploadedBy", "firstName lastName picture")
           .populate("documents", "title fileName fileType")
-          .sort(sortQuery)
+          .select("+isFolder +parentFolder +isAccessible +requiresFolderPurchase +parentFolderPrice")
+          .sort({ isFolder: -1, ...sortQuery }) // Folders first
           .lean(),
         DocumentBundle.countDocuments(bundleQuery),
       ]);
 
       console.log("[Storefront API] Found bundles:", bdls.length);
-      bundles = bdls.map((bundle) => ({ ...bundle, itemType: "bundle" }));
+      
+      // Apply access control logic for students
+      const { userId } = auth();
+      let currentDbUser = null;
+      let isInstructor = false;
+      let purchasedBundleIds = new Set<string>();
+      
+      if (userId) {
+        currentDbUser = await UserModel.findOne({ clerkId: userId }).lean();
+        isInstructor = currentDbUser?.isAdmin === true;
+        
+        // For students, get their purchases
+        if (!isInstructor && currentDbUser) {
+          const userPurchases = await DocumentPurchase.find({
+            userId: currentDbUser._id,
+            itemType: "bundle",
+            paymentStatus: "completed"
+          }).lean();
+          
+          purchasedBundleIds = new Set(
+            userPurchases.map(p => p.itemId.toString())
+          );
+        }
+      }
+      
+      // Get parent folder data for access control
+      const parentFolderIds = bdls
+        .filter(b => b.parentFolder)
+        .map(b => typeof b.parentFolder === 'string' ? b.parentFolder : (b.parentFolder as any).toString());
+      
+      const parentFolders = await DocumentBundle.find({
+        _id: { $in: parentFolderIds }
+      }).lean();
+      
+      const parentFolderMap = new Map(
+        parentFolders.map(pf => [(pf._id as any).toString(), pf])
+      );
+      
+      // Mark bundles with access control info
+      bundles = bdls.map((bundle) => {
+        let isAccessible = true;
+        let requiresFolderPurchase = false;
+        let parentFolderPrice = 0;
+        
+        // For students: Check if bundle is inside a paid folder
+        if (!isInstructor && bundle.parentFolder && !bundle.isFolder) {
+          const parentFolderId = typeof bundle.parentFolder === 'string' 
+            ? bundle.parentFolder 
+            : (bundle.parentFolder as any).toString();
+          
+          const parentFolder = parentFolderMap.get(parentFolderId);
+          
+          if (parentFolder && (parentFolder as any).price > 0) {
+            // Parent folder is paid
+            requiresFolderPurchase = true;
+            parentFolderPrice = (parentFolder as any).price;
+            // Only accessible if parent folder is purchased
+            isAccessible = purchasedBundleIds.has(parentFolderId);
+          }
+        }
+        
+        return {
+          ...bundle,
+          itemType: "bundle",
+          isPurchased: purchasedBundleIds.has((bundle._id as any).toString()),
+          isAccessible,
+          requiresFolderPurchase,
+          parentFolderPrice,
+        };
+      });
+      
       bundlesTotal = bdlsCount;
+    }
+    
+    // Add folder metadata (child bundle count and preview)
+    for (let i = 0; i < bundles.length; i++) {
+      const bundle = bundles[i];
+      // Check if this is a folder (has isFolder=true OR has no documents)
+      if (bundle.isFolder || !bundle.documents || bundle.documents.length === 0) {
+        try {
+          // Count child bundles
+          const childBundleCount = await DocumentBundle.countDocuments({
+            parentFolder: bundle._id,
+            isPublished: true
+          });
+          
+          // Get preview of child bundles (first 5)
+          const childBundles = await DocumentBundle.find({
+            parentFolder: bundle._id,
+            isPublished: true
+          })
+            .select('title documents')
+            .limit(5)
+            .lean();
+          
+          // Format child bundle preview
+          const childBundlePreview = childBundles.map(cb => ({
+            _id: (cb._id as any).toString(),
+            title: cb.title,
+            fileCount: (cb.documents && Array.isArray(cb.documents)) ? cb.documents.length : 0
+          }));
+          
+          bundles[i] = {
+            ...bundle,
+            childBundleCount,
+            childBundles: childBundlePreview
+          };
+        } catch (folderError) {
+          console.error("[Storefront API] Error fetching folder metadata:", folderError);
+          // Continue without folder metadata
+          bundles[i] = {
+            ...bundle,
+            childBundleCount: 0,
+            childBundles: []
+          };
+        }
+      }
     }
 
     // Combine and sort

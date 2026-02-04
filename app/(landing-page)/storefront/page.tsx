@@ -13,6 +13,9 @@ import {
   ShoppingCart,
   FolderOpen,
   Lock,
+  Folder,
+  Info,
+  Home,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -85,6 +88,18 @@ interface StorefrontItem {
     title: string;
     fileName: string;
   }>;
+  isFolder?: boolean; // True if this is a folder, false if bundle with files
+  // Folder metadata
+  childBundleCount?: number; // Number of bundles inside this folder
+  childBundles?: Array<{ // Preview of bundles inside
+    _id: string;
+    title: string;
+    fileCount: number;
+  }>;
+  // Access control
+  isAccessible?: boolean; // Can the user access the files?
+  requiresFolderPurchase?: boolean; // Is this locked behind a paid folder?
+  parentFolderPrice?: number; // Price of parent folder if locked
   createdAt: string;
 }
 
@@ -98,6 +113,10 @@ export default function StorefrontPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("All");
   const [typeFilter, setTypeFilter] = useState("all"); // all, document, bundle
+  const [currentFolder, setCurrentFolder] = useState<string | null>(null);
+  const [breadcrumbs, setBreadcrumbs] = useState<Array<{ id: string | null; name: string }>>([
+    { id: null, name: "All Documents" }
+  ]);
   const [sortBy, setSortBy] = useState("newest");
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -111,6 +130,10 @@ export default function StorefrontPage() {
   // Bundle preview dialog state
   const [previewBundle, setPreviewBundle] = useState<StorefrontItem | null>(null);
   const [isBundlePreviewOpen, setIsBundlePreviewOpen] = useState(false);
+  
+  // Folder preview state
+  const [previewFolder, setPreviewFolder] = useState<StorefrontItem | null>(null);
+  const [isFolderPreviewOpen, setIsFolderPreviewOpen] = useState(false);
 
   const ITEMS_PER_PAGE = 12;
 
@@ -147,6 +170,12 @@ export default function StorefrontPage() {
 
       if (searchTerm) {
         params.append("search", searchTerm);
+      }
+      
+      if (currentFolder) {
+        params.append("parentFolder", currentFolder);
+      } else {
+        params.append("parentFolder", "null");
       }
 
       const response = await fetch(`/api/storefront?${params.toString()}`);
@@ -186,7 +215,7 @@ export default function StorefrontPage() {
   useEffect(() => {
     fetchItems();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentPage, categoryFilter, typeFilter, sortBy]);
+  }, [currentPage, categoryFilter, typeFilter, sortBy, currentFolder]);
 
   useEffect(() => {
     fetchPurchasedItems();
@@ -265,6 +294,26 @@ export default function StorefrontPage() {
     setPreviewBundle(item);
     setIsBundlePreviewOpen(true);
   };
+  
+  // Navigate to folder
+  const navigateToFolder = (folderId: string | null, folderName: string) => {
+    setCurrentFolder(folderId);
+    if (folderId === null) {
+      setBreadcrumbs([{ id: null, name: "All Documents" }]);
+    } else {
+      const existingIndex = breadcrumbs.findIndex(b => b.id === folderId);
+      if (existingIndex >= 0) {
+        setBreadcrumbs(breadcrumbs.slice(0, existingIndex + 1));
+      } else {
+        setBreadcrumbs([...breadcrumbs, { id: folderId, name: folderName }]);
+      }
+    }
+  };
+  
+  // Handle folder click
+  const handleFolderClick = (item: StorefrontItem) => {
+    navigateToFolder(item._id, item.title);
+  };
 
   // Format price
   const formatPrice = (price: number, currency: string) => {
@@ -308,6 +357,27 @@ export default function StorefrontPage() {
             {t("subtitle")}
           </p>
         </div>
+
+        {/* Breadcrumbs */}
+        {breadcrumbs.length > 1 && (
+          <div className="flex items-center gap-2 text-sm mb-4">
+            {breadcrumbs.map((crumb, index) => (
+              <div key={crumb.id || 'root'} className="flex items-center gap-2">
+                {index > 0 && <ChevronRight className="h-4 w-4 text-slate-400" />}
+                <button
+                  onClick={() => navigateToFolder(crumb.id, crumb.name)}
+                  className={`px-2 py-1 rounded hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors ${
+                    index === breadcrumbs.length - 1
+                      ? 'text-brand-red-600 dark:text-brand-red-400 font-medium'
+                      : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100'
+                  }`}
+                >
+                  {crumb.name}
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
 
         {/* Filters */}
         <Card className="mb-8">
@@ -413,7 +483,9 @@ export default function StorefrontPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
               {items.map((item) => {
                 const purchased = isPurchased(item._id);
-                const isFree = item.price === 0;
+                // Bundle is free if price is 0 AND it's accessible (not locked behind folder)
+                const isFree = item.price === 0 && (item.isAccessible !== false);
+                const isLocked = item.requiresFolderPurchase && !item.isAccessible;
                 
                 return (
                   <Card
@@ -430,13 +502,21 @@ export default function StorefrontPage() {
                           }`}
                         >
                           {item.itemType === "bundle" ? (
-                            <FolderOpen
-                              className={`w-6 h-6 ${
-                                item.itemType === "bundle"
-                                  ? "text-purple-500"
-                                  : "text-brand-red-500"
-                              }`}
-                            />
+                            <>
+                              {item.requiresFolderPurchase && !item.isAccessible ? (
+                                <Lock
+                                  className="w-6 h-6 text-amber-500"
+                                />
+                              ) : (
+                                <FolderOpen
+                                  className={`w-6 h-6 ${
+                                    item.itemType === "bundle"
+                                      ? "text-purple-500"
+                                      : "text-brand-red-500"
+                                  }`}
+                                />
+                              )}
+                            </>
                           ) : (
                             <FileText className="w-6 h-6 text-brand-red-500" />
                           )}
@@ -454,10 +534,36 @@ export default function StorefrontPage() {
                                 {t("bundle")}
                               </Badge>
                             )}
+                            {item.requiresFolderPurchase && !item.isAccessible && (
+                              <Badge variant="outline" className="text-xs bg-amber-50 text-amber-700 border-amber-300">
+                                🔒 Locked
+                              </Badge>
+                            )}
+                            {(item.isFolder || (item.itemType === "bundle" && (!item.documents || item.documents.length === 0))) && item.childBundleCount !== undefined && item.childBundleCount > 0 && (
+                              <Badge variant="outline" className="text-xs bg-blue-50 text-blue-700 border-blue-300">
+                                📁 {item.childBundleCount} {item.childBundleCount === 1 ? 'bundle' : 'bundles'}
+                              </Badge>
+                            )}
                           </div>
-                          <CardTitle className="text-lg line-clamp-2">
-                            {item.title}
-                          </CardTitle>
+                          <div className="flex items-center gap-2">
+                            <CardTitle className="text-lg line-clamp-2 flex-1">
+                              {item.title}
+                            </CardTitle>
+                            {(item.isFolder || (item.itemType === "bundle" && (!item.documents || item.documents.length === 0))) && item.childBundleCount !== undefined && item.childBundleCount > 0 && (
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setPreviewFolder(item);
+                                  setIsFolderPreviewOpen(true);
+                                }}
+                                className="h-8 w-8 p-0 shrink-0"
+                              >
+                                <Info className="w-4 h-4 text-slate-500" />
+                              </Button>
+                            )}
+                          </div>
                         </div>
                       </div>
                     </CardHeader>
@@ -489,26 +595,64 @@ export default function StorefrontPage() {
 
                       {/* Price */}
                       <div className="mb-4 pb-4 border-b">
-                        <div className="flex items-center justify-between">
-                          <span className="text-sm text-slate-600 dark:text-slate-400">
-                            {t("price")}:
-                          </span>
-                          <span className="text-xl font-bold text-brand-red-500">
-                            {formatPrice(item.price, item.currency)}
-                          </span>
-                        </div>
-                        {purchased && (
-                          <Badge
-                            variant="secondary"
-                            className="w-full justify-center mt-2 bg-green-100 text-green-700 border-green-200"
-                          >
-                            {t("purchased")}
-                          </Badge>
+                        {item.requiresFolderPurchase && !item.isAccessible ? (
+                          <div className="space-y-2">
+                            <div className="flex items-center gap-2 text-amber-700 dark:text-amber-400">
+                              <Lock className="w-4 h-4" />
+                              <span className="text-sm font-medium">Requires Folder Purchase</span>
+                            </div>
+                            <div className="text-xs text-slate-600 dark:text-slate-400">
+                              This bundle is part of a paid folder. Purchase the folder ({formatPrice(item.parentFolderPrice || 0, item.currency)}) to access all bundles inside.
+                            </div>
+                          </div>
+                        ) : (
+                          <>
+                            <div className="flex items-center justify-between">
+                              <span className="text-sm text-slate-600 dark:text-slate-400">
+                                {t("price")}:
+                              </span>
+                              <span className="text-xl font-bold text-brand-red-500">
+                                {formatPrice(item.price, item.currency)}
+                              </span>
+                            </div>
+                            {purchased && (
+                              <Badge
+                                variant="secondary"
+                                className="w-full justify-center mt-2 bg-green-100 text-green-700 border-green-200"
+                              >
+                                {t("purchased")}
+                              </Badge>
+                            )}
+                          </>
                         )}
                       </div>
 
                       {/* Actions */}
-                      {isFree || purchased ? (
+                      {isLocked ? (
+                        <div className="text-center">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            disabled
+                            className="w-full"
+                          >
+                            <Lock className="w-4 h-4 mr-1" />
+                            Locked
+                          </Button>
+                          <p className="text-xs text-slate-500 mt-2">
+                            Purchase folder to access
+                          </p>
+                        </div>
+                      ) : item.itemType === \"bundle\" && (item.isFolder || (!item.documents || item.documents.length === 0)) ? (
+                        <Button
+                          size="sm"
+                          onClick={() => handleFolderClick(item)}
+                          className="w-full bg-purple-500 hover:bg-purple-600"
+                        >
+                          <FolderOpen className="w-4 h-4 mr-1" />
+                          Open Folder
+                        </Button>
+                      ) : isFree || purchased ? (
                         <div className="grid grid-cols-2 gap-2">
                           <Button
                             variant="outline"
@@ -742,6 +886,108 @@ export default function StorefrontPage() {
                   <ShoppingCart className="w-4 h-4 mr-2" />
                   {t("buyNow")} - {formatPrice(previewBundle.price, previewBundle.currency)}
                 </Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
+      )}
+
+      {/* Folder Preview Dialog */}
+      {previewFolder && isFolderPreviewOpen && (
+        <Dialog open={isFolderPreviewOpen} onOpenChange={setIsFolderPreviewOpen}>
+          <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+            <DialogHeader>
+              <div className="flex items-center gap-2">
+                <Folder className="w-6 h-6 text-purple-500" />
+                <DialogTitle className="text-2xl">{previewFolder.title}</DialogTitle>
+              </div>
+              <DialogDescription className="text-base mt-2">
+                {previewFolder.description || t("noDescription")}
+              </DialogDescription>
+            </DialogHeader>
+
+            <div className="space-y-6">
+              {/* Folder Info */}
+              <div className="grid grid-cols-2 gap-4 p-4 bg-slate-50 dark:bg-slate-800 rounded-lg">
+                <div>
+                  <p className="text-sm text-slate-600 dark:text-slate-400">{t("category")}</p>
+                  <Badge variant="outline" className={getCategoryColor(previewFolder.category)}>
+                    {previewFolder.category}
+                  </Badge>
+                </div>
+                <div>
+                  <p className="text-sm text-slate-600 dark:text-slate-400">{t("price")}</p>
+                  <p className="text-lg font-bold text-brand-red-500">
+                    {formatPrice(previewFolder.price, previewFolder.currency)}
+                  </p>
+                </div>
+              </div>
+
+              {/* Bundles Inside */}
+              <div>
+                <div className="flex items-center gap-2 mb-3">
+                  <h3 className="text-lg font-semibold">{t("bundlesInside") || "Bundles Inside"}</h3>
+                  <Badge variant="secondary">
+                    {previewFolder.childBundleCount || 0} {previewFolder.childBundleCount === 1 ? 'bundle' : 'bundles'}
+                  </Badge>
+                </div>
+                
+                <div className="space-y-2 max-h-[300px] overflow-y-auto">
+                  {previewFolder.childBundles && previewFolder.childBundles.length > 0 ? (
+                    previewFolder.childBundles.map((bundle: any) => (
+                      <div
+                        key={bundle._id}
+                        className="flex items-center gap-3 p-3 border rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
+                      >
+                        <div className="flex-shrink-0 w-10 h-10 bg-purple-100 dark:bg-purple-900/20 rounded flex items-center justify-center">
+                          <FolderOpen className="w-5 h-5 text-purple-500" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-medium text-slate-900 dark:text-slate-100">
+                            {bundle.title}
+                          </p>
+                          <p className="text-xs text-slate-500 dark:text-slate-400">
+                            {bundle.fileCount} {bundle.fileCount === 1 ? 'file' : 'files'}
+                          </p>
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <p className="text-sm text-slate-500 dark:text-slate-400 text-center py-4">
+                      {t("noBundlesInFolder") || "No bundles in this folder"}
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              {/* Call to Action */}
+              <div className="bg-purple-50 dark:bg-purple-900/20 p-4 rounded-lg">
+                <p className="text-sm text-purple-900 dark:text-purple-100 mb-3">
+                  {t("folderPurchasePrompt") || "Purchase this folder to access all bundles inside"}
+                </p>
+                <div className="flex gap-2">
+                  <Button
+                    variant="outline"
+                    onClick={() => {
+                      setIsFolderPreviewOpen(false);
+                      handleFolderClick(previewFolder);
+                    }}
+                    className="flex-1"
+                  >
+                    <Eye className="w-4 h-4 mr-2" />
+                    {t("browseFolder") || "Browse Folder"}
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      setIsFolderPreviewOpen(false);
+                      handlePurchase(previewFolder);
+                    }}
+                    className="flex-1 bg-brand-red-500 hover:bg-brand-red-600"
+                  >
+                    <ShoppingCart className="w-4 h-4 mr-2" />
+                    {t("buyNow")} - {formatPrice(previewFolder.price, previewFolder.currency)}
+                  </Button>
+                </div>
               </div>
             </div>
           </DialogContent>

@@ -49,6 +49,13 @@ interface DocumentItem {
     _id: string;
     title: string;
   }>;
+  isFolder?: boolean;
+  childBundleCount?: number;
+  childBundles?: Array<{
+    _id: string;
+    title: string;
+    fileCount: number;
+  }>;
   uploadedBy: {
     firstName: string;
     lastName: string;
@@ -319,6 +326,11 @@ export default function DocumentsSection({ documents }: DocumentsSectionProps) {
                               {item.itemType === "bundle" && (
                                 <Badge variant="secondary" className="text-xs">
                                   Bundle
+                                </Badge>
+                              )}
+                              {(item.isFolder || (item.itemType === "bundle" && (!item.documents || item.documents.length === 0))) && item.childBundleCount !== undefined && item.childBundleCount > 0 && (
+                                <Badge variant="outline" className="text-xs bg-blue-50 text-blue-700 border-blue-300">
+                                  📁 {item.childBundleCount} {item.childBundleCount === 1 ? 'bundle' : 'bundles'}
                                 </Badge>
                               )}
                             </div>

@@ -1973,7 +1973,11 @@
     "totalDocuments": "Gesamte Dokumente",
     "documentsInBundle": "Dokumente im Paket",
     "noDocumentsInBundle": "Keine Dokumente in diesem Paket gefunden",
-    "bundlePurchasePrompt": "Kaufen Sie dieses Paket, um alle Dokumente freizuschalten und Ihre Lernreise zu beginnen!"
+    "bundlePurchasePrompt": "Kaufen Sie dieses Paket, um alle Dokumente freizuschalten und Ihre Lernreise zu beginnen!",
+    "bundlesInside": "Pakete im Ordner",
+    "noBundlesInFolder": "Keine Pakete in diesem Ordner",
+    "folderPurchasePrompt": "Kaufen Sie diesen Ordner, um auf alle Pakete zuzugreifen",
+    "browseFolder": "Ordner durchsuchen"
   },
   "purchaseModal": {
     "title": "Kauf abschließen",

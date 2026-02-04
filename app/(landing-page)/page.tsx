@@ -40,16 +40,59 @@ const LandingPage = async () => {
     // Fetch documents and bundles using storefront logic
     await connectToDatabase();
     
-    // Fetch published bundles first
-    const bundles = await DocumentBundle.find({ isPublished: true })
+    // Fetch published bundles first - only root level bundles (not inside folders)
+    const bundles = await DocumentBundle.find({ 
+      isPublished: true,
+      parentFolder: null // Only show root-level items on homepage
+    })
       .populate("uploadedBy", "firstName lastName")
       .populate("documents", "title fileName")
       .sort({ createdAt: -1 })
       .limit(3)
       .lean();
     
+    // Add folder metadata for folders
+    const bundlesWithMetadata = await Promise.all(bundles.map(async (bundle: any) => {
+      // Check if this is a folder
+      if (bundle.isFolder || !bundle.documents || bundle.documents.length === 0) {
+        try {
+          // Count child bundles
+          const childBundleCount = await DocumentBundle.countDocuments({
+            parentFolder: bundle._id,
+            isPublished: true
+          });
+          
+          // Get preview of child bundles (first 5)
+          const childBundles = await DocumentBundle.find({
+            parentFolder: bundle._id,
+            isPublished: true
+          })
+            .select('title documents')
+            .limit(5)
+            .lean();
+          
+          // Format child bundle preview
+          const childBundlePreview = childBundles.map(cb => ({
+            _id: cb._id.toString(),
+            title: cb.title,
+            fileCount: (cb.documents && Array.isArray(cb.documents)) ? cb.documents.length : 0
+          }));
+          
+          return {
+            ...bundle,
+            childBundleCount,
+            childBundles: childBundlePreview
+          };
+        } catch (error) {
+          console.error("Error fetching folder metadata:", error);
+          return bundle;
+        }
+      }
+      return bundle;
+    }));
+    
     // Get all document IDs that are part of bundles
-    const bundledDocumentIds = bundles
+    const bundledDocumentIds = bundlesWithMetadata
       .filter(bundle => bundle.documents && Array.isArray(bundle.documents))
       .flatMap(bundle => 
         bundle.documents.map((doc: any) => doc._id.toString())
@@ -72,7 +115,7 @@ const LandingPage = async () => {
     // Combine and add itemType
     const allItems: Array<any & { itemType: string; createdAt: string | Date }> = [
       ...docs.map((doc) => ({ ...doc, itemType: "document" })),
-      ...bundles.map((bundle) => ({ ...bundle, itemType: "bundle" }))
+      ...bundlesWithMetadata.map((bundle) => ({ ...bundle, itemType: "bundle" }))
     ];
     
     // Sort by createdAt and limit to 6 total items

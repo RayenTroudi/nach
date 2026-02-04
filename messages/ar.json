@@ -1969,7 +1969,11 @@
     "totalDocuments": "إجمالي المستندات",
     "documentsInBundle": "المستندات في الحزمة",
     "noDocumentsInBundle": "لم يتم العثور على مستندات في هذه الحزمة",
-    "bundlePurchasePrompt": "اشترِ هذه الحزمة لفتح جميع المستندات وبدء رحلة التعلم الخاصة بك!"
+    "bundlePurchasePrompt": "اشترِ هذه الحزمة لفتح جميع المستندات وبدء رحلة التعلم الخاصة بك!",
+    "bundlesInside": "الحزم بالداخل",
+    "noBundlesInFolder": "لا توجد حزم في هذا المجلد",
+    "folderPurchasePrompt": "قم بشراء هذا المجلد للوصول إلى جميع الحزم بالداخل",
+    "browseFolder": "تصفح المجلد"
   },
   "purchaseModal": {
     "title": "إتمام عملية الشراء",

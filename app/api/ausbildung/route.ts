@@ -476,7 +476,6 @@ export async function GET(request: Request) {
       opportunities = MOCK_AUSBILDUNG_DATA.filter(
         (item) => {
           const matchesSearch = item.title.toLowerCase().includes(search.toLowerCase()) ||
-                               item.company.toLowerCase().includes(search.toLowerCase()) ||
                                item.description.toLowerCase().includes(search.toLowerCase());
           
           // Match if the searched location is in the item location, or vice versa
@@ -485,7 +484,7 @@ export async function GET(request: Request) {
           
           return matchesSearch && matchesLocation;
         }
-      );
+      ).map(({ company, ...rest }) => rest);
       
       // If no location-specific results found, don't fall back to all cities
       // This ensures users see results only for their selected location

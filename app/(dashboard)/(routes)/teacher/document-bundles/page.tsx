@@ -997,7 +997,7 @@ export default function DocumentBundlesPage() {
                 <Card 
                   key={bundle._id} 
                   className={`hover:shadow-lg transition-shadow ${borderClass} ${isFolder ? 'cursor-pointer' : ''}`}
-                  onDoubleClick={(e) => {
+                  onClick={(e) => {
                     if (isFolder) {
                       e.preventDefault();
                       handleFolderClick(bundle);
@@ -1046,7 +1046,7 @@ export default function DocumentBundlesPage() {
                         <div className="text-center py-8">
                           <Folder className="h-16 w-16 mx-auto text-blue-400 mb-2" />
                           <p className="text-sm text-slate-600 dark:text-slate-400">
-                            Double-click to open
+                            Click to open
                           </p>
                         </div>
                         <div className="flex gap-2 pt-4 border-t">

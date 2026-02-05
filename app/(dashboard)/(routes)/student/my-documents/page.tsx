@@ -344,12 +344,20 @@ export default function MyDocumentsPage() {
       }
     };
 
+    const handleCardClick = () => {
+      if (!canAccess) return;
+      
+      if ((isFolder || (isBundle && currentView === "folder"))) {
+        handleCardDoubleClick();
+      }
+    };
+
     return (
       <Card
         key={purchase._id}
         id={isBundle ? `bundle-${itemId._id}` : undefined}
         className={`transition-all h-full flex flex-col ${(isFolder || (isBundle && currentView === "folder")) && canAccess ? 'cursor-pointer hover:shadow-xl hover:scale-105 hover:border-brand-red-300 dark:hover:border-brand-red-700' : 'hover:shadow-lg'}`}
-        onDoubleClick={handleCardDoubleClick}
+        onClick={handleCardClick}
       >
         <CardHeader className="pb-3">
           <div className="flex flex-col items-center text-center gap-3">

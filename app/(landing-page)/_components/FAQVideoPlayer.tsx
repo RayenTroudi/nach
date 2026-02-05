@@ -146,10 +146,7 @@ export default function FAQVideoPlayer({
                 {/* Loading Spinner */}
                 {isLoading && (
                   <div className="absolute inset-0 flex items-center justify-center bg-black/80 z-40">
-                    <div className="flex flex-col items-center gap-4">
-                      <Spinner size={64} className="text-brand-red-500" />
-                      <p className="text-white text-sm">Loading video...</p>
-                    </div>
+                    <Spinner size={64} className="text-brand-red-500" />
                   </div>
                 )}
                 

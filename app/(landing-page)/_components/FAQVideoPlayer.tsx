@@ -158,7 +158,7 @@ export default function FAQVideoPlayer({
                 playsInline
                 preload="metadata"
                 crossOrigin="anonymous"
-                poster={course.image}
+                poster={course.thumbnail}
                 onLoadedData={() => {
                   if (autoPlay && videoRef) {
                     videoRef.play().catch(err => {

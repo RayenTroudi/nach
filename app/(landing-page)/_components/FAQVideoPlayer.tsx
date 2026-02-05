@@ -6,6 +6,7 @@ import { Play, Pause, Volume2, VolumeX, X, ChevronLeft, ChevronRight } from "luc
 import { TCourse } from "@/types/models.types";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
+import Spinner from "@/components/shared/Spinner";
 
 interface FAQVideoPlayerProps {
   course: TCourse;
@@ -28,6 +29,7 @@ export default function FAQVideoPlayer({
   const [currentIndex, setCurrentIndex] = useState(0);
   const [showInfo, setShowInfo] = useState(true);
   const [videoError, setVideoError] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const containerRef = useRef<HTMLDivElement>(null);
 
   // Find current course index
@@ -35,6 +37,7 @@ export default function FAQVideoPlayer({
     const index = courses.findIndex(c => c._id === course._id);
     if (index !== -1) setCurrentIndex(index);
     setVideoError(false); // Reset error when course changes
+    setIsLoading(true); // Reset loading when course changes
   }, [course, courses]);
 
   const togglePlay = () => {
@@ -139,34 +142,50 @@ export default function FAQVideoPlayer({
                 </div>
               </div>
             ) : (
-              <video
-                ref={setVideoRef}
-                src={course.faqVideo}
-                className="w-full h-full object-contain"
-                onEnded={handleVideoEnd}
-                onError={(e) => {
-                  console.error("Video loading error:", e);
-                  setVideoError(true);
-                  setIsPlaying(false);
-                }}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  togglePlay();
-                }}
-                autoPlay={autoPlay}
-                loop={false}
-                playsInline
-                preload="metadata"
-                poster={course.thumbnail}
-                onLoadedData={() => {
-                  if (autoPlay && videoRef) {
-                    videoRef.play().catch(err => {
-                      console.error("Auto-play failed:", err);
-                      setVideoError(true);
-                    });
-                  }
-                }}
-              />
+              <>
+                {/* Loading Spinner */}
+                {isLoading && (
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/80 z-40">
+                    <div className="flex flex-col items-center gap-4">
+                      <Spinner size={64} className="text-brand-red-500" />
+                      <p className="text-white text-sm">Loading video...</p>
+                    </div>
+                  </div>
+                )}
+                
+                <video
+                  ref={setVideoRef}
+                  src={course.faqVideo}
+                  className="w-full h-full object-contain"
+                  onEnded={handleVideoEnd}
+                  onError={(e) => {
+                    setVideoError(true);
+                    setIsPlaying(false);
+                    setIsLoading(false);
+                  }}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    togglePlay();
+                  }}
+                  autoPlay={autoPlay}
+                  loop={false}
+                  playsInline
+                  preload="metadata"
+                  poster={course.thumbnail}
+                  onLoadStart={() => setIsLoading(true)}
+                  onLoadedMetadata={() => setIsLoading(false)}
+                  onCanPlay={() => setIsLoading(false)}
+                  onLoadedData={() => {
+                    setIsLoading(false);
+                    if (autoPlay && videoRef) {
+                      videoRef.play().catch(err => {
+                        setVideoError(true);
+                        setIsLoading(false);
+                      });
+                    }
+                  }}
+                />
+              </>
             )}
           </motion.div>
         </AnimatePresence>

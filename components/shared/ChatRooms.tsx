@@ -30,7 +30,6 @@ export type UnreadMessagesType = {
 
 const ChatRooms = ({ chatRooms, user }: Props) => {
   const t = useTranslations("dashboard.student.chatRooms");
-  console.log("Chat Rooms: ", chatRooms);
   const [unreadMessages, setUnreadMessages] = useState<UnreadMessagesType[]>(
     []
   );

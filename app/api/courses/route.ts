@@ -13,9 +13,6 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
     const type = searchParams.get("type");
 
-    console.log("=== COURSES API DEBUG ===");
-    console.log("Type param:", type);
-
     // Build query - show only published courses
     const query: any = {
       isPublished: true,
@@ -27,9 +24,6 @@ export async function GET(request: Request) {
     } else if (type === "faq") {
       query.courseType = CourseTypeEnum.Most_Frequent_Questions;
     }
-
-    console.log("Query:", JSON.stringify(query));
-    console.log("CourseTypeEnum.Regular value:", CourseTypeEnum.Regular);
 
     const courses = await Course.find(query)
       .populate({
@@ -43,18 +37,6 @@ export async function GET(request: Request) {
       .sort({ createdAt: -1 })
       .lean();
 
-    console.log("Courses found:", courses.length);
-    console.log("First course (if any):", courses[0] ? {
-      title: courses[0].title,
-      courseType: courses[0].courseType,
-      isPublished: courses[0].isPublished
-    } : "No courses");
-
-    // Also check all courses without filters
-    const allCourses = await Course.find({}).select('title courseType isPublished').lean();
-    console.log("Total courses in DB:", allCourses.length);
-    console.log("All courses:", allCourses);
-
     return NextResponse.json({
       success: true,
       courses,
@@ -63,7 +45,7 @@ export async function GET(request: Request) {
   } catch (error: any) {
     console.error("Error fetching courses:", error);
     return NextResponse.json(
-      { success: false, error: "Failed to fetch courses" },
+      { success: false, error: "Failed to fetch courses", message: error.message },
       { status: 500 }
     );
   }

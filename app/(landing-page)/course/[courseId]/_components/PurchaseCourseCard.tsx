@@ -165,7 +165,6 @@ const PurchaseCourseCard = ({
                     controls
                     className="w-full h-full object-cover bg-black"
                     controlsList="nodownload"
-                    crossOrigin="anonymous"
                     preload="metadata"
                     onPlay={() => setIsVideoPlaying(true)}
                     onPause={() => setIsVideoPlaying(false)}

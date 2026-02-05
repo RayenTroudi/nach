@@ -64,7 +64,6 @@ const FAQVideoForm = ({ course }: Props) => {
               controls
               controlsList="nodownload"
               className="w-full h-full"
-              crossOrigin="anonymous"
             >
               Your browser does not support the video tag.
             </video>

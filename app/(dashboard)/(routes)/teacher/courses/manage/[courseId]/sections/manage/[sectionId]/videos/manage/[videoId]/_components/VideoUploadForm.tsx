@@ -111,7 +111,6 @@ const VideoUploadForm = ({ video }: Props) => {
               controls
               className="w-full h-full object-cover bg-black"
               controlsList="nodownload"
-              crossOrigin="anonymous"
               preload="metadata"
             >
               Your browser does not support the video tag.
@@ -142,7 +141,6 @@ const VideoUploadForm = ({ video }: Props) => {
                 controls
                 className="w-full h-full object-cover bg-black"
                 controlsList="nodownload"
-                crossOrigin="anonymous"
                 preload="metadata"
               >
                 Your browser does not support the video tag.

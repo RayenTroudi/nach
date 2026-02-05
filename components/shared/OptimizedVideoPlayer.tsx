@@ -144,7 +144,6 @@ const OptimizedVideoPlayer = ({ video, isLoading, poster, autoplay = false, clas
                 ref={videoRef}
                 className="video-js vjs-big-play-centered vjs-theme-forest"
                 poster={poster}
-                crossOrigin="anonymous"
               >
                 <source src={getProxiedVideoUrl(video.videoUrl)} type="video/mp4" />
                 <p className="vjs-no-js">

@@ -148,7 +148,6 @@ export default function StreamingVideoPlayer({
         playsInline
         preload="none" // Only load when user clicks play
         className="w-full h-full object-cover bg-black"
-        crossOrigin="anonymous"
       >
         <p className="text-white p-4">
           Your browser does not support HTML5 video playback.

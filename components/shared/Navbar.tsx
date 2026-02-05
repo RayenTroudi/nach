@@ -41,12 +41,12 @@ const Navbar = ({ isUserAdmin }: { isUserAdmin: boolean }) => {
   const isRTL = locale === 'ar';
   
   return (
-    <div className={`flex items-center ${isRTL ? 'gap-x-reverse gap-1 flex-row-reverse' : 'gap-1'}`}>
+    <div className={`flex items-center ${isRTL ? 'gap-x-reverse gap-2 sm:gap-3 flex-row-reverse' : 'gap-2 sm:gap-3'}`}>
       {isTeacher || isSection || isAdmin ? (
-        <div className={`flex items-center ${isRTL ? 'gap-x-reverse gap-x-2 flex-row-reverse' : 'gap-x-2'}`}>
+        <div className={`flex items-center ${isRTL ? 'gap-x-reverse gap-x-2 sm:gap-x-3 flex-row-reverse' : 'gap-x-2 sm:gap-x-3'}`}>
           <Link
             href="/"
-            className="text-slate-950 dark:text-slate-200 font-bold text-sm hover:text-brand-red-500 ease-in-out duration-100 whitespace-nowrap"
+            className="text-slate-950 dark:text-slate-200 font-bold text-xs sm:text-sm hover:text-brand-red-500 ease-in-out duration-100 whitespace-nowrap touch-manipulation"
           >
             {t('student')}
           </Link>
@@ -57,22 +57,22 @@ const Navbar = ({ isUserAdmin }: { isUserAdmin: boolean }) => {
           <MobileSideBar isAdmin={isUserAdmin} />
         </div>
       ) : (
-        <div className={`flex items-center ${isRTL ? 'gap-x-reverse gap-x-2 flex-row-reverse' : 'gap-x-2'}`}>
+        <div className={`flex items-center ${isRTL ? 'gap-x-reverse gap-x-2 sm:gap-x-3 flex-row-reverse' : 'gap-x-2 sm:gap-x-3'}`}>
           {isUserAdmin ? (
             <>
               <Link
                 href={getLocalizedHref("/admin/dashboard/")}
-                className="font-bold text-sm text-brand-red-500 ease-in-out duration-100 hidden lg:block whitespace-nowrap"
+                className="font-bold text-xs sm:text-sm text-brand-red-500 ease-in-out duration-100 hidden md:block whitespace-nowrap touch-manipulation"
               >
                 {t('admin')}
               </Link>
               <Separator
                 orientation="vertical"
-                className="h-[20px] hidden lg:block"
+                className="h-[18px] sm:h-[20px] hidden md:block"
               />
               {/* Admins can access instructor features */}
-              <Link href={getLocalizedHref("/teacher/courses")} className="hidden lg:block">
-                <p className="text-slate-950 dark:text-slate-200 font-bold text-[14px] cursor-pointer relative">
+              <Link href={getLocalizedHref("/teacher/courses")} className="hidden md:block">
+                <p className="text-slate-950 dark:text-slate-200 font-bold text-xs sm:text-sm cursor-pointer relative touch-manipulation">
                   <span className="primary-color hover:border-b-2 hover:border-brand-red-500 ease-in-out duration-100 whitespace-nowrap">
                     {t('instructor')}
                   </span>
@@ -80,14 +80,14 @@ const Navbar = ({ isUserAdmin }: { isUserAdmin: boolean }) => {
               </Link>
               <Separator
                 orientation="vertical"
-                className="h-[20px] hidden lg:block"
+                className="h-[18px] sm:h-[20px] hidden md:block"
               />
             </>
           ) : null}
 
           <Link
             href="/my-learning"
-            className="text-slate-950 dark:text-slate-200 font-medium text-[14px] cursor-pointer relative hidden md:block whitespace-nowrap"
+            className="text-slate-950 dark:text-slate-200 font-medium text-xs sm:text-sm cursor-pointer relative hidden sm:block whitespace-nowrap touch-manipulation"
           >
             <span className="hover:primary-color ease-in-out duration-100">
               {t('myLearning')}

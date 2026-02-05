@@ -131,24 +131,24 @@ export default function CoursesContent() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-slate-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950">
       {/* Hero Section */}
-      <section className="relative py-20 overflow-hidden">
+      <section className="relative py-12 sm:py-16 md:py-20 overflow-hidden">
         {/* Background Pattern */}
         <div className="absolute inset-0 -z-10">
           <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
-          <div className="absolute top-0 left-1/4 w-96 h-96 bg-brand-red-500/10 rounded-full blur-3xl"></div>
-          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl"></div>
+          <div className="absolute top-0 left-1/4 w-64 h-64 sm:w-96 sm:h-96 bg-brand-red-500/10 rounded-full blur-3xl"></div>
+          <div className="absolute bottom-0 right-1/4 w-64 h-64 sm:w-96 sm:h-96 bg-blue-500/10 rounded-full blur-3xl"></div>
         </div>
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-center mb-12"
+            className="text-center mb-8 sm:mb-10 md:mb-12"
           >
-            <h1 className="text-5xl md:text-6xl font-bold text-slate-900 dark:text-slate-50 mb-6">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-slate-900 dark:text-slate-50 mb-4 sm:mb-6 px-2">
               {t('hero.title')} <span className="text-brand-red-500">{t('hero.titleHighlight')}</span>
             </h1>
-            <p className="text-xl text-slate-600 dark:text-slate-300 max-w-3xl mx-auto mb-8">
+            <p className="text-base sm:text-lg md:text-xl text-slate-600 dark:text-slate-300 max-w-3xl mx-auto mb-6 sm:mb-8 px-4">
               {t('hero.subtitle')}
             </p>
 
@@ -157,23 +157,24 @@ export default function CoursesContent() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
-              className="max-w-2xl mx-auto"
+              className="max-w-2xl mx-auto px-2"
             >
               <div className="relative">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+                <Search className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-slate-400" />
                 <Input
                   type="text"
                   placeholder={t('search.placeholder')}
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-12 pr-12 h-14 text-base shadow-lg border-2 focus:border-brand-red-500"
+                  className="pl-10 sm:pl-12 pr-10 sm:pr-12 h-12 sm:h-14 text-sm sm:text-base shadow-lg border-2 focus:border-brand-red-500 w-full touch-manipulation"
                 />
                 {searchTerm && (
                   <button
                     onClick={() => setSearchTerm("")}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
+                    className="absolute right-3 sm:right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 p-1 touch-manipulation"
+                    aria-label="Clear search"
                   >
-                    <X className="w-5 h-5" />
+                    <X className="w-4 h-4 sm:w-5 sm:h-5" />
                   </button>
                 )}
               </div>
@@ -219,15 +220,15 @@ export default function CoursesContent() {
       </section>
 
       {/* Courses Grid */}
-      <section className="py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="py-8 sm:py-10 md:py-12">
+        <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8">
           {/* Results Header */}
-          <div className="flex items-center justify-between mb-8">
+          <div className="flex items-center justify-between mb-6 sm:mb-8">
             <div>
-              <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-50">
+              <h2 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-slate-50">
                 {loading ? t('results.loading') : t('results.coursesFound', { count: filteredCourses.length })}
               </h2>
-              <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">
+              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-1">
                 {hasActiveFilters ? t('results.filtered') : t('results.all')}
               </p>
             </div>
@@ -235,9 +236,9 @@ export default function CoursesContent() {
 
           {/* Loading State */}
           {loading && (
-            <div className="flex flex-col items-center justify-center py-20">
+            <div className="flex flex-col items-center justify-center py-16 sm:py-20">
               <Spinner size={48} className="text-brand-red-500 mb-4" />
-              <p className="text-slate-600 dark:text-slate-400">{t('results.loadingCourses')}</p>
+              <p className="text-sm sm:text-base text-slate-600 dark:text-slate-400">{t('results.loadingCourses')}</p>
             </div>
           )}
 
@@ -246,19 +247,19 @@ export default function CoursesContent() {
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="text-center py-20"
+              className="text-center py-16 sm:py-20 px-4"
             >
-              <div className="inline-flex items-center justify-center w-20 h-20 bg-slate-100 dark:bg-slate-800 rounded-full mb-6">
-                <BookOpen className="w-10 h-10 text-slate-400" />
+              <div className="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 bg-slate-100 dark:bg-slate-800 rounded-full mb-4 sm:mb-6">
+                <BookOpen className="w-8 h-8 sm:w-10 sm:h-10 text-slate-400" />
               </div>
-              <h3 className="text-2xl font-bold text-slate-900 dark:text-slate-50 mb-2">
+              <h3 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-slate-50 mb-2">
                 {t('empty.title')}
               </h3>
-              <p className="text-slate-600 dark:text-slate-400 mb-6">
+              <p className="text-sm sm:text-base text-slate-600 dark:text-slate-400 mb-4 sm:mb-6">
                 {t('empty.subtitle')}
               </p>
               {hasActiveFilters && (
-                <Button onClick={clearFilters} className="bg-brand-red-500 hover:bg-brand-red-600">
+                <Button onClick={clearFilters} className="bg-brand-red-500 hover:bg-brand-red-600 touch-manipulation">
                   {t('empty.clearFilters')}
                 </Button>
               )}
@@ -267,7 +268,7 @@ export default function CoursesContent() {
 
           {/* Courses Grid */}
           {!loading && filteredCourses.length > 0 && (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5 md:gap-6">
               {filteredCourses.map((course, idx) => (
                 <motion.div
                   key={course._id}

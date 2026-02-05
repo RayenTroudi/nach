@@ -96,10 +96,13 @@ export default async function RootLayout({
         <ThemeProvider>
           <PageLoaderProvider>
             <html lang={locale} dir={direction} className="dark">
+              <head>
+                <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
+              </head>
               <body
                 className={
                   inter.className +
-                  " relative scroll-smooth tracking-widest overflow-x-hidden bg-slate-100/30 dark:bg-slate-950 text-slate-800 dark:text-slate-100 bg-dot-slate-950/5 dark:bg-dot-slate-50/5"
+                  " relative scroll-smooth tracking-wider antialiased w-full max-w-full overflow-x-hidden bg-slate-100/30 dark:bg-slate-950 text-slate-800 dark:text-slate-100 bg-dot-slate-950/5 dark:bg-dot-slate-50/5"
                 }
               >
                 <ToasterProvider />

@@ -24,7 +24,7 @@ export default function HeroSection() {
             opacity: [0.3, 0.5, 0.3],
           }}
           transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute top-20 right-20 w-96 h-96 bg-brand-red-500/20 dark:bg-brand-red-500/10 rounded-full blur-3xl"
+          className="absolute top-20 right-20 w-64 h-64 sm:w-80 sm:h-80 md:w-96 md:h-96 bg-brand-red-500/20 dark:bg-brand-red-500/10 rounded-full blur-3xl"
         />
         <motion.div
           animate={{
@@ -32,35 +32,35 @@ export default function HeroSection() {
             opacity: [0.2, 0.4, 0.2],
           }}
           transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute bottom-40 left-20 w-80 h-80 bg-brand-gold-500/20 dark:bg-brand-gold-500/10 rounded-full blur-3xl"
+          className="absolute bottom-40 left-20 w-56 h-56 sm:w-72 sm:h-72 md:w-80 md:h-80 bg-brand-gold-500/20 dark:bg-brand-gold-500/10 rounded-full blur-3xl"
         />
       </div>
 
       {/* German Flag Accent - Enhanced */}
       <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-black via-brand-red-500 to-brand-gold-500 shadow-lg" />
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-32 sm:pb-36 md:pb-40 lg:pb-44">
+      <div className="relative w-full max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-16 sm:py-20 md:py-24 lg:py-32">
         <div className="max-w-5xl mx-auto text-center">
           {/* Main Content */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
-            className="space-y-4"
+            className="space-y-6 sm:space-y-8"
           >
             {/* Logo */}
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.2, duration: 0.6 }}
-              className="flex justify-center -mb-20 relative z-0"
+              className="flex justify-center -mb-12 sm:-mb-16 md:-mb-20 relative z-0"
             >
               <Image
                 src="/images/nobgLogo.png"
                 alt="Talel Deutschland Services"
                 width={1400}
                 height={420}
-                className="w-auto h-64 sm:h-80 md:h-[28rem] lg:h-[32rem] object-contain drop-shadow-2xl"
+                className="w-auto h-48 xs:h-56 sm:h-72 md:h-80 lg:h-96 object-contain drop-shadow-2xl"
                 priority
               />
             </motion.div>
@@ -70,17 +70,17 @@ export default function HeroSection() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3, duration: 0.6 }}
-              className="space-y-6 relative z-10"
+              className="space-y-4 sm:space-y-6 relative z-10"
             >
               {/* Headline */}
-              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-[1.1] tracking-tight">
+              <h1 className="text-3xl xs:text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-tight sm:leading-[1.1] tracking-tight px-2">
                 <span className="block bg-gradient-to-r from-brand-red-600 via-brand-red-500 to-brand-gold-600 bg-clip-text text-transparent drop-shadow-sm">
                   {t('heroHeadline')}
                 </span>
               </h1>
               
               {/* Description */}
-              <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl text-slate-700 dark:text-slate-300 max-w-4xl mx-auto font-light leading-relaxed px-4">
+              <p className="text-base xs:text-lg sm:text-xl md:text-2xl lg:text-3xl text-slate-700 dark:text-slate-300 max-w-4xl mx-auto font-light leading-relaxed px-4 sm:px-6">
                 {t('heroDescription')}
               </p>
             </motion.div>
@@ -90,16 +90,16 @@ export default function HeroSection() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5, duration: 0.6 }}
-              className="flex flex-col sm:flex-row gap-5 justify-center items-center pt-2"
+              className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-stretch sm:items-center pt-4 px-4 sm:px-6"
             >
               <NavigationButton
                 href="/courses"
                 size="lg"
-                className="group relative w-full sm:w-auto h-16 px-12 text-lg font-semibold bg-gradient-to-r from-brand-red-600 via-brand-red-500 to-brand-red-600 hover:from-brand-red-700 hover:via-brand-red-600 hover:to-brand-red-700 text-white shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300 overflow-hidden rounded-xl"
+                className="group relative w-full sm:w-auto min-h-[3.5rem] sm:h-16 px-8 sm:px-12 text-base sm:text-lg font-semibold bg-gradient-to-r from-brand-red-600 via-brand-red-500 to-brand-red-600 hover:from-brand-red-700 hover:via-brand-red-600 hover:to-brand-red-700 text-white shadow-xl hover:shadow-2xl active:scale-95 sm:hover:scale-105 transition-all duration-300 overflow-hidden rounded-xl touch-manipulation"
               >
-                <span className="relative z-10 flex items-center gap-3">
-                  {t('exploreOurCourses')}
-                  <ArrowRight className={`w-5 h-5 group-hover:translate-x-2 transition-transform duration-300 ${locale === 'ar' ? 'rotate-180 group-hover:-translate-x-2' : ''}`} />
+                <span className="relative z-10 flex items-center justify-center gap-2 sm:gap-3">
+                  <span className="truncate">{t('exploreOurCourses')}</span>
+                  <ArrowRight className={`w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0 group-hover:translate-x-1 sm:group-hover:translate-x-2 transition-transform duration-300 ${locale === 'ar' ? 'rotate-180 group-hover:-translate-x-1 sm:group-hover:-translate-x-2' : ''}`} />
                 </span>
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/25 to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-700" />
               </NavigationButton>
@@ -108,11 +108,11 @@ export default function HeroSection() {
                 href="/contact/resume"
                 size="lg"
                 variant="outline"
-                className="group w-full sm:w-auto h-16 px-12 text-lg font-semibold border-2 border-slate-300 dark:border-slate-600 text-slate-800 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 hover:border-brand-red-500 dark:hover:border-brand-red-500 hover:scale-105 transition-all duration-300 rounded-xl"
+                className="group w-full sm:w-auto min-h-[3.5rem] sm:h-16 px-8 sm:px-12 text-base sm:text-lg font-semibold border-2 border-slate-300 dark:border-slate-600 text-slate-800 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 hover:border-brand-red-500 dark:hover:border-brand-red-500 active:scale-95 sm:hover:scale-105 transition-all duration-300 rounded-xl touch-manipulation"
               >
-                <span className="flex items-center gap-2">
-                  {t('requestProfessionalResume')}
-                  <FileText className="w-5 h-5 group-hover:scale-110 transition-transform duration-300" />
+                <span className="flex items-center justify-center gap-2 truncate">
+                  <span className="truncate">{t('requestProfessionalResume')}</span>
+                  <FileText className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0 group-hover:scale-110 transition-transform duration-300" />
                 </span>
               </NavigationButton>
             </motion.div>

@@ -10,33 +10,34 @@ const Footer = () => {
   const t = useTranslations("footer");
   return (
     <footer className="border-t border-input bg-slate-100 dark:bg-slate-950">
-      <div className="mx-auto max-w-screen-xl px-4 py-16 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-screen-xl px-3 py-12 sm:px-4 sm:py-14 md:px-6 md:py-16 lg:px-8">
         <div className="lg:flex lg:items-start lg:gap-8">
-          <div className="mt-8 grid grid-cols-2 gap-8 lg:mt-0 lg:grid-cols-5 lg:gap-y-16">
-            <div className="col-span-2">
+          <div className="mt-6 sm:mt-8 grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8 lg:mt-0 lg:grid-cols-5 lg:gap-y-16">
+            <div className="col-span-1 sm:col-span-2">
               <div>
-                <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+                <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">
                   {t("startJourneyTitle")}
                 </h2>
 
-                <p className="mt-4 text-gray-500 dark:text-gray-400">
+                <p className="mt-3 sm:mt-4 text-sm sm:text-base text-gray-500 dark:text-gray-400">
                   {t("startJourneyDesc")}
                 </p>
               </div>
             </div>
 
-            <ul className="col-span-2 lg:col-span-3 flex justify-start gap-6 lg:justify-end">
+            <ul className="col-span-1 sm:col-span-2 lg:col-span-3 flex justify-start gap-4 sm:gap-6 lg:justify-end items-start">
               <li>
                 <a
                   href="https://www.facebook.com/talel.mysterio198"
                   rel="noreferrer"
                   target="_blank"
-                  className="text-gray-700 transition hover:opacity-75 dark:text-gray-200"
+                  className="text-gray-700 transition hover:opacity-75 dark:text-gray-200 block p-2 touch-manipulation"
+                  aria-label={t("facebook")}
                 >
                   <span className="sr-only">{t("facebook")}</span>
 
                   <svg
-                    className="h-6 w-6"
+                    className="h-5 w-5 sm:h-6 sm:w-6"
                     fill="currentColor"
                     viewBox="0 0 24 24"
                     aria-hidden="true"
@@ -55,12 +56,13 @@ const Footer = () => {
                   href="https://www.instagram.com/talel.jouini/"
                   rel="noreferrer"
                   target="_blank"
-                  className="text-gray-700 transition hover:opacity-75 dark:text-gray-200"
+                  className="text-gray-700 transition hover:opacity-75 dark:text-gray-200 block p-2 touch-manipulation"
+                  aria-label={t("instagram")}
                 >
                   <span className="sr-only">{t("instagram")}</span>
 
                   <svg
-                    className="h-6 w-6"
+                    className="h-5 w-5 sm:h-6 sm:w-6"
                     fill="currentColor"
                     viewBox="0 0 24 24"
                     aria-hidden="true"
@@ -79,22 +81,22 @@ const Footer = () => {
           </div>
         </div>
 
-        <div className="mt-8 border-t border-gray-100 pt-8 dark:border-gray-800">
-          <div className="sm:flex sm:justify-between">
+        <div className="mt-6 sm:mt-8 border-t border-gray-100 pt-6 sm:pt-8 dark:border-gray-800">
+          <div className="sm:flex sm:justify-between sm:items-center gap-4">
             <div className="flex flex-col gap-2">
-              <p className="text-xs text-gray-500 dark:text-gray-400">
+              <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">
                 © 2026. TDS (Talel Deutschland Services). All rights reserved.
               </p>
-              <p className="text-xs text-gray-500 dark:text-gray-400">
+              <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">
                 Developed by Rayen Troudi
               </p>
             </div>
 
-            <ul className="mt-8 flex flex-wrap justify-start gap-4 text-xs sm:mt-0 lg:justify-end">
+            <ul className="mt-6 sm:mt-0 flex flex-wrap justify-start gap-3 sm:gap-4 text-xs sm:text-sm lg:justify-end">
               <li>
                 <a
                   href="#"
-                  className="text-gray-500 transition hover:opacity-75 dark:text-gray-400"
+                  className="text-gray-500 transition hover:opacity-75 dark:text-gray-400 touch-manipulation inline-block py-1"
                 >
                   {t("termsConditions")}
                 </a>
@@ -103,7 +105,7 @@ const Footer = () => {
               <li>
                 <a
                   href="#"
-                  className="text-gray-500 transition hover:opacity-75 dark:text-gray-400"
+                  className="text-gray-500 transition hover:opacity-75 dark:text-gray-400 touch-manipulation inline-block py-1"
                 >
                   {t("privacyPolicy")}
                 </a>
@@ -112,7 +114,7 @@ const Footer = () => {
               <li>
                 <a
                   href="#"
-                  className="text-gray-500 transition hover:opacity-75 dark:text-gray-400"
+                  className="text-gray-500 transition hover:opacity-75 dark:text-gray-400 touch-manipulation inline-block py-1"
                 >
                   {t("cookies")}
                 </a>

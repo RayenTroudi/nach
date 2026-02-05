@@ -1927,6 +1927,7 @@
     "subtitle": "Browse and purchase individual documents and document bundles",
     "searchPlaceholder": "Search documents and bundles...",
     "allCategories": "All Categories",
+    "category": "Category",
     "allTypes": "All Types",
     "typeDocument": "Documents Only",
     "typeBundle": "Bundles Only",

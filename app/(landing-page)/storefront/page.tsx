@@ -945,7 +945,7 @@ export default function StorefrontPage() {
               {/* Folder Info */}
               <div className="grid grid-cols-2 gap-4 p-4 bg-slate-50 dark:bg-slate-800 rounded-lg">
                 <div>
-                  <p className="text-sm text-slate-600 dark:text-slate-400">{t("category")}</p>
+                  <p className="text-sm text-slate-600 dark:text-slate-400">{t("storefront.category")}</p>
                   <Badge variant="outline" className={getCategoryColor(previewFolder.category)}>
                     {previewFolder.category}
                   </Badge>

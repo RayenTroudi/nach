@@ -295,26 +295,12 @@ export default function StorefrontPage() {
     setIsDialogOpen(true);
   };
   
-  // Handle bundle preview
   const handleBundlePreview = (item: StorefrontItem) => {
-    // Check if this is a folder (has no documents but has child bundles)
     const isFolder = item.isFolder || ((!item.documents || item.documents.length === 0) && item.childBundleCount && item.childBundleCount > 0);
-    
-    console.log('handleBundlePreview called:', {
-      title: item.title,
-      isFolder: item.isFolder,
-      documentsLength: item.documents?.length,
-      childBundleCount: item.childBundleCount,
-      childBundles: item.childBundles,
-      detectedAsFolder: isFolder
-    });
-    
     if (isFolder) {
-      console.log('Opening folder preview dialog');
       setPreviewFolder(item);
       setIsFolderPreviewOpen(true);
     } else {
-      console.log('Opening bundle preview dialog');
       setPreviewBundle(item);
       setIsBundlePreviewOpen(true);
     }
@@ -356,7 +342,7 @@ export default function StorefrontPage() {
 
   // Get category color
   const getCategoryColor = (category: string) => {
-    const colors: { [key: string]: string } = {
+    const colors: Record<string, string> = {
       Visa: "bg-blue-100 text-blue-700 border-blue-200",
       Application: "bg-green-100 text-green-700 border-green-200",
       Language: "bg-purple-100 text-purple-700 border-purple-200",
@@ -676,7 +662,7 @@ export default function StorefrontPage() {
                             Purchase folder to access
                           </p>
                         </div>
-                      ) : item.itemType === \"bundle\" && (item.isFolder || (!item.documents || item.documents.length === 0)) ? (
+                      ) : item.itemType === "bundle" && (item.isFolder || (!item.documents || item.documents.length === 0)) ? (
                         <Button
                           size="sm"
                           onClick={() => handleFolderClick(item)}

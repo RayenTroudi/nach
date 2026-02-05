@@ -47,7 +47,7 @@ interface DocumentPurchase {
       firstName: string;
       lastName: string;
     };
-  };
+  } | null;
   amount: number;
   currency: string;
   paymentMethod: string;
@@ -343,9 +343,9 @@ export default function AdminDocumentPurchasesPage() {
                       </p>
                       <div className="space-y-1">
                         <p className="text-sm font-semibold">
-                          {purchase.itemId.title}
+                          {purchase.itemId?.title || "(Item deleted)"}
                         </p>
-                        {purchase.itemId.category && (
+                        {purchase.itemId?.category && (
                           <Badge variant="outline" className="text-xs">
                             {purchase.itemId.category}
                           </Badge>
@@ -468,13 +468,13 @@ export default function AdminDocumentPurchasesPage() {
                       <p className="text-xs text-slate-600 dark:text-slate-400 mb-1">
                         {selectedPurchase.itemType === "bundle" ? "Bundle" : "Document"}
                       </p>
-                      <h4 className="font-medium mb-1">{selectedPurchase.itemId.title}</h4>
-                      {selectedPurchase.itemId.description && (
+                      <h4 className="font-medium mb-1">{selectedPurchase.itemId?.title || "(Item deleted)"}</h4>
+                      {selectedPurchase.itemId?.description && (
                         <p className="text-sm text-slate-600 dark:text-slate-400">
                           {selectedPurchase.itemId.description}
                         </p>
                       )}
-                      {selectedPurchase.itemId.category && (
+                      {selectedPurchase.itemId?.category && (
                         <Badge variant="outline" className="mt-2">
                           {selectedPurchase.itemId.category}
                         </Badge>

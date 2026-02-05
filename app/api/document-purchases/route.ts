@@ -30,15 +30,46 @@ export async function GET(request: Request) {
     })
       .populate({
         path: "itemId",
-        populate: {
-          path: "documents uploadedBy",
-          select: "firstName lastName picture title fileUrl fileName category",
-        },
+        populate: [
+          {
+            path: "documents",
+            select: "title fileUrl fileName fileSize category",
+          },
+          {
+            path: "uploadedBy",
+            select: "firstName lastName picture",
+          },
+        ],
       })
       .sort({ createdAt: -1 })
       .lean();
 
-    return NextResponse.json({ purchases });
+    // For folders, also get child bundles with their documents
+    const enrichedPurchases = await Promise.all(
+      purchases.map(async (purchase: any) => {
+        if (purchase.itemId && purchase.itemId.isFolder) {
+          // Get child bundles for this folder
+          const childBundles = await DocumentBundle.find({
+            parentFolder: purchase.itemId._id,
+            isPublished: true,
+          })
+            .populate("documents", "title fileUrl fileName fileSize category")
+            .populate("uploadedBy", "firstName lastName picture")
+            .lean();
+
+          return {
+            ...purchase,
+            itemId: {
+              ...purchase.itemId,
+              childBundles,
+            },
+          };
+        }
+        return purchase;
+      })
+    );
+
+    return NextResponse.json({ purchases: enrichedPurchases });
   } catch (error: any) {
     console.error("Error fetching purchased documents:", error);
     return NextResponse.json(

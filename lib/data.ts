@@ -49,7 +49,7 @@ export const studentRoutes = [
   {
     icon: Settings,
     labelKey: "navigation.manageMyAccount",
-    href: "/manage",
+    href: "/student/manage",
   },
 ];
 export const teacherRoutes = [

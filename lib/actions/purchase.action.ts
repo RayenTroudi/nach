@@ -65,21 +65,23 @@ export const createPurchase = async (params: CreatePurchaseParams) => {
 
     await depositToUserWallet(course.instructor._id, amount);
 
-    // Create private chat room with instructor for regular courses
+    // For regular courses, create private chat room with instructor
+    // Note: Group chat room is handled by pushStudentToCourse
     if (course.courseType === CourseTypeEnum.Regular) {
       try {
-        await createPrivateChatRoom({
+        const privateChatRoom = await createPrivateChatRoom({
           courseId: params.courseId,
           studentId: params.userId,
           instructorId: course.instructor._id,
         });
-        console.log("Private chat room created for course purchase");
+        console.log("✅ Private chat room created:", privateChatRoom._id);
       } catch (chatError: any) {
-        console.log("Warning: Failed to create private chat room:", chatError.message);
+        console.error("❌ Failed to create private chat room:", chatError.message);
         // Don't fail the purchase if chat room creation fails
       }
     }
 
+    console.log("✅ Purchase completed successfully. Chat rooms should be available.");
     return JSON.parse(JSON.stringify(purchase));
   } catch (error: any) {
     console.log("Error in createPurchase: ", error.message);

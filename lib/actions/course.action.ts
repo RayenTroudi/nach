@@ -515,18 +515,43 @@ export const pushStudentToCourse = async (params: ToggleStudentFromCourse) => {
 
     // Only add student to chat room for regular courses
     if (course.courseType === CourseTypeEnum.Regular) {
+      // If course doesn't have a chat room, create one
+      if (!course.chatRoom || !course.chatRoom._id) {
+        console.log("⚠️ Regular course has no chat room, creating one now...");
+        try {
+          const { createCourseChatRoom } = await import("./course-chat-room");
+          await createCourseChatRoom({
+            courseId: courseId,
+            instructorId: course.instructor._id.toString(),
+          });
+          // Re-fetch course with the newly created chat room
+          const updatedCourse = await Course.findById(courseId).populate("chatRoom");
+          if (updatedCourse && updatedCourse.chatRoom) {
+            course.chatRoom = updatedCourse.chatRoom;
+            console.log("✅ Created group chat room:", course.chatRoom._id);
+          }
+        } catch (createError: any) {
+          console.error("❌ Failed to create chat room:", createError.message);
+          // Continue even if chat room creation fails
+        }
+      }
+
+      // Now add student to the chat room if it exists
       if (course.chatRoom && course.chatRoom._id) {
-        // Add chat room to user's joinedChatRooms array
-        await joinChatRoom(studentId, course.chatRoom._id);
-        // Add student to chat room's students array (imported from course-chat-room.ts)
-        const { pushStudentToChatRoom } = await import("./course-chat-room");
-        await pushStudentToChatRoom({
-          chatRoomId: course.chatRoom._id.toString(),
-          studentId: studentId,
-        });
-        console.log("Student added to group chat room successfully");
-      } else {
-        console.log("Warning: Regular course has no chat room, skipping group chat enrollment");
+        try {
+          // Add chat room to user's joinedChatRooms array
+          await joinChatRoom(studentId, course.chatRoom._id);
+          // Add student to chat room's students array
+          const { pushStudentToChatRoom } = await import("./course-chat-room");
+          await pushStudentToChatRoom({
+            chatRoomId: course.chatRoom._id.toString(),
+            studentId: studentId,
+          });
+          console.log("✅ Student added to group chat room successfully");
+        } catch (chatError: any) {
+          console.error("❌ Failed to add student to group chat:", chatError.message);
+          // Continue even if adding to chat fails
+        }
       }
     }
   } catch (error: any) {

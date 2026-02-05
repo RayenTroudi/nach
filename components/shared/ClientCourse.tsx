@@ -35,6 +35,7 @@ type Props = {
   showWishlistHeart?: boolean;
   className?: string;
   children?: React.ReactNode;
+  href?: string; // Optional custom href for the link
 };
 
 const ClientCourse = ({
@@ -42,12 +43,13 @@ const ClientCourse = ({
   showWishlistHeart,
   className,
   children,
+  href,
 }: Props) => {
   const { courseRating, ratingFrom } = calculateCourseRating(course);
 
   const isFree = false;
   return (
-    <Link href={`/course/${course._id}`} className="block">
+    <Link href={href || `/course/${course._id}`} className="block">
       <div
         className={cn(
           "group relative flex flex-col gap-2 w-full md:w-[360px] h-[500px] border border-input  rounded-md shadow-sm hover:shadow-md  duration-300 ease-in-out  hover:z-100 hover:bg-slate-200/50 hover:dark:bg-slate-900/30",
@@ -67,7 +69,7 @@ const ClientCourse = ({
         alt="course-thumbnail"
         width={380}
         height={250}
-        className="transition duration-300 ease-in-out w-full rounded-tr-md rounded-tl-md h-[200px] object-covers"
+        className="transition duration-300 ease-in-out w-full rounded-tr-md rounded-tl-md h-[200px] object-cover"
         placeholder="blur"
         blurDataURL={
           course?.thumbnail

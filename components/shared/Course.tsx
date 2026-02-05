@@ -8,6 +8,7 @@ interface Props {
   showWishlistHeart?: boolean;
   className?: string;
   children?: React.ReactNode;
+  href?: string;
 }
 
 const Course = ({
@@ -16,6 +17,7 @@ const Course = ({
   showWishlistHeart = true,
   className,
   children,
+  href,
 }: Props) => {
   return withFramerMotionAnimation ? (
     <FramerMotion>
@@ -24,12 +26,14 @@ const Course = ({
           course={course}
           showWishlistHeart={showWishlistHeart}
           className={className}
+          href={href}
         />
       ) : (
         <ClientCourse
           course={course}
           showWishlistHeart={showWishlistHeart}
           className={className}
+          href={href}
         >
           {children}
         </ClientCourse>
@@ -42,12 +46,14 @@ const Course = ({
           course={course}
           showWishlistHeart={showWishlistHeart}
           className={className}
+          href={href}
         />
       ) : (
         <ClientCourse
           course={course}
           showWishlistHeart={showWishlistHeart}
           className={className}
+          href={href}
         >
           {children}
         </ClientCourse>

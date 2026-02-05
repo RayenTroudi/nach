@@ -81,7 +81,11 @@ const PurchaseCourseCard = ({
     );
   }
   
-  const priceInDinar = course.price! * 3.3;
+  // Only convert USD to TND, keep TND prices as-is
+  const priceInDinar = course.currency?.toLowerCase() === 'usd' 
+    ? course.price! * 3.3 
+    : course.price!;
+  
   const toggleHeart = () => {
     if (user === null) {
       console.log("the user", user);
@@ -302,30 +306,6 @@ const PurchaseCourseCard = ({
           {/* Action Buttons */}
           {course.price! > 0 ? (
             <div className="space-y-3 pt-4 border-t border-slate-200 dark:border-slate-800">
-              {!isCourseOwner && !isEnrolled ? (
-                <div className="flex gap-3">
-                  <Button
-                    name="add-to-cart"
-                    className="flex-1 h-12 bg-brand-red-500 text-white hover:bg-brand-red-600 font-semibold text-base rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
-                    onClick={handleAddToCart}
-                  >
-                    {isInCart ? t('removeFromCart') : t('addToCart')}
-                  </Button>
-
-                  <Button
-                    name="add-to-wishlist"
-                    onClick={toggleHeart}
-                    className="w-12 h-12 bg-red-500 hover:bg-red-600 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
-                  >
-                    <LucideHeart
-                      size={20}
-                      fill={isFilled ? "white" : "none"}
-                      stroke={isFilled ? "transparent" : "white"}
-                      className="transition-all duration-300"
-                    />
-                  </Button>
-                </div>
-              ) : null}
               
             <SignedIn>
               {isCourseOwner ? (

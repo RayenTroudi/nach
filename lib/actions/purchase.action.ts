@@ -60,8 +60,8 @@ export const createPurchase = async (params: CreatePurchaseParams) => {
 
     const course: TCourse = await getCourseById({ courseId: params.courseId });
 
-    const amount =
-      course?.currency === "usd" ? course?.price! : course?.price! / 3.3;
+    // Use the price directly from the database without conversion
+    const amount = course?.price!;
 
     await depositToUserWallet(course.instructor._id, amount);
 

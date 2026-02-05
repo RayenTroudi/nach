@@ -155,9 +155,12 @@ const Courses = ({ enrolledCourses, enrolledCoursesCategories }: Props) => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
         {filteredCourses.length > 0 ? (
           filteredCourses.map((course: TCourse) => (
-            <Link key={course._id} href={`/my-learning/${course._id}`}>
-              <Course course={course} showWishlistHeart={false} />
-            </Link>
+            <Course 
+              key={course._id} 
+              course={course} 
+              showWishlistHeart={false}
+              href={`/my-learning/${course._id}`}
+            />
           ))
         ) : (
           <div className="col-span-full flex flex-col items-center justify-center py-12 text-center">

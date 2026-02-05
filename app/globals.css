@@ -341,10 +341,17 @@ mux-player:not([media-paused]) ~ .absolute {
   will-change: border-color;
 }
 
-/* Hide Clerk UserButton badge */
+/* Hide Clerk UserButton badge - Debug mode indicator */
 .cl-userButtonBox .cl-badge,
 .cl-avatarBox .cl-badge,
-.cl-userButtonTrigger .cl-badge {
+.cl-userButtonTrigger .cl-badge,
+.cl-badge,
+.cl-userButton .cl-badge,
+[class*="cl-badge"],
+[class*="Badge"] {
   display: none !important;
   visibility: hidden !important;
+  opacity: 0 !important;
+  width: 0 !important;
+  height: 0 !important;
 }

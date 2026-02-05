@@ -1,22 +1,13 @@
 /**
  * Helper function to get the correct video URL for playback
  * 
- * UploadThing videos (utfs.io) don't support CORS for direct video playback,
- * so we proxy them through our API route that adds proper CORS headers.
+ * Returns the direct video URL without any proxy.
+ * UploadThing videos work directly without CORS issues when accessed properly.
  * 
- * Mux videos and other video services work directly.
- * 
- * @param url - The original video URL
- * @returns The proxied URL for UploadThing videos, or the original URL for others
+ * @param url - The original video URL from MongoDB
+ * @returns The video URL (direct, no proxy)
  */
 export function getProxiedVideoUrl(url: string | undefined): string | undefined {
-  if (!url) return url;
-  
-  // If it's an UploadThing URL, use the proxy
-  if (url.startsWith('https://utfs.io/')) {
-    return `/api/video-proxy?url=${encodeURIComponent(url)}`;
-  }
-  
-  // Otherwise, return the original URL (e.g., Mux URLs, direct video files, etc.)
+  // Return URL directly - no proxy needed
   return url;
 }

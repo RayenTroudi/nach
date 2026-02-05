@@ -1,0 +1,71 @@
+/* Video.js Custom Theme - Optimized */
+.video-js {
+  font-family: inherit;
+}
+
+/* Better loading state */
+.vjs-loading-spinner {
+  border-color: rgba(221, 0, 0, 0.8);
+}
+
+/* Custom theme colors */
+.vjs-theme-forest {
+  --vjs-theme-forest--primary: #DD0000;
+  --vjs-theme-forest--secondary: #fff;
+}
+
+.vjs-theme-forest .vjs-big-play-button {
+  background-color: rgba(221, 0, 0, 0.9);
+  border-color: rgba(221, 0, 0, 0.9);
+  border-radius: 50%;
+  width: 2em;
+  height: 2em;
+  line-height: 2em;
+  margin-top: -1em;
+  margin-left: -1em;
+}
+
+.vjs-theme-forest .vjs-big-play-button:hover {
+  background-color: rgba(221, 0, 0, 1);
+}
+
+.vjs-theme-forest .vjs-control-bar {
+  background-color: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(10px);
+}
+
+.vjs-theme-forest .vjs-play-progress {
+  background-color: #DD0000;
+}
+
+.vjs-theme-forest .vjs-volume-level {
+  background-color: #DD0000;
+}
+
+/* Optimize for mobile */
+@media (max-width: 768px) {
+  .vjs-theme-forest .vjs-big-play-button {
+    font-size: 2.5em;
+  }
+}
+
+/* Better poster image handling */
+.vjs-poster {
+  background-size: cover;
+  background-position: center;
+}
+
+/* Smooth transitions */
+.vjs-has-started .vjs-control-bar {
+  transition: transform 0.3s ease-in-out;
+}
+
+/* Hide controls when playing for better UX */
+.vjs-has-started.vjs-user-inactive.vjs-playing .vjs-control-bar {
+  transform: translateY(100%);
+}
+
+.vjs-has-started.vjs-user-active.vjs-playing .vjs-control-bar,
+.vjs-has-started.vjs-paused .vjs-control-bar {
+  transform: translateY(0);
+}

@@ -4,7 +4,6 @@ import { TVideo } from "@/types/models.types";
 import { useEffect, useState } from "react";
 import MuxPlayer from "@mux/mux-player-react";
 import Spinner from "./Spinner";
-import { getProxiedVideoUrl } from "@/lib/utils/video-url-helper";
 
 interface Props {
   video: TVideo;
@@ -14,6 +13,7 @@ interface Props {
 
 const VideoPlayerWrapper = ({ video, isLoading, poster }: Props) => {
   const [isMounted, setIsMounted] = useState<boolean>(false);
+  const [videoError, setVideoError] = useState<boolean>(false);
 
   useEffect(() => setIsMounted(true), []);
 
@@ -45,21 +45,34 @@ const VideoPlayerWrapper = ({ video, isLoading, poster }: Props) => {
             <div className="w-full h-full bg-slate-200 dark:bg-slate-900 flex items-center justify-center">
               <Spinner size={50} />
             </div>
+          ) : videoError ? (
+            <div className="w-full h-full bg-slate-200 dark:bg-slate-900 flex items-center justify-center">
+              <div className="text-center p-6">
+                <div className="text-6xl mb-4">🎥</div>
+                <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-2">Video Not Available</h3>
+                <p className="text-sm text-slate-600 dark:text-slate-400 mb-4">This video file is missing or has been removed.</p>
+                <p className="text-xs text-slate-500 dark:text-slate-500">Please contact support if this issue persists.</p>
+              </div>
+            </div>
           ) : isUploadThingVideo ? (
-            // Use HTML5 video player for UploadThing videos
+            // Use HTML5 video player for UploadThing videos - DIRECT URL
             <video
-              src={getProxiedVideoUrl(video.videoUrl)}
+              src={video.videoUrl}
               poster={poster}
               controls
               className="w-full h-full object-cover"
               controlsList="nodownload"
-              crossOrigin="anonymous"
               preload="metadata"
+              playsInline
+              onError={(e) => {
+                console.error('Video loading failed:', e);
+                setVideoError(true);
+              }}
             >
               Your browser does not support the video tag.
             </video>
           ) : (
-            // Use MuxPlayer for Mux videos
+            // Use MuxPlayer for Mux videos - optimized streaming
             <MuxPlayer
               playbackId={video.muxData?.playbackId}
               poster={poster}
@@ -69,6 +82,7 @@ const VideoPlayerWrapper = ({ video, isLoading, poster }: Props) => {
                 video_title: video.title,
               }}
               accentColor="#DD0000"
+              preload="metadata"
               style={{ 
                 width: '100%', 
                 height: '100%',

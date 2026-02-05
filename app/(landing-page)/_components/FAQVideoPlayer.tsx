@@ -6,7 +6,6 @@ import { Play, Pause, Volume2, VolumeX, X, ChevronLeft, ChevronRight } from "luc
 import { TCourse } from "@/types/models.types";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
-import { getProxiedVideoUrl } from "@/lib/utils/video-url-helper";
 
 interface FAQVideoPlayerProps {
   course: TCourse;
@@ -142,7 +141,7 @@ export default function FAQVideoPlayer({
             ) : (
               <video
                 ref={setVideoRef}
-                src={getProxiedVideoUrl(course.faqVideo)}
+                src={course.faqVideo}
                 className="w-full h-full object-contain"
                 onEnded={handleVideoEnd}
                 onError={(e) => {
@@ -159,6 +158,7 @@ export default function FAQVideoPlayer({
                 playsInline
                 preload="metadata"
                 crossOrigin="anonymous"
+                poster={course.image}
                 onLoadedData={() => {
                   if (autoPlay && videoRef) {
                     videoRef.play().catch(err => {

@@ -1,7 +1,7 @@
 "use client";
 import { TUser } from "@/types/models.types";
 import React from "react";
-import { useClerk } from "@clerk/clerk-react";
+import { useClerk } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import { scnToast } from "../ui/use-toast";
 

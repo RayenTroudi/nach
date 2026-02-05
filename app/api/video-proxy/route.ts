@@ -32,19 +32,11 @@ export async function GET(request: NextRequest) {
     // Fetch the video from UploadThing with range support
     const videoResponse = await fetch(videoUrl, {
       headers: fetchHeaders,
+      next: { revalidate: 3600 }, // Cache for 1 hour
     });
 
-    // If UploadThing returns an error, return it
+    // If fails, return error immediately (no full-file fallback)
     if (!videoResponse.ok) {
-      console.error('UploadThing fetch error:', videoResponse.status, videoResponse.statusText);
-      console.error('Failed URL:', videoUrl);
-      
-      // For 404s, provide more helpful error message
-      if (videoResponse.status === 404) {
-        console.error('⚠️ Video file not found on UploadThing. The file may have been deleted or the URL is incorrect.');
-        console.error('Please re-upload the video or update the URL in the database.');
-      }
-      
       return new NextResponse(null, { 
         status: videoResponse.status,
         statusText: videoResponse.statusText

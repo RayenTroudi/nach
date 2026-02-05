@@ -21,7 +21,6 @@ const VideoPlayer = ({ video, isLoading, poster }: Props) => {
     if (video) {
       console.log('🎬 VideoPlayer mounted with:', {
         videoUrl: video.videoUrl,
-        videoSource: video.videoSource,
         hasMuxData: !!video.muxData,
         muxPlaybackId: video.muxData?.playbackId,
       });
@@ -46,7 +45,7 @@ const VideoPlayer = ({ video, isLoading, poster }: Props) => {
   }
 
   // Determine if this is an UploadThing video or Mux video
-  const isMuxVideo = video.videoSource === "Mux" && video.muxData?.playbackId;
+  const isMuxVideo = video.muxData?.playbackId;
 
   return isMounted ? (
     <div className="w-full lg:flex-1 bg-slate-50 dark:bg-slate-950 border-b lg:border-b-0 lg:border-r border-slate-200 dark:border-slate-800">

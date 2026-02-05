@@ -27,7 +27,6 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
-import { useTranslations } from "next-intl";
 
 interface DocumentPurchase {
   _id: string;
@@ -60,7 +59,6 @@ interface DocumentPurchase {
 type StatusFilter = "all" | "pending" | "approved" | "rejected";
 
 export default function AdminDocumentPurchasesPage() {
-  const t = useTranslations("adminDocumentPurchases");
   const router = useRouter();
   const [allPurchases, setAllPurchases] = useState<DocumentPurchase[]>([]);
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");

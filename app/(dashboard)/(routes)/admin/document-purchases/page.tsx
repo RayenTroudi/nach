@@ -312,12 +312,12 @@ export default function AdminDocumentPurchasesPage() {
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-1">
                           <h3 className="font-semibold">
-                            {purchase.userId.firstName} {purchase.userId.lastName}
+                            {purchase.userId?.firstName || "Unknown"} {purchase.userId?.lastName || "User"}
                           </h3>
                           {getStatusBadge(purchase.paymentStatus)}
                         </div>
                         <p className="text-sm text-slate-600 dark:text-slate-400 mb-2">
-                          {purchase.userId.email}
+                          {purchase.userId?.email || "No email available"}
                         </p>
                         <div className="flex flex-wrap gap-3 text-xs text-slate-600 dark:text-slate-400">
                           <span className="flex items-center gap-1">

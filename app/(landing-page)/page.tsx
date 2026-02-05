@@ -73,7 +73,7 @@ const LandingPage = async () => {
             .lean();
           
           // Format child bundle preview with document details
-          const childBundlePreview = childBundles.map(cb => ({
+          const childBundlePreview = childBundles.map((cb: any) => ({
             _id: cb._id.toString(),
             title: cb.title,
             fileCount: (cb.documents && Array.isArray(cb.documents)) ? cb.documents.length : 0,

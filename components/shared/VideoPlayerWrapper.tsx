@@ -64,8 +64,7 @@ const VideoPlayerWrapper = ({ video, isLoading, poster }: Props) => {
               controlsList="nodownload"
               preload="metadata"
               playsInline
-              onError={(e) => {
-                console.error('Video loading failed:', e);
+              onError={() => {
                 setVideoError(true);
               }}
             >

@@ -16,17 +16,6 @@ const VideoPlayer = ({ video, isLoading, poster }: Props) => {
 
   useEffect(() => setIsMounted(true), []);
 
-  // Debug logging
-  useEffect(() => {
-    if (video) {
-      console.log('🎬 VideoPlayer mounted with:', {
-        videoUrl: video.videoUrl,
-        hasMuxData: !!video.muxData,
-        muxPlaybackId: video.muxData?.playbackId,
-      });
-    }
-  }, [video]);
-
   // Check if video has a valid URL
   if (!video || !video.videoUrl) {
     return (
@@ -106,11 +95,8 @@ const VideoPlayer = ({ video, isLoading, poster }: Props) => {
               controlsList="nodownload"
               onError={(e) => {
                 const errorMsg = `Video failed to load. URL: ${video.videoUrl}`;
-                console.error('❌ Video error:', errorMsg, e);
                 setVideoError(errorMsg);
               }}
-              onLoadStart={() => console.log('▶️ Video loading started')}
-              onCanPlay={() => console.log('✅ Video ready to play')}
             >
               Your browser does not support the video tag.
             </video>

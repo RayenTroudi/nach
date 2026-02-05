@@ -89,6 +89,7 @@ export default function DocumentBundlesPage() {
   const [uploadingFiles, setUploadingFiles] = useState(false);
   const [uploadedDocuments, setUploadedDocuments] = useState<string[]>([]);
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+  const [uploadProgress, setUploadProgress] = useState({ current: 0, total: 0 });
 
   // Form state
   const [formData, setFormData] = useState({
@@ -371,11 +372,13 @@ export default function DocumentBundlesPage() {
     if (files.length === 0) return;
 
     setUploadingFiles(true);
+    setUploadProgress({ current: 0, total: files.length });
     const uploadedIds: string[] = [];
+    let successCount = 0;
 
     try {
-      // Split files into batches of 30 to avoid hitting limits
-      const BATCH_SIZE = 30;
+      // Split files into batches of 10 to avoid hitting limits and improve real-time updates
+      const BATCH_SIZE = 10;
       const batches: File[][] = [];
       
       for (let i = 0; i < files.length; i += BATCH_SIZE) {
@@ -387,66 +390,87 @@ export default function DocumentBundlesPage() {
         const batch = batches[batchIndex];
         toast.info(`Uploading batch ${batchIndex + 1}/${batches.length} (${batch.length} files)...`);
         
-        // Upload files to UploadThing using the bundleDocuments endpoint
-        const uploadedFiles = await startUpload(batch);
-        
-        if (!uploadedFiles || uploadedFiles.length === 0) {
-          throw new Error(`Failed to upload batch ${batchIndex + 1}`);
-        }
-
-        // Create document records for each uploaded file
-        for (let i = 0; i < batch.length; i++) {
-          const file = batch[i];
-          const uploadedFile = uploadedFiles[i];
+        try {
+          // Upload files to UploadThing using the bundleDocuments endpoint
+          const uploadedFiles = await startUpload(batch);
           
-          if (!uploadedFile || !uploadedFile.url) {
-            console.error(`No URL for file ${file.name}`);
+          if (!uploadedFiles || uploadedFiles.length === 0) {
+            console.error(`Failed to upload batch ${batchIndex + 1}`);
             continue;
           }
-          
-          const documentData = {
-            title: file.name.replace(/\.[^/.]+$/, ''),
-            description: `Auto-uploaded for bundle: ${formData.title || 'New Bundle'}`,
-            fileUrl: uploadedFile.url,
-            fileName: file.name,
-            fileType: file.type || 'application/octet-stream',
-            fileSize: file.size,
-            category: formData.category,
-            tags: [],
-            isPublic: false, // Bundle documents should not be shown publicly
-            isForSale: false,
-            price: 0,
-            currency: 'usd',
-          };
 
-          const documentResponse = await fetch('/api/documents', {
-            method: 'POST',
-            headers: { 
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(documentData),
-          });
+          // Create document records for each uploaded file
+          for (let i = 0; i < batch.length; i++) {
+            const file = batch[i];
+            const uploadedFile = uploadedFiles[i];
+            
+            if (!uploadedFile || !uploadedFile.url) {
+              console.error(`No URL for file ${file.name}`);
+              continue;
+            }
+            
+            try {
+              const documentData = {
+                title: file.name.replace(/\.[^/.]+$/, ''),
+                description: `Auto-uploaded for bundle: ${formData.title || 'New Bundle'}`,
+                fileUrl: uploadedFile.url,
+                fileName: file.name,
+                fileType: file.type || 'application/octet-stream',
+                fileSize: file.size,
+                category: formData.category,
+                tags: [],
+                isPublic: false, // Bundle documents should not be shown publicly
+                isForSale: false,
+                price: 0,
+                currency: 'usd',
+              };
 
-          if (!documentResponse.ok) {
-            const errorData = await documentResponse.json();
-            throw new Error(errorData.error || `Failed to create document for ${file.name}`);
+              const documentResponse = await fetch('/api/documents', {
+                method: 'POST',
+                headers: { 
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(documentData),
+              });
+
+              if (!documentResponse.ok) {
+                const errorData = await documentResponse.json();
+                console.error(`Failed to create document for ${file.name}:`, errorData.error);
+                continue;
+              }
+
+              const documentResult = await documentResponse.json();
+              uploadedIds.push(documentResult.document._id);
+              successCount++;
+              
+              // Update progress
+              setUploadProgress({ current: successCount, total: files.length });
+              
+              // Real-time UI update after each successful upload
+              setFormData(prev => ({
+                ...prev,
+                selectedDocuments: [...prev.selectedDocuments, documentResult.document._id]
+              }));
+              
+              setUploadedDocuments(prev => [...prev, documentResult.document._id]);
+              
+            } catch (docError: any) {
+              console.error(`Error creating document for ${file.name}:`, docError);
+            }
           }
-
-          const documentResult = await documentResponse.json();
-          uploadedIds.push(documentResult.document._id);
+          
+        } catch (batchError: any) {
+          console.error(`Error in batch ${batchIndex + 1}:`, batchError);
+          toast.error(`Batch ${batchIndex + 1} failed. Continuing with next batch...`);
         }
       }
 
-      // Add uploaded documents to selected documents
-      setFormData(prev => ({
-        ...prev,
-        selectedDocuments: [...prev.selectedDocuments, ...uploadedIds]
-      }));
+      // Refresh documents list once at the end
+      await fetchData();
       
-      setUploadedDocuments(prev => [...prev, ...uploadedIds]);
       setSelectedFiles([]); // Clear selected files after upload
-      await fetchData(); // Refresh documents list
-      toast.success(`${files.length} files uploaded successfully!`);
+      setUploadProgress({ current: 0, total: 0 }); // Reset progress
+      toast.success(`Upload complete! ${successCount}/${files.length} files uploaded successfully.`);
     } catch (error: any) {
       console.error('Error uploading files:', error);
       toast.error(error.message || 'Failed to upload files');
@@ -787,7 +811,10 @@ export default function DocumentBundlesPage() {
                             {uploadingFiles ? (
                               <>
                                 <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                                Uploading...
+                                {uploadProgress.total > 0 
+                                  ? `Uploading ${uploadProgress.current}/${uploadProgress.total}...`
+                                  : 'Uploading...'
+                                }
                               </>
                             ) : (
                               <>

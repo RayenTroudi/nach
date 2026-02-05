@@ -62,26 +62,38 @@ const LandingPage = async () => {
             isPublished: true
           });
           
-          // Get preview of child bundles (first 5)
+          // Get preview of child bundles (first 5) with documents
           const childBundles = await DocumentBundle.find({
             parentFolder: bundle._id,
             isPublished: true
           })
             .select('title documents')
+            .populate('documents', 'title fileName')
             .limit(5)
             .lean();
           
-          // Format child bundle preview
+          // Format child bundle preview with document details
           const childBundlePreview = childBundles.map(cb => ({
             _id: cb._id.toString(),
             title: cb.title,
-            fileCount: (cb.documents && Array.isArray(cb.documents)) ? cb.documents.length : 0
+            fileCount: (cb.documents && Array.isArray(cb.documents)) ? cb.documents.length : 0,
+            documents: cb.documents && Array.isArray(cb.documents) 
+              ? cb.documents.map((doc: any) => ({
+                  _id: doc._id.toString(),
+                  title: doc.title,
+                  fileName: doc.fileName
+                }))
+              : []
           }));
+          
+          // Calculate total file count across all child bundles
+          const totalFileCount = childBundlePreview.reduce((sum, cb) => sum + cb.fileCount, 0);
           
           return {
             ...bundle,
             childBundleCount,
-            childBundles: childBundlePreview
+            childBundles: childBundlePreview,
+            totalFileCount
           };
         } catch (error) {
           console.error("Error fetching folder metadata:", error);

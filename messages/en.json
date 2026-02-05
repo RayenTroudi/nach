@@ -1986,7 +1986,11 @@
     "bundlesInside": "Bundles Inside",
     "noBundlesInFolder": "No bundles in this folder",
     "folderPurchasePrompt": "Purchase this folder to access all bundles inside",
-    "browseFolder": "Browse Folder"
+    "browseFolder": "Browse Folder",
+    "filesPreview": "Files Preview",
+    "moreFiles": "more files",
+    "totalFiles": "Total Files",
+    "bundlesCount": "bundles"
   },
   "purchaseModal": {
     "title": "Complete Your Purchase",

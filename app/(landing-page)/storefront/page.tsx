@@ -91,10 +91,16 @@ interface StorefrontItem {
   isFolder?: boolean; // True if this is a folder, false if bundle with files
   // Folder metadata
   childBundleCount?: number; // Number of bundles inside this folder
+  totalFileCount?: number; // Total number of files across all bundles in folder
   childBundles?: Array<{ // Preview of bundles inside
     _id: string;
     title: string;
     fileCount: number;
+    documents?: Array<{
+      _id: string;
+      title: string;
+      fileName: string;
+    }>;
   }>;
   // Access control
   isAccessible?: boolean; // Can the user access the files?
@@ -291,8 +297,27 @@ export default function StorefrontPage() {
   
   // Handle bundle preview
   const handleBundlePreview = (item: StorefrontItem) => {
-    setPreviewBundle(item);
-    setIsBundlePreviewOpen(true);
+    // Check if this is a folder (has no documents but has child bundles)
+    const isFolder = item.isFolder || ((!item.documents || item.documents.length === 0) && item.childBundleCount && item.childBundleCount > 0);
+    
+    console.log('handleBundlePreview called:', {
+      title: item.title,
+      isFolder: item.isFolder,
+      documentsLength: item.documents?.length,
+      childBundleCount: item.childBundleCount,
+      childBundles: item.childBundles,
+      detectedAsFolder: isFolder
+    });
+    
+    if (isFolder) {
+      console.log('Opening folder preview dialog');
+      setPreviewFolder(item);
+      setIsFolderPreviewOpen(true);
+    } else {
+      console.log('Opening bundle preview dialog');
+      setPreviewBundle(item);
+      setIsBundlePreviewOpen(true);
+    }
   };
   
   // Navigate to folder
@@ -522,7 +547,7 @@ export default function StorefrontPage() {
                           )}
                         </div>
                         <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-2 mb-2">
+                          <div className="flex items-center gap-2 mb-2 flex-wrap">
                             <Badge
                               variant="outline"
                               className={getCategoryColor(item.category)}
@@ -535,12 +560,12 @@ export default function StorefrontPage() {
                               </Badge>
                             )}
                             {item.requiresFolderPurchase && !item.isAccessible && (
-                              <Badge variant="outline" className="text-xs bg-amber-50 text-amber-700 border-amber-300">
+                              <Badge variant="outline" className="text-xs bg-amber-50 text-amber-700 dark:bg-amber-900/20 dark:text-amber-400 border-amber-300 dark:border-amber-700">
                                 🔒 Locked
                               </Badge>
                             )}
                             {(item.isFolder || (item.itemType === "bundle" && (!item.documents || item.documents.length === 0))) && item.childBundleCount !== undefined && item.childBundleCount > 0 && (
-                              <Badge variant="outline" className="text-xs bg-blue-50 text-blue-700 border-blue-300">
+                              <Badge variant="outline" className="text-xs bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-400 border-blue-300 dark:border-blue-700">
                                 📁 {item.childBundleCount} {item.childBundleCount === 1 ? 'bundle' : 'bundles'}
                               </Badge>
                             )}
@@ -555,6 +580,10 @@ export default function StorefrontPage() {
                                 size="sm"
                                 onClick={(e) => {
                                   e.stopPropagation();
+                                  console.log('Info button clicked for folder:', item.title, {
+                                    childBundleCount: item.childBundleCount,
+                                    childBundles: item.childBundles
+                                  });
                                   setPreviewFolder(item);
                                   setIsFolderPreviewOpen(true);
                                 }}
@@ -586,9 +615,13 @@ export default function StorefrontPage() {
                           <>
                             <div className="flex items-center gap-1">
                               <FileText className="w-3 h-3" />
-                              {item.documents?.length || 0} {t("documents")}
+                              {(item.isFolder || ((!item.documents || item.documents.length === 0) && item.childBundleCount)) 
+                                ? `${item.totalFileCount || 0} ${t("totalFiles")}`
+                                : `${item.documents?.length || 0} ${t("documents")}`}
                             </div>
-                            <span>{t("documentBundle")}</span>
+                            <span>{(item.isFolder || ((!item.documents || item.documents.length === 0) && item.childBundleCount)) 
+                              ? `${item.childBundleCount || 0} ${t("bundlesCount")}`
+                              : t("documentBundle")}</span>
                           </>
                         )}
                       </div>
@@ -682,7 +715,9 @@ export default function StorefrontPage() {
                               className="w-full"
                             >
                               <Eye className="w-4 h-4 mr-1" />
-                              {t("previewContents")}
+                              {(item.isFolder || ((!item.documents || item.documents.length === 0) && item.childBundleCount && item.childBundleCount > 0)) 
+                                ? t("previewFolder") || t("previewContents")
+                                : t("previewContents")}
                             </Button>
                           )}
                           <Button
@@ -932,24 +967,53 @@ export default function StorefrontPage() {
                   </Badge>
                 </div>
                 
-                <div className="space-y-2 max-h-[300px] overflow-y-auto">
+                <div className="space-y-3 max-h-[400px] overflow-y-auto pr-2">
                   {previewFolder.childBundles && previewFolder.childBundles.length > 0 ? (
                     previewFolder.childBundles.map((bundle: any) => (
                       <div
                         key={bundle._id}
-                        className="flex items-center gap-3 p-3 border rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
+                        className="border rounded-lg overflow-hidden bg-white dark:bg-slate-800/50"
                       >
-                        <div className="flex-shrink-0 w-10 h-10 bg-purple-100 dark:bg-purple-900/20 rounded flex items-center justify-center">
-                          <FolderOpen className="w-5 h-5 text-purple-500" />
+                        <div className="flex items-center gap-3 p-3 bg-slate-50 dark:bg-slate-800">
+                          <div className="flex-shrink-0 w-10 h-10 bg-purple-100 dark:bg-purple-900/20 rounded flex items-center justify-center">
+                            <FolderOpen className="w-5 h-5 text-purple-500" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-medium text-slate-900 dark:text-slate-100">
+                              {bundle.title}
+                            </p>
+                            <p className="text-xs text-slate-500 dark:text-slate-400">
+                              {bundle.fileCount} {bundle.fileCount === 1 ? 'document' : 'documents'}
+                            </p>
+                          </div>
+                          <Badge variant="outline" className="text-xs bg-purple-50 text-purple-700 dark:bg-purple-900/20 dark:text-purple-400">
+                            {t("bundle")}
+                          </Badge>
                         </div>
-                        <div className="flex-1 min-w-0">
-                          <p className="text-sm font-medium text-slate-900 dark:text-slate-100">
-                            {bundle.title}
-                          </p>
-                          <p className="text-xs text-slate-500 dark:text-slate-400">
-                            {bundle.fileCount} {bundle.fileCount === 1 ? 'file' : 'files'}
-                          </p>
-                        </div>
+                        {bundle.documents && bundle.documents.length > 0 && (
+                          <div className="p-3 space-y-2 bg-slate-50/50 dark:bg-slate-900/50">
+                            <p className="text-xs font-medium text-slate-600 dark:text-slate-400 mb-2">
+                              {t("filesPreview") || "Files Preview"} ({bundle.documents.length})
+                            </p>
+                            {bundle.documents.slice(0, 3).map((doc: any, idx: number) => (
+                              <div
+                                key={doc._id || idx}
+                                className="flex items-center gap-2 p-2 bg-white dark:bg-slate-800 rounded border border-slate-200 dark:border-slate-700"
+                              >
+                                <FileText className="w-4 h-4 text-slate-400 flex-shrink-0" />
+                                <span className="text-xs text-slate-700 dark:text-slate-300 truncate flex-1">
+                                  {doc.title || doc.fileName}
+                                </span>
+                                <Lock className="w-3 h-3 text-amber-500 flex-shrink-0" />
+                              </div>
+                            ))}
+                            {bundle.documents.length > 3 && (
+                              <p className="text-xs text-slate-500 dark:text-slate-400 text-center pt-1">
+                                +{bundle.documents.length - 3} {t("moreFiles") || "more files"}
+                              </p>
+                            )}
+                          </div>
+                        )}
                       </div>
                     ))
                   ) : (

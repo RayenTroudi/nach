@@ -19,7 +19,7 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
-import { Download, FileText, Eye, Calendar, FolderOpen, Package, ShoppingCart, Lock } from "lucide-react";
+import { Download, FileText, Eye, Calendar, FolderOpen, Package, ShoppingCart, Lock, Folder, Info } from "lucide-react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
@@ -51,10 +51,16 @@ interface DocumentItem {
   }>;
   isFolder?: boolean;
   childBundleCount?: number;
+  totalFileCount?: number;
   childBundles?: Array<{
     _id: string;
     title: string;
     fileCount: number;
+    documents?: Array<{
+      _id: string;
+      title: string;
+      fileName: string;
+    }>;
   }>;
   uploadedBy: {
     firstName: string;
@@ -80,6 +86,10 @@ export default function DocumentsSection({ documents }: DocumentsSectionProps) {
   // Bundle preview dialog state
   const [previewBundle, setPreviewBundle] = useState<DocumentItem | null>(null);
   const [isBundlePreviewOpen, setIsBundlePreviewOpen] = useState(false);
+  
+  // Folder preview dialog state
+  const [previewFolder, setPreviewFolder] = useState<DocumentItem | null>(null);
+  const [isFolderPreviewOpen, setIsFolderPreviewOpen] = useState(false);
   
   // Purchase dialog state
   const [selectedItem, setSelectedItem] = useState<DocumentItem | null>(null);
@@ -143,8 +153,27 @@ export default function DocumentsSection({ documents }: DocumentsSectionProps) {
   };
   
   const handleBundlePreview = (item: DocumentItem) => {
-    setPreviewBundle(item);
-    setIsBundlePreviewOpen(true);
+    // Check if this is a folder (has no documents but has child bundles)
+    const isFolder = item.isFolder || ((!item.documents || item.documents.length === 0) && item.childBundleCount && item.childBundleCount > 0);
+    
+    console.log('DocumentsSection handleBundlePreview:', {
+      title: item.title,
+      isFolder: item.isFolder,
+      documentsLength: item.documents?.length,
+      childBundleCount: item.childBundleCount,
+      childBundles: item.childBundles,
+      detectedAsFolder: isFolder
+    });
+    
+    if (isFolder) {
+      console.log('Opening folder preview dialog');
+      setPreviewFolder(item);
+      setIsFolderPreviewOpen(true);
+    } else {
+      console.log('Opening bundle preview dialog');
+      setPreviewBundle(item);
+      setIsBundlePreviewOpen(true);
+    }
   };
   
   const handlePurchase = (item: DocumentItem) => {
@@ -319,17 +348,17 @@ export default function DocumentsSection({ documents }: DocumentsSectionProps) {
                             )}
                           </div>
                           <div className="flex-1 min-w-0">
-                            <div className="flex items-center gap-2 mb-2">
+                            <div className="flex items-center gap-2 mb-2 flex-wrap">
                               <Badge variant="outline">
                                 {item.category}
                               </Badge>
-                              {item.itemType === "bundle" && (
+                              {item.itemType === "bundle" && !(item.isFolder || ((!item.documents || item.documents.length === 0) && item.childBundleCount && item.childBundleCount > 0)) && (
                                 <Badge variant="secondary" className="text-xs">
                                   Bundle
                                 </Badge>
                               )}
                               {(item.isFolder || (item.itemType === "bundle" && (!item.documents || item.documents.length === 0))) && item.childBundleCount !== undefined && item.childBundleCount > 0 && (
-                                <Badge variant="outline" className="text-xs bg-blue-50 text-blue-700 border-blue-300">
+                                <Badge variant="outline" className="text-xs bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-400 border-blue-300 dark:border-blue-700">
                                   📁 {item.childBundleCount} {item.childBundleCount === 1 ? 'bundle' : 'bundles'}
                                 </Badge>
                               )}
@@ -367,9 +396,13 @@ export default function DocumentsSection({ documents }: DocumentsSectionProps) {
                       <>
                         <div className="flex items-center gap-1">
                           <FileText className="w-3 h-3" />
-                          {item.documents?.length || 0} {t("documents")}
+                          {(item.isFolder || ((!item.documents || item.documents.length === 0) && item.childBundleCount)) 
+                            ? `${item.totalFileCount || 0} ${tStorefront("totalFiles")}`
+                            : `${item.documents?.length || 0} ${t("documents")}`}
                         </div>
-                        <span>Bundle</span>
+                        <span>{(item.isFolder || ((!item.documents || item.documents.length === 0) && item.childBundleCount)) 
+                          ? `${item.childBundleCount || 0} ${tStorefront("bundlesCount")}`
+                          : "Bundle"}</span>
                       </>
                     )}
                   </div>
@@ -543,6 +576,124 @@ export default function DocumentsSection({ documents }: DocumentsSectionProps) {
                 >
                   <ShoppingCart className="w-4 h-4 mr-2" />
                   {tStorefront("buyNow")} - {formatPrice(previewBundle.price || 0, previewBundle.currency || 'EUR')}
+                </Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
+      )}
+      
+      {/* Folder Preview Dialog */}
+      {previewFolder && isFolderPreviewOpen && (
+        <Dialog open={isFolderPreviewOpen} onOpenChange={setIsFolderPreviewOpen}>
+          <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+            <DialogHeader>
+              <div className="flex items-center gap-2">
+                <Folder className="w-6 h-6 text-purple-500" />
+                <DialogTitle className="text-2xl">{previewFolder.title}</DialogTitle>
+              </div>
+              <DialogDescription className="text-base mt-2">
+                {previewFolder.description || tStorefront("noDescription")}
+              </DialogDescription>
+            </DialogHeader>
+
+            <div className="space-y-6">
+              {/* Folder Info */}
+              <div className="grid grid-cols-2 gap-4 p-4 bg-slate-50 dark:bg-slate-800 rounded-lg">
+                <div>
+                  <p className="text-sm text-slate-600 dark:text-slate-400">{tStorefront("category")}</p>
+                  <Badge variant="outline">
+                    {previewFolder.category}
+                  </Badge>
+                </div>
+                <div>
+                  <p className="text-sm text-slate-600 dark:text-slate-400">{tStorefront("price")}</p>
+                  <p className="text-lg font-bold text-brand-red-500">
+                    {formatPrice(previewFolder.price || 0, previewFolder.currency || 'EUR')}
+                  </p>
+                </div>
+              </div>
+
+              {/* Bundles Inside */}
+              <div>
+                <div className="flex items-center gap-2 mb-3">
+                  <h3 className="text-lg font-semibold">{tStorefront("bundlesInside") || "Bundles Inside"}</h3>
+                  <Badge variant="secondary">
+                    {previewFolder.childBundleCount || 0} {previewFolder.childBundleCount === 1 ? 'bundle' : 'bundles'}
+                  </Badge>
+                </div>
+                
+                <div className="space-y-3 max-h-[400px] overflow-y-auto pr-2">
+                  {previewFolder.childBundles && previewFolder.childBundles.length > 0 ? (
+                    previewFolder.childBundles.map((bundle: any) => (
+                      <div
+                        key={bundle._id}
+                        className="border rounded-lg overflow-hidden bg-white dark:bg-slate-800/50"
+                      >
+                        <div className="flex items-center gap-3 p-3 bg-slate-50 dark:bg-slate-800">
+                          <div className="flex-shrink-0 w-10 h-10 bg-purple-100 dark:bg-purple-900/20 rounded flex items-center justify-center">
+                            <FolderOpen className="w-5 h-5 text-purple-500" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-medium text-slate-900 dark:text-slate-100">
+                              {bundle.title}
+                            </p>
+                            <p className="text-xs text-slate-500 dark:text-slate-400">
+                              {bundle.fileCount} {bundle.fileCount === 1 ? 'document' : 'documents'}
+                            </p>
+                          </div>
+                          <Badge variant="outline" className="text-xs bg-purple-50 text-purple-700 dark:bg-purple-900/20 dark:text-purple-400">
+                            Bundle
+                          </Badge>
+                        </div>
+                        {bundle.documents && bundle.documents.length > 0 && (
+                          <div className="p-3 space-y-2 bg-slate-50/50 dark:bg-slate-900/50">
+                            <p className="text-xs font-medium text-slate-600 dark:text-slate-400 mb-2">
+                              {tStorefront("filesPreview") || "Files Preview"} ({bundle.documents.length})
+                            </p>
+                            {bundle.documents.slice(0, 3).map((doc: any, idx: number) => (
+                              <div
+                                key={doc._id || idx}
+                                className="flex items-center gap-2 p-2 bg-white dark:bg-slate-800 rounded border border-slate-200 dark:border-slate-700"
+                              >
+                                <FileText className="w-4 h-4 text-slate-400 flex-shrink-0" />
+                                <span className="text-xs text-slate-700 dark:text-slate-300 truncate flex-1">
+                                  {doc.title || doc.fileName}
+                                </span>
+                                <Lock className="w-3 h-3 text-amber-500 flex-shrink-0" />
+                              </div>
+                            ))}
+                            {bundle.documents.length > 3 && (
+                              <p className="text-xs text-slate-500 dark:text-slate-400 text-center pt-1">
+                                +{bundle.documents.length - 3} {tStorefront("moreFiles") || "more files"}
+                              </p>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    ))
+                  ) : (
+                    <p className="text-sm text-slate-500 dark:text-slate-400 text-center py-4">
+                      {tStorefront("noBundlesInFolder") || "No bundles in this folder"}
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              {/* Call to Action */}
+              <div className="bg-purple-50 dark:bg-purple-900/20 p-4 rounded-lg">
+                <p className="text-sm text-purple-900 dark:text-purple-100 mb-3">
+                  {tStorefront("folderPurchasePrompt") || "Purchase this folder to access all bundles inside"}
+                </p>
+                <Button
+                  onClick={() => {
+                    setIsFolderPreviewOpen(false);
+                    handlePurchase(previewFolder);
+                  }}
+                  className="w-full bg-brand-red-500 hover:bg-brand-red-600"
+                >
+                  <ShoppingCart className="w-4 h-4 mr-2" />
+                  {tStorefront("buyNow")} - {formatPrice(previewFolder.price || 0, previewFolder.currency || 'EUR')}
                 </Button>
               </div>
             </div>

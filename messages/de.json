@@ -1977,7 +1977,11 @@
     "bundlesInside": "Pakete im Ordner",
     "noBundlesInFolder": "Keine Pakete in diesem Ordner",
     "folderPurchasePrompt": "Kaufen Sie diesen Ordner, um auf alle Pakete zuzugreifen",
-    "browseFolder": "Ordner durchsuchen"
+    "browseFolder": "Ordner durchsuchen",
+    "filesPreview": "Dateivorschau",
+    "moreFiles": "weitere Dateien",
+    "totalFiles": "Gesamtdateien",
+    "bundlesCount": "Pakete"
   },
   "purchaseModal": {
     "title": "Kauf abschließen",

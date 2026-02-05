@@ -234,33 +234,66 @@ export async function GET(request: Request) {
       // Check if this is a folder (has isFolder=true OR has no documents)
       if (bundle.isFolder || !bundle.documents || bundle.documents.length === 0) {
         try {
+          console.log(`[Storefront API] Processing folder: ${bundle.title}, _id: ${bundle._id}`);
+          
           // Count child bundles
           const childBundleCount = await DocumentBundle.countDocuments({
             parentFolder: bundle._id,
             isPublished: true
           });
           
-          // Get preview of child bundles (first 5)
+          console.log(`[Storefront API] Found ${childBundleCount} child bundles`);
+          
+          // Get preview of child bundles (first 5) with populated documents
           const childBundles = await DocumentBundle.find({
             parentFolder: bundle._id,
             isPublished: true
           })
             .select('title documents')
+            .populate('documents', 'title fileName')
             .limit(5)
             .lean();
           
-          // Format child bundle preview
-          const childBundlePreview = childBundles.map(cb => ({
-            _id: (cb._id as any).toString(),
-            title: cb.title,
-            fileCount: (cb.documents && Array.isArray(cb.documents)) ? cb.documents.length : 0
-          }));
+          console.log(`[Storefront API] Child bundles fetched:`, childBundles.length);
+          
+          // Format child bundle preview with document details
+          const childBundlePreview = childBundles.map(cb => {
+            const docCount = (cb.documents && Array.isArray(cb.documents)) ? cb.documents.length : 0;
+            console.log(`[Storefront API] Child bundle: ${cb.title}, documents: ${docCount}`);
+            
+            return {
+              _id: (cb._id as any).toString(),
+              title: cb.title,
+              fileCount: docCount,
+              documents: cb.documents && Array.isArray(cb.documents) 
+                ? cb.documents.map((doc: any) => ({
+                    _id: (doc._id as any).toString(),
+                    title: doc.title,
+                    fileName: doc.fileName
+                  }))
+                : []
+            };
+          });
+          
+          // Calculate total file count across all child bundles
+          const totalFileCount = childBundlePreview.reduce((sum, cb) => sum + cb.fileCount, 0);
           
           bundles[i] = {
             ...bundle,
             childBundleCount,
-            childBundles: childBundlePreview
+            childBundles: childBundlePreview,
+            totalFileCount // Total files across all bundles in this folder
           };
+          
+          console.log(`[Storefront API] Final bundle data for ${bundle.title}:`, {
+            _id: bundles[i]._id,
+            title: bundles[i].title,
+            isFolder: bundles[i].isFolder,
+            documents: bundles[i].documents?.length || 0,
+            childBundleCount: bundles[i].childBundleCount,
+            childBundlesLength: bundles[i].childBundles?.length || 0,
+            totalFileCount: bundles[i].totalFileCount
+          });
         } catch (folderError) {
           console.error("[Storefront API] Error fetching folder metadata:", folderError);
           // Continue without folder metadata

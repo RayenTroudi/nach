@@ -1973,7 +1973,11 @@
     "bundlesInside": "الحزم بالداخل",
     "noBundlesInFolder": "لا توجد حزم في هذا المجلد",
     "folderPurchasePrompt": "قم بشراء هذا المجلد للوصول إلى جميع الحزم بالداخل",
-    "browseFolder": "تصفح المجلد"
+    "browseFolder": "تصفح المجلد",
+    "filesPreview": "معاينة الملفات",
+    "moreFiles": "ملفات إضافية",
+    "totalFiles": "إجمالي الملفات",
+    "bundlesCount": "حزم"
   },
   "purchaseModal": {
     "title": "إتمام عملية الشراء",

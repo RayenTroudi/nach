@@ -14,6 +14,7 @@
     "translate:types": "tsx scripts/generate-translation-types.ts",
     "translate:scan": "tsx scripts/scan-hardcoded-strings.ts",
     "fix:chat-rooms": "tsx scripts/fix-missing-chat-rooms.ts",
+    "fix:instructor-chat": "tsx scripts/add-instructor-to-chat-rooms.ts",
     "cleanup:uploadthing": "tsx scripts/cleanup-uploadthing-orphans.ts",
     "storage:report": "tsx scripts/cleanup-uploadthing-orphans.ts report",
     "check:faq": "tsx scripts/check-faq-videos.ts",

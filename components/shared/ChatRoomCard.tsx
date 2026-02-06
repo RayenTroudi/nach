@@ -96,13 +96,13 @@ const ChatRoomCard = ({
 
         {chatRoomUnreadMessages.length ? (
           <p className="text-slate-900 dark:text-slate-100 font-semibold truncate text-xs">
-            {chatRoomUnreadMessages.at(-1)?.unreadMessage.senderId.username}: {chatRoomUnreadMessages.at(-1)?.unreadMessage.content}
+            {chatRoomUnreadMessages.at(-1)?.unreadMessage.senderId?.username || "Unknown user"}: {chatRoomUnreadMessages.at(-1)?.unreadMessage.content}
           </p>
         ) : (
           <>
             {lastMessage ? (
               <p className="text-slate-500 dark:text-slate-400 font-normal truncate text-xs">
-                {lastMessage.senderId.username}: {lastMessage.content}
+                {lastMessage.senderId?.username || "Unknown user"}: {lastMessage.content}
               </p>
             ) : isPrivate ? (
               <p className="text-slate-400 dark:text-slate-500 font-normal text-xs italic">

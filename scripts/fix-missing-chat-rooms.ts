@@ -35,11 +35,14 @@ async function fixMissingChatRooms() {
       console.log(`\n🔧 Fixing course: ${course.title} (ID: ${course._id})`);
       
       try {
-        // Create chat room
+        // Create chat room with instructor and existing students
+        const studentsArray = course.students || [];
+        const allParticipants = [course.instructor._id, ...studentsArray];
+        
         const chatRoom = await CourseChatRoom.create({
           courseId: course._id,
           instructorAdmin: course.instructor._id,
-          students: course.students || [], // Add all existing students
+          students: allParticipants, // Add instructor and all existing students
         });
 
         console.log(`  ✅ Created chat room: ${chatRoom._id}`);

@@ -11,10 +11,11 @@ export const createCourseChatRoom = async (params: CreateChatRoomParams) => {
     const { courseId, instructorId } = params;
     await connectToDatabase();
 
-    // Create a course chat room
+    // Create a course chat room with instructor as admin and first student
     const courseChatRoom = await CourseChatRoom.create({
       courseId,
       instructorAdmin: instructorId,
+      students: [instructorId], // Add instructor to students array by default
     });
 
     await addCourseChatRoom({

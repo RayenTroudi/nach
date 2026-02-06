@@ -46,6 +46,7 @@ import {
 import CourseChatRoom from "../models/course-chat-room.model";
 import Purchase from "../models/purchase.model";
 import Feedback from "../models/feedback.model";
+import { deleteFileFromUploadThing } from "../utils/uploadthing-manager";
 
 export const getCourseById = async (params: GetCourseByIdParams) => {
   try {
@@ -198,6 +199,19 @@ export const updateCourse = async (params: UpdateCourseParams) => {
       throw new Error("Unauthorized, this course does not belong to you.");
     if (!mongoose.isValidObjectId(courseId)) throw new Error("Invalid ID");
 
+    // If updating faqVideo, delete old video from UploadThing first
+    if (data.faqVideo) {
+      const existingCourse = await Course.findById(courseId);
+      if (existingCourse?.faqVideo && existingCourse.faqVideo !== data.faqVideo) {
+        console.log('[Update Course] Removing old FAQ video from UploadThing:', existingCourse.faqVideo);
+        try {
+          await deleteFileFromUploadThing(existingCourse.faqVideo);
+        } catch (error) {
+          console.error('[Update Course] Failed to delete old FAQ video:', error);
+        }
+      }
+    }
+
     const course = await Course.findByIdAndUpdate(
       courseId,
       { ...data, isPublished: false },
@@ -247,6 +261,17 @@ export const deleteCourseById = async (params: DeleteCourseByIdParams) => {
       throw new Error(
         "We promise students lifetime access, so courses cannot be deleted after students have enrolled."
       );
+    
+    // Delete FAQ video from UploadThing if exists
+    if (course.faqVideo) {
+      console.log('[Delete Course] Removing FAQ video from UploadThing:', course.faqVideo);
+      try {
+        await deleteFileFromUploadThing(course.faqVideo);
+      } catch (error) {
+        console.error('[Delete Course] Failed to delete FAQ video:', error);
+      }
+    }
+
     await removeCourseFromCategory({
       categoryId: course.category,
       courseId: course._id,

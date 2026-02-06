@@ -13,7 +13,11 @@
     "translate:extract": "tsx scripts/extract-missing.ts",
     "translate:types": "tsx scripts/generate-translation-types.ts",
     "translate:scan": "tsx scripts/scan-hardcoded-strings.ts",
-    "fix:chat-rooms": "tsx scripts/fix-missing-chat-rooms.ts"
+    "fix:chat-rooms": "tsx scripts/fix-missing-chat-rooms.ts",
+    "cleanup:uploadthing": "tsx scripts/cleanup-uploadthing-orphans.ts",
+    "storage:report": "tsx scripts/cleanup-uploadthing-orphans.ts report",
+    "check:faq": "tsx scripts/check-faq-videos.ts",
+    "delete:videos": "tsx scripts/delete-all-videos.ts"
   },
   "dependencies": {
     "@clerk/nextjs": "^4.29.6",

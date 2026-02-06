@@ -15,6 +15,7 @@ import { revalidatePath } from "next/cache";
 import { getCourseById } from "./course.action";
 import { pullVideoFromSection } from "./section.action";
 import UserProgress from "../models/userprogress.model";
+import { deleteFileFromUploadThing } from "../utils/uploadthing-manager";
 
 export const getVideoById = async (videoId: string) => {
   try {
@@ -97,6 +98,18 @@ export const deleteVideo = async (params: DeleteVideoParams) => {
     if (course.instructor._id.toString() !== instructorId.toString())
       throw new Error("Unauthorized, this course does not belong to you.");
 
+    // Get video before deleting to retrieve the video URL
+    const video = await Video.findById(videoId);
+    
+    if (video && video.videoUrl) {
+      // Delete video file from UploadThing if it's an UploadThing URL
+      if (video.videoUrl.includes('utfs.io')) {
+        console.log('[Delete Video] Removing file from UploadThing:', video.videoUrl);
+        await deleteFileFromUploadThing(video.videoUrl);
+      }
+    }
+
+    // Delete video from database
     await Video.findByIdAndDelete(videoId);
     await pullVideoFromSection({ sectionId, videoId, path });
 
@@ -136,6 +149,7 @@ export const reorderVideo = async (params: ReorderVideoParams) => {
     if (!course) throw new Error("Course not found");
     if (course.instructor._id.toString() !== instructorId.toString())
       throw new Error("Unauthorized, this course does not belong to you.");
+
     await Video.findByIdAndUpdate(videoId, { position: newPosition });
     revalidatePath(path);
   } catch (error: any) {
@@ -148,6 +162,21 @@ export const deleteVideosSection = async (sectionId: string) => {
   try {
     await connectToDatabase();
     if (!mongoose.isValidObjectId(sectionId)) throw new Error("Invalid ID");
+    
+    // Get all videos in the section before deleting
+    const videos = await Video.find({ sectionId });
+    
+    // Delete video files from UploadThing
+    if (videos && videos.length > 0) {
+      console.log(`[Delete Videos Section] Removing ${videos.length} video files from UploadThing`);
+      for (const video of videos) {
+        if (video.videoUrl && video.videoUrl.includes('utfs.io')) {
+          await deleteFileFromUploadThing(video.videoUrl);
+        }
+      }
+    }
+    
+    // Delete videos from database
     await Video.deleteMany({ sectionId });
   } catch (error: any) {
     console.log("DELETE VIDEO SECTION ERROR: ", error.message);
@@ -159,6 +188,21 @@ export const deleteSectionVideos = async (sectionId: string) => {
   try {
     await connectToDatabase();
     if (!mongoose.isValidObjectId(sectionId)) throw new Error("Invalid ID");
+    
+    // Get all videos in the section before deleting
+    const videos = await Video.find({ sectionId });
+    
+    // Delete video files from UploadThing
+    if (videos && videos.length > 0) {
+      console.log(`[Delete Section Videos] Removing ${videos.length} video files from UploadThing`);
+      for (const video of videos) {
+        if (video.videoUrl && video.videoUrl.includes('utfs.io')) {
+          await deleteFileFromUploadThing(video.videoUrl);
+        }
+      }
+    }
+    
+    // Delete videos from database
     await Video.deleteMany({ sectionId });
   } catch (error: any) {
     console.log("DELETE SECTION VIDEOS ERROR: ", error.message);

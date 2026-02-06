@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { X, ZoomIn, ZoomOut, RotateCw, ChevronLeft, ChevronRight } from "lucide-react";
+import { X, ZoomIn, ZoomOut, RotateCw, ChevronLeft, ChevronRight, Printer } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import {
@@ -74,6 +74,18 @@ export default function DocumentViewer({
       setPageNumber(1);
       setScale(1.2);
       setRotation(0);
+      
+      // Dynamically load print-js CSS on client side only
+      if (typeof window !== 'undefined') {
+        const link = document.getElementById('print-js-css');
+        if (!link) {
+          const cssLink = document.createElement('link');
+          cssLink.id = 'print-js-css';
+          cssLink.rel = 'stylesheet';
+          cssLink.href = 'https://printjs-4de6.kxcdn.com/print.min.css';
+          document.head.appendChild(cssLink);
+        }
+      }
     }
   }, [isOpen, fileUrl]);
 
@@ -92,6 +104,40 @@ export default function DocumentViewer({
   const handleReset = () => {
     setScale(1.2);
     setRotation(0);
+  };
+
+  const handlePrint = async () => {
+    try {
+      // Dynamically import print-js only when needed (client-side only)
+      const printJS = (await import('print-js')).default;
+      
+      if (isPDF) {
+        // For PDFs, use printJS library
+        printJS({
+          printable: fileUrl,
+          type: 'pdf',
+          showModal: true,
+          modalMessage: 'Preparing document for printing...',
+          onError: (error: any) => {
+            console.error('Print error:', error);
+          }
+        });
+      } else if (isImage) {
+        // For images, use printJS library
+        printJS({
+          printable: fileUrl,
+          type: 'image',
+          showModal: true,
+          modalMessage: 'Preparing image for printing...',
+          imageStyle: 'width:100%;',
+          onError: (error: any) => {
+            console.error('Print error:', error);
+          }
+        });
+      }
+    } catch (error) {
+      console.error('Error loading print-js:', error);
+    }
   };
 
   return (
@@ -138,6 +184,16 @@ export default function DocumentViewer({
                   >
                     {t("reset")}
                   </Button>
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    onClick={handlePrint}
+                    title={t("print")}
+                    className="text-brand-red-500 hover:text-brand-red-600"
+                  >
+                    <Printer className="w-4 h-4 ltr:mr-1 rtl:ml-1" />
+                    {t("print")}
+                  </Button>
                 </>
               )}
               {isImage && (
@@ -166,6 +222,16 @@ export default function DocumentViewer({
                   </Button>
                   <Button variant="outline" size="sm" onClick={handleReset}>
                     {t("reset")}
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    onClick={handlePrint}
+                    title={t("print")}
+                    className="text-brand-red-500 hover:text-brand-red-600"
+                  >
+                    <Printer className="w-4 h-4 ltr:mr-1 rtl:ml-1" />
+                    {t("print")}
                   </Button>
                 </>
               )}

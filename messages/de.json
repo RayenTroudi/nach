@@ -2047,6 +2047,7 @@
   },
   "documentViewer": {
     "reset": "Zurücksetzen",
+    "print": "Drucken",
     "openNewTab": "In neuem Tab öffnen",
     "cannotPreview": "Diese Datei kann nicht in der Vorschau angezeigt werden",
     "cannotPreviewDescription": "Dieser Dateityp kann nicht im Browser in der Vorschau angezeigt werden. Klicken Sie unten, um sie in einem neuen Tab zu öffnen.",

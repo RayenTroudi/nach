@@ -84,6 +84,7 @@
     "next-video": "^1.0.0",
     "pdfjs-dist": "^5.4.624",
     "plaiceholder": "^3.0.0",
+    "print-js": "^1.6.0",
     "prismjs": "^1.29.0",
     "pusher": "^5.2.0",
     "pusher-js": "^8.4.0-rc2",

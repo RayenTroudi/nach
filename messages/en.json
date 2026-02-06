@@ -2056,6 +2056,7 @@
   },
   "documentViewer": {
     "reset": "Reset",
+    "print": "Print",
     "openNewTab": "Open in New Tab",
     "cannotPreview": "Cannot Preview This File",
     "cannotPreviewDescription": "This file type cannot be previewed in the browser. Click below to open it in a new tab.",

@@ -5,9 +5,9 @@ import { auth } from "@clerk/nextjs";
 import { getUserByClerkId } from "@/lib/actions";
 import { redirect } from "next/navigation";
 import { TUser } from "@/types/models.types";
-import ProfileForm from "./_components/ProfileForm";
+import ProfileForm from "@/app/(dashboard)/(routes)/(student)/manage/_components/ProfileForm";
 
-const page = async () => {
+const ManagePage = async () => {
   const { userId } = auth();
   if (!userId) return redirect("/sign-in");
 
@@ -27,4 +27,4 @@ const page = async () => {
   );
 };
 
-export default page;
+export default ManagePage;

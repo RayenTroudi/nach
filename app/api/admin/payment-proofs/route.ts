@@ -280,7 +280,22 @@ export async function POST(request: Request) {
 
           await sendEmail({
             to: user.email,
-            subject: `✅ Payme) {
+            subject: `✅ Payment Approved - Access Granted`,
+            html: emailHtml,
+          });
+
+          console.log("✅ Approval email sent to user:", user.email);
+        } catch (emailError) {
+          console.error("❌ Error sending approval email:", emailError);
+        }
+      } catch (enrollError) {
+        console.error(`❌ Error granting access to ${proof.itemType}:`, enrollError);
+        // Continue even if enrollment fails - admin can manually fix
+      }
+    }
+
+    // If rejected, send notification email
+    if (status === "rejected") {
       try {
         const user = await User.findById(proof.userId._id);
         
@@ -314,22 +329,7 @@ export async function POST(request: Request) {
             html: emailHtml,
           });
 
-          console.log("✅ Rejection email sent to user:", user.emailst user = await User.findById(proof.userId._id);
-        
-        if (user && user.email) {
-          await sendEmail({
-            to: user.email,
-            subject: "Payment Verification Issue",
-            html: `
-              <h2>Payment Verification Required</h2>
-              <p>Hi ${user.firstName},</p>
-              <p>We've reviewed your payment proof, but we need additional information or clarification.</p>
-              <p>Amount: ${proof.amount} TND</p>
-              ${adminNotes ? `<p><strong>Reason:</strong> ${adminNotes}</p>` : ""}
-              <p>Please upload a new proof or contact support for assistance.</p>
-              <p>Best regards,<br/>The Team</p>
-            `,
-          });
+          console.log("✅ Rejection email sent to user:", user.email);
         }
       } catch (emailError) {
         console.error("❌ Error sending rejection email:", emailError);

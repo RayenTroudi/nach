@@ -65,10 +65,14 @@ export async function PATCH(
           
           // If found, update the resume request with userId
           if (studentUser) {
-            updatedRequest.userId = studentUser._id;
             await ResumeRequestModel.findByIdAndUpdate(params.id, {
               userId: studentUser._id
             });
+            // Refresh the request data
+            const refreshedRequest = await ResumeRequestModel.findById(params.id);
+            if (refreshedRequest) {
+              updatedRequest.userId = refreshedRequest.userId;
+            }
             console.log("   Updated resume request with userId");
           }
         }

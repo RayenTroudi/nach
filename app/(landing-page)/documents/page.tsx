@@ -51,17 +51,6 @@ import Image from "next/image";
 import { scnToast } from "@/components/ui/use-toast";
 import BankTransferUpload from "../course/[courseId]/_components/BankTransferUpload";
 
-const CATEGORIES = [
-  "All",
-  "Visa",
-  "Application",
-  "Language",
-  "Certificate",
-  "Guide",
-  "Template",
-  "Other",
-];
-
 interface DocumentItem {
   _id: string;
   title: string;
@@ -113,7 +102,6 @@ export default function DocumentsPage() {
   const [items, setItems] = useState<DocumentItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
-  const [categoryFilter, setCategoryFilter] = useState("All");
   const [sortBy, setSortBy] = useState("newest");
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -148,10 +136,6 @@ export default function DocumentsPage() {
         sort: sortBy,
       });
 
-      if (categoryFilter !== "All") {
-        params.append("category", categoryFilter);
-      }
-
       if (searchTerm) {
         params.append("search", searchTerm);
       }
@@ -170,7 +154,7 @@ export default function DocumentsPage() {
     } finally {
       setLoading(false);
     }
-  }, [currentPage, categoryFilter, sortBy, searchTerm]);
+  }, [currentPage, sortBy, searchTerm]);
 
   useEffect(() => {
     fetchDocuments();
@@ -304,9 +288,9 @@ export default function DocumentsPage() {
         {/* Filters */}
         <Card className="mb-8">
           <CardContent className="pt-6">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 gap-4">
               {/* Search */}
-              <div className="relative md:col-span-2">
+              <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                 <Input
                   placeholder={t('searchPlaceholder')}
@@ -315,21 +299,6 @@ export default function DocumentsPage() {
                   className="pl-10"
                 />
               </div>
-
-              {/* Category Filter */}
-              <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-                <SelectTrigger>
-                  <Filter className="w-4 h-4 mr-2" />
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {CATEGORIES.map((cat) => (
-                    <SelectItem key={cat} value={cat}>
-                      {cat === "All" ? t('allCategories') : cat}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
             </div>
 
             {/* Sort and Results */}
@@ -370,16 +339,15 @@ export default function DocumentsPage() {
                 {t('noDocumentsFound')}
               </h3>
               <p className="text-slate-600 dark:text-slate-400 mb-6">
-                {searchTerm || categoryFilter !== "All"
+                {searchTerm
                   ? t('tryAdjustingFilters')
                   : t('checkBackSoon')}
               </p>
-              {(searchTerm || categoryFilter !== "All") && (
+              {searchTerm && (
                 <Button
                   variant="outline"
                   onClick={() => {
                     setSearchTerm("");
-                    setCategoryFilter("All");
                   }}
                 >
                   {t('clearFilters')}

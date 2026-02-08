@@ -38,12 +38,20 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    const availability = await Availability.find({ userId: user._id }).sort({ dayOfWeek: 1, startTime: 1 });
+    const availability = await Availability.find({ userId: user._id })
+      .sort({ date: 1, startTime: 1 })
+      .lean();
+
+    // Ensure dates are properly formatted as ISO strings
+    const formattedAvailability = availability.map((slot: any) => ({
+      ...slot,
+      date: slot.date ? new Date(slot.date).toISOString() : null
+    }));
 
     return NextResponse.json(
       {
         success: true,
-        availability,
+        availability: formattedAvailability,
       },
       { status: 200 }
     );
@@ -69,14 +77,26 @@ export async function POST(req: NextRequest) {
     }
 
     const body = await req.json();
-    const { dayOfWeek, startTime, endTime } = body;
+    const { date, startTime, endTime } = body;
 
-    if (dayOfWeek === undefined || !startTime || !endTime) {
+    if (!date || !startTime || !endTime) {
       return NextResponse.json(
         { success: false, error: "Missing required fields" },
         { status: 400 }
       );
     }
+
+    // Parse and validate date
+    const availabilityDate = new Date(date);
+    if (isNaN(availabilityDate.getTime())) {
+      return NextResponse.json(
+        { success: false, error: "Invalid date format" },
+        { status: 400 }
+      );
+    }
+
+    // Set time to start of day for consistent comparison
+    availabilityDate.setHours(0, 0, 0, 0);
 
     await connectToDatabase();
 
@@ -100,10 +120,10 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Check for overlapping slots
+    // Check for overlapping slots on the same date
     const overlapping = await Availability.findOne({
       userId: user._id,
-      dayOfWeek,
+      date: availabilityDate,
       isActive: true,
       $or: [
         { startTime: { $lte: startTime }, endTime: { $gt: startTime } },
@@ -121,16 +141,23 @@ export async function POST(req: NextRequest) {
 
     const availability = await Availability.create({
       userId: user._id,
-      dayOfWeek,
+      date: availabilityDate,
+      dayOfWeek: availabilityDate.getDay(), // Store day of week for convenience
       startTime,
       endTime,
       isActive: true,
     });
 
+    // Format the response with ISO date string
+    const formattedAvailability = {
+      ...availability.toObject(),
+      date: availability.date.toISOString()
+    };
+
     return NextResponse.json(
       {
         success: true,
-        availability,
+        availability: formattedAvailability,
       },
       { status: 201 }
     );

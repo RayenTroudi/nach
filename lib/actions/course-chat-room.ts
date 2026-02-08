@@ -24,6 +24,11 @@ export const createCourseChatRoom = async (params: CreateChatRoomParams) => {
     });
 
     await pushOwnChatRoomToUser(instructorId, courseChatRoom._id);
+    
+    // IMPORTANT: Also add instructor to joinedChatRooms so they appear as participant
+    const { joinChatRoom } = await import("./user.action");
+    // Add to joinedChatRooms only (student already added above)
+    await joinChatRoom(instructorId, courseChatRoom._id.toString(), true);
   } catch (error: any) {
     console.log("CREATE COURSE CHAT ROOM ERROR", error.message);
   }
@@ -37,9 +42,9 @@ export const pushStudentToChatRoom = async (params: {
     const { chatRoomId, studentId } = params;
     await connectToDatabase();
 
-    // Push student to course chat room
+    // Use $addToSet to prevent duplicate students in chat room
     await CourseChatRoom.findByIdAndUpdate(chatRoomId, {
-      $push: { students: studentId },
+      $addToSet: { students: studentId },
     });
   } catch (error: any) {
     console.log("PUSH STUDENT TO COURSE CHAT ROOM ERROR", error.message);

@@ -80,7 +80,6 @@ export default function DocumentsSection({ documents }: DocumentsSectionProps) {
   const router = useRouter();
   const { user, isSignedIn } = useUser();
   const [mounted, setMounted] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState("All");
   const [carouselRef, setCarouselRef] = useState<any>(null);
   
   // Bundle preview dialog state
@@ -99,20 +98,6 @@ export default function DocumentsSection({ documents }: DocumentsSectionProps) {
   useEffect(() => {
     setMounted(true);
   }, []);
-
-  const categories = [
-    { name: "All", label: t('categoryAll'), color: "bg-slate-500" },
-    { name: "Visa", label: t('categoryVisa'), color: "bg-blue-500" },
-    { name: "Application", label: t('categoryApplication'), color: "bg-green-500" },
-    { name: "Language", label: t('categoryLanguage'), color: "bg-purple-500" },
-    { name: "Certificate", label: t('categoryCertificate'), color: "bg-orange-500" },
-    { name: "Guide", label: t('categoryGuide'), color: "bg-pink-500" },
-  ];
-
-  // Filter documents based on selected category
-  const filteredDocuments = selectedCategory === "All" 
-    ? documents 
-    : documents.filter(doc => doc.category === selectedCategory);
 
   const formatDate = (dateString: string) => {
     if (!mounted) return "";
@@ -212,41 +197,15 @@ export default function DocumentsSection({ documents }: DocumentsSectionProps) {
           </motion.div>
         </div>
 
-        {/* Category Filters */}
-        <div className="flex flex-wrap gap-3 justify-center mb-8">
-          {categories.map((cat, idx) => (
-            <motion.div
-              key={cat.name}
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: idx * 0.1 }}
-            >
-              <Button
-                variant={selectedCategory === cat.name ? "default" : "outline"}
-                className={`rounded-full ${
-                  selectedCategory === cat.name 
-                    ? "bg-brand-red-500 hover:bg-brand-red-600 text-white" 
-                    : "hover:bg-slate-100 dark:hover:bg-slate-800"
-                }`}
-                onClick={() => setSelectedCategory(cat.name)}
-              >
-                <span className={`w-2 h-2 rounded-full ${cat.color} ${isRTL ? 'ml-2' : 'mr-2'}`} />
-                {cat.label}
-              </Button>
-            </motion.div>
-          ))}
-        </div>
-
         {/* Documents Carousel */}
-        {filteredDocuments.length === 0 ? (
+        {documents.length === 0 ? (
           <div className="text-center py-12">
             <FileText className="w-16 h-16 mx-auto text-slate-300 dark:text-slate-700 mb-4" />
             <h3 className="text-xl font-semibold text-slate-900 dark:text-slate-50 mb-2">
               {t('noDocuments')}
             </h3>
             <p className="text-slate-600 dark:text-slate-400">
-              {t('noDocumentsDesc', { category: selectedCategory })}
+              {t('noDocumentsDesc')}
             </p>
           </div>
         ) : (
@@ -313,7 +272,7 @@ export default function DocumentsSection({ documents }: DocumentsSectionProps) {
               }
               itemClass="px-3"
             >
-              {filteredDocuments.map((item, idx) => {
+              {documents.map((item, idx) => {
                 const isFree = !item.price || item.price === 0;
                 const purchased = false; // On homepage, we don't track purchases
                 

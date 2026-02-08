@@ -160,6 +160,20 @@ const WatchScreen = ({
                   </div>
                 </div>
               )}
+
+              {/* Video Description Section */}
+              {videoToWatch && videoToWatch.description && (
+                <div className="bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800">
+                  <div className="max-w-5xl mx-auto px-6 lg:px-8 py-6">
+                    <h3 className="text-sm font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">
+                      Video Description
+                    </h3>
+                    <p className="text-base text-slate-700 dark:text-slate-300 whitespace-pre-wrap leading-relaxed">
+                      {videoToWatch.description}
+                    </p>
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Collapsible Sidebar - Course Content - RTL Support */}

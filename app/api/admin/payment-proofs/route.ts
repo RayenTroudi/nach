@@ -10,6 +10,12 @@ import { getUserByClerkId } from "@/lib/actions/user.action";
 import { sendEmail } from "@/lib/actions/email.action";
 import { createPrivateChatRoom } from "@/lib/actions/private-chat-room.action";
 import { CourseTypeEnum } from "@/lib/enums";
+import { 
+  getPaymentApprovedToUserEmail, 
+  getPaymentRejectedToUserEmail 
+} from "@/lib/utils/email-templates";
+
+const ADMIN_EMAIL = "talel.jouini02@gmail.com";
 
 // GET: List all payment proofs with filters
 export async function GET(request: Request) {
@@ -246,37 +252,69 @@ export async function POST(request: Request) {
           itemIds,
         });
 
-        // Send approval email
-        if (process.env.RESEND_API_KEY) {
-          const itemTypeName = proof.itemType === "course" ? "course" : proof.itemType === "bundle" ? "document bundle" : "document";
-          const accessLink = proof.itemType === "course" 
+        // Send approval email to user
+        try {
+          // Get item names
+          let items = [];
+          if (proof.itemType === "course") {
+            items = await Course.find({ _id: { $in: itemIds } }).select("title");
+          } else if (proof.itemType === "document") {
+            items = await DocumentModel.find({ _id: { $in: itemIds } }).select("title");
+          } else if (proof.itemType === "bundle") {
+            items = await DocumentBundle.find({ _id: { $in: itemIds } }).select("title");
+          }
+          const itemNames = items.map((item: any) => item.title);
+
+          const accessUrl = proof.itemType === "course" 
             ? `${process.env.NEXT_PUBLIC_SERVER_URL}/my-learning`
             : `${process.env.NEXT_PUBLIC_SERVER_URL}/student/my-documents`;
-            
+
+          const emailHtml = getPaymentApprovedToUserEmail({
+            userName: user.firstName || user.username,
+            itemType: proof.itemType,
+            itemNames,
+            amount: proof.amount,
+            accessUrl,
+            adminNotes,
+          });
+
           await sendEmail({
             to: user.email,
-            subject: `Payment Approved - ${itemTypeName.charAt(0).toUpperCase() + itemTypeName.slice(1)} Access Granted`,
-            html: `
-              <h2>Payment Approved!</h2>
-              <p>Hi ${user.firstName},</p>
-              <p>Your payment has been verified and approved. You now have access to your ${itemTypeName}(s)!</p>
-              <p>Amount: ${proof.amount} TND</p>
-              <p>Access your ${itemTypeName}(s) at: <a href="${accessLink}">${proof.itemType === "course" ? "My Learning" : "My Documents"}</a></p>
-              ${adminNotes ? `<p><strong>Note from admin:</strong> ${adminNotes}</p>` : ""}
-              <p>Best regards,<br/>The Team</p>
-            `,
-          });
-        }
-      } catch (enrollError) {
-        console.error(`❌ Error granting access to ${proof.itemType}:`, enrollError);
-        // Continue even if enrollment fails - admin can manually fix
-      }
-    }
-
-    // If rejected, send notification email
-    if (status === "rejected" && process.env.RESEND_API_KEY) {
+            subject: `✅ Payme) {
       try {
         const user = await User.findById(proof.userId._id);
+        
+        if (user && user.email) {
+          // Get item names
+          let items = [];
+          const itemIds = proof.itemIds || proof.courseIds;
+          if (proof.itemType === "course") {
+            items = await Course.find({ _id: { $in: itemIds } }).select("title");
+          } else if (proof.itemType === "document") {
+            items = await DocumentModel.find({ _id: { $in: itemIds } }).select("title");
+          } else if (proof.itemType === "bundle") {
+            items = await DocumentBundle.find({ _id: { $in: itemIds } }).select("title");
+          }
+          const itemNames = items.map((item: any) => item.title);
+
+          const resubmitUrl = `${process.env.NEXT_PUBLIC_SERVER_URL}/my-learning`;
+
+          const emailHtml = getPaymentRejectedToUserEmail({
+            userName: user.firstName || user.username,
+            itemType: proof.itemType,
+            itemNames,
+            amount: proof.amount,
+            adminNotes,
+            resubmitUrl,
+          });
+
+          await sendEmail({
+            to: user.email,
+            subject: "⚠️ Payment Review Required - Action Needed",
+            html: emailHtml,
+          });
+
+          console.log("✅ Rejection email sent to user:", user.emailst user = await User.findById(proof.userId._id);
         
         if (user && user.email) {
           await sendEmail({

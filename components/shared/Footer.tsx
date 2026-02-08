@@ -37,7 +37,7 @@ const Footer = () => {
                   <span className="sr-only">{t("facebook")}</span>
 
                   <svg
-                    className="h-5 w-5 sm:h-6 sm:w-6"
+                    className="h-7 w-7 sm:h-8 sm:w-8"
                     fill="currentColor"
                     viewBox="0 0 24 24"
                     aria-hidden="true"
@@ -62,7 +62,7 @@ const Footer = () => {
                   <span className="sr-only">{t("instagram")}</span>
 
                   <svg
-                    className="h-5 w-5 sm:h-6 sm:w-6"
+                    className="h-7 w-7 sm:h-8 sm:w-8"
                     fill="currentColor"
                     viewBox="0 0 24 24"
                     aria-hidden="true"
@@ -76,6 +76,51 @@ const Footer = () => {
                 </a>
               </li>
 
+              <li>
+                <a
+                  href="https://www.tiktok.com/@talel.jouini3"
+                  rel="noreferrer"
+                  target="_blank"
+                  className="text-gray-700 transition hover:opacity-75 dark:text-gray-200 block p-2 touch-manipulation"
+                  aria-label="TikTok"
+                >
+                  <span className="sr-only">TikTok</span>
+
+                  <svg
+                    className="h-7 w-7 sm:h-8 sm:w-8"
+                    fill="currentColor"
+                    viewBox="0 0 24 24"
+                    aria-hidden="true"
+                  >
+                    <path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-5.2 1.74 2.89 2.89 0 012.31-4.64 2.93 2.93 0 01.88.13V9.4a6.84 6.84 0 00-1-.05A6.33 6.33 0 005 20.1a6.34 6.34 0 0010.86-4.43v-7a8.16 8.16 0 004.77 1.52v-3.4a4.85 4.85 0 01-1-.1z" />
+                  </svg>
+                </a>
+              </li>
+
+              <li>
+                <a
+                  href="https://www.youtube.com/@talel.jouini02"
+                  rel="noreferrer"
+                  target="_blank"
+                  className="text-gray-700 transition hover:opacity-75 dark:text-gray-200 block p-2 touch-manipulation"
+                  aria-label="YouTube"
+                >
+                  <span className="sr-only">YouTube</span>
+
+                  <svg
+                    className="h-7 w-7 sm:h-8 sm:w-8"
+                    fill="currentColor"
+                    viewBox="0 0 24 24"
+                    aria-hidden="true"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M19.812 5.418c.861.23 1.538.907 1.768 1.768C21.998 8.746 22 12 22 12s0 3.255-.418 4.814a2.504 2.504 0 0 1-1.768 1.768c-1.56.419-7.814.419-7.814.419s-6.255 0-7.814-.419a2.505 2.505 0 0 1-1.768-1.768C2 15.255 2 12 2 12s0-3.255.417-4.814a2.507 2.507 0 0 1 1.768-1.768C5.744 5 11.998 5 11.998 5s6.255 0 7.814.418ZM15.194 12 10 15V9l5.194 3Z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                </a>
+              </li>
 
             </ul>
           </div>

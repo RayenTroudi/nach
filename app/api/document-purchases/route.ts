@@ -5,6 +5,10 @@ import DocumentPurchase from "@/lib/models/document-purchase.model";
 import DocumentBundle from "@/lib/models/document-bundle.model";
 import DocumentModel from "@/lib/models/document.model";
 import UserModel from "@/lib/models/user.model";
+import { sendEmail } from "@/lib/actions/email.action";
+import { getPaymentRequestToAdminEmail } from "@/lib/utils/email-templates";
+
+const ADMIN_EMAIL = "talel.jouini02@gmail.com";
 
 /**
  * GET /api/document-purchases
@@ -180,6 +184,36 @@ export async function POST(request: Request) {
         populate: { path: "documents uploadedBy" },
       })
       .lean();
+
+    // Send notification email to admin if payment is pending
+    if (purchase.paymentStatus === "pending" && proofUrl) {
+      try {
+        const itemName = item.title || "Document";
+        
+        const emailHtml = getPaymentRequestToAdminEmail({
+          userName: `${user.firstName} ${user.lastName}`.trim() || user.username,
+          userEmail: user.email,
+          itemType: itemType as "document" | "bundle",
+          itemNames: [itemName],
+          amount: Number(amount || item.price || 0),
+          paymentProofUrl: proofUrl,
+          proofId: purchase._id.toString(),
+          submittedAt: new Date(),
+          userNotes: notes,
+        });
+
+        await sendEmail({
+          to: ADMIN_EMAIL,
+          subject: `🔔 New Document Purchase Request - ${user.firstName} ${user.lastName}`,
+          html: emailHtml,
+        });
+
+        console.log("✅ Admin notification email sent to:", ADMIN_EMAIL);
+      } catch (emailError) {
+        console.error("❌ Error sending admin notification email:", emailError);
+        // Continue even if email fails
+      }
+    }
 
     return NextResponse.json({
       success: true,

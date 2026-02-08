@@ -339,7 +339,7 @@ export const pushOwnChatRoomToUser = async (
   try {
     await connectToDatabase();
     await User.findByIdAndUpdate(userId, {
-      $push: { ownChatRooms: chatRoomId },
+      $addToSet: { ownChatRooms: chatRoomId },
     });
   } catch (error: any) {
     console.log("Error in pushOwnChatRoomToUser: ", error.message);
@@ -347,16 +347,23 @@ export const pushOwnChatRoomToUser = async (
   }
 };
 
-export const joinChatRoom = async (userId: string, chatRoomId: string) => {
+export const joinChatRoom = async (
+  userId: string,
+  chatRoomId: string,
+  skipAddingToStudents: boolean = false
+) => {
   try {
     await connectToDatabase();
     await User.findByIdAndUpdate(userId, {
-      $push: { joinedChatRooms: chatRoomId },
+      $addToSet: { joinedChatRooms: chatRoomId },
     });
 
-    await pushStudentToChatRoom({ chatRoomId, studentId: userId });
+    // Only add to students array if not skipped (to avoid duplicates when creating room)
+    if (!skipAddingToStudents) {
+      await pushStudentToChatRoom({ chatRoomId, studentId: userId });
+    }
   } catch (error: any) {
-    console.log("Error in pushOwnChatRoomToUser: ", error.message);
+    console.log("Error in joinChatRoom: ", error.message);
     throw new Error(error.message);
   }
 };

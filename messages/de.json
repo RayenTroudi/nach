@@ -2191,6 +2191,7 @@
       "addAvailability": "Verfügbarkeit hinzufügen",
       "currentAvailability": "Aktuelle Verfügbarkeit",
       "day": "Tag",
+      "date": "Datum",
       "startTime": "Startzeit",
       "endTime": "Endzeit",
       "addSlot": "Zeitfenster hinzufügen",

@@ -2200,6 +2200,7 @@
       "addAvailability": "Add Availability",
       "currentAvailability": "Current Availability",
       "day": "Day",
+      "date": "Date",
       "startTime": "Start Time",
       "endTime": "End Time",
       "addSlot": "Add Slot",

@@ -3,6 +3,13 @@ import { NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/mongoose";
 import PaymentProof from "@/lib/models/payment-proof.model";
 import User from "@/lib/models/user.model";
+import Course from "@/lib/models/course.model";
+import DocumentModel from "@/lib/models/document.model";
+import DocumentBundle from "@/lib/models/document-bundle.model";
+import { sendEmail } from "@/lib/actions/email.action";
+import { getPaymentRequestToAdminEmail } from "@/lib/utils/email-templates";
+
+const ADMIN_EMAIL = "talel.jouini02@gmail.com";
 
 export async function POST(request: Request) {
   console.log("🔵 Submit payment proof API called");
@@ -104,6 +111,43 @@ export async function POST(request: Request) {
     });
 
     console.log("🔵 Payment proof created successfully:", paymentProof._id);
+
+    // Send notification email to admin
+    try {
+      // Get item names
+      let items = [];
+      if (itemType === "course") {
+        items = await Course.find({ _id: { $in: finalItemIds } }).select("title");
+      } else if (itemType === "document") {
+        items = await DocumentModel.find({ _id: { $in: finalItemIds } }).select("title");
+      } else if (itemType === "bundle") {
+        items = await DocumentBundle.find({ _id: { $in: finalItemIds } }).select("title");
+      }
+      const itemNames = items.map((item: any) => item.title || "Unnamed Item");
+
+      const emailHtml = getPaymentRequestToAdminEmail({
+        userName: `${user.firstName} ${user.lastName}`.trim() || user.username,
+        userEmail: user.email,
+        itemType: itemType,
+        itemNames,
+        amount: Number(amount),
+        paymentProofUrl: proofUrl,
+        proofId: paymentProof._id.toString(),
+        submittedAt: new Date(),
+        userNotes: notes,
+      });
+
+      await sendEmail({
+        to: ADMIN_EMAIL,
+        subject: `🔔 New Payment Request - ${user.firstName} ${user.lastName}`,
+        html: emailHtml,
+      });
+
+      console.log("✅ Admin notification email sent to:", ADMIN_EMAIL);
+    } catch (emailError) {
+      console.error("❌ Error sending admin notification email:", emailError);
+      // Continue even if email fails - don't block the payment submission
+    }
 
     return NextResponse.json({
       success: true,

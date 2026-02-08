@@ -83,11 +83,14 @@ export async function POST() {
     // Fix each course
     for (const course of coursesWithoutChatRooms) {
       try {
-        // Create chat room
+        // Create chat room with instructor and all existing students
+        const studentsArray = course.students || [];
+        const allParticipants = [course.instructor._id, ...studentsArray];
+        
         const chatRoom = await CourseChatRoom.create({
           courseId: course._id,
           instructorAdmin: course.instructor._id,
-          students: course.students || [], // Add all existing students
+          students: allParticipants, // Add instructor and all existing students
         });
 
         // Update course with chat room reference
@@ -95,9 +98,12 @@ export async function POST() {
           chatRoom: chatRoom._id,
         });
 
-        // Update instructor's ownChatRooms
+        // Update instructor's ownChatRooms AND joinedChatRooms
         await User.findByIdAndUpdate(course.instructor._id, {
-          $addToSet: { ownChatRooms: chatRoom._id }
+          $addToSet: { 
+            ownChatRooms: chatRoom._id,
+            joinedChatRooms: chatRoom._id  // IMPORTANT: Instructor must also join
+          }
         });
 
         // Update each student's joinedChatRooms

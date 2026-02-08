@@ -4,6 +4,7 @@ import { StepBack } from "../../../_components";
 import {
   VideoAccessForm,
   VideoTitleForm,
+  VideoDescriptionForm,
   VideoVisibilityForm,
 } from "./_components";
 import VideoUploadForm from "./_components/VideoUploadForm";
@@ -92,6 +93,7 @@ const VideIdPage = async ({ params }: { params: { videoId: string } }) => {
               title="Customize your video"
             />
             <VideoTitleForm video={video} />
+            <VideoDescriptionForm video={video} />
             <VideoUploadForm video={video} />
             {/* <SectionThumbnailForm section={section} /> */}
           </div>

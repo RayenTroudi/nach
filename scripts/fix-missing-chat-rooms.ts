@@ -54,13 +54,16 @@ async function fixMissingChatRooms() {
 
         console.log(`  ✅ Updated course with chat room reference`);
 
-        // Update instructor's ownChatRooms
+        // Update instructor's ownChatRooms AND joinedChatRooms
         const User = (await import("../lib/models/user.model")).default;
         await User.findByIdAndUpdate(course.instructor._id, {
-          $addToSet: { ownChatRooms: chatRoom._id }
+          $addToSet: { 
+            ownChatRooms: chatRoom._id,
+            joinedChatRooms: chatRoom._id  // IMPORTANT: Instructor must also join
+          }
         });
 
-        console.log(`  ✅ Added chat room to instructor's owned rooms`);
+        console.log(`  ✅ Added chat room to instructor's owned and joined rooms`);
 
         // Update each student's joinedChatRooms
         if (course.students && course.students.length > 0) {

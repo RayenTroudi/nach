@@ -140,6 +140,7 @@ export type TAttachment = {
 export type TVideo = {
   _id: string;
   title: string;
+  description?: string;
   videoUrl?: string;
   position?: number;
   isPublished?: boolean;

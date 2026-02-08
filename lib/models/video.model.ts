@@ -2,6 +2,7 @@ import { models, model, Schema, Document } from "mongoose";
 
 export interface IVideo extends Document {
   title: string;
+  description?: string;
   videoUrl?: string;
   position?: number;
   isPublished?: boolean;
@@ -14,6 +15,7 @@ export interface IVideo extends Document {
 export const VideoSchema = new Schema(
   {
     title: { type: String, required: true },
+    description: { type: String, default: "" },
     videoUrl: { type: String, default: "" },
     position: { type: Number, default: 0 },
     isPublished: { type: Boolean, default: false },

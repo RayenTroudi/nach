@@ -3,6 +3,13 @@ import { NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/mongoose";
 import DocumentPurchase from "@/lib/models/document-purchase.model";
 import UserModel from "@/lib/models/user.model";
+import DocumentModel from "@/lib/models/document.model";
+import DocumentBundle from "@/lib/models/document-bundle.model";
+import { sendEmail } from "@/lib/actions/email.action";
+import { 
+  getPaymentApprovedToUserEmail, 
+  getPaymentRejectedToUserEmail 
+} from "@/lib/utils/email-templates";
 
 /**
  * GET /api/document-purchases/[id]
@@ -134,6 +141,77 @@ export async function PATCH(
           }
         }
         await purchaseUser.save();
+
+        // Send approval email
+        try {
+          let itemName = "Document";
+          if (purchase.itemType === "document") {
+            const doc = await DocumentModel.findById(purchase.itemId).select("title");
+            itemName = doc?.title || "Document";
+          } else if (purchase.itemType === "bundle") {
+            const bundle = await DocumentBundle.findById(purchase.itemId).select("title");
+            itemName = bundle?.title || "Document Bundle";
+          }
+
+          const accessUrl = `${process.env.NEXT_PUBLIC_SERVER_URL}/student/my-documents`;
+
+          const emailHtml = getPaymentApprovedToUserEmail({
+            userName: purchaseUser.firstName || purchaseUser.username,
+            itemType: purchase.itemType as "document" | "bundle",
+            itemNames: [itemName],
+            amount: purchase.amount || 0,
+            accessUrl,
+            adminNotes,
+          });
+
+          await sendEmail({
+            to: purchaseUser.email,
+            subject: "✅ Payment Approved - Document Access Granted",
+            html: emailHtml,
+          });
+
+          console.log("✅ Approval email sent to user:", purchaseUser.email);
+        } catch (emailError) {
+          console.error("❌ Error sending approval email:", emailError);
+        }
+      }
+    }
+
+    // If rejected, send notification email
+    if (paymentStatus === "rejected") {
+      try {
+        const purchaseUser = await UserModel.findById(purchase.userId);
+        if (purchaseUser) {
+          let itemName = "Document";
+          if (purchase.itemType === "document") {
+            const doc = await DocumentModel.findById(purchase.itemId).select("title");
+            itemName = doc?.title || "Document";
+          } else if (purchase.itemType === "bundle") {
+            const bundle = await DocumentBundle.findById(purchase.itemId).select("title");
+            itemName = bundle?.title || "Document Bundle";
+          }
+
+          const resubmitUrl = `${process.env.NEXT_PUBLIC_SERVER_URL}/documents`;
+
+          const emailHtml = getPaymentRejectedToUserEmail({
+            userName: purchaseUser.firstName || purchaseUser.username,
+            itemType: purchase.itemType as "document" | "bundle",
+            itemNames: [itemName],
+            amount: purchase.amount || 0,
+            adminNotes,
+            resubmitUrl,
+          });
+
+          await sendEmail({
+            to: purchaseUser.email,
+            subject: "⚠️ Payment Review Required - Action Needed",
+            html: emailHtml,
+          });
+
+          console.log("✅ Rejection email sent to user:", purchaseUser.email);
+        }
+      } catch (emailError) {
+        console.error("❌ Error sending rejection email:", emailError);
       }
     }
 

@@ -4,6 +4,7 @@ export interface IVideo extends Document {
   title: string;
   description?: string;
   videoUrl?: string;
+  videoQualities?: Record<string, string>;
   position?: number;
   isPublished?: boolean;
   isFree: boolean;
@@ -17,6 +18,11 @@ export const VideoSchema = new Schema(
     title: { type: String, required: true },
     description: { type: String, default: "" },
     videoUrl: { type: String, default: "" },
+    videoQualities: { 
+      type: Map, 
+      of: String,
+      default: () => new Map()
+    },
     position: { type: Number, default: 0 },
     isPublished: { type: Boolean, default: false },
     isFree: { type: Boolean, default: false },

@@ -13,6 +13,7 @@ export default authMiddleware({
     "/api/courses",
     "/api/ausbildung",
     "/api/video-proxy",
+    "/api/video-stream",
     "/courses/(.*)",
     "/course/(.*)",
     "/user/(.*)",
@@ -27,6 +28,7 @@ export default authMiddleware({
   ignoredRoutes: [
     "/api/webhooks",
     "/api/ausbildung",
+    "/api/video-stream",
     "/_next/static(.*)",
     "/_next/image(.*)",
     "/favicon.ico",

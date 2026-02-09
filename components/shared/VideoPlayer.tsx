@@ -3,6 +3,8 @@ import { TVideo } from "@/types/models.types";
 import { useEffect, useState } from "react";
 import MuxPlayer from "@mux/mux-player-react";
 import Spinner from "./Spinner";
+import AdaptiveVideoPlayer from "./AdaptiveVideoPlayer";
+import { convertToVideoSources } from "@/lib/utils/video-helpers";
 
 interface Props {
   video: TVideo;
@@ -16,8 +18,8 @@ const VideoPlayer = ({ video, isLoading, poster }: Props) => {
 
   useEffect(() => setIsMounted(true), []);
 
-  // Check if video has a valid URL
-  if (!video || !video.videoUrl) {
+  // Check if video has a valid URL or qualities
+  if (!video || (!video.videoUrl && !video.videoQualities)) {
     return (
       <div className="w-full lg:flex-1 bg-slate-50 dark:bg-slate-950 border-b lg:border-b-0 lg:border-r border-slate-200 dark:border-slate-800">
         <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
@@ -35,6 +37,9 @@ const VideoPlayer = ({ video, isLoading, poster }: Props) => {
 
   // Determine if this is an UploadThing video or Mux video
   const isMuxVideo = video.muxData?.playbackId;
+  
+  // Convert video to adaptive sources
+  const videoSources = convertToVideoSources(video);
 
   return isMounted ? (
     <div className="w-full lg:flex-1 bg-slate-50 dark:bg-slate-950 border-b lg:border-b-0 lg:border-r border-slate-200 dark:border-slate-800">
@@ -84,22 +89,19 @@ const VideoPlayer = ({ video, isLoading, poster }: Props) => {
               } as React.CSSProperties}
             />
           ) : (
-            // Use HTML5 video for UploadThing and other videos - DIRECT URL
-            <video
-              src={video.videoUrl}
-              poster={poster}
-              controls
-              className="w-full h-full object-cover bg-black"
-              playsInline
-              preload="metadata"
-              controlsList="nodownload"
-              onError={(e) => {
-                const errorMsg = `Video failed to load. URL: ${video.videoUrl}`;
-                setVideoError(errorMsg);
-              }}
-            >
-              Your browser does not support the video tag.
-            </video>
+            // Use AdaptiveVideoPlayer for UploadThing and other videos
+            <div className="w-full h-full">
+              <AdaptiveVideoPlayer
+                sources={videoSources}
+                poster={poster}
+                defaultQuality="auto"
+                enableAutoQuality={true}
+                onError={(error) => {
+                  const errorMsg = `Video failed to load: ${error.message || 'Unknown error'}`;
+                  setVideoError(errorMsg);
+                }}
+              />
+            </div>
           )}
         </div>
       </div>

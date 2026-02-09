@@ -142,6 +142,7 @@ export type TVideo = {
   title: string;
   description?: string;
   videoUrl?: string;
+  videoQualities?: Record<string, string>;
   position?: number;
   isPublished?: boolean;
   isFree: boolean;

@@ -20,7 +20,9 @@
     "cleanup:uploadthing": "tsx scripts/cleanup-uploadthing-orphans.ts",
     "storage:report": "tsx scripts/cleanup-uploadthing-orphans.ts report",
     "check:faq": "tsx scripts/check-faq-videos.ts",
-    "delete:videos": "tsx scripts/delete-all-videos.ts"
+    "delete:videos": "tsx scripts/delete-all-videos.ts",
+    "encode:video": "tsx scripts/encode-uploadthing-videos.ts",
+    "encode:batch": "tsx scripts/batch-encode-videos.ts"
   },
   "dependencies": {
     "@clerk/nextjs": "^4.29.6",
@@ -67,6 +69,7 @@
     "date-fns": "^4.1.0",
     "dotenv": "^17.2.3",
     "encoding": "^0.1.13",
+    "form-data": "^4.0.0",
     "framer-motion": "^11.0.25",
     "html-react-parser": "^5.1.10",
     "html2canvas": "^1.4.1",

@@ -1,0 +1,254 @@
+/**
+ * Adaptive Video Player Styles
+ * 
+ * Custom styling for the Video.js quality selector and adaptive player
+ */
+
+/* Quality Selector Button */
+.vjs-quality-selector {
+  cursor: pointer;
+  position: relative;
+}
+
+.vjs-quality-selector .vjs-icon-placeholder::before {
+  content: "HD";
+  font-family: VideoJS, Arial, sans-serif;
+  font-size: 1.8em;
+  line-height: 1.67;
+  font-weight: bold;
+  text-shadow: 0 0 10px rgba(255, 68, 68, 0.8);
+}
+
+.vjs-quality-selector:hover .vjs-icon-placeholder::before {
+  color: #ff4444;
+  text-shadow: 0 0 15px rgba(255, 68, 68, 1);
+}
+
+.vjs-quality-selector.vjs-menu-button-popup .vjs-menu {
+  left: auto;
+  right: 0;
+  min-width: 150px;
+}
+
+/* Quality Menu */
+.vjs-quality-menu-item {
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.vjs-quality-menu-item:hover {
+  background-color: rgba(255, 68, 68, 0.2);
+}
+
+.vjs-quality-menu-item.vjs-selected {
+  background-color: rgba(255, 68, 68, 0.3);
+  color: #fff;
+}
+
+.vjs-quality-menu-item.vjs-selected::before {
+  content: "✓";
+  position: absolute;
+  left: 0.5em;
+  font-weight: bold;
+  color: #ff4444;
+}
+
+.vjs-quality-menu-item .vjs-menu-item-text {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5em 1em 0.5em 2em;
+  width: 100%;
+}
+
+.vjs-quality-label {
+  font-weight: 500;
+  margin-right: 0.5em;
+}
+
+.vjs-quality-badge {
+  font-size: 0.85em;
+  padding: 0.2em 0.5em;
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+  font-weight: 600;
+}
+
+.vjs-quality-menu-item.vjs-selected .vjs-quality-badge {
+  background-color: #ff4444;
+  color: white;
+}
+
+/* Auto quality indicator */
+.vjs-quality-menu-item[data-quality="auto"] .vjs-quality-label::after {
+  content: "✨";
+  margin-left: 0.3em;
+}
+
+/* Adaptive Video Player Container */
+.adaptive-video-player {
+  width: 100%;
+  height: 100%;
+}
+
+.adaptive-video-player .vjs-control-bar {
+  background-color: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(10px);
+}
+
+.adaptive-video-player .vjs-big-play-button {
+  border-radius: 50%;
+  width: 2em;
+  height: 2em;
+  line-height: 2em;
+  border: 2px solid #fff;
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+}
+
+.adaptive-video-player .vjs-big-play-button:hover {
+  background-color: rgba(255, 68, 68, 0.9);
+  border-color: #ff4444;
+  transform: scale(1.1);
+}
+
+/* Loading state */
+.adaptive-video-player .vjs-loading-spinner {
+  border-color: rgba(255, 68, 68, 0.8);
+  border-top-color: transparent;
+}
+
+/* Quality change transition */
+.adaptive-video-player.quality-switching {
+  opacity: 0.7;
+  transition: opacity 0.3s ease;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .vjs-quality-selector .vjs-icon-placeholder::before {
+    font-size: 1.5em;
+  }
+  
+  .vjs-quality-menu-item .vjs-menu-item-text {
+    padding: 0.6em 0.8em;
+  }
+  
+  .adaptive-video-player .vjs-big-play-button {
+    width: 1.8em;
+    height: 1.8em;
+    line-height: 1.8em;
+  }
+}
+
+/* Dark theme enhancements */
+.dark .adaptive-video-player .vjs-control-bar {
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
+.dark .vjs-quality-menu-item:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+/* Progress bar styling */
+.adaptive-video-player .vjs-play-progress {
+  background-color: #ff4444;
+}
+
+.adaptive-video-player .vjs-volume-level {
+  background-color: #ff4444;
+}
+
+/* Focus states for accessibility */
+.vjs-quality-selector:focus,
+.vjs-quality-menu-item:focus {
+  outline: 2px solid #ff4444;
+  outline-offset: 2px;
+}
+
+/* Menu positioning */
+.vjs-quality-selector .vjs-menu {
+  bottom: 3em;
+  max-height: 15em;
+  overflow-y: auto;
+  background-color: rgba(0, 0, 0, 0.95);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 68, 68, 0.3);
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+}
+
+.vjs-quality-selector .vjs-menu .vjs-menu-content {
+  max-height: 15em;
+  overflow-y: auto;
+  background: transparent;
+}
+
+/* Custom scrollbar for quality menu */
+.vjs-quality-selector .vjs-menu-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.vjs-quality-selector .vjs-menu-content::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 4px;
+}
+
+.vjs-quality-selector .vjs-menu-content::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 4px;
+}
+
+.vjs-quality-selector .vjs-menu-content::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.7);
+}
+
+/* Smooth transitions */
+.adaptive-video-player * {
+  transition: opacity 0.2s ease, background-color 0.2s ease, transform 0.2s ease;
+}
+
+/* Error state styling */
+.adaptive-video-player .vjs-error-display {
+  background-color: rgba(0, 0, 0, 0.9);
+}
+
+.adaptive-video-player .vjs-error-display::before {
+  color: #ff4444;
+  font-size: 4em;
+}
+
+/* Quality indicator overlay */
+.adaptive-video-player .quality-indicator {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  padding: 0.4rem 0.8rem;
+  background-color: rgba(0, 0, 0, 0.7);
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: 9999px;
+  z-index: 10;
+  pointer-events: none;
+  backdrop-filter: blur(10px);
+}
+
+/* Animation for quality changes */
+@keyframes qualityChange {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.adaptive-video-player.quality-changing {
+  animation: qualityChange 0.5s ease;
+}

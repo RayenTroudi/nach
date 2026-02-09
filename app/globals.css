@@ -8,6 +8,7 @@
 
 /* Import Video Player Styles */
 @import '../styles/video-player.css';
+@import '../styles/adaptive-video-player.css';
 
 html,
 body,

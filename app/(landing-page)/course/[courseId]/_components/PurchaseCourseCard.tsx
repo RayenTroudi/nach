@@ -27,6 +27,8 @@ import { useCart } from "@/contexts/CartContext";
 import BankTransferUpload from "./BankTransferUpload";
 import MuxPlayer from "@mux/mux-player-react";
 import { getProxiedVideoUrl } from "@/lib/utils/video-url-helper";
+import AdaptiveVideoPlayer from "@/components/shared/AdaptiveVideoPlayer";
+import { convertToVideoSources } from "@/lib/utils/video-helpers";
 
 interface Props {
   course: TCourse;
@@ -156,26 +158,20 @@ const PurchaseCourseCard = ({
             {/* Check if there's a valid video to display */}
             {(videoToPreview?.videoUrl || allFreeVideos[0]?.videoUrl) ? (
               <>
-                {/* Determine if we should use HTML5 video or MuxPlayer */}
+                {/* Determine if we should use AdaptiveVideoPlayer or MuxPlayer */}
                 {(videoToPreview?.videoUrl || allFreeVideos[0]?.videoUrl || "").startsWith('https://utfs.io/') ? (
-                  // Use HTML5 video for UploadThing videos
-                  <video
-                    src={getProxiedVideoUrl(
-                      videoToPreview
-                        ? videoToPreview.videoUrl
-                        : allFreeVideos[0]?.videoUrl || ""
-                    )}
-                    poster={course?.thumbnail!}
-                    controls
-                    className="w-full h-full object-cover bg-black"
-                    controlsList="nodownload"
-                    preload="metadata"
-                    onPlay={() => setIsVideoPlaying(true)}
-                    onPause={() => setIsVideoPlaying(false)}
-                    onEnded={() => setIsVideoPlaying(false)}
-                  >
-                    Your browser does not support the video tag.
-                  </video>
+                  // Use AdaptiveVideoPlayer for UploadThing videos
+                  <div className="w-full h-full">
+                    <AdaptiveVideoPlayer
+                      sources={convertToVideoSources(videoToPreview || allFreeVideos[0])}
+                      poster={course?.thumbnail!}
+                      defaultQuality="auto"
+                      enableAutoQuality={true}
+                      onError={(error) => {
+                        console.error("Video preview error:", error);
+                      }}
+                    />
+                  </div>
                 ) : (
                   // Use MuxPlayer for Mux videos
                   <>

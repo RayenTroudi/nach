@@ -24,14 +24,8 @@ export async function GET(request: NextRequest) {
     const searchParams = request.nextUrl.searchParams;
     const videoUrl = searchParams.get('url');
 
-    console.log('\n🎬 === VIDEO STREAM REQUEST ===');
-    console.log('📍 URL:', videoUrl);
-    console.log('🌐 Origin:', request.headers.get('origin'));
-    console.log('📦 Range:', request.headers.get('range'));
-
     // Validate video URL
     if (!videoUrl) {
-      console.log('❌ No URL provided');
       return NextResponse.json(
         { error: 'Video URL is required' },
         { status: 400 }
@@ -42,7 +36,6 @@ export async function GET(request: NextRequest) {
     try {
       new URL(videoUrl);
     } catch {
-      console.log('❌ Invalid URL format');
       return NextResponse.json(
         { error: 'Invalid video URL format' },
         { status: 400 }
@@ -58,28 +51,18 @@ export async function GET(request: NextRequest) {
       upstreamHeaders['Range'] = range;
     }
 
-    console.log('🎬 Video stream request:', videoUrl);
-    console.log('📦 Range header:', range);
-
     // Fetch video from external source
     let videoResponse = await fetch(videoUrl, {
       headers: upstreamHeaders,
     });
 
-    console.log('📡 Upstream response status:', videoResponse.status);
-
     // If range request fails (UploadThing issue), retry without Range header
     if (!videoResponse.ok && range) {
-      console.warn('⚠️ Range request failed, retrying without Range header');
       videoResponse = await fetch(videoUrl);
-      console.log('🔄 Retry response status:', videoResponse.status);
     }
 
     // Handle upstream errors
     if (!videoResponse.ok) {
-      console.error(`❌ Video fetch failed: ${videoResponse.status} ${videoResponse.statusText}`);
-      console.error(`❌ URL: ${videoUrl}`);
-      
       return NextResponse.json(
         { 
           error: 'Video not found or unavailable',
@@ -120,16 +103,6 @@ export async function GET(request: NextRequest) {
     // Determine status code (206 for partial content, 200 for full)
     const status = videoResponse.status === 206 ? 206 : 200;
 
-    console.log('✅ Streaming video:', {
-      status,
-      contentType,
-      contentLength: contentLength ? `${(parseInt(contentLength) / 1024 / 1024).toFixed(2)} MB` : 'unknown',
-      hasRange: !!range,
-      hasContentRange: !!contentRange,
-      duration: `${Date.now() - startTime}ms`,
-    });
-    console.log('🎬 === END REQUEST ===\n');
-
     // Stream the video response
     return new NextResponse(videoResponse.body, {
       status,
@@ -137,7 +110,6 @@ export async function GET(request: NextRequest) {
     });
 
   } catch (error) {
-    console.error('Video streaming error:', error);
     
     return NextResponse.json(
       { 
@@ -209,7 +181,6 @@ export async function HEAD(request: NextRequest) {
     });
 
   } catch (error) {
-    console.error('Video HEAD request error:', error);
     return new NextResponse(null, { status: 500 });
   }
 }

@@ -55,8 +55,6 @@ export const getCourseById = async (params: GetCourseByIdParams) => {
     if (!mongoose.isValidObjectId(params.courseId))
       throw new Error("Invalid ID");
 
-    console.log("🔍 Fetching course with ID:", params.courseId);
-
     Feedback.find();
     Section.find();
     Video.find();
@@ -104,19 +102,9 @@ export const getCourseById = async (params: GetCourseByIdParams) => {
       })
       .lean();
 
-    console.log("📋 Course fetched:", course ? "✅ Found" : "❌ Not found");
-    console.log("📋 Course title:", course?.title);
-    console.log("📋 Course price:", course?.price);
-    console.log("📋 Course type (RAW):", course?.courseType);
-    console.log("📋 Course type (typeof):", typeof course?.courseType);
-    console.log("📋 Full course object keys:", Object.keys(course || {}).join(", "));
-
     if (!course) throw new Error("Course not found");
     
-    const serialized = JSON.parse(JSON.stringify(course));
-    console.log("📋 Serialized course type:", serialized?.courseType);
-    
-    return serialized;
+    return JSON.parse(JSON.stringify(course));
   } catch (error: any) {
     console.log("GET COURSE BY ID ERROR FROM SERVER: ", error.message);
     throw new Error(error.message);
@@ -152,16 +140,6 @@ export const createCourse = async (params: CreateCourseParams) => {
     console.log("📦 Course data to create:", JSON.stringify(courseData, null, 2));
 
     const newCourse = await Course.create(courseData);
-
-    // Verify the course was created with the correct type
-    const verifyC = await Course.findById(newCourse._id).lean() as any;
-    console.log("🔍 Verification - Course type in DB:", verifyC?.courseType);
-
-    console.log("✅ Course created:");
-    console.log("   - ID:", newCourse._id);
-    console.log("   - Title:", newCourse.title);
-    console.log("   - Type:", newCourse.courseType);
-    console.log("   - Price:", newCourse.price);
 
     await addNewlyCreatedCourseToUser({
       userId: user._id,

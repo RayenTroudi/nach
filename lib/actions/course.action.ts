@@ -101,7 +101,8 @@ export const getCourseById = async (params: GetCourseByIdParams) => {
           },
         ],
         options: { sort: { createdAt: -1 } },
-      });
+      })
+      .lean();
 
     console.log("📋 Course fetched:", course ? "✅ Found" : "❌ Not found");
     console.log("📋 Course title:", course?.title);
@@ -199,6 +200,8 @@ export const updateCourse = async (params: UpdateCourseParams) => {
       throw new Error("Unauthorized, this course does not belong to you.");
     if (!mongoose.isValidObjectId(courseId)) throw new Error("Invalid ID");
 
+    console.log('[Update Course] Updating course with data:', data);
+
     // If updating faqVideo, delete old video from UploadThing first
     if (data.faqVideo) {
       const existingCourse = await Course.findById(courseId);
@@ -221,15 +224,38 @@ export const updateCourse = async (params: UpdateCourseParams) => {
       }
     );
 
+    console.log('[Update Course] Course updated. New currency:', course.currency, 'New price:', course.price);
+
     course.status =
       course.status === CourseStatusEnum.Draft
         ? course.status
         : CourseStatusEnum.Pending;
 
-    course.save();
-    revalidatePath(path);
+    await course.save();
+    
+    // Aggressively clear cache for all course-related paths
+    revalidatePath(path, 'page');
+    revalidatePath(`/course/${courseId}`, 'page');
+    revalidatePath(`/en/course/${courseId}`, 'page');
+    revalidatePath(`/de/course/${courseId}`, 'page');
+    revalidatePath(`/ar/course/${courseId}`, 'page');
+    revalidatePath(`/teacher/courses/manage/${courseId}`, 'page');
+    
+    // Revalidate landing page and courses listing pages
+    revalidatePath('/', 'page');
+    revalidatePath('/en', 'page');
+    revalidatePath('/de', 'page');
+    revalidatePath('/ar', 'page');
+    revalidatePath('/courses', 'page');
+    revalidatePath('/en/courses', 'page');
+    revalidatePath('/de/courses', 'page');
+    revalidatePath('/ar/courses', 'page');
+    
+    console.log('[Update Course] Cache revalidated for course:', courseId);
+    
     return JSON.parse(JSON.stringify(course));
   } catch (error: any) {
+    console.error('[Update Course] Error:', error);
     throw new Error(error.message);
   }
 };
@@ -310,7 +336,8 @@ export const getAllPublishedCourses = async () => {
             model: "Course",
           },
         ],
-      });
+      })
+      .lean();
     return JSON.parse(JSON.stringify(courses));
   } catch (error: any) {
     throw new Error(error.message);
@@ -329,7 +356,8 @@ export const getCoursesByTitle = async (title: string) => {
       .populate("instructor")
       .populate("category")
       .populate("students")
-      .populate("feedbacks");
+      .populate("feedbacks")
+      .lean();
     return JSON.parse(JSON.stringify(courses));
   } catch (error) {
     console.error("Error fetching courses by title:", error);
@@ -475,7 +503,8 @@ export const getAllCourses = async () => {
     const courses = await Course.find()
       .populate("instructor")
       .populate("category")
-      .populate("students");
+      .populate("students")
+      .lean();
     return JSON.parse(JSON.stringify(courses));
   } catch (error) {
     console.error("Error fetching all courses:", error);
@@ -490,7 +519,8 @@ export const getPendingCourses = async () => {
       .populate("instructor")
       .populate("category")
       .populate("students")
-      .populate("feedbacks");
+      .populate("feedbacks")
+      .lean();
 
     return JSON.parse(JSON.stringify(courses));
   } catch (error: any) {
@@ -664,7 +694,8 @@ export const getCoursesByFilter = async (filters: CourseState) => {
     let courseQuery = Course.find(query)
       .populate("instructor")
       .populate("category")
-      .populate("students");
+      .populate("students")
+      .lean();
 
     const courses = await courseQuery;
 

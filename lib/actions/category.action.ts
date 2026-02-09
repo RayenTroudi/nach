@@ -114,7 +114,8 @@ export const getCoursesByCategoryID = async (categoryId: string) => {
     })
       .populate("instructor")
       .populate("category")
-      .populate("students");
+      .populate("students")
+      .lean();
 
     const coursesWithCategoryName = courses.map((course) => {
       let mutableCourse = JSON.parse(JSON.stringify(course));

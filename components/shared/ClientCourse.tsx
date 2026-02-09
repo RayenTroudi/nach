@@ -152,6 +152,7 @@ const ClientCourse = ({
             priceOff={0}
             price={course.price ?? 0}
             isFree={isFree}
+            currency={course.currency || "USD"}
           />
         )}
       </div>

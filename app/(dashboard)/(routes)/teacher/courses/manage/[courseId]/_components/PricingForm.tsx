@@ -66,6 +66,14 @@ const PricingForm = ({ course }: Props) => {
     ?.label.toUpperCase()
     .split("-")[1] as string;
 
+  // Reset form when course data changes
+  useEffect(() => {
+    form.reset({
+      price: course?.price ? course?.price.toString() : "",
+      currency: course?.currency ? course?.currency : "",
+    });
+  }, [course?.price, course?.currency, form]);
+
   useEffect(() => {
     if (isFAQCourse) return; // Don't fetch currencies for FAQ courses
     
@@ -87,6 +95,9 @@ const PricingForm = ({ course }: Props) => {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
+      console.log('[PricingForm] Submitting values:', values);
+      console.log('[PricingForm] Current course currency:', course.currency);
+      
       await updateCourse({
         courseId: course._id,
         instructorId: course.instructor._id,
@@ -101,6 +112,7 @@ const PricingForm = ({ course }: Props) => {
       onToggleEditHandler();
       router.refresh();
     } catch (error: any) {
+      console.error('[PricingForm] Error updating course:', error);
       scnToast({
         variant: "destructive",
         title: "Error",
@@ -122,45 +134,42 @@ const PricingForm = ({ course }: Props) => {
 
   return (
     <div className="flex flex-col gap-2 bg-slate-200/10 dark:bg-slate-800/10 rounded-sm">
-      <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-x-2 ">
-        <div className="flex flex-col gap-2 bg-slate-100 dark:bg-slate-800/20   p-6 rounded-md border border-input ">
-          <div className="w-full flex items-center justify-between">
-            <h3 className="text-slate-500 dark:text-slate-300 font-bold">
-              Price
-            </h3>
-            <Button variant="ghost" size="icon" onClick={onToggleEditHandler}>
-              {!edit && course.price ? (
-                <PencilLineIcon
-                  size={15}
-                  className="text-slate-600 dark:text-slate-300"
-                />
-              ) : (
-                <XCircle
-                  size={15}
-                  className="text-slate-600 dark:text-slate-300 "
-                />
-              )}
-            </Button>
-          </div>
-          {!edit && course.price ? (
-            <div className="break-words">
-              {course?.price ? (
-                <p className="font-bold text-slate-600 dark:text-slate-200 ">
-                  {transformCurrencyToSymbol(
-                    course?.currency?.toUpperCase() ?? "USD"
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-x-2 ">
+            <div className="flex flex-col gap-2 bg-slate-100 dark:bg-slate-800/20   p-6 rounded-md border border-input ">
+              <div className="w-full flex items-center justify-between">
+                <h3 className="text-slate-500 dark:text-slate-300 font-bold">
+                  Price
+                </h3>
+                <Button type="button" variant="ghost" size="icon" onClick={onToggleEditHandler}>
+                  {!edit && course.price ? (
+                    <PencilLineIcon
+                      size={15}
+                      className="text-slate-600 dark:text-slate-300"
+                    />
+                  ) : (
+                    <XCircle
+                      size={15}
+                      className="text-slate-600 dark:text-slate-300 "
+                    />
                   )}
-                  {course?.price}
-                </p>
+                </Button>
+              </div>
+              {!edit && course.price ? (
+                <div className="break-words">
+                  {course?.price ? (
+                    <p className="font-bold text-slate-600 dark:text-slate-200 ">
+                      {transformCurrencyToSymbol(
+                        course?.currency?.toUpperCase() ?? "USD"
+                      )}
+                      {course?.price}
+                    </p>
+                  ) : (
+                    <Spinner />
+                  )}
+                </div>
               ) : (
-                <Spinner />
-              )}
-            </div>
-          ) : (
-            <Form {...form}>
-              <form
-                onSubmit={form.handleSubmit(onSubmit)}
-                className="space-y-2 "
-              >
                 <FormField
                   control={form.control}
                   name="price"
@@ -173,47 +182,40 @@ const PricingForm = ({ course }: Props) => {
                     </FormItem>
                   )}
                 />
-              </form>
-            </Form>
-          )}
-        </div>
-        <div className="flex flex-col gap-2 bg-slate-100 dark:bg-slate-800/20 p-6 rounded-md border border-input ">
-          <div className="w-full flex items-center justify-between">
-            <h3 className="font-bold text-slate-500 dark:text-slate-300 ">
-              Currency
-            </h3>
-            <Button variant="ghost" size="icon" onClick={onToggleEditHandler}>
-              {!edit && course.currency ? (
-                <PencilLineIcon
-                  size={15}
-                  className="text-slate-600 dark:text-slate-300 "
-                />
-              ) : (
-                <XCircle
-                  size={15}
-                  className="text-slate-600 dark:text-slate-300 "
-                />
-              )}
-            </Button>
-          </div>
-          {!edit && course?.currency ? (
-            <div className="break-words">
-              {course?.currency && currencies.length ? (
-                <p className="text-slate-600 dark:text-slate-200  font-bold">
-                  {`${transformCurrencyToSymbol(
-                    course.currency.toUpperCase()
-                  )}-${currencyMeaning}`}
-                </p>
-              ) : (
-                <Spinner />
               )}
             </div>
-          ) : (
-            <Form {...form}>
-              <form
-                onSubmit={form.handleSubmit(onSubmit)}
-                className="space-y-2 "
-              >
+            <div className="flex flex-col gap-2 bg-slate-100 dark:bg-slate-800/20 p-6 rounded-md border border-input ">
+              <div className="w-full flex items-center justify-between">
+                <h3 className="font-bold text-slate-500 dark:text-slate-300 ">
+                  Currency
+                </h3>
+                <Button type="button" variant="ghost" size="icon" onClick={onToggleEditHandler}>
+                  {!edit && course.currency ? (
+                    <PencilLineIcon
+                      size={15}
+                      className="text-slate-600 dark:text-slate-300 "
+                    />
+                  ) : (
+                    <XCircle
+                      size={15}
+                      className="text-slate-600 dark:text-slate-300 "
+                    />
+                  )}
+                </Button>
+              </div>
+              {!edit && course?.currency ? (
+                <div className="break-words">
+                  {course?.currency && currencies.length ? (
+                    <p className="text-slate-600 dark:text-slate-200  font-bold">
+                      {`${transformCurrencyToSymbol(
+                        course.currency.toUpperCase()
+                      )}-${currencyMeaning}`}
+                    </p>
+                  ) : (
+                    <Spinner />
+                  )}
+                </div>
+              ) : (
                 <FormField
                   control={form.control}
                   name="currency"
@@ -226,33 +228,32 @@ const PricingForm = ({ course }: Props) => {
                     </FormItem>
                   )}
                 />
-              </form>
-            </Form>
-          )}
-        </div>
-      </div>
-      <div className="w-full flex justify-end">
-        <div className="w-full flex justify-end items-center gap-2">
-          <Button
-            type="button"
-            size="sm"
-            className="bg-brand-red-500 hover:bg-brand-red-600"
-            onClick={() => onSubmit(form.getValues())}
-            disabled={
-              !isValid ||
-              isSubmitting ||
-              (+form.getValues().price === +(course.price ?? 0) &&
-                form.getValues().currency === course.currency)
-            }
-          >
-            {isSubmitting ? (
-              <Spinner size={20} className="text-slate-500" />
-            ) : (
-              "Save"
-            )}
-          </Button>
-        </div>
-      </div>
+              )}
+            </div>
+          </div>
+          <div className="w-full flex justify-end">
+            <div className="w-full flex justify-end items-center gap-2">
+              <Button
+                type="submit"
+                size="sm"
+                className="bg-brand-red-500 hover:bg-brand-red-600"
+                disabled={
+                  !isValid ||
+                  isSubmitting ||
+                  (+form.getValues().price === +(course.price ?? 0) &&
+                    form.getValues().currency === course.currency)
+                }
+              >
+                {isSubmitting ? (
+                  <Spinner size={20} className="text-slate-500" />
+                ) : (
+                  "Save"
+                )}
+              </Button>
+            </div>
+          </div>
+        </form>
+      </Form>
     </div>
   );
 };

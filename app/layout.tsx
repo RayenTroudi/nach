@@ -28,6 +28,12 @@ The platform also includes a dynamic discussion forum where learners can interac
 
 Whether you're a beginner looking to learn a new skill or a professional seeking to advance your career, our AI-powered e-learning platform is your go-to resource for quality, accessible, and personalized online education.
   `,
+  viewport: {
+    width: 'device-width',
+    initialScale: 1,
+    maximumScale: 5,
+    userScalable: true,
+  },
   icons: {
     icon: [
       { url: "/images/nobgLogo.png", sizes: "48x48", type: "image/png" },
@@ -37,6 +43,14 @@ Whether you're a beginner looking to learn a new skill or a professional seeking
     ],
     shortcut: "/images/nobgLogo.png",
     apple: { url: "/images/nobgLogo.png", sizes: "180x180", type: "image/png" },
+  },
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'default',
+    title: 'TDS',
+  },
+  formatDetection: {
+    telephone: false,
   },
 };
 

@@ -10,6 +10,8 @@ const nextConfig = {
       "img.clerk.com",
       "images.unsplash.com",
       "aceternity.com",
+      "image.mux.com",
+      "stream.mux.com",
     ],
   },
   webpack: (config, { isServer }) => {

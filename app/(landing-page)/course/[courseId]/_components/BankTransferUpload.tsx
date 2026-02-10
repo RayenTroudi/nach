@@ -105,20 +105,26 @@ export default function BankTransferUpload({
         
         <div className="space-y-2">
           <div className="grid grid-cols-2 gap-2 text-sm">
-            <div className="font-medium">{t('bankName')}</div>
-            <div>Banque Centrale de Tunisie</div>
+            <div className="font-medium">{t('identifier')}</div>
+            <div className="font-mono">375202</div>
             
             <div className="font-medium">{t('accountName')}</div>
-            <div>GermanyFormation SARL</div>
+            <div>TALEL JOUINI</div>
             
-            <div className="font-medium">{t('accountNumber')}</div>
-            <div className="font-mono">12345678901234567890</div>
+            <div className="font-medium">{t('accountType')}</div>
+            <div>COMPTES TAWFIR</div>
+            
+            <div className="font-medium">{t('rib')}</div>
+            <div className="font-mono">25109000000056387409</div>
             
             <div className="font-medium">{t('iban')}</div>
-            <div className="font-mono">TN59 1234 5678 9012 3456 7890</div>
+            <div className="font-mono">TN59 2510 9000 0000 5638 7409</div>
             
             <div className="font-medium">{t('swiftCode')}</div>
-            <div className="font-mono">BCTUTNTX</div>
+            <div className="font-mono">BZITINTT</div>
+            
+            <div className="font-medium">{t('bankName')}</div>
+            <div>BANQUE ZITOUNA</div>
             
             <div className="font-medium">{t('amountToTransfer')}</div>
             <div className="text-lg font-bold text-brand-red-500">{amount.toFixed(2)} TND</div>

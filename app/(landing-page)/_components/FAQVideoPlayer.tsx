@@ -119,14 +119,7 @@ export default function FAQVideoPlayer({
                 </div>
               </div>
             ) : (
-              <>
-                {/* Loading Spinner Overlay */}
-                {isLoading && (
-                  <div className="absolute inset-0 flex items-center justify-center bg-black/80 z-40">
-                    <Spinner size={64} className="text-brand-red-500" />
-                  </div>
-                )}
-                
+              <>                
                 {/* Mux Video Player */}
                 <div className="w-full h-full">
                   <MuxVideoPlayer
@@ -175,7 +168,7 @@ export default function FAQVideoPlayer({
               <Button
                 size="icon"
                 variant="ghost"
-                className="absolute left-4 top-1/2 -translate-y-1/2 z-50 h-12 w-12 bg-black/50 backdrop-blur-sm hover:bg-black/70 text-white rounded-full opacity-0 hover:opacity-100 transition-opacity"
+                className="absolute left-4 top-1/2 -translate-y-1/2 z-50 h-12 w-12 bg-black/60 backdrop-blur-sm hover:bg-black/80 text-white rounded-full transition-all hover:scale-110"
                 onClick={(e) => {
                   e.stopPropagation();
                   handlePrevious();
@@ -191,7 +184,7 @@ export default function FAQVideoPlayer({
               <Button
                 size="icon"
                 variant="ghost"
-                className="absolute right-4 top-1/2 -translate-y-1/2 z-50 h-12 w-12 bg-black/50 backdrop-blur-sm hover:bg-black/70 text-white rounded-full opacity-0 hover:opacity-100 transition-opacity"
+                className="absolute right-4 top-1/2 -translate-y-1/2 z-50 h-12 w-12 bg-black/60 backdrop-blur-sm hover:bg-black/80 text-white rounded-full transition-all hover:scale-110"
                 onClick={(e) => {
                   e.stopPropagation();
                   handleNext();

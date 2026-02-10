@@ -381,7 +381,7 @@ const MuxVideoPlayer = ({
                   e.stopPropagation();
                   setShowQualityMenu(!showQualityMenu);
                 }}
-                className="px-3 py-1.5 rounded-md bg-black/80 backdrop-blur-sm flex items-center gap-1.5 hover:bg-black/90 transition-colors text-white text-sm font-medium"
+                className="px-3 py-1.5 rounded-md bg-slate-800/90 hover:bg-slate-700/90 flex items-center gap-1.5 transition-colors text-white text-sm font-medium border border-red-900/30"
                 title={`Quality: ${currentQuality === 'auto' ? 'Auto' : currentQuality + 'p'}`}
               >
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -396,7 +396,7 @@ const MuxVideoPlayer = ({
               
               {/* Quality Menu */}
               {showQualityMenu && (
-                <div className="absolute bottom-full right-0 mb-2 bg-black/95 backdrop-blur-md rounded-lg overflow-hidden min-w-[140px] border border-white/20 shadow-xl">
+                <div className="absolute bottom-full right-0 mb-2 bg-slate-900/95 backdrop-blur-md rounded-lg overflow-hidden min-w-[140px] border border-red-900/30 shadow-xl shadow-black/50">
                   {availableQualities.length > 0 ? (
                     availableQualities.map((quality) => (
                       <button
@@ -438,9 +438,9 @@ const MuxVideoPlayer = ({
           playsInline
           defaultHiddenCaptions={true}
           nohotkeys={minimalHover && !isFullscreen}
-          accentColor="#DD0000"
+          accentColor="#DC2626"
           primaryColor="#FFFFFF"
-          secondaryColor="#000000"
+          secondaryColor="#1E293B"
           title={title || "Video"}
           metadata={{
             video_title: title || "Video",
@@ -469,26 +469,26 @@ const MuxVideoPlayer = ({
 
       {/* External Controls Bar - Below Video (YouTube Style) */}
       {!isLoading && showControls && (
-        <div className="w-full bg-black/95 backdrop-blur-md border-t border-white/10">
+        <div className={`w-full backdrop-blur-sm border-t border-red-500/20 ${isFullscreen ? 'fixed bottom-0 left-0 right-0 z-[99999] pointer-events-auto' : ''}`}>
           {/* Timeline Progress Bar */}
           <div 
-            className="relative h-1 bg-white/20 hover:h-2 transition-all cursor-pointer group/timeline"
+            className="relative h-1 bg-white/20 hover:h-2 transition-all cursor-pointer group/timeline pointer-events-auto"
             onClick={handleTimelineClick}
           >
             <div 
-              className="absolute top-0 left-0 h-full bg-red-600 transition-all"
+              className="absolute top-0 left-0 h-full bg-gradient-to-r from-red-600 to-red-500 transition-all shadow-lg shadow-red-500/50"
               style={{ width: `${duration ? (currentTime / duration) * 100 : 0}%` }}
             />
           </div>
           
           {/* Control Buttons Row */}
-          <div className="flex items-center justify-between px-4 py-3">
+          <div className="flex items-center justify-between px-4 py-3 pointer-events-auto">
             {/* Left Controls */}
             <div className="flex items-center gap-3">
               {/* Play/Pause Button */}
               <button
                 onClick={togglePlayPause}
-                className="p-2 rounded-md bg-white/10 hover:bg-white/20 transition-colors text-white"
+                className="p-2 rounded-md bg-gray-800/50 hover:bg-red-600 transition-colors text-white shadow-lg"
                 title={isPlaying ? 'Pause' : 'Play'}
               >
                 {isPlaying ? (
@@ -509,15 +509,15 @@ const MuxVideoPlayer = ({
             </div>
 
             {/* Right Controls */}
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 pointer-events-auto">
               {/* Quality Selector */}
-              <div className="relative quality-selector">
+              <div className="relative quality-selector pointer-events-auto z-[100000]">
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
                     setShowQualityMenu(!showQualityMenu);
                   }}
-                  className="px-3 py-1.5 rounded-md bg-white/10 hover:bg-white/20 flex items-center gap-1.5 transition-colors text-white text-sm font-medium"
+                  className="px-3 py-1.5 rounded-md bg-gray-800/50 hover:bg-gray-700/60 flex items-center gap-1.5 transition-colors text-white text-sm font-medium border border-gray-600/40"
                   title={`Quality: ${currentQuality === 'auto' ? 'Auto' : currentQuality + 'p'}`}
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -532,7 +532,7 @@ const MuxVideoPlayer = ({
                 
                 {/* Quality Menu */}
                 {showQualityMenu && (
-                  <div className="absolute bottom-full right-0 mb-2 bg-black/95 backdrop-blur-md rounded-lg overflow-hidden min-w-[140px] border border-white/20 shadow-xl">
+                  <div className="absolute bottom-full right-0 mb-2 bg-slate-800/95 backdrop-blur-md rounded-lg overflow-hidden min-w-[140px] border border-white/20 shadow-xl shadow-black/50 pointer-events-auto z-[100001]">
                     {availableQualities.length > 0 ? (
                       availableQualities.map((quality) => (
                         <button
@@ -563,7 +563,7 @@ const MuxVideoPlayer = ({
               {/* Fullscreen Button */}
               <button
                 onClick={handleFullscreen}
-                className="p-2 rounded-md bg-white/10 hover:bg-white/20 transition-colors text-white"
+                className="p-2 rounded-md bg-gray-800/50 hover:bg-gray-700/60 transition-colors text-white border border-gray-600/40"
                 title="Fullscreen"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

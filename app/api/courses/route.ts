@@ -28,7 +28,7 @@ export async function GET(request: Request) {
     const courses = await Course.find(query)
       .populate({
         path: "instructor",
-        select: "firstName lastName email photo",
+        select: "firstName lastName email photo picture username",
       })
       .populate({
         path: "category",

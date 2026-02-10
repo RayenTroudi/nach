@@ -30,6 +30,33 @@ import { scnToast } from "@/components/ui/use-toast";
 import { toast } from "sonner";
 import BankTransferUpload from "../course/[courseId]/_components/BankTransferUpload";
 
+// Custom Arrow Component to avoid React prop warnings
+const CustomArrow = ({ direction, isRTL, onClick }: { direction: 'left' | 'right'; isRTL: boolean; onClick: () => void }) => {
+  const isLeft = direction === 'left';
+  return (
+    <button
+      className={`absolute ${isLeft ? (isRTL ? 'right-0' : 'left-0') : (isRTL ? 'left-0' : 'right-0')} top-1/2 -translate-y-1/2 z-10 p-2 rounded-full bg-white dark:bg-slate-900 shadow-lg hover:shadow-xl transition-shadow`}
+      onClick={onClick}
+      aria-label={`${isLeft ? 'Previous' : 'Next'} slide`}
+    >
+      <svg
+        className="w-6 h-6"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+        style={{ transform: isRTL ? 'scaleX(-1)' : 'none' }}
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth={2}
+          d={isLeft ? "M15 19l-7-7 7-7" : "M9 5l7 7-7 7"}
+        />
+      </svg>
+    </button>
+  );
+};
+
 interface DocumentItem {
   _id: string;
   title: string;
@@ -236,39 +263,20 @@ export default function DocumentsSection({ documents }: DocumentsSectionProps) {
               }}
               autoPlay={false}
               infinite={false}
+              rtl={isRTL}
               customLeftArrow={
-                <button
-                  className={`absolute left-0 top-1/2 -translate-y-1/2 z-10 p-2 rounded-full bg-white dark:bg-slate-900 shadow-lg hover:shadow-xl transition-shadow ${isRTL ? 'left-auto right-0' : ''}`}
+                <CustomArrow
+                  direction="left"
+                  isRTL={isRTL}
                   onClick={() => carouselRef?.previous?.()}
-                  aria-label="Previous slide"
-                >
-                  <svg
-                    className="w-6 h-6"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    style={{ transform: isRTL ? 'scaleX(-1)' : 'none' }}
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                  </svg>
-                </button>
+                />
               }
               customRightArrow={
-                <button
-                  className={`absolute right-0 top-1/2 -translate-y-1/2 z-10 p-2 rounded-full bg-white dark:bg-slate-900 shadow-lg hover:shadow-xl transition-shadow ${isRTL ? 'right-auto left-0' : ''}`}
+                <CustomArrow
+                  direction="right"
+                  isRTL={isRTL}
                   onClick={() => carouselRef?.next?.()}
-                  aria-label="Next slide"
-                >
-                  <svg
-                    className="w-6 h-6"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    style={{ transform: isRTL ? 'scaleX(-1)' : 'none' }}
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                  </svg>
-                </button>
+                />
               }
               itemClass="px-3"
             >

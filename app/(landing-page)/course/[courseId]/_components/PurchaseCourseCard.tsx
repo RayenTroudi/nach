@@ -180,6 +180,7 @@ const PurchaseCourseCard = ({
                     src={course?.thumbnail || '/images/placeholder.jpg'}
                     alt={course?.title || 'Course preview'}
                     fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1024px) 350px, 350px"
                     className="object-cover"
                   />
                   <div className="absolute inset-0 bg-black/50 flex items-center justify-center">

@@ -60,10 +60,24 @@ export default function CoursesContent() {
     try {
       setLoading(true);
       const response = await fetch("/api/courses?type=regular");
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
       const data = await response.json();
-      setCourses(data.courses || []);
+      
+      if (data.success && Array.isArray(data.courses)) {
+        setCourses(data.courses);
+        setFilteredCourses(data.courses);
+      } else {
+        setCourses([]);
+        setFilteredCourses([]);
+      }
     } catch (error) {
       console.error("Error fetching courses:", error);
+      setCourses([]);
+      setFilteredCourses([]);
     } finally {
       setLoading(false);
       setInitialLoad(false);

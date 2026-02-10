@@ -31,7 +31,29 @@ export default function FAQVideoPlayer({
   const [currentIndex, setCurrentIndex] = useState(0);
   const [videoError, setVideoError] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [isMobile, setIsMobile] = useState(false);
+  const [touchStart, setTouchStart] = useState<number | null>(null);
+  const [touchEnd, setTouchEnd] = useState<number | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const videoPlayerRef = useRef<HTMLDivElement>(null);
+
+  // Minimum swipe distance (in px) to trigger navigation
+  const minSwipeDistance = 50;
+
+  // Detect mobile device
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  // Note: Auto-fullscreen removed - browsers require direct user gesture for fullscreen API
+  // Users can manually enter fullscreen using the video player controls
 
   // Find current course index
   useEffect(() => {
@@ -65,6 +87,31 @@ export default function FAQVideoPlayer({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentIndex, courses.length]);
 
+  // Touch/Swipe handlers for mobile navigation
+  const onTouchStart = (e: React.TouchEvent) => {
+    setTouchEnd(null);
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const onTouchMove = (e: React.TouchEvent) => {
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const onTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+    
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > minSwipeDistance;
+    const isRightSwipe = distance < -minSwipeDistance;
+    
+    if (isLeftSwipe && isMobile && courses.length > 1) {
+      handleNext();
+    }
+    if (isRightSwipe && isMobile && courses.length > 1) {
+      handlePrevious();
+    }
+  };
+
   // Check if video has Mux data
   const hasMuxVideo = course.faqVideoMuxData?.playbackId;
   const playbackId = course.faqVideoMuxData?.playbackId || "";
@@ -76,6 +123,9 @@ export default function FAQVideoPlayer({
     <div 
       ref={containerRef}
       className="relative w-full h-full bg-black overflow-hidden"
+      onTouchStart={onTouchStart}
+      onTouchMove={onTouchMove}
+      onTouchEnd={onTouchEnd}
     >
       {/* Main Video - Instagram Feed Style */}
       <div className="relative w-full h-full flex items-center justify-center">
@@ -121,14 +171,14 @@ export default function FAQVideoPlayer({
             ) : (
               <>                
                 {/* Mux Video Player */}
-                <div className="w-full h-full">
+                <div ref={videoPlayerRef} className="w-full h-full">
                   <MuxVideoPlayer
                     playbackId={playbackId}
                     title={course.title}
                     poster={posterUrl}
                     autoPlay={autoPlay}
                     muted={false}
-                    aspectRatio="16:9"
+                    aspectRatio={isMobile ? "9:16" : "16:9"}
                     metadata={{
                       video_id: course._id?.toString(),
                       video_title: course.title,
@@ -160,8 +210,8 @@ export default function FAQVideoPlayer({
           <X className="w-5 h-5" />
         </Button>
 
-        {/* Navigation Arrows */}
-        {courses.length > 1 && (
+        {/* Navigation Arrows - Hidden on mobile */}
+        {courses.length > 1 && !isMobile && (
           <>
             {/* Previous */}
             {currentIndex > 0 && (
@@ -197,10 +247,19 @@ export default function FAQVideoPlayer({
           </>
         )}
 
-        {/* Video Counter */}
+        {/* Video Counter - Adjusted for mobile */}
         {courses.length > 1 && (
-          <div className="absolute bottom-20 left-1/2 -translate-x-1/2 z-50 bg-black/50 backdrop-blur-sm px-3 py-1 rounded-full text-white text-sm">
+          <div className={`absolute ${isMobile ? 'bottom-24' : 'bottom-20'} left-1/2 -translate-x-1/2 z-50 bg-black/50 backdrop-blur-sm px-3 py-1 rounded-full text-white text-sm`}>
             {currentIndex + 1} / {courses.length}
+          </div>
+        )}
+
+        {/* Swipe hint for mobile */}
+        {isMobile && courses.length > 1 && (
+          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-50 text-white/60 text-xs flex items-center gap-1">
+            <ChevronLeft className="w-3 h-3" />
+            <span>Swipe to navigate</span>
+            <ChevronRight className="w-3 h-3" />
           </div>
         )}
       </div>

@@ -14,12 +14,12 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 import { PencilLineIcon, XCircle } from "lucide-react";
 import toast from "react-hot-toast";
 import { updateCourse } from "@/lib/actions/course.action";
 import { usePathname, useRouter } from "next/navigation";
 import { Combobox, ShowMoreLess, Spinner } from "@/components/shared";
-import { coursePrices } from "@/constants/constants";
 import { transformCurrencyToSymbol } from "@/lib/utils";
 import { IUser } from "@/lib/models/user.model";
 import { scnToast } from "@/components/ui/use-toast";
@@ -27,7 +27,9 @@ import { TCourse } from "@/types/models.types";
 import { CourseTypeEnum } from "@/lib/enums";
 
 const formSchema = z.object({
-  price: z.string(),
+  price: z.string().min(1, "Price is required").refine((val) => !isNaN(Number(val)) && Number(val) >= 0, {
+    message: "Price must be a valid number",
+  }),
   currency: z.string(),
 });
 
@@ -176,7 +178,14 @@ const PricingForm = ({ course }: Props) => {
                   render={({ field }) => (
                     <FormItem>
                       <FormControl>
-                        <Combobox options={coursePrices} {...field} />
+                        <Input 
+                          type="number" 
+                          placeholder="Enter price" 
+                          min="0"
+                          step="0.01"
+                          {...field}
+                          className="w-full"
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

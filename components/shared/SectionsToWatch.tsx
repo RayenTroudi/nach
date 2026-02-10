@@ -14,12 +14,9 @@ import {
   TVideo,
 } from "@/types/models.types";
 import {
-  CheckCircle,
   FileDown,
   FileQuestion,
-  TrophyIcon,
   Video,
-  VideoIcon,
   VideoOff,
 } from "lucide-react";
 import Link from "next/link";
@@ -35,16 +32,6 @@ import Spinner from "./Spinner";
 import Image from "next/image";
 
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuShortcut,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-
-import {
   Dialog,
   DialogContent,
   DialogDescription,
@@ -53,7 +40,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Button } from "../ui/button";
 import { cn } from "@/lib/utils";
 
 interface Props {
@@ -153,78 +139,6 @@ const SectionsToWatch = ({
                 {courseTitle}
               </p>
             </div>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild className="!border-none flex-shrink-0">
-                <button className="relative group">
-                  <div className="relative size-[52px] rounded-xl bg-gradient-to-br from-brand-red-500 to-brand-red-600 shadow-lg shadow-brand-red-500/20 group-hover:shadow-xl group-hover:shadow-brand-red-500/30 transition-all duration-300 group-hover:scale-105">
-                    <svg
-                      width="52"
-                      height="52"
-                      viewBox="0 0 250 250"
-                      className="circular-progress"
-                      style={
-                        {
-                          "--progress": userProgress?.progress || 0,
-                        } as React.CSSProperties
-                      }
-                    >
-                      <circle className="bg"></circle>
-                      <circle className="fg"></circle>
-                    </svg>
-                    <div className="absolute inset-0 flex flex-col items-center justify-center">
-                      <TrophyIcon
-                        size={18}
-                        className="text-white mb-0.5"
-                      />
-                      <span className="text-[10px] font-bold text-white">
-                        {userProgress?.progress || 0}%
-                      </span>
-                    </div>
-                  </div>
-                </button>
-              </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-80 p-4 shadow-xl">
-              <DropdownMenuGroup className="space-y-3">
-                <div className="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800">
-                  <span className="font-bold text-lg text-slate-900 dark:text-slate-100">Your Progress</span>
-                  <span className="text-2xl font-bold text-brand-red-500">
-                    {userProgress?.progress ?? 0}%
-                  </span>
-                </div>
-                
-                <div className="bg-slate-50 dark:bg-slate-950 rounded-lg p-3">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm font-medium text-slate-700 dark:text-slate-300">
-                      {userProgress?.isCompleted
-                        ? "🎉 All videos completed!"
-                        : `${allVideos.length - (userCourseCompletedVideos?.length ?? 0)} video(s) remaining`}
-                    </span>
-                    {userProgress?.isCompleted ? (
-                      <CheckCircle size={18} className="text-green-500" />
-                    ) : (
-                      <VideoIcon size={18} className="text-slate-400" />
-                    )}
-                  </div>
-                  
-                  {/* Progress Bar */}
-                  <div className="w-full h-2 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
-                    <div 
-                      className="h-full bg-gradient-to-r from-brand-red-500 to-brand-red-600 transition-all duration-500"
-                      style={{ width: `${userProgress?.progress ?? 0}%` }}
-                    />
-                  </div>
-                </div>
-
-                <Button
-                  className="w-full h-11 bg-gradient-to-r from-brand-red-500 to-brand-red-600 hover:from-brand-red-600 hover:to-brand-red-700 text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
-                  disabled={!userProgress?.isCompleted}
-                  onClick={() => router.push(`/certificate/${courseId}`)}
-                >
-                  {userProgress?.isCompleted ? '🏆 Get Your Certificate' : '🔒 Complete Course to Get Certificate'}
-                </Button>
-              </DropdownMenuGroup>
-            </DropdownMenuContent>
-          </DropdownMenu>
           </div>
         </div>
       ) : null}

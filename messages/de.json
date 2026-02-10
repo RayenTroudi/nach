@@ -89,6 +89,7 @@
     "or": "ODER"
   },
   "courses": {
+    "courseContent": "Kursinhalt",
     "allCourses": "Alle Kurse",
     "myCourses": "Meine Kurse",
     "enrolledCourses": "Eingeschriebene Kurse",

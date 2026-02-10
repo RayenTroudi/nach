@@ -89,6 +89,7 @@
     "or": "OR"
   },
   "courses": {
+    "courseContent": "Course Content",
     "allCourses": "All Courses",
     "myCourses": "My Courses",
     "enrolledCourses": "Enrolled Courses",

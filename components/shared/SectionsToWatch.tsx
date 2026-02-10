@@ -22,13 +22,7 @@ import {
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Checkbox } from "../ui/checkbox";
-import {
-  addCompletedCourseVideo,
-  deleteCompletedCourseVideo,
-} from "@/lib/actions/user-course-video-completed.action";
-import { scnToast } from "../ui/use-toast";
-import Spinner from "./Spinner";
+import { useTranslations } from "next-intl";
 import Image from "next/image";
 
 import {
@@ -71,54 +65,9 @@ const SectionsToWatch = ({
 }: Props) => {
   const pathname = usePathname();
   const router = useRouter();
+  const t = useTranslations("courses");
   const isAdmin = pathname?.includes("/admin");
-
-  const [videoToComplete, setVideoToComplete] = useState<TVideo | null>(null);
   const [isMounted, setIsMounted] = useState<boolean>(false);
-
-  const toggleVideoCompleted = async (video: TVideo) => {
-    const videoAlreadyCompleted = userCourseCompletedVideos?.some(
-      (completedVideo) => completedVideo.videoId._id === video._id
-    );
-    try {
-      setVideoToComplete(video);
-
-      if (videoAlreadyCompleted) {
-        await deleteCompletedCourseVideo({
-          userId: userProgress?.userId._id!,
-          courseId: userProgress?.courseId._id!,
-          videoId: video._id,
-          allVideos: allVideos.length,
-        });
-      } else {
-        await addCompletedCourseVideo({
-          userId: userProgress?.userId._id!,
-          courseId: userProgress?.courseId._id!,
-          videoId: video._id,
-          allVideos: allVideos.length,
-        });
-      }
-
-      // Update state immediately and show success
-      setVideoToComplete(null);
-      scnToast({
-        title: "Success",
-        description: `${video.title} marked as ${videoAlreadyCompleted ? 'incomplete' : 'completed'}.`,
-        variant: "success",
-      });
-      
-      // Refresh to update progress data from server
-      router.refresh();
-    } catch (error: any) {
-      console.log("toggleVideoCompleted : ", error.message);
-      setVideoToComplete(null);
-      scnToast({
-        title: "Error",
-        description: "Failed to mark video as completed.",
-        variant: "destructive",
-      });
-    }
-  };
 
   useEffect(() => setIsMounted(true), []);
 
@@ -130,9 +79,8 @@ const SectionsToWatch = ({
           <div className="flex items-start justify-between gap-3">
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 mb-1">
-                <div className="w-1.5 h-1.5 rounded-full bg-brand-red-500 animate-pulse"></div>
                 <h2 className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
-                  Course Content
+                  {t("courseContent")}
                 </h2>
               </div>
               <p className="text-base font-bold text-slate-900 dark:text-slate-100 line-clamp-2">
@@ -187,35 +135,9 @@ const SectionsToWatch = ({
                                   : "ltr:border-l-4 rtl:border-r-4 border-transparent"
                               }
                             `}
+                            onClick={() => onChangeVideoToWatchHandler(video)}
                           >
-                            {isStudent && !isCourseOwner ? (
-                              <div className="flex-shrink-0">
-                                {videoToComplete && videoToComplete?._id === video._id ? (
-                                  <Spinner size={18} />
-                                ) : (
-                                  <Checkbox
-                                    checked={
-                                      userCourseCompletedVideos
-                                        ? userCourseCompletedVideos?.some(
-                                            (completedVideo: TUserCourseVideoCompleted) =>
-                                              completedVideo.videoId._id === video._id
-                                          )
-                                        : false
-                                    }
-                                    id={video._id}
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      toggleVideoCompleted(video);
-                                    }}
-                                    className="w-5 h-5"
-                                  />
-                                )}
-                              </div>
-                            ) : null}
-                            <div 
-                              onClick={() => onChangeVideoToWatchHandler(video)}
-                              className="flex items-center gap-3 flex-1 min-w-0"
-                            >
+                            <div className="flex items-center gap-3 flex-1 min-w-0">
                               <div className={`flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center ${
                                 video._id === selectedVideo._id
                                   ? 'bg-brand-red-500 text-white'

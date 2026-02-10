@@ -89,6 +89,7 @@
     "or": "أو"
   },
   "courses": {
+    "courseContent": "محتوى الدورة",
     "allCourses": "جميع الدورات",
     "myCourses": "دوراتي",
     "enrolledCourses": "الدورات المسجلة",

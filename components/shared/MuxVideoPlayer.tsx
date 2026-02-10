@@ -567,11 +567,11 @@ const MuxVideoPlayer = ({
 
       {/* External Controls Bar - Below Video (YouTube Style) */}
       {!isLoading && showControls && (
-        <div className={`video-controls w-full bg-white dark:bg-slate-900 backdrop-blur-sm border-t border-slate-200 dark:border-slate-800 ${isFullscreen ? 'fixed bottom-0 left-0 right-0 z-[99999] pointer-events-auto' : ''}`}>
+        <div className={`video-controls w-full bg-gradient-to-b from-slate-50 to-white dark:from-slate-900 dark:to-slate-950 backdrop-blur-sm border-t border-slate-200 dark:border-slate-800 ${isFullscreen ? 'fixed bottom-0 left-0 right-0 z-[99999] pointer-events-auto' : ''}`}>
           {/* Timeline Progress Bar */}
           <div 
             ref={timelineRef}
-            className="relative h-1 bg-slate-200 dark:bg-slate-700 hover:h-2 transition-all cursor-pointer group/timeline pointer-events-auto z-10"
+            className="relative h-1 bg-slate-200 dark:bg-slate-800 hover:h-2 transition-all cursor-pointer group/timeline pointer-events-auto z-10"
             onMouseDown={handleTimelineMouseDown}
             onMouseMove={handleTimelineMouseMove}
             onMouseLeave={handleTimelineMouseLeave}
@@ -579,7 +579,7 @@ const MuxVideoPlayer = ({
             {/* Hover time preview tooltip */}
             {timelineHover.show && !isDraggingTimeline && (
               <div 
-                className="absolute bottom-full mb-2 -translate-x-1/2 px-2 py-1 bg-brand-red-500 text-white text-xs rounded pointer-events-none whitespace-nowrap z-50 shadow-lg"
+                className="absolute bottom-full mb-2 -translate-x-1/2 px-3 py-1.5 bg-slate-900 dark:bg-slate-800 text-white text-xs font-semibold rounded-lg pointer-events-none whitespace-nowrap z-50 shadow-lg"
                 style={{ left: `${timelineHover.x}px` }}
               >
                 {formatTime(timelineHover.time)}
@@ -590,7 +590,7 @@ const MuxVideoPlayer = ({
               style={{ width: `${duration ? (currentTime / duration) * 100 : 0}%` }}
             >
               {/* Draggable handle */}
-              <div className="absolute right-0 top-1/2 -translate-y-1/2 w-3 h-3 bg-brand-red-500 rounded-full shadow-lg opacity-0 group-hover/timeline:opacity-100 transition-opacity" />
+              <div className="absolute right-0 top-1/2 -translate-y-1/2 w-3 h-3 bg-white rounded-full shadow-lg border-2 border-red-600 opacity-0 group-hover/timeline:opacity-100 transition-opacity" />
             </div>
           </div>
           
@@ -605,7 +605,7 @@ const MuxVideoPlayer = ({
                   togglePlayPause();
                 }}
                 onMouseDown={(e) => e.stopPropagation()}
-                className="p-2 rounded-md bg-slate-100 dark:bg-slate-800 hover:bg-brand-red-500 dark:hover:bg-brand-red-500 transition-colors text-brand-red-500 hover:text-white shadow-md pointer-events-auto cursor-pointer"
+                className="p-2.5 rounded-xl bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 transition-all duration-200 text-slate-700 dark:text-slate-300 shadow-md hover:shadow-lg pointer-events-auto cursor-pointer border border-slate-200 dark:border-slate-700"
                 title={isPlaying ? 'Pause' : 'Play'}
               >
                 {isPlaying ? (
@@ -620,41 +620,7 @@ const MuxVideoPlayer = ({
                 )}
               </button>
               
-              {/* Skip Backward 10s Button */}
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  skipBackward();
-                }}
-                onMouseDown={(e) => e.stopPropagation()}
-                className="p-2 rounded-md bg-slate-100 dark:bg-slate-800 hover:bg-brand-red-500 dark:hover:bg-brand-red-500 transition-colors text-brand-red-500 hover:text-white shadow-md pointer-events-auto cursor-pointer"
-                title="Rewind 10 seconds (Left Arrow)"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
-                  <path d="M3 3v5h5"/>
-                  <text x="12" y="16" fontSize="8" textAnchor="middle" fill="currentColor" fontWeight="bold">10</text>
-                </svg>
-              </button>
-
-              {/* Skip Forward 10s Button */}
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  skipForward();
-                }}
-                onMouseDown={(e) => e.stopPropagation()}
-                className="p-2 rounded-md bg-slate-100 dark:bg-slate-800 hover:bg-brand-red-500 dark:hover:bg-brand-red-500 transition-colors text-brand-red-500 hover:text-white shadow-md pointer-events-auto cursor-pointer"
-                title="Forward 10 seconds (Right Arrow)"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/>
-                  <path d="M21 3v5h-5"/>
-                  <text x="12" y="16" fontSize="8" textAnchor="middle" fill="currentColor" fontWeight="bold">10</text>
-                </svg>
-              </button>
-              
-              <div className="text-slate-700 dark:text-slate-300 text-sm font-medium">
+              <div className="text-slate-950 dark:text-white text-sm font-bold">
                 {formatTime(currentTime)} / {formatTime(duration)}
               </div>
             </div>
@@ -669,7 +635,7 @@ const MuxVideoPlayer = ({
                     setShowQualityMenu(!showQualityMenu);
                   }}
                   onMouseDown={(e) => e.stopPropagation()}
-                  className="px-3 py-1.5 rounded-md bg-slate-100 dark:bg-slate-800 hover:bg-brand-red-500 dark:hover:bg-brand-red-500 flex items-center gap-1.5 transition-colors text-brand-red-500 hover:text-white text-sm font-medium border border-slate-200 dark:border-slate-700 pointer-events-auto cursor-pointer shadow-md"
+                  className="px-3 py-2 rounded-xl bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 flex items-center gap-2 transition-all duration-200 text-slate-700 dark:text-slate-300 text-sm font-semibold border border-slate-200 dark:border-slate-700 pointer-events-auto cursor-pointer shadow-md hover:shadow-lg"
                   title={`Quality: ${currentQuality === 'auto' ? 'Auto' : currentQuality + 'p'}`}
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -679,12 +645,12 @@ const MuxVideoPlayer = ({
                     <path d="M1 12h6m6 0h6"/>
                     <path d="m4.93 19.07 4.24-4.24m5.66-5.66 4.24-4.24"/>
                   </svg>
-                  <span>{currentQuality === 'auto' ? 'Auto' : currentQuality + 'p'}</span>
+                  <span className="font-semibold">{currentQuality === 'auto' ? 'Auto' : currentQuality + 'p'}</span>
                 </button>
                 
                 {/* Quality Menu */}
                 {showQualityMenu && (
-                  <div className="absolute bottom-full right-0 mb-2 bg-white dark:bg-slate-900 backdrop-blur-md rounded-lg overflow-hidden min-w-[140px] border border-slate-200 dark:border-slate-700 shadow-xl pointer-events-auto z-[100001]">
+                  <div className="absolute bottom-full right-0 mb-2 bg-white dark:bg-slate-900 backdrop-blur-md rounded-xl overflow-hidden min-w-[140px] border border-slate-200 dark:border-slate-700 shadow-2xl pointer-events-auto z-[100001]">
                     {availableQualities.length > 0 ? (
                       availableQualities.map((quality) => (
                         <button
@@ -694,8 +660,8 @@ const MuxVideoPlayer = ({
                             handleQualityChange(quality);
                           }}
                           onMouseDown={(e) => e.stopPropagation()}
-                          className={`w-full px-4 py-2.5 text-left text-sm hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors flex items-center justify-between pointer-events-auto cursor-pointer ${
-                            currentQuality === quality ? 'bg-brand-red-500 text-white' : 'text-slate-700 dark:text-slate-300'
+                          className={`w-full px-4 py-2.5 text-left text-sm font-semibold hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors flex items-center justify-between pointer-events-auto cursor-pointer ${
+                            currentQuality === quality ? 'bg-gradient-to-r from-brand-red-500 to-brand-red-600 text-white' : 'text-slate-700 dark:text-slate-300'
                           }`}
                         >
                           <span className="font-medium">{quality === 'auto' ? 'Auto (Best)' : `${quality}p`}</span>
@@ -720,7 +686,7 @@ const MuxVideoPlayer = ({
                   handleFullscreen(e);
                 }}
                 onMouseDown={(e) => e.stopPropagation()}
-                className="p-2 rounded-md bg-slate-100 dark:bg-slate-800 hover:bg-brand-red-500 dark:hover:bg-brand-red-500 transition-colors text-brand-red-500 hover:text-white border border-slate-200 dark:border-slate-700 pointer-events-auto cursor-pointer shadow-md"
+                className="p-2.5 rounded-xl bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 transition-all duration-200 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 pointer-events-auto cursor-pointer shadow-md hover:shadow-lg"
                 title="Fullscreen"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

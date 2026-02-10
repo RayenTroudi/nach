@@ -260,7 +260,7 @@
 /* Timeline thumbnail preview positioning - positioned lower for better visibility */
 .mux-video-player mux-player::part(preview-thumbnail),
 .mux-video-player media-preview-thumbnail {
-  bottom: 60px !important;
+  bottom: 100px !important;
   margin-bottom: 0 !important;
 }
 
@@ -269,7 +269,7 @@
   border-radius: 6px;
   border: 2px solid rgba(255, 255, 255, 0.9);
   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
-  transform: translateY(-10px);
+  transform: translateY(-15px);
 }
 
 /* Ensure thumbnail is visible and not clipped */
@@ -284,6 +284,15 @@
 /* Control bar styling */
 .mux-video-player mux-player::part(bottom) {
   padding-bottom: 8px;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+/* Ensure controls are at the very bottom */
+.mux-video-player mux-player::part(bottom-controls) {
+  bottom: 0 !important;
 }
 
 /* Timeline hover area */

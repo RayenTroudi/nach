@@ -206,7 +206,7 @@ export default function FAQVideoPlayer({
 
         {/* Video Counter */}
         {courses.length > 1 && (
-          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-50 bg-black/50 backdrop-blur-sm px-3 py-1 rounded-full text-white text-sm">
+          <div className="absolute bottom-20 left-1/2 -translate-x-1/2 z-50 bg-black/50 backdrop-blur-sm px-3 py-1 rounded-full text-white text-sm">
             {currentIndex + 1} / {courses.length}
           </div>
         )}

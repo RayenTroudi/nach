@@ -90,6 +90,9 @@ const MuxVideoPlayer = ({
   const [availableQualities, setAvailableQualities] = useState<string[]>([]);
   const [currentQuality, setCurrentQuality] = useState<string>("auto");
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(false);
 
   // Next.js SSR safety: Only render player on client
   useEffect(() => {
@@ -146,6 +149,32 @@ const MuxVideoPlayer = ({
     };
   }, []);
 
+  // Track video time and playback state
+  useEffect(() => {
+    const player = playerRef.current;
+    if (!player) return;
+
+    const handleTimeUpdate = () => {
+      setCurrentTime(player.currentTime || 0);
+      setDuration(player.duration || 0);
+    };
+
+    const handlePlay = () => setIsPlaying(true);
+    const handlePause = () => setIsPlaying(false);
+
+    player.addEventListener('timeupdate', handleTimeUpdate);
+    player.addEventListener('loadedmetadata', handleTimeUpdate);
+    player.addEventListener('play', handlePlay);
+    player.addEventListener('pause', handlePause);
+
+    return () => {
+      player.removeEventListener('timeupdate', handleTimeUpdate);
+      player.removeEventListener('loadedmetadata', handleTimeUpdate);
+      player.removeEventListener('play', handlePlay);
+      player.removeEventListener('pause', handlePause);
+    };
+  }, [isMounted]);
+
   // Generate thumbnail from Mux if not provided
   const thumbnailUrl = poster || getMuxThumbnail(playbackId, { width: 1280 });
 
@@ -176,7 +205,41 @@ const MuxVideoPlayer = ({
       return;
     }
     
-    if (minimalHover && playerRef.current) {
+    if (playerRef.current) {
+      if (playerRef.current.paused) {
+        playerRef.current.play();
+      } else {
+        playerRef.current.pause();
+      }
+    }
+  };
+
+  // Format time for display (MM:SS or HH:MM:SS)
+  const formatTime = (seconds: number): string => {
+    if (isNaN(seconds) || seconds === 0) return '0:00';
+    const hours = Math.floor(seconds / 3600);
+    const mins = Math.floor((seconds % 3600) / 60);
+    const secs = Math.floor(seconds % 60);
+    
+    if (hours > 0) {
+      return `${hours}:${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    }
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
+
+  // Handle timeline click to seek
+  const handleTimelineClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!playerRef.current || !duration) return;
+    const rect = e.currentTarget.getBoundingClientRect();
+    const clickX = e.clientX - rect.left;
+    const percentage = clickX / rect.width;
+    const newTime = percentage * duration;
+    playerRef.current.currentTime = newTime;
+  };
+
+  // Handle play/pause toggle
+  const togglePlayPause = () => {
+    if (playerRef.current) {
       if (playerRef.current.paused) {
         playerRef.current.play();
       } else {
@@ -278,15 +341,17 @@ const MuxVideoPlayer = ({
   }
 
   return (
-    <div 
-      className={`relative w-full ${className} ${minimalHover ? 'group' : ''}`}
-      style={{ paddingBottom: aspectRatioPadding }}
-    >
+    <div className={`w-full ${className} ${minimalHover ? 'group' : ''}`}>
+      {/* Video Container */}
       <div 
-        className="absolute inset-0"
-        onClick={handleVideoClick}
-        style={{ cursor: minimalHover && !isFullscreen ? 'pointer' : 'default' }}
+        className="relative w-full bg-black"
+        style={{ paddingBottom: aspectRatioPadding }}
       >
+        <div 
+          className="absolute inset-0"
+          onClick={handleVideoClick}
+          style={{ cursor: minimalHover && !isFullscreen ? 'pointer' : 'default' }}
+        >
         {/* Loading overlay */}
         {isLoading && (
           <div className="absolute inset-0 flex items-center justify-center bg-slate-900/80 z-10">
@@ -306,8 +371,8 @@ const MuxVideoPlayer = ({
           </div>
         )}
 
-        {/* Quality Selector Overlay - Bottom Right */}
-        {!isLoading && showControls && (
+        {/* Quality Selector Overlay - Hidden now, using external controls */}
+        {false && !isLoading && showControls && (
           <div className="video-controls absolute bottom-16 right-4 flex items-center gap-2 transition-opacity duration-200 z-30 pointer-events-auto">
             {/* Quality Selector */}
             <div className="relative quality-selector">
@@ -392,17 +457,123 @@ const MuxVideoPlayer = ({
           style={{
             width: "100%",
             height: "100%",
-            "--controls": showControls || isFullscreen ? "block" : "none",
+            "--controls": "none",
             "--media-object-fit": "contain",
             "--media-object-position": "center",
-            "--bottom-controls": "block",
-            "--media-preview-time-margin-bottom": "60px",
-            "--media-preview-thumbnail-border-radius": "6px",
             pointerEvents: minimalHover && !isFullscreen ? "none" : "auto",
           } as React.CSSProperties}
           className={`mux-video-player ${minimalHover && !isFullscreen ? "minimal-hover-player" : ""} ${isFullscreen ? "fullscreen-player" : ""}`}
         />
+        </div>
       </div>
+
+      {/* External Controls Bar - Below Video (YouTube Style) */}
+      {!isLoading && showControls && (
+        <div className="w-full bg-black/95 backdrop-blur-md border-t border-white/10">
+          {/* Timeline Progress Bar */}
+          <div 
+            className="relative h-1 bg-white/20 hover:h-2 transition-all cursor-pointer group/timeline"
+            onClick={handleTimelineClick}
+          >
+            <div 
+              className="absolute top-0 left-0 h-full bg-red-600 transition-all"
+              style={{ width: `${duration ? (currentTime / duration) * 100 : 0}%` }}
+            />
+          </div>
+          
+          {/* Control Buttons Row */}
+          <div className="flex items-center justify-between px-4 py-3">
+            {/* Left Controls */}
+            <div className="flex items-center gap-3">
+              {/* Play/Pause Button */}
+              <button
+                onClick={togglePlayPause}
+                className="p-2 rounded-md bg-white/10 hover:bg-white/20 transition-colors text-white"
+                title={isPlaying ? 'Pause' : 'Play'}
+              >
+                {isPlaying ? (
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="white" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <rect x="6" y="4" width="4" height="16"/>
+                    <rect x="14" y="4" width="4" height="16"/>
+                  </svg>
+                ) : (
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="white" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <polygon points="5 3 19 12 5 21 5 3"/>
+                  </svg>
+                )}
+              </button>
+              
+              <div className="text-white/90 text-sm font-medium">
+                {formatTime(currentTime)} / {formatTime(duration)}
+              </div>
+            </div>
+
+            {/* Right Controls */}
+            <div className="flex items-center gap-2">
+              {/* Quality Selector */}
+              <div className="relative quality-selector">
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setShowQualityMenu(!showQualityMenu);
+                  }}
+                  className="px-3 py-1.5 rounded-md bg-white/10 hover:bg-white/20 flex items-center gap-1.5 transition-colors text-white text-sm font-medium"
+                  title={`Quality: ${currentQuality === 'auto' ? 'Auto' : currentQuality + 'p'}`}
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="12" cy="12" r="3"/>
+                    <path d="M12 1v6m0 6v6"/>
+                    <path d="m4.93 4.93 4.24 4.24m5.66 5.66 4.24 4.24"/>
+                    <path d="M1 12h6m6 0h6"/>
+                    <path d="m4.93 19.07 4.24-4.24m5.66-5.66 4.24-4.24"/>
+                  </svg>
+                  <span>{currentQuality === 'auto' ? 'Auto' : currentQuality + 'p'}</span>
+                </button>
+                
+                {/* Quality Menu */}
+                {showQualityMenu && (
+                  <div className="absolute bottom-full right-0 mb-2 bg-black/95 backdrop-blur-md rounded-lg overflow-hidden min-w-[140px] border border-white/20 shadow-xl">
+                    {availableQualities.length > 0 ? (
+                      availableQualities.map((quality) => (
+                        <button
+                          key={quality}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleQualityChange(quality);
+                          }}
+                          className={`w-full px-4 py-2.5 text-left text-sm hover:bg-white/10 transition-colors flex items-center justify-between ${
+                            currentQuality === quality ? 'bg-red-600 text-white' : 'text-white/90'
+                          }`}
+                        >
+                          <span className="font-medium">{quality === 'auto' ? 'Auto (Best)' : `${quality}p`}</span>
+                          {currentQuality === quality && (
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                              <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                          )}
+                        </button>
+                      ))
+                    ) : (
+                      <div className="px-4 py-2 text-sm text-white/60">Loading...</div>
+                    )}
+                  </div>
+                )}
+              </div>
+
+              {/* Fullscreen Button */}
+              <button
+                onClick={handleFullscreen}
+                className="p-2 rounded-md bg-white/10 hover:bg-white/20 transition-colors text-white"
+                title="Fullscreen"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

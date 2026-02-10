@@ -2,8 +2,7 @@
 import React, { useState } from "react";
 
 import { z } from "zod";
-import MuxPlayer from "@mux/mux-player-react";
-import { getProxiedVideoUrl } from "@/lib/utils/video-url-helper";
+import MuxVideoPlayer, { getMuxThumbnail } from "@/components/shared/MuxVideoPlayer";
 
 import { PencilLineIcon, XCircle } from "lucide-react";
 import { FileUpload, Spinner } from "@/components/shared";
@@ -27,6 +26,7 @@ const VideoUploadForm = ({ video }: Props) => {
   const pathname = usePathname();
   const router = useRouter();
   const [isSaving, setIsSaving] = useState<boolean>(false);
+  const [isProcessing, setIsProcessing] = useState<boolean>(false);
   const [edit, setEdit] = useState<boolean>(false);
   const [videoUrl, setVideoUrl] = useState<string | undefined>(() =>
     video.videoUrl ? video.videoUrl : ""
@@ -41,17 +41,32 @@ const VideoUploadForm = ({ video }: Props) => {
     );
   }
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(uploadedUrl: string) {
     try {
       setIsSaving(true);
-      const updatedVideo = await updateVideo({
-        videoId: video._id,
-        courseId: video.sectionId.course._id,
-        instructorId: video.sectionId.course.instructor._id,
-        data: values,
-        path: pathname,
+      setIsProcessing(true);
+
+      // Step 1: Create Mux asset from the uploaded video URL
+      const muxResponse = await fetch('/api/mux/create-asset', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          videoId: video._id,
+          videoUrl: uploadedUrl,
+        }),
       });
 
+      if (!muxResponse.ok) {
+        const error = await muxResponse.json();
+        throw new Error(error.error || 'Failed to process video with Mux');
+      }
+
+      const muxData = await muxResponse.json();
+      console.log('[VideoUpload] Mux asset created:', muxData);
+
+      setIsProcessing(false);
+
+      // Step 2: Update course status if needed
       await updateCourseStatus({
         courseId: video?.sectionId.course._id,
         status:
@@ -62,17 +77,20 @@ const VideoUploadForm = ({ video }: Props) => {
       });
 
       setEdit(false);
+      setVideoUrl("");
       scnToast({
         variant: "success",
         title: "Success",
-        description: "Video Added Successfully!",
+        description: "Video processed successfully! Adaptive streaming is now enabled.",
       });
       router.refresh();
     } catch (error: any) {
+      console.error('[VideoUpload] Error:', error);
+      setIsProcessing(false);
       scnToast({
         variant: "destructive",
         title: "Error",
-        description: error.message,
+        description: error.message || "Failed to process video",
       });
     } finally {
       setIsSaving(false);
@@ -81,19 +99,27 @@ const VideoUploadForm = ({ video }: Props) => {
 
   const onToggleEditHandler = () =>
     setEdit((curr) => {
-      return !video.videoUrl ? false : !curr;
+      return !video.muxData?.playbackId ? false : !curr;
     });
 
-  const onChangeVideoUrlHandler = (url?: string) => setVideoUrl(url);
+  const onChangeVideoUrlHandler = (url?: string) => {
+    if (url) {
+      setVideoUrl(url);
+      // Automatically submit when video is uploaded
+      onSubmit(url);
+    }
+  };
+
   const onEditVideo = () => setVideoUrl("");
+
   return (
     <div className=" flex flex-col gap-2 bg-slate-200/50 dark:bg-slate-900 shadow-md p-6 rounded-md border border-input ">
       <div className="w-full flex items-center justify-between">
         <h2 className="font-bold text-slate-500 dark:text-slate-300">
-          Video URL
+          Video Upload
         </h2>
         <Button variant="ghost" size="icon" onClick={onToggleEditHandler}>
-          {!edit && video.videoUrl ? (
+          {!edit && video.muxData?.playbackId ? (
             <PencilLineIcon
               size={15}
               className="text-slate-600  dark:text-slate-300"
@@ -103,96 +129,45 @@ const VideoUploadForm = ({ video }: Props) => {
           )}
         </Button>
       </div>
-      {!edit && video.videoUrl ? (
-        <div className="w-full h-full relative aspect-video">
-          {video.videoUrl.startsWith('https://utfs.io/') ? (
-            <video
-              src={getProxiedVideoUrl(video.videoUrl)}
-              controls
-              className="w-full h-full object-cover bg-black"
-              controlsList="nodownload"
-              preload="metadata"
-            >
-              Your browser does not support the video tag.
-            </video>
-          ) : (
-            <MuxPlayer
-              playbackId={video.muxData?.playbackId}
-              streamType="on-demand"
-              metadata={{
-                video_id: video._id?.toString(),
-                video_title: video.title,
-              }}
-              accentColor="#DD0000"
-              style={{ 
-                width: '100%', 
-                height: '100%',
-                '--media-object-fit': 'cover',
-              } as React.CSSProperties}
-            />
-          )}
+      
+      {!edit && video.muxData?.playbackId ? (
+        <div className="w-full h-full relative">
+          <MuxVideoPlayer
+            playbackId={video.muxData.playbackId}
+            title={video.title}
+            poster={getMuxThumbnail(video.muxData.playbackId)}
+            metadata={{
+              video_id: video._id?.toString(),
+              video_title: video.title,
+            }}
+            showControls={true}
+          />
         </div>
       ) : (
         <>
-          {videoUrl ? (
-            videoUrl.startsWith('https://utfs.io/') ? (
-              <video
-                src={getProxiedVideoUrl(videoUrl)}
-                controls
-                className="w-full h-full object-cover bg-black"
-                controlsList="nodownload"
-                preload="metadata"
-              >
-                Your browser does not support the video tag.
-              </video>
-            ) : (
-              <MuxPlayer
-                playbackId={video.muxData?.playbackId}
-                streamType="on-demand"
-                metadata={{
-                  video_id: video._id?.toString(),
-                  video_title: video.title,
-                }}
-                accentColor="#DD0000"
-                style={{ 
-                  width: '100%', 
-                  height: '100%',
-                  '--media-object-fit': 'cover',
-                } as React.CSSProperties}
-              />
-            )
+          {isSaving || isProcessing ? (
+            <div className="w-full h-[300px] flex flex-col items-center justify-center gap-4">
+              <Spinner size={50} />
+              <p className="text-sm text-slate-600 dark:text-slate-400">
+                {isProcessing 
+                  ? "Processing video with Mux... This may take a few minutes." 
+                  : "Uploading video..."}
+              </p>
+            </div>
           ) : (
-            <>
-              {isSaving ? (
-                <div className="w-full h-[300px] flex items-center justify-center">
-                  <Spinner size={50} />
-                </div>
-              ) : (
-                <FileUpload
-                  className={`w-full ${videoUrl ? "" : "h-full"} `}
-                  endpoint="sectionVideo"
-                  onChange={onChangeVideoUrlHandler}
-                />
-              )}
-            </>
+            <FileUpload
+              className={`w-full ${videoUrl ? "" : "h-full"} `}
+              endpoint="sectionVideo"
+              onChange={onChangeVideoUrlHandler}
+            />
           )}
-          <div className="pt-4 flex gap-x-2 justify-between">
-            <Button onClick={onEditVideo} disabled={!videoUrl}>
-              Change Video
-            </Button>
-            <Button
-              size="sm"
-              className="bg-brand-red-500 hover:bg-brand-red-600 dark:text-slate-50"
-              disabled={isSaving || !videoUrl || videoUrl === video.videoUrl}
-              onClick={() => onSubmit({ videoUrl: videoUrl!.toString() })}
-            >
-              {isSaving ? (
-                <Spinner size={20} className="text-slate-50 " />
-              ) : (
-                "Save"
-              )}
-            </Button>
-          </div>
+          {!isSaving && !isProcessing && (
+            <div className="pt-4 flex gap-x-2 justify-end">
+              <Button onClick={onEditVideo} variant="outline" size="sm">
+                Cancel
+              </Button>
+            </div>
+          )}
         </>
       )}
     </div>

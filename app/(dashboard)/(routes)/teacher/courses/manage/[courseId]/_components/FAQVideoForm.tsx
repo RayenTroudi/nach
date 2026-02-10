@@ -2,17 +2,22 @@
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { FileUpload } from "@/components/shared";
-import { PencilLineIcon, Video, XCircle } from "lucide-react";
+import { PencilLineIcon, XCircle } from "lucide-react";
 import { updateCourse } from "@/lib/actions/course.action";
 import { usePathname, useRouter } from "next/navigation";
 import { scnToast } from "@/components/ui/use-toast";
 import { TCourse } from "@/types/models.types";
-import { getProxiedVideoUrl } from "@/lib/utils/video-url-helper";
+import MuxVideoPlayer, { getMuxThumbnail } from "@/components/shared/MuxVideoPlayer";
 
 interface Props {
   course: TCourse;
 }
 
+/**
+ * FAQVideoForm - Teacher's FAQ video management
+ * Updated to use Mux streaming for video preview
+ * Videos are automatically processed to Mux after upload via API route
+ */
 const FAQVideoForm = ({ course }: Props) => {
   const pathname = usePathname();
   const [edit, setEdit] = useState<boolean>(false);
@@ -30,7 +35,7 @@ const FAQVideoForm = ({ course }: Props) => {
       scnToast({
         variant: "success",
         title: "Success!",
-        description: "FAQ video uploaded successfully!",
+        description: "FAQ video uploaded successfully! Processing for streaming...",
       });
 
       setEdit(false);
@@ -46,32 +51,64 @@ const FAQVideoForm = ({ course }: Props) => {
 
   const onToggleEditHandler = () => setEdit((curr) => !curr);
 
+  // Check if video has Mux data
+  const hasMuxVideo = course.faqVideoMuxData?.playbackId;
+  const playbackId = course.faqVideoMuxData?.playbackId || "";
+  const posterUrl = course.thumbnail || (playbackId ? getMuxThumbnail(playbackId) : "");
+
   return (
     <div className="flex flex-col gap-4 bg-slate-200/10 px-3 py-4 dark:bg-slate-800/10 rounded-sm">
-      {!edit && course.faqVideo ? (
+      {!edit && (course.faqVideo || hasMuxVideo) ? (
         <div className="w-full flex flex-col gap-4">
           <div className="w-full flex items-center justify-between">
             <h3 className="font-semibold text-slate-700 dark:text-slate-300">
-              Current Video
+              Current FAQ Video
             </h3>
             <Button variant="ghost" size="icon" onClick={onToggleEditHandler}>
               <PencilLineIcon size={15} className="text-slate-600" />
             </Button>
           </div>
-          <div className="aspect-video rounded-lg overflow-hidden bg-slate-900">
-            <video
-              src={getProxiedVideoUrl(course.faqVideo)}
-              controls
-              controlsList="nodownload"
-              className="w-full h-full"
-            >
-              Your browser does not support the video tag.
-            </video>
-          </div>
+          
+          {hasMuxVideo ? (
+            // Mux streaming video (processed)
+            <div className="w-full rounded-lg overflow-hidden bg-slate-900">
+              <MuxVideoPlayer
+                playbackId={playbackId}
+                title={`${course.title} - FAQ Video`}
+                poster={posterUrl}
+                showControls={true}
+                metadata={{
+                  video_id: course._id?.toString(),
+                  video_title: course.title,
+                  video_type: "faq",
+                }}
+              />
+            </div>
+          ) : (
+            // Show processing message if uploaded but not yet in Mux
+            <div className="aspect-video rounded-lg overflow-hidden bg-slate-900 flex items-center justify-center">
+              <div className="text-center p-6">
+                <div className="text-5xl mb-3">⏳</div>
+                <h4 className="text-white font-semibold mb-2">Processing Video</h4>
+                <p className="text-slate-400 text-sm">
+                  Your video is being processed for streaming.
+                  <br />
+                  This usually takes 1-3 minutes.
+                </p>
+                <Button
+                  variant="outline"
+                  className="mt-4"
+                  onClick={() => router.refresh()}
+                >
+                  Refresh Status
+                </Button>
+              </div>
+            </div>
+          )}
         </div>
       ) : (
         <div className="w-full flex flex-col gap-4">
-          {course.faqVideo && (
+          {(course.faqVideo || hasMuxVideo) && (
             <div className="w-full flex items-center justify-between">
               <h3 className="font-semibold text-slate-700 dark:text-slate-300">
                 Replace Video
@@ -91,6 +128,8 @@ const FAQVideoForm = ({ course }: Props) => {
           />
           <p className="text-xs text-slate-500 dark:text-slate-400">
             Upload your FAQ video (recommended: 30 seconds to 3 minutes)
+            <br />
+            Video will be automatically processed for adaptive streaming.
           </p>
         </div>
       )}
@@ -99,3 +138,4 @@ const FAQVideoForm = ({ course }: Props) => {
 };
 
 export default FAQVideoForm;
+

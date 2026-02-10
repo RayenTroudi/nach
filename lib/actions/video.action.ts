@@ -11,11 +11,13 @@ import Video from "../models/video.model";
 import Section from "../models/section.model";
 import Course from "../models/course.model";
 import User from "../models/user.model";
+import MuxData from "../models/muxdata.model";
 import { revalidatePath } from "next/cache";
 import { getCourseById } from "./course.action";
 import { pullVideoFromSection } from "./section.action";
 import UserProgress from "../models/userprogress.model";
 import { deleteFileFromUploadThing } from "../utils/uploadthing-manager";
+import { deleteMuxAsset } from "../mux";
 
 export const getVideoById = async (videoId: string) => {
   try {
@@ -41,6 +43,7 @@ export const getVideoById = async (videoId: string) => {
           },
         },
       })
+      .populate("muxData")
       .populate("userProgress");
 
     if (!video) {
@@ -98,14 +101,31 @@ export const deleteVideo = async (params: DeleteVideoParams) => {
     if (course.instructor._id.toString() !== instructorId.toString())
       throw new Error("Unauthorized, this course does not belong to you.");
 
-    // Get video before deleting to retrieve the video URL
-    const video = await Video.findById(videoId);
+    // Get video before deleting to retrieve resources
+    const video = await Video.findById(videoId).populate('muxData');
     
-    if (video && video.videoUrl) {
-      // Delete video file from UploadThing if it's an UploadThing URL
-      if (video.videoUrl.includes('utfs.io')) {
+    if (video) {
+      // Delete Mux asset if it exists
+      if (video.muxData?.assetId) {
+        console.log('[Delete Video] Removing Mux asset:', video.muxData.assetId);
+        try {
+          await deleteMuxAsset(video.muxData.assetId);
+          await MuxData.findByIdAndDelete(video.muxData._id);
+        } catch (error) {
+          console.error('[Delete Video] Failed to delete Mux asset:', error);
+          // Continue with deletion even if Mux fails
+        }
+      }
+
+      // Delete video file from UploadThing if it exists (for legacy videos)
+      if (video.videoUrl && video.videoUrl.includes('utfs.io')) {
         console.log('[Delete Video] Removing file from UploadThing:', video.videoUrl);
-        await deleteFileFromUploadThing(video.videoUrl);
+        try {
+          await deleteFileFromUploadThing(video.videoUrl);
+        } catch (error) {
+          console.error('[Delete Video] Failed to delete from UploadThing:', error);
+          // Continue with deletion even if UploadThing fails
+        }
       }
     }
 

@@ -67,6 +67,7 @@ export const getCourseById = async (params: GetCourseByIdParams) => {
       .populate("category")
       .populate("students")
       .populate("purchases")
+      .populate("faqVideoMuxData")
       .populate({
         path: "feedbacks",
         populate: [
@@ -305,6 +306,7 @@ export const getAllPublishedCourses = async () => {
       .populate("instructor")
       .populate("category")
       .populate("students")
+      .populate("faqVideoMuxData")
       .populate({
         path: "feedbacks",
         populate: [
@@ -335,6 +337,7 @@ export const getCoursesByTitle = async (title: string) => {
       .populate("category")
       .populate("students")
       .populate("feedbacks")
+      .populate("faqVideoMuxData")
       .lean();
     return JSON.parse(JSON.stringify(courses));
   } catch (error) {
@@ -482,6 +485,7 @@ export const getAllCourses = async () => {
       .populate("instructor")
       .populate("category")
       .populate("students")
+      .populate("faqVideoMuxData")
       .lean();
     return JSON.parse(JSON.stringify(courses));
   } catch (error) {
@@ -498,6 +502,7 @@ export const getPendingCourses = async () => {
       .populate("category")
       .populate("students")
       .populate("feedbacks")
+      .populate("faqVideoMuxData")
       .lean();
 
     return JSON.parse(JSON.stringify(courses));
@@ -673,6 +678,7 @@ export const getCoursesByFilter = async (filters: CourseState) => {
       .populate("instructor")
       .populate("category")
       .populate("students")
+      .populate("faqVideoMuxData")
       .lean();
 
     const courses = await courseQuery;

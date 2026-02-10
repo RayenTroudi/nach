@@ -3,7 +3,6 @@ import {
   AlignCenterVertical,
   LucideHeart,
   Video as LucideVideo,
-  PlayCircle,
 } from "lucide-react";
 
 import { Spinner } from "@/components/shared";
@@ -25,10 +24,7 @@ import { scnToast } from "@/components/ui/use-toast";
 import { useCart } from "@/contexts/CartContext";
 // import { useWishlist } from "@/contexts/WishlistContext"; // TODO: Create WishlistContext
 import BankTransferUpload from "./BankTransferUpload";
-import MuxPlayer from "@mux/mux-player-react";
-import { getProxiedVideoUrl } from "@/lib/utils/video-url-helper";
-import AdaptiveVideoPlayer from "@/components/shared/AdaptiveVideoPlayer";
-import { convertToVideoSources } from "@/lib/utils/video-helpers";
+import MuxVideoPlayer, { getMuxThumbnail } from "@/components/shared/MuxVideoPlayer";
 
 interface Props {
   course: TCourse;
@@ -53,7 +49,6 @@ const PurchaseCourseCard = ({
   const [isFilled, setIsFilled] = useState(false);
   const { user } = useUser();
   const [isInCart, setIsInCart] = useState(false);
-  const [isVideoPlaying, setIsVideoPlaying] = useState(false);
 
   // Update wishlist and cart state when they change
   useEffect(() => {
@@ -153,92 +148,51 @@ const PurchaseCourseCard = ({
           <div className="w-full aspect-video bg-slate-200 dark:bg-slate-950 flex items-center justify-center">
             <Spinner size={50} />
           </div>
-        ) : (
-          <div className="relative w-full aspect-video group">
-            {/* Check if there's a valid video to display */}
-            {(videoToPreview?.videoUrl || allFreeVideos[0]?.videoUrl) ? (
-              <>
-                {/* Determine if we should use AdaptiveVideoPlayer or MuxPlayer */}
-                {(videoToPreview?.videoUrl || allFreeVideos[0]?.videoUrl || "").startsWith('https://utfs.io/') ? (
-                  // Use AdaptiveVideoPlayer for UploadThing videos
-                  <div className="w-full h-full">
-                    <AdaptiveVideoPlayer
-                      sources={convertToVideoSources(videoToPreview || allFreeVideos[0])}
-                      poster={course?.thumbnail!}
-                      defaultQuality="auto"
-                      enableAutoQuality={true}
-                      onError={(error) => {
-                        console.error("Video preview error:", error);
-                      }}
-                    />
-                  </div>
-                ) : (
-                  // Use MuxPlayer for Mux videos
-                  <>
-                    {/* Play Icon Overlay - Shows when video is paused */}
-                    {!isVideoPlaying && (
-                      <div 
-                        className="absolute inset-0 z-10 flex items-center justify-center bg-black/20 group-hover:bg-black/30 transition-all duration-300 cursor-pointer"
-                        onClick={() => {
-                          const videoElement = document.querySelector('mux-player') as any;
-                          if (videoElement) {
-                            videoElement.play();
-                            setIsVideoPlaying(true);
-                          }
-                        }}
-                      >
-                        <div className="transform group-hover:scale-110 transition-transform duration-300">
-                          <PlayCircle 
-                            className="w-20 h-20 text-white drop-shadow-2xl opacity-90 group-hover:opacity-100" 
-                            strokeWidth={1.5}
-                            fill="rgba(221, 0, 0, 0.8)"
-                          />
-                        </div>
-                      </div>
-                    )}
-                    
-                    <MuxPlayer
-                      playbackId={videoToPreview?.muxData?.playbackId || allFreeVideos[0]?.muxData?.playbackId}
-                      poster={course?.thumbnail!}
-                      streamType="on-demand"
-                      metadata={{
-                        video_id: videoToPreview?._id?.toString() || allFreeVideos[0]?._id?.toString(),
-                        video_title: videoToPreview?.title || allFreeVideos[0]?.title || course?.title,
-                        course_id: course?._id?.toString(),
-                      }}
-                      accentColor="#DD0000"
-                      style={{ 
-                        width: '100%', 
-                        height: '100%', 
-                        borderRadius: 0,
-                        '--media-object-fit': 'cover',
-                      } as React.CSSProperties}
-                      onPlay={() => setIsVideoPlaying(true)}
-                      onPause={() => setIsVideoPlaying(false)}
-                      onEnded={() => setIsVideoPlaying(false)}
-                    />
-                  </>
-                )}
-              </>
-            ) : (
-              // Show thumbnail image when no video is available
-              <div className="relative w-full h-full">
-                <Image
-                  src={course?.thumbnail || '/images/placeholder.jpg'}
-                  alt={course?.title || 'Course preview'}
-                  fill
-                  className="object-cover"
+        ) : (() => {
+          // Calculate the playback ID once to avoid inconsistencies
+          const previewPlaybackId = videoToPreview?.muxData?.playbackId || allFreeVideos[0]?.muxData?.playbackId;
+          const hasValidPlaybackId = previewPlaybackId && previewPlaybackId.trim() !== '';
+          
+          // Get poster - use course thumbnail or generate from playbackId
+          const posterUrl = course?.thumbnail || (hasValidPlaybackId ? getMuxThumbnail(previewPlaybackId) : undefined);
+
+          return (
+            <div className="relative w-full aspect-video">
+              {/* Check if there's a valid video with Mux data to display */}
+              {hasValidPlaybackId ? (
+                <MuxVideoPlayer
+                  playbackId={previewPlaybackId}
+                  title={videoToPreview?.title || allFreeVideos[0]?.title || course?.title}
+                  poster={posterUrl}
+                  metadata={{
+                    video_id: videoToPreview?._id?.toString() || allFreeVideos[0]?._id?.toString(),
+                    video_title: videoToPreview?.title || allFreeVideos[0]?.title || course?.title,
+                    course_id: course?._id?.toString(),
+                  }}
+                  showControls={true}
+                  minimalHover={true}
+                  onLoadedData={() => console.log('Video loaded')}
                 />
-                <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
-                  <div className="text-center text-white">
-                    <LucideVideo className="w-16 h-16 mx-auto mb-2 opacity-50" />
-                    <p className="text-sm">{t('noPreviewAvailable')}</p>
+              ) : (
+                // Show thumbnail image when no video is available
+                <div className="relative w-full h-full">
+                  <Image
+                    src={course?.thumbnail || '/images/placeholder.jpg'}
+                    alt={course?.title || 'Course preview'}
+                    fill
+                    className="object-cover"
+                  />
+                  <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
+                    <div className="text-center text-white">
+                      <LucideVideo className="w-16 h-16 mx-auto mb-2 opacity-50" />
+                      <p className="text-sm">{t('noPreviewAvailable')}</p>
+                    </div>
                   </div>
                 </div>
-              </div>
-            )}
-          </div>
-        )}
+              )}
+            </div>
+          );
+        })()}
 
         {/* Card Content */}
         <div className="p-6 space-y-6">

@@ -22,7 +22,8 @@
     "check:faq": "tsx scripts/check-faq-videos.ts",
     "delete:videos": "tsx scripts/delete-all-videos.ts",
     "encode:video": "tsx scripts/encode-uploadthing-videos.ts",
-    "encode:batch": "tsx scripts/batch-encode-videos.ts"
+    "encode:batch": "tsx scripts/batch-encode-videos.ts",
+    "migrate:videos": "tsx scripts/migrate-videos-to-mux.ts"
   },
   "dependencies": {
     "@clerk/nextjs": "^4.29.6",

@@ -19,6 +19,7 @@ export interface ICourse extends Document {
   status?: CourseStatusEnum;
   courseType?: CourseTypeEnum;
   faqVideo?: string;
+  faqVideoMuxData?: Schema.Types.ObjectId;
   instructor: Schema.Types.ObjectId;
   category: Schema.Types.ObjectId;
   exam?: Schema.Types.ObjectId;
@@ -59,6 +60,7 @@ export const CourseSchema = new Schema(
       default: CourseTypeEnum.Regular,
     },
     faqVideo: { type: String, default: "" },
+    faqVideoMuxData: { type: Schema.Types.ObjectId, ref: "MuxData", default: null },
     exam: { type: Schema.Types.ObjectId, ref: "Exam", default: null },
     instructor: { type: Schema.Types.ObjectId, ref: "User" },
     category: { type: Schema.Types.ObjectId, ref: "Category" },

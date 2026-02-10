@@ -69,3 +69,151 @@
 .vjs-has-started.vjs-paused .vjs-control-bar {
   transform: translateY(0);
 }
+
+/* Minimal hover mode - hide all Mux player controls */
+.minimal-hover-player::part(bottom play-button center gesture-layer) {
+  display: none !important;
+}
+
+.minimal-hover-player {
+  --controls: none !important;
+  --media-control-display: none !important;
+}
+
+/* Ensure no hover effects on Mux player in minimal mode */
+.minimal-hover-player:hover::part(bottom play-button center) {
+  display: none !important;
+  opacity: 0 !important;
+}
+
+/* YouTube-style Mux Player Controls - VERTICAL LAYOUT */
+mux-player {
+  --controls: auto;
+  --media-control-background: transparent;
+  --media-control-hover-background: rgba(255, 255, 255, 0.15);
+  --media-range-track-height: 4px;
+  --media-time-range-hover-height: 6px;
+  --media-range-track-background: rgba(255, 255, 255, 0.3);
+  --media-range-bar-color: #DD0000;
+  --media-preview-background: rgba(0, 0, 0, 0.9);
+  --media-range-thumb-background: #DD0000;
+  --media-tooltip-background: rgba(28, 28, 28, 0.95);
+  --media-font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --media-font-size: 14px;
+  --media-button-icon-width: 32px;
+  --media-button-icon-height: 32px;
+  --media-control-padding: 12px 8px;
+  --media-control-bar-background: linear-gradient(to left, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.7) 70%, transparent 100%);
+}
+
+/* Important: Hide the big centered play button for YouTube-style */
+mux-player:not(.minimal-hover-player) {
+  --media-play-button-display: none;
+}
+
+mux-player.fullscreen-player {
+  --media-play-button-display: none;
+}
+
+/* Vertical Control Bar - Positioned on Right Side */
+mux-player::part(bottom) {
+  position: absolute !important;
+  right: 0 !important;
+  top: 0 !important;
+  bottom: 0 !important;
+  width: 70px !important;
+  height: 100% !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  align-items: center !important;
+  gap: 16px !important;
+  padding: 24px 10px !important;
+  background: linear-gradient(to left, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.7) 70%, transparent 100%) !important;
+  backdrop-filter: blur(8px) !important;
+}
+
+/* Stack all controls vertically */
+mux-player::part(play-button),
+mux-player::part(mute-button),
+mux-player::part(fullscreen-button) {
+  width: 48px !important;
+  height: 48px !important;
+  margin: 0 !important;
+  border-radius: 8px !important;
+  transition: all 0.2s ease !important;
+}
+
+mux-player::part(play-button):hover,
+mux-player::part(mute-button):hover,
+mux-player::part(fullscreen-button):hover {
+  background: rgba(255, 255, 255, 0.15) !important;
+  transform: scale(1.05) !important;
+}
+
+/* Hide time display in vertical mode (too wide) */
+mux-player::part(time-display) {
+  display: none !important;
+}
+
+/* Vertical progress bar - centered and prominent */
+mux-player::part(time-range) {
+  order: 0 !important;
+  flex: 1 !important;
+  height: auto !important;
+  width: 8px !important;
+  min-height: 200px !important;
+  max-height: 60% !important;
+  margin: 20px 0 !important;
+  background: rgba(255, 255, 255, 0.2) !important;
+  border-radius: 4px !important;
+  overflow: hidden !important;
+}
+
+mux-player::part(time-range):hover {
+  width: 10px !important;
+  transition: width 0.2s ease !important;
+}
+
+/* Volume slider vertical */
+mux-player::part(volume-range) {
+  width: 6px !important;
+  height: 80px !important;
+  margin: 8px 0 !important;
+  background: rgba(255, 255, 255, 0.2) !important;
+  border-radius: 3px !important;
+}
+
+/* Fullscreen enhancements */
+mux-player.fullscreen-player {
+  --media-control-bar-background: linear-gradient(to left, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.8) 70%, transparent 100%);
+  --media-control-padding: 16px 10px;
+  --media-font-size: 15px;
+}
+
+mux-player.fullscreen-player::part(bottom) {
+  width: 80px !important;
+  gap: 16px !important;
+  padding: 24px 12px !important;
+}
+
+mux-player.fullscreen-player::part(play-button),
+mux-player.fullscreen-player::part(mute-button),
+mux-player.fullscreen-player::part(fullscreen-button) {
+  width: 56px !important;
+  height: 56px !important;
+}
+
+/* Auto-hide vertical controls when playing */
+mux-player[user-inactive]:not([paused])::part(bottom) {
+  opacity: 0;
+  transform: translateX(100%);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+mux-player:not([user-inactive])::part(bottom),
+mux-player[paused]::part(bottom),
+mux-player:hover::part(bottom) {
+  opacity: 1;
+  transform: translateX(0);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}

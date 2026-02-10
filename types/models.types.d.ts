@@ -99,6 +99,7 @@ export type TCourse = {
   status?: CourseStatusEnum;
   courseType?: CourseTypeEnum;
   faqVideo?: string;
+  faqVideoMuxData?: TMuxData;
   instructor: TUser;
   category: TCategory;
   exam?: TExam;

@@ -571,7 +571,7 @@ const MuxVideoPlayer = ({
           {/* Timeline Progress Bar */}
           <div 
             ref={timelineRef}
-            className="relative h-1 bg-slate-200 dark:bg-slate-800 hover:h-2 transition-all cursor-pointer group/timeline pointer-events-auto z-10"
+            className="relative h-1 bg-slate-200 dark:bg-slate-800 hover:h-2 transition-all cursor-pointer group-timeline pointer-events-auto z-10"
             onMouseDown={handleTimelineMouseDown}
             onMouseMove={handleTimelineMouseMove}
             onMouseLeave={handleTimelineMouseLeave}

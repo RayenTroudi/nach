@@ -280,7 +280,6 @@ body,
   transition: stroke-dasharray 0.3s linear 0s;
   stroke: #DD0000;
 }
-@import "~@uploadthing/react/styles.css";
 
 /* Mux Player Customization */
 /* Make poster image fill entire container */

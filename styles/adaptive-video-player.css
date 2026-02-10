@@ -345,16 +345,3 @@
   pointer-events: auto !important;
 }
 
-/* Timeline progress bar styling with brand colors */
-.group\\/timeline:hover {
-  height: 8px !important;
-}
-
-.group\\/timeline .bg-gradient-to-r {
-  transition: all 0.3s ease;
-}
-
-.group\\/timeline:hover .bg-gradient-to-r {
-  box-shadow: 0 0 12px rgba(220, 38, 38, 0.6);
-}
-

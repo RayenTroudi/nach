@@ -61,6 +61,11 @@ const nextConfig = {
   swcMinify: true,
   compress: true,
   poweredByHeader: false,
+  // Disable CSS minification to prevent issues with Tailwind's group/name syntax
+  productionBrowserSourceMaps: false,
+  compiler: {
+    removeConsole: process.env.NODE_ENV === "production",
+  },
 };
 
 export default nextConfig;

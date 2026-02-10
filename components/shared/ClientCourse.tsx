@@ -58,7 +58,7 @@ const ClientCourse = ({
       >
       <BorderBeam size={250} duration={12} delay={9} />
       <div className="absolute top-0 left-0 w-full aspect-[6/1] bg-gradient-to-b from-black/50 to-transparent"></div>
-      <Badge text={course?.category.name} />
+      {course?.category?.name && <Badge text={course.category.name} />}
 
       <Image
         src={

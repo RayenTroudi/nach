@@ -134,6 +134,7 @@ export default function FAQVideoPlayer({
                     title={course.title}
                     poster={posterUrl}
                     autoPlay={autoPlay}
+                    muted={false}
                     aspectRatio="16:9"
                     metadata={{
                       video_id: course._id?.toString(),
@@ -146,6 +147,7 @@ export default function FAQVideoPlayer({
                       setIsLoading(false);
                     }}
                     showControls={true}
+                    minimalHover={false}
                     className="h-full"
                   />
                 </div>

@@ -252,3 +252,46 @@
 .adaptive-video-player.quality-changing {
   animation: qualityChange 0.5s ease;
 }
+
+/* ========================================
+   Mux Video Player Styles
+   ======================================== */
+
+/* Timeline thumbnail preview positioning - positioned lower for better visibility */
+.mux-video-player mux-player::part(preview-thumbnail),
+.mux-video-player media-preview-thumbnail {
+  bottom: 60px !important;
+  margin-bottom: 0 !important;
+}
+
+/* Timeline thumbnail styling */
+.mux-video-player mux-player::part(preview-thumbnail) {
+  border-radius: 6px;
+  border: 2px solid rgba(255, 255, 255, 0.9);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
+  transform: translateY(-10px);
+}
+
+/* Ensure thumbnail is visible and not clipped */
+.mux-video-player {
+  overflow: visible !important;
+}
+
+.mux-video-player mux-player {
+  overflow: visible !important;
+}
+
+/* Control bar styling */
+.mux-video-player mux-player::part(bottom) {
+  padding-bottom: 8px;
+}
+
+/* Timeline hover area */
+.mux-video-player mux-player::part(time-range) {
+  cursor: pointer;
+}
+
+/* Quality selector custom positioning */
+.video-controls.quality-selector {
+  z-index: 50;
+}

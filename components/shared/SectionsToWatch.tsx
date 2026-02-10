@@ -253,7 +253,7 @@ const SectionsToWatch = ({
                   )}
                 </div>
               </AccordionTrigger>
-            <AccordionContent className="flex flex-col gap-2 w-full px-2 pb-2">
+            <AccordionContent className="flex flex-col gap-2 w-full px-2 pb-2 bg-white dark:bg-slate-900">
               <div className="flex flex-col items-start gap-x-1 w-full">
                 {section?.videos?.length ? (
                   <>

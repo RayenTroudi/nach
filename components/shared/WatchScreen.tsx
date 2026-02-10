@@ -91,7 +91,7 @@ const WatchScreen = ({
           {isAdmin ? <ReviewBanner course={course} /> : null}
 
           {/* Modern Video Player + Collapsible Sidebar Layout */}
-          <div className="relative flex flex-col lg:flex-row w-full bg-slate-950">
+          <div className="relative flex flex-col lg:flex-row w-full bg-white dark:bg-slate-950">
             {/* Video Player Section - Enhanced with Toggle Button */}
             <div className={`w-full transition-all duration-500 ease-in-out ${isSidebarOpen ? 'lg:flex-1' : 'lg:w-full'} relative`}>
               {videoToWatch && videoToWatch.videoUrl ? (
@@ -102,8 +102,8 @@ const WatchScreen = ({
                     poster={course?.thumbnail!}
                   />
                   
-                  {/* Video Title Overlay - Modern Design */}
-                  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent p-6 lg:p-8">
+                  {/* Video Title Overlay - Modern Design - Moved up to avoid controls */}
+                  <div className="absolute bottom-16 left-0 right-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent p-4 lg:p-6 pointer-events-none z-10">
                     <div className="max-w-5xl">
                       <h1 className="text-xl lg:text-2xl font-bold text-white drop-shadow-lg">
                         {videoToWatch.title}

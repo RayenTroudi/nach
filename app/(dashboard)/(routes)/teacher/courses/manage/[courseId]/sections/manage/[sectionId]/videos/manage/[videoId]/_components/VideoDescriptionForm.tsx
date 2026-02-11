@@ -150,7 +150,6 @@ const VideoDescriptionForm = ({ video }: Props) => {
                         className={`text-xs font-medium ${
                           charCount > MAX_CHARACTERS
                             ? "text-red-500"
-                    setCharCount(video.description?.length || 0);
                             : charCount > MAX_CHARACTERS * 0.9
                             ? "text-amber-500"
                             : "text-slate-400 dark:text-slate-500"

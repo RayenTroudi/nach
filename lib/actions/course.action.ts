@@ -82,7 +82,11 @@ export const getCourseById = async (params: GetCourseByIdParams) => {
       .populate({
         path: "sections",
         populate: [
-          { path: "videos", populate: { path: "muxData" } },
+          { 
+            path: "videos", 
+            populate: { path: "muxData" },
+            options: { sort: { position: 1 } }
+          },
           { path: "attachments" },
         ],
         options: { sort: { position: 1 } },

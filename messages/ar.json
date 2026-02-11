@@ -959,7 +959,10 @@
     "nextLesson": "الدرس التالي",
     "previousLesson": "الدرس السابق",
     "markComplete": "تحديد كمكتمل",
-    "markIncomplete": "تحديد كغير مكتمل"
+    "markIncomplete": "تحديد كغير مكتمل",
+    "description": "وصف الفيديو",
+    "showMore": "عرض المزيد",
+    "showLess": "عرض أقل"
   },
   "quiz": {
     "startQuiz": "بدء الاختبار",

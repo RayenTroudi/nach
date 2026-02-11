@@ -959,7 +959,10 @@
     "nextLesson": "Nächste Lektion",
     "previousLesson": "Vorherige Lektion",
     "markComplete": "Als abgeschlossen markieren",
-    "markIncomplete": "Als unvollständig markieren"
+    "markIncomplete": "Als unvollständig markieren",
+    "description": "Videobeschreibung",
+    "showMore": "Mehr anzeigen",
+    "showLess": "Weniger anzeigen"
   },
   "quiz": {
     "startQuiz": "Quiz starten",

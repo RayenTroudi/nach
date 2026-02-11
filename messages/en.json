@@ -959,7 +959,10 @@
     "nextLesson": "Next Lesson",
     "previousLesson": "Previous Lesson",
     "markComplete": "Mark Complete",
-    "markIncomplete": "Mark Incomplete"
+    "markIncomplete": "Mark Incomplete",
+    "description": "Video Description",
+    "showMore": "Show more",
+    "showLess": "Show less"
   },
   "quiz": {
     "startQuiz": "Start Quiz",

@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 
 import {
   TCourse,
@@ -12,6 +13,7 @@ import {
 import VideoPlayer from "@/components/shared/VideoPlayer";
 import SectionsToWatch from "./SectionsToWatch";
 import ReviewBanner from "./ReviewBanner";
+import LinkifiedText from "@/components/shared/LinkifiedText";
 import { TUserCourseVideoCompleted } from "../../types/models.types";
 
 interface Props {
@@ -31,8 +33,10 @@ const WatchScreen = ({
 }: Props) => {
   const router = useRouter();
   const pathname = usePathname();
+  const t = useTranslations("video");
 
   const [isMounted, setIsMounted] = useState<boolean>(false);
+  const [isDescriptionExpanded, setIsDescriptionExpanded] = useState<boolean>(false);
 
   const allVideos =
     course?.sections
@@ -42,6 +46,8 @@ const WatchScreen = ({
   const isStudent =
     !pathname.includes("/admin") && !pathname.includes("/teacher");
   const isAdmin = pathname.includes("/admin") || pathname.startsWith("/admin");
+  
+  const MAX_DESCRIPTION_LENGTH = 300;
 
   // Find first available video
   const getFirstVideo = () => {
@@ -58,10 +64,11 @@ const WatchScreen = ({
   const [videoToWatch, setVideoToWatch] = useState<TVideo | null>(getFirstVideo());
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(true);
-
+    
   const onChangeVideoToWatchHandler = (video: TVideo) => {
     setIsLoading(true);
     setVideoToWatch(video);
+    setIsDescriptionExpanded(false); // Reset description state when changing videos
     // Remove video immediately without unnecessary delay
     setIsLoading(false);
   };
@@ -166,11 +173,39 @@ const WatchScreen = ({
                 <div className="bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800">
                   <div className="max-w-5xl mx-auto px-6 lg:px-8 py-6">
                     <h3 className="text-sm font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">
-                      Video Description
+                      {t("description")}
                     </h3>
-                    <p className="text-base text-slate-700 dark:text-slate-300 whitespace-pre-wrap leading-relaxed">
-                      {videoToWatch.description}
-                    </p>
+                    <div className="text-base text-slate-700 dark:text-slate-300 leading-relaxed">
+                      {videoToWatch.description.length > MAX_DESCRIPTION_LENGTH && !isDescriptionExpanded ? (
+                        <>
+                          <LinkifiedText 
+                            text={videoToWatch.description.substring(0, MAX_DESCRIPTION_LENGTH) + "..."}
+                            className="whitespace-pre-wrap"
+                          />
+                          <button
+                            onClick={() => setIsDescriptionExpanded(true)}
+                            className="block mt-2 text-brand-red-500 hover:text-brand-red-600 font-medium text-sm transition-colors duration-200"
+                          >
+                            {t("showMore")}
+                          </button>
+                        </>
+                      ) : (
+                        <>
+                          <LinkifiedText 
+                            text={videoToWatch.description}
+                            className="whitespace-pre-wrap"
+                          />
+                          {videoToWatch.description.length > MAX_DESCRIPTION_LENGTH && (
+                            <button
+                              onClick={() => setIsDescriptionExpanded(false)}
+                              className="block mt-2 text-brand-red-500 hover:text-brand-red-600 font-medium text-sm transition-colors duration-200"
+                            >
+                              {t("showLess")}
+                            </button>
+                          )}
+                        </>
+                      )}
+                    </div>
                   </div>
                 </div>
               )}

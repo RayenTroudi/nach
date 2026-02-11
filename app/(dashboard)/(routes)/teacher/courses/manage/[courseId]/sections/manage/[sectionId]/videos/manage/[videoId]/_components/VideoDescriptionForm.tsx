@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
 import { PencilLineIcon } from "lucide-react";
-import { ShowMoreLess, Spinner } from "@/components/shared";
+import { ShowMoreLess, Spinner, LinkifiedText } from "@/components/shared";
 import { scnToast } from "@/components/ui/use-toast";
 import { usePathname, useRouter } from "next/navigation";
 import { updateVideo } from "@/lib/actions/video.action";
@@ -110,9 +110,9 @@ const VideoDescriptionForm = ({ video }: Props) => {
           <div className="w-full flex items-center justify-between">
             <div className="flex-1">
               {video.description ? (
-                <p className="font-normal text-slate-700 dark:text-slate-300 whitespace-pre-wrap">
-                  <ShowMoreLess text={video.description} />
-                </p>
+                <div className="font-normal text-slate-700 dark:text-slate-300 whitespace-pre-wrap">
+                  <LinkifiedText text={video.description} />
+                </div>
               ) : (
                 <p className="font-normal text-slate-400 dark:text-slate-500 italic">
                   No description added yet
@@ -135,8 +135,8 @@ const VideoDescriptionForm = ({ video }: Props) => {
                   <FormItem>
                     <FormControl>
                       <Textarea
-                        placeholder="Add a description for this video (optional)..."
-                        className="text-slate-700 dark:text-slate-200 min-h-[120px]"
+                        placeholder="Add a description for this video (optional)...\n\nTip: You can add clickable links:\n• Paste URL directly: https://example.com\n• Or use markdown: [Click here](https://example.com)"
+                        className="text-slate-700 dark:text-slate-200 min-h-[140px]"
                         {...field}
                         onChange={(e) => {
                           field.onChange(e);

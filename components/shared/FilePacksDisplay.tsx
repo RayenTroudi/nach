@@ -6,6 +6,7 @@ import { scnToast } from "@/components/ui/use-toast";
 import { useRouter } from "next/navigation";
 import { Spinner } from "@/components/shared";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 
 interface DocumentBundle {
   _id: string;
@@ -25,6 +26,7 @@ interface Props {
 
 const FilePacksDisplay = ({ filePacks, userId, purchasedBundleIds = [] }: Props) => {
   const router = useRouter();
+  const t = useTranslations("video");
   const [purchasingId, setPurchasingId] = useState<string | null>(null);
 
   if (!filePacks || filePacks.length === 0) {
@@ -71,10 +73,10 @@ const FilePacksDisplay = ({ filePacks, userId, purchasedBundleIds = [] }: Props)
           </div>
           <div>
             <h3 className="text-xl font-bold text-slate-900 dark:text-slate-100">
-              Recommended File Packs
+              {t("filePacksTitle")}
             </h3>
             <p className="text-sm text-slate-600 dark:text-slate-400">
-              Get additional resources to enhance your learning
+              {t("filePacksSubtitle")}
             </p>
           </div>
         </div>
@@ -100,7 +102,7 @@ const FilePacksDisplay = ({ filePacks, userId, purchasedBundleIds = [] }: Props)
                     {isPurchased && (
                       <div className="absolute top-2 right-2 bg-green-500 text-white px-2 py-1 rounded-full text-xs font-semibold flex items-center gap-1">
                         <Check size={12} />
-                        Owned
+                        {t("owned")}
                       </div>
                     )}
                   </div>
@@ -110,7 +112,7 @@ const FilePacksDisplay = ({ filePacks, userId, purchasedBundleIds = [] }: Props)
                     {isPurchased && (
                       <div className="absolute top-2 right-2 bg-green-500 text-white px-2 py-1 rounded-full text-xs font-semibold flex items-center gap-1">
                         <Check size={12} />
-                        Owned
+                        {t("owned")}
                       </div>
                     )}
                   </div>
@@ -145,7 +147,7 @@ const FilePacksDisplay = ({ filePacks, userId, purchasedBundleIds = [] }: Props)
                         className="bg-green-600 hover:bg-green-700 text-white"
                       >
                         <ExternalLink size={14} className="mr-1" />
-                        View Files
+                        {t("viewFiles")}
                       </Button>
                     ) : (
                       <Button
@@ -159,7 +161,7 @@ const FilePacksDisplay = ({ filePacks, userId, purchasedBundleIds = [] }: Props)
                         ) : (
                           <ShoppingCart size={14} className="mr-1" />
                         )}
-                        Buy Now
+                        {t("buyNow")}
                       </Button>
                     )}
                   </div>
@@ -171,7 +173,7 @@ const FilePacksDisplay = ({ filePacks, userId, purchasedBundleIds = [] }: Props)
 
         <div className="mt-6 p-4 bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-800 rounded-lg">
           <p className="text-sm text-blue-800 dark:text-blue-200">
-            💡 <strong>Tip:</strong> These file packs contain additional materials like templates, guides, and resources to complement this video lesson.
+            {t("filePacksTip")}
           </p>
         </div>
       </div>

@@ -962,7 +962,13 @@
     "markIncomplete": "Mark Incomplete",
     "description": "Video Description",
     "showMore": "Show more",
-    "showLess": "Show less"
+    "showLess": "Show less",
+    "filePacksTitle": "Recommended File Packs",
+    "filePacksSubtitle": "Get additional resources to enhance your learning",
+    "filePacksTip": "💡 Tip: These file packs contain additional materials like templates, guides, and resources to complement this video lesson.",
+    "viewFiles": "View Files",
+    "buyNow": "Buy Now",
+    "owned": "Owned"
   },
   "quiz": {
     "startQuiz": "Start Quiz",

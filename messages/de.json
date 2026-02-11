@@ -962,7 +962,13 @@
     "markIncomplete": "Als unvollständig markieren",
     "description": "Videobeschreibung",
     "showMore": "Mehr anzeigen",
-    "showLess": "Weniger anzeigen"
+    "showLess": "Weniger anzeigen",
+    "filePacksTitle": "Empfohlene Dateipakete",
+    "filePacksSubtitle": "Holen Sie sich zusätzliche Ressourcen, um Ihr Lernen zu verbessern",
+    "filePacksTip": "💡 Tipp: Diese Dateipakete enthalten zusätzliche Materialien wie Vorlagen, Anleitungen und Ressourcen, um diese Videolektion zu ergänzen.",
+    "viewFiles": "Dateien anzeigen",
+    "buyNow": "Jetzt kaufen",
+    "owned": "Im Besitz"
   },
   "quiz": {
     "startQuiz": "Quiz starten",

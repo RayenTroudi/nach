@@ -37,17 +37,8 @@ const VideoFilePacksForm = ({ video }: Props) => {
   const [selectedFilePacks, setSelectedFilePacks] = useState<string[]>([]);
   const [availableBundles, setAvailableBundles] = useState<DocumentBundle[]>([]);
 
-  // Safety check for nested properties
-  if (!video?.sectionId?.course) {
-    return (
-      <div className="bg-slate-200/50 dark:bg-slate-900 border-input shadow-md w-full border rounded-sm p-4">
-        <p className="text-red-500">Error: Video data is incomplete</p>
-      </div>
-    );
-  }
-
+  // Initialize selected file packs
   useEffect(() => {
-    // Initialize selected file packs
     if (video.filePacks && video.filePacks.length > 0) {
       const filePackIds = video.filePacks.map((pack: any) => 
         typeof pack === "string" ? pack : pack._id
@@ -56,31 +47,39 @@ const VideoFilePacksForm = ({ video }: Props) => {
     }
   }, [video.filePacks]);
 
+  // Fetch available document bundles when editing
   useEffect(() => {
-    // Fetch available document bundles when editing
-    if (editing && availableBundles.length === 0) {
-      fetchAvailableBundles();
-    }
-  }, [editing]);
+    const fetchBundles = async () => {
+      if (editing && availableBundles.length === 0 && video?.sectionId?.course?.instructor?._id) {
+        setIsFetchingBundles(true);
+        try {
+          const instructorId = video.sectionId.course.instructor._id;
+          const response = await fetch(`/api/document-bundles?instructorId=${instructorId}&published=true`);
+          if (!response.ok) throw new Error("Failed to fetch document bundles");
+          const data = await response.json();
+          setAvailableBundles(data.bundles || []);
+        } catch (error: any) {
+          scnToast({
+            variant: "destructive",
+            title: "Error",
+            description: error.message || "Failed to fetch available file packs",
+          });
+        } finally {
+          setIsFetchingBundles(false);
+        }
+      }
+    };
+    fetchBundles();
+  }, [editing, availableBundles.length, video?.sectionId?.course?.instructor?._id]);
 
-  const fetchAvailableBundles = async () => {
-    setIsFetchingBundles(true);
-    try {
-      const instructorId = video.sectionId.course.instructor._id;
-      const response = await fetch(`/api/document-bundles?instructorId=${instructorId}&published=true`);
-      if (!response.ok) throw new Error("Failed to fetch document bundles");
-      const data = await response.json();
-      setAvailableBundles(data.bundles || []);
-    } catch (error: any) {
-      scnToast({
-        variant: "destructive",
-        title: "Error",
-        description: error.message || "Failed to fetch available file packs",
-      });
-    } finally {
-      setIsFetchingBundles(false);
-    }
-  };
+  // Safety check for nested properties - AFTER hooks
+  if (!video?.sectionId?.course) {
+    return (
+      <div className="bg-slate-200/50 dark:bg-slate-900 border-input shadow-md w-full border rounded-sm p-4">
+        <p className="text-red-500">Error: Video data is incomplete</p>
+      </div>
+    );
+  }
 
   const toggleFilePack = (bundleId: string) => {
     setSelectedFilePacks((prev) =>

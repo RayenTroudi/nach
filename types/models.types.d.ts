@@ -150,6 +150,7 @@ export type TVideo = {
   sectionId: TSection;
   muxData?: TMuxData;
   userProgress?: TUserProgress[];
+  filePacks?: TDocumentBundle[];
   createdAt: Date;
 };
 

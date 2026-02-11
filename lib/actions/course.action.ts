@@ -84,7 +84,14 @@ export const getCourseById = async (params: GetCourseByIdParams) => {
         populate: [
           { 
             path: "videos", 
-            populate: { path: "muxData" },
+            populate: [
+              { path: "muxData" },
+              { 
+                path: "filePacks",
+                model: "DocumentBundle",
+                match: { isPublished: true }
+              }
+            ],
             options: { sort: { position: 1 } }
           },
           { path: "attachments" },

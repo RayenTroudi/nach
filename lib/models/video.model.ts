@@ -12,6 +12,7 @@ export interface IVideo extends Document {
   sectionId: Schema.Types.ObjectId;
   muxData?: Schema.Types.ObjectId; // Primary video source via Mux
   userProgress?: Schema.Types.ObjectId[];
+  filePacks?: Schema.Types.ObjectId[]; // References to DocumentBundle model for purchasable file packs
 }
 
 export const VideoSchema = new Schema(
@@ -32,6 +33,8 @@ export const VideoSchema = new Schema(
     // Mux data - primary video source
     muxData: { type: Schema.Types.ObjectId, ref: "MuxData", default: null },
     userProgress: [{ type: Schema.Types.ObjectId, ref: "UserProgress" }],
+    // File packs - purchasable document bundles
+    filePacks: [{ type: Schema.Types.ObjectId, ref: "DocumentBundle", default: [] }],
   },
   { timestamps: true }
 );

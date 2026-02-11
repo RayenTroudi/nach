@@ -8,6 +8,7 @@ import {
   VideoVisibilityForm,
 } from "./_components";
 import VideoUploadForm from "./_components/VideoUploadForm";
+import VideoFilePacksForm from "./_components/VideoFilePacksForm";
 import { Banner, CourseStepHeader } from "@/components/shared";
 import { TVideo } from "@/types/models.types";
 import { redirect } from "next/navigation";
@@ -94,6 +95,7 @@ const VideIdPage = async ({ params }: { params: { videoId: string } }) => {
             />
             <VideoTitleForm video={video} />
             <VideoDescriptionForm video={video} />
+            <VideoFilePacksForm video={video} />
             <VideoUploadForm video={video} />
             {/* <SectionThumbnailForm section={section} /> */}
           </div>

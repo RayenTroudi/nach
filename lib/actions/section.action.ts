@@ -38,6 +38,11 @@ export const getSectionById = async (sectionId: string) => {
       .populate({
         path: "videos",
         options: { sort: { position: 1 } },
+        populate: {
+          path: "filePacks",
+          model: "DocumentBundle",
+          match: { isPublished: true },
+        },
       });
     if (!section) throw new Error("Section not found");
     return JSON.parse(JSON.stringify(section));

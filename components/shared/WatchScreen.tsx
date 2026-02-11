@@ -14,6 +14,7 @@ import VideoPlayer from "@/components/shared/VideoPlayer";
 import SectionsToWatch from "./SectionsToWatch";
 import ReviewBanner from "./ReviewBanner";
 import LinkifiedText from "@/components/shared/LinkifiedText";
+import FilePacksDisplay from "@/components/shared/FilePacksDisplay";
 import { TUserCourseVideoCompleted } from "../../types/models.types";
 
 interface Props {
@@ -208,6 +209,17 @@ const WatchScreen = ({
                     </div>
                   </div>
                 </div>
+              )}
+
+              {/* File Packs Display - Show purchasable file packs */}
+              {videoToWatch && videoToWatch.filePacks && videoToWatch.filePacks.length > 0 && (
+                <FilePacksDisplay 
+                  filePacks={videoToWatch.filePacks as any[]}
+                  userId={user?._id}
+                  purchasedBundleIds={user?.purchasedDocumentBundles?.map((bundle: any) => 
+                    typeof bundle === 'string' ? bundle : bundle._id
+                  ) || []}
+                />
               )}
             </div>
 

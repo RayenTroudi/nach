@@ -44,7 +44,12 @@ export const getVideoById = async (videoId: string) => {
         },
       })
       .populate("muxData")
-      .populate("userProgress");
+      .populate("userProgress")
+      .populate({
+        path: "filePacks",
+        model: "DocumentBundle",
+        match: { isPublished: true }, // Only show published bundles
+      });
 
     if (!video) {
       throw new Error("Video not found");

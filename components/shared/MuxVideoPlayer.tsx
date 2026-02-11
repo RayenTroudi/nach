@@ -207,6 +207,7 @@ const MuxVideoPlayer = ({
 
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [duration, isMounted]);
 
   // Generate thumbnail from Mux if not provided
@@ -315,6 +316,7 @@ const MuxVideoPlayer = ({
       document.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseup', handleMouseUp);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isDraggingTimeline, duration]);
 
   // Handle play/pause toggle

@@ -161,15 +161,18 @@ export default function MyDocumentsPage() {
     }
   };
 
-  // Auto-expand bundle from URL param - removed as we now use navigation
+  // Auto-expand bundle from URL param
   useEffect(() => {
     const bundleId = searchParams.get("bundle");
-    if (bundleId) {
+    if (bundleId && purchases.length > 0) {
       // Find the purchase with this bundle
       const purchase = purchases.find(p => p.itemId?._id === bundleId);
       if (purchase && purchase.itemId) {
         if (purchase.itemId.isFolder) {
           navigateToFolder(purchase);
+        } else if (purchase.itemType === "bundle") {
+          // Navigate to regular bundle
+          navigateToBundle(purchase.itemId._id, purchase.itemId.title);
         }
       }
     }

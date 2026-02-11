@@ -61,7 +61,7 @@ const FilePacksDisplay = ({ filePacks, userId, purchasedBundleIds = [] }: Props)
   };
 
   const handleViewPurchased = (bundleId: string) => {
-    router.push(`/documents/bundle/${bundleId}`);
+    router.push(`/student/my-documents?bundle=${bundleId}`);
   };
 
   return (

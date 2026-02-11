@@ -15,6 +15,8 @@ export type TUser = {
   interests?: string[];
   createdCourses?: TCourse[];
   enrolledCourses?: TCourse[];
+  purchasedDocuments?: TDocument[];
+  purchasedDocumentBundles?: TDocumentBundle[];
   ownChatRooms?: TCourseChatRoom[];
   joinedChatRooms?: TCourseChatRoom[];
   privateChatRooms?: TPrivateChatRoom[];

@@ -24,8 +24,10 @@ import { CourseStatusEnum } from "@/lib/enums";
 import { TSection } from "@/types/models.types";
 
 const formSchema = z.object({
-  description: z.string().max(1000).optional(),
+  description: z.string().max(3000).optional(),
 });
+
+const MAX_CHARACTERS = 3000;
 
 interface Props {
   video: {
@@ -39,6 +41,9 @@ const VideoDescriptionForm = ({ video }: Props) => {
   const pathname = usePathname();
   const router = useRouter();
   const [editing, setIsEditing] = useState<boolean>(false);
+  const [charCount, setCharCount] = useState<number>(
+    video?.description?.length || 0
+  );
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -133,9 +138,27 @@ const VideoDescriptionForm = ({ video }: Props) => {
                         placeholder="Add a description for this video (optional)..."
                         className="text-slate-700 dark:text-slate-200 min-h-[120px]"
                         {...field}
+                        onChange={(e) => {
+                          field.onChange(e);
+                          setCharCount(e.target.value.length);
+                        }}
                       />
                     </FormControl>
-                    <FormMessage />
+                    <div className="flex justify-between items-center mt-1">
+                      <FormMessage />
+                      <p
+                        className={`text-xs font-medium ${
+                          charCount > MAX_CHARACTERS
+                            ? "text-red-500"
+                    setCharCount(video.description?.length || 0);
+                            : charCount > MAX_CHARACTERS * 0.9
+                            ? "text-amber-500"
+                            : "text-slate-400 dark:text-slate-500"
+                        }`}
+                      >
+                        {charCount} / {MAX_CHARACTERS} characters
+                      </p>
+                    </div>
                   </FormItem>
                 )}
               />

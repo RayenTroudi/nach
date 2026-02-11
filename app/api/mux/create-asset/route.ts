@@ -7,7 +7,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@clerk/nextjs';
-import { createMuxAsset } from '@/lib/mux';
+import { createMuxAsset, deleteMuxAsset } from '@/lib/mux';
 import { connectToDatabase } from '@/lib/mongoose';
 import Video from '@/lib/models/video.model';
 import MuxData from '@/lib/models/muxdata.model';
@@ -75,8 +75,18 @@ export async function POST(req: NextRequest) {
 
     console.log('[Mux] Asset created:', { assetId, playbackId });
 
-    // Delete existing MuxData if any
+    // Delete existing Mux asset and MuxData if any
     if (video.muxData) {
+      const existingMuxData = await MuxData.findById(video.muxData);
+      if (existingMuxData?.assetId) {
+        console.log('[Mux] Deleting old asset:', existingMuxData.assetId);
+        try {
+          await deleteMuxAsset(existingMuxData.assetId);
+        } catch (error) {
+          console.error('[Mux] Failed to delete old asset:', error);
+          // Continue even if deletion fails
+        }
+      }
       await MuxData.findByIdAndDelete(video.muxData);
     }
 

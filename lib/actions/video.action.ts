@@ -150,8 +150,9 @@ export const updateVideo = async (params: UpdateVideoParams) => {
     if (course.instructor._id.toString() !== instructorId.toString())
       throw new Error("Unauthorized, this course does not belong to you.");
 
-    const video = await Video.findByIdAndUpdate(videoId, data);
+    const video = await Video.findByIdAndUpdate(videoId, data, { new: true });
 
+    revalidatePath(path);
     return JSON.parse(JSON.stringify(video));
   } catch (error: any) {
     console.log("UPDATE VIDEO ERROR: ", error.message);

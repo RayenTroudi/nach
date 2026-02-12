@@ -1995,7 +1995,20 @@
     "filesPreview": "معاينة الملفات",
     "moreFiles": "ملفات إضافية",
     "totalFiles": "إجمالي الملفات",
-    "bundlesCount": "حزم"
+    "bundlesCount": "حزم",
+    "purchaseBundle": "شراء الحزمة",
+    "bundleCreator": "منشئ الحزمة",
+    "instructorInfo": "معلومات المدرب",
+    "whatsIncluded": "ما هو مشمول",
+    "lifetimeAccess": "وصول مدى الحياة",
+    "downloadable": "ملفات قابلة للتنزيل",
+    "alreadyPurchased": "تم الشراء بالفعل",
+    "viewDownload": "عرض وتنزيل",
+    "getFree": "احصل عليه مجانا",
+    "note": "ملاحظة",
+    "partOfFolder": "هذه الحزمة جزء من المجلد",
+    "includedDocuments": "الوثائق المضمنة",
+    "back": "رجوع"
   },
   "purchaseModal": {
     "title": "إتمام عملية الشراء",

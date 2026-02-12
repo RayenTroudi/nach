@@ -2008,7 +2008,20 @@
     "filesPreview": "Files Preview",
     "moreFiles": "more files",
     "totalFiles": "Total Files",
-    "bundlesCount": "bundles"
+    "bundlesCount": "bundles",
+    "purchaseBundle": "Purchase Bundle",
+    "bundleCreator": "Bundle Creator",
+    "instructorInfo": "Instructor Information",
+    "whatsIncluded": "What's Included",
+    "lifetimeAccess": "Lifetime access",
+    "downloadable": "Downloadable files",
+    "alreadyPurchased": "Already Purchased",
+    "viewDownload": "View & Download",
+    "getFree": "Get Free",
+    "note": "Note",
+    "partOfFolder": "This bundle is part of the folder",
+    "includedDocuments": "Included Documents",
+    "back": "Back"
   },
   "purchaseModal": {
     "title": "Complete Your Purchase",

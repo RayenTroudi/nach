@@ -69,8 +69,8 @@ const FilePacksDisplay = ({ filePacks, userId, purchasedBundleIds = [] }: Props)
         }
       }
 
-      // Navigate to the document bundle page for purchase
-      router.push(`/documents/bundle/${bundle._id}`);
+      // Navigate to the documents page
+      router.push(`/documents`);
     } catch (error: any) {
       scnToast({
         variant: "destructive",
@@ -180,16 +180,7 @@ const FilePacksDisplay = ({ filePacks, userId, purchasedBundleIds = [] }: Props)
                     </div>
                   )}
 
-                  <div className="flex items-center justify-between mt-4 pt-4 border-t border-slate-200 dark:border-slate-800">
-                    <div>
-                      <div className="text-2xl font-bold text-brand-red-600 dark:text-brand-red-400">
-                        {isLockedInFolder ? bundle.parentFolder!.price : bundle.price}
-                      </div>
-                      <div className="text-xs text-slate-500 dark:text-slate-500 uppercase">
-                        {isLockedInFolder ? bundle.parentFolder!.currency : bundle.currency}
-                      </div>
-                    </div>
-
+                  <div className="flex items-center justify-end mt-4 pt-4 border-t border-slate-200 dark:border-slate-800">
                     {isPurchased ? (
                       <Button
                         onClick={() => handleViewPurchased(bundle._id)}

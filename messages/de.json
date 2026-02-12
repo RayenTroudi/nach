@@ -1999,7 +1999,20 @@
     "filesPreview": "Dateivorschau",
     "moreFiles": "weitere Dateien",
     "totalFiles": "Gesamtdateien",
-    "bundlesCount": "Pakete"
+    "bundlesCount": "Pakete",
+    "purchaseBundle": "Paket kaufen",
+    "bundleCreator": "Paketersteller",
+    "instructorInfo": "Ausbilder-Informationen",
+    "whatsIncluded": "Was ist enthalten",
+    "lifetimeAccess": "Lebenslanger Zugang",
+    "downloadable": "Herunterladbare Dateien",
+    "alreadyPurchased": "Bereits gekauft",
+    "viewDownload": "Ansehen & Herunterladen",
+    "getFree": "Kostenlos erhalten",
+    "note": "Hinweis",
+    "partOfFolder": "Dieses Paket ist Teil des Ordners",
+    "includedDocuments": "Enthaltene Dokumente",
+    "back": "Zurück"
   },
   "purchaseModal": {
     "title": "Kauf abschließen",

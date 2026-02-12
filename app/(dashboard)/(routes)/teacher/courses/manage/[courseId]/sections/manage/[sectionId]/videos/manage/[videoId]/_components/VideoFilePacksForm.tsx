@@ -8,27 +8,10 @@ import { scnToast } from "@/components/ui/use-toast";
 import { updateVideo } from "@/lib/actions/video.action";
 import { updateCourseStatus } from "@/lib/actions";
 import { CourseStatusEnum } from "@/lib/enums";
-import { TSection } from "@/types/models.types";
+import { TSection, TVideo, TDocumentBundle } from "@/types/models.types";
 
-interface ParentFolder {
-  _id: string;
-  title: string;
-  price: number;
-  currency: string;
-  isFolder: boolean;
-}
-
-interface DocumentBundle {
-  _id: string;
-  title: string;
-  description?: string;
-  price: number;
-  currency: string;
-  thumbnail?: string;
-  isPublished: boolean;
-  isFolder?: boolean;
-  parentFolder?: ParentFolder;
-}
+// Use the imported TDocumentBundle type directly
+type DocumentBundle = TDocumentBundle;
 
 interface Breadcrumb {
   id: string | null;
@@ -36,11 +19,7 @@ interface Breadcrumb {
 }
 
 interface Props {
-  video: {
-    _id: string;
-    filePacks?: DocumentBundle[] | string[];
-    sectionId: TSection;
-  };
+  video: TVideo;
 }
 
 const VideoFilePacksForm = ({ video }: Props) => {
@@ -190,7 +169,10 @@ const VideoFilePacksForm = ({ video }: Props) => {
             {currentFilePacks.length > 0 ? (
               <div className="space-y-2">
                 {currentFilePacks.map((pack) => {
-                  const isInPaidFolder = pack.parentFolder && pack.parentFolder.price > 0;
+                  const isInPaidFolder = pack.parentFolder && 
+                    typeof pack.parentFolder === 'object' && 
+                    'price' in pack.parentFolder &&
+                    pack.parentFolder.price > 0;
                   
                   return (
                     <div
@@ -212,7 +194,7 @@ const VideoFilePacksForm = ({ video }: Props) => {
                             </span>
                           )}
                         </p>
-                        {isInPaidFolder && pack.parentFolder ? (
+                        {isInPaidFolder && pack.parentFolder && typeof pack.parentFolder === 'object' && 'title' in pack.parentFolder ? (
                           <div className="space-y-1">
                             <p className="text-xs text-amber-600 dark:text-amber-400">
                               📁 Part of: {pack.parentFolder.title}
@@ -280,7 +262,10 @@ const VideoFilePacksForm = ({ video }: Props) => {
                 {currentFolderId ? "Select items or navigate into folders:" : "Select file packs or folders:"}
               </p>
               {availableBundles.map((bundle) => {
-                const isInPaidFolder = bundle.parentFolder && bundle.parentFolder.price > 0;
+                const isInPaidFolder = bundle.parentFolder && 
+                  typeof bundle.parentFolder === 'object' && 
+                  'price' in bundle.parentFolder &&
+                  bundle.parentFolder.price > 0;
                 const isSelected = selectedFilePacks.includes(bundle._id);
                 
                 return (
@@ -343,7 +328,7 @@ const VideoFilePacksForm = ({ video }: Props) => {
                           {bundle.description}
                         </p>
                       )}
-                      {!bundle.isFolder && isInPaidFolder && bundle.parentFolder ? (
+                      {!bundle.isFolder && isInPaidFolder && bundle.parentFolder && typeof bundle.parentFolder === 'object' && 'title' in bundle.parentFolder ? (
                         <div className="flex items-center gap-2 mt-1">
                           <p className="text-xs text-amber-600 dark:text-amber-400">
                             📁 {bundle.parentFolder.title}

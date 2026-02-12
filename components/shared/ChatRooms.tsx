@@ -90,7 +90,7 @@ const ChatRooms = ({ chatRooms, user }: Props) => {
   return (
     <>
       {!chatRooms.length ? (
-        <div className="h-full w-full flex">
+        <div className="min-h-[calc(100vh-80px)] w-full flex">
           <LeftSideBar />
           <div className="flex-1 h-full flex items-center flex-col justify-center bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-950 dark:to-slate-900">
             <NoChatAnimation className="h-[300px] md:h-[500px]" />
@@ -103,12 +103,12 @@ const ChatRooms = ({ chatRooms, user }: Props) => {
           </div>
         </div>
       ) : (
-        <div className="flex h-full w-full">
+        <div className="flex min-h-[calc(100vh-80px)] w-full">
           <LeftSideBar />
           <div className="flex flex-1 h-full bg-slate-50 dark:bg-slate-950">
           {/* Fixed Sidebar */}
           <aside className={`
-            fixed top-0 left-0 bottom-0 
+            fixed top-[80px] left-0 bottom-0 
             w-full md:w-[380px] lg:w-[420px]
             bg-white dark:bg-slate-900 
             border-r border-slate-200 dark:border-slate-800
@@ -198,7 +198,7 @@ const ChatRooms = ({ chatRooms, user }: Props) => {
           </aside>
 
           {/* Main Content Area */}
-          <main className="flex-1 md:ml-[380px] lg:ml-[420px] h-screen">
+          <main className="flex-1 md:ml-[380px] lg:ml-[420px] h-[calc(100vh-80px)]">
             <ChatRoomConversation
               selectedChatRoom={selectedChatRoom}
               user={user}

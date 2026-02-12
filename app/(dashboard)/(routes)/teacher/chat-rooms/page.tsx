@@ -26,7 +26,11 @@ const TeacherChatRoomsPage = async () => {
     user._id
   );
   
-  return <ChatRooms chatRooms={allChatRooms} user={user} />;
+  return (
+    <div className="fixed top-[80px] left-0 right-0 bottom-0 overflow-hidden">
+      <ChatRooms chatRooms={allChatRooms} user={user} />
+    </div>
+  );
 };
 
 export default TeacherChatRoomsPage;

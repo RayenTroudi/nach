@@ -105,10 +105,10 @@ const ChatRooms = ({ chatRooms, user }: Props) => {
       ) : (
         <div className="flex h-full w-full">
           <LeftSideBar />
-          <div className="flex flex-1 h-screen bg-slate-50 dark:bg-slate-950">
+          <div className="flex flex-1 h-full bg-slate-50 dark:bg-slate-950">
           {/* Fixed Sidebar */}
           <aside className={`
-            fixed top-[80px] left-0 bottom-0 
+            fixed top-0 left-0 bottom-0 
             w-full md:w-[380px] lg:w-[420px]
             bg-white dark:bg-slate-900 
             border-r border-slate-200 dark:border-slate-800

@@ -99,7 +99,16 @@ export async function PATCH(
           }
           
           const instructorUser = talelUser || await User.findOne({ isAdmin: true }).sort({ createdAt: 1 });
-          console.log("   Instructor for resume chat:", instructorUser?.username || instructorUser?.email);
+          
+          if (!instructorUser) {
+            console.log("⚠️ No instructor user found to create chat room");
+            return NextResponse.json(
+              { success: false, error: "No instructor found" },
+              { status: 500 }
+            );
+          }
+          
+          console.log("   Instructor for resume chat:", instructorUser.username || instructorUser.email);
           
           // Find or create a "Resume Service" course to associate with the private chat
           let resumeServiceCourse = await Course.findOne({ 

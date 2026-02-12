@@ -81,18 +81,30 @@ export async function PATCH(
           console.log("⚠️ Cannot create chat room - student user not found");
           console.log("   Student should sign in and create a new resume request");
         } else {
-          // Find an admin user to be the instructor for resume service
-          const adminUser = await User.findOne({ isAdmin: true }).sort({ createdAt: 1 });
+          // Find Talel (the main instructor) for resume service private chats
+          const TALEL_CLERK_ID = "user_35hV3NV1RA4gd4NJQTWg7bSzYCJ";
+          const talelUser = await User.findOne({ clerkId: TALEL_CLERK_ID });
           
-          if (!adminUser) {
-            console.log("⚠️ No admin user found to create chat room");
-          } else {
-            console.log("   Admin/Instructor found:", adminUser.username || adminUser.email);
-            
-            // Find or create a "Resume Service" course to associate with the private chat
-            let resumeServiceCourse = await Course.findOne({ 
-              title: "Resume Service",
-              instructor: adminUser._id 
+          if (!talelUser) {
+            console.log("⚠️ Talel user not found, falling back to any admin");
+            // Fallback to any admin
+            const adminUser = await User.findOne({ isAdmin: true }).sort({ createdAt: 1 });
+            if (!adminUser) {
+              console.log("⚠️ No admin user found to create chat room");
+              return NextResponse.json(
+                { success: false, error: "No instructor found" },
+                { status: 500 }
+              );
+            }
+          }
+          
+          const instructorUser = talelUser || await User.findOne({ isAdmin: true }).sort({ createdAt: 1 });
+          console.log("   Instructor for resume chat:", instructorUser?.username || instructorUser?.email);
+          
+          // Find or create a "Resume Service" course to associate with the private chat
+          let resumeServiceCourse = await Course.findOne({ 
+            title: "Resume Service",
+            instructor: instructorUser._id 
             });
             
             if (!resumeServiceCourse) {
@@ -104,7 +116,7 @@ export async function PATCH(
               resumeServiceCourse = await Course.create({
                 title: "Resume Service",
                 description: "Professional resume creation service - Private chat for resume requests",
-                instructor: adminUser._id,
+                instructor: instructorUser._id,
                 category: defaultCategory?._id || null,
                 courseType: "regular",
                 price: 0,
@@ -119,12 +131,12 @@ export async function PATCH(
             const privateChatRoom = await createPrivateChatRoom({
               courseId: resumeServiceCourse._id.toString(),
               studentId: studentUser._id.toString(),
-              instructorId: adminUser._id.toString(),
+              instructorId: instructorUser._id.toString(),
             });
             
             console.log("✅ Private chat room created/verified for resume service");
             console.log("   Student:", studentUser.username || studentUser.email);
-            console.log("   Instructor:", adminUser.username || adminUser.email);
+            console.log("   Instructor:", instructorUser.username || instructorUser.email);
             console.log("   They can now chat about the resume requirements!");
 
             // Send approval email to user

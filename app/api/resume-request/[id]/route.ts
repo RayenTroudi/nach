@@ -163,7 +163,6 @@ export async function PATCH(
               console.error("❌ Error sending approval email:", emailError);
             }
           }
-        }
       } catch (chatError: any) {
         console.error("❌ Failed to create private chat room:", chatError.message);
         console.error(chatError.stack);

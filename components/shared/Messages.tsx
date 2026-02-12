@@ -47,12 +47,7 @@ const Messages = ({ roomId, messages, loggedInUser }: Props) => {
   useEffect(() => router.refresh(), [router, roomId]);
 
   return (
-    <div
-      style={{
-        height: "calc(100vh - 247px)",
-      }}
-      className="overflow-y-auto"
-    >
+    <div className="flex-1 overflow-y-auto">
       {!uniqueMessages.length ? (
         <div className="w-full h-full flex flex-col items-center justify-start">
           <NoChatAnimation className="h-[200px] md:h-[300px]" />

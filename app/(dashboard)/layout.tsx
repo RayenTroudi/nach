@@ -16,9 +16,11 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
 
       <InitialScreen>
         <Header />
-        <DashboardTranslationsProvider>
-          {children}
-        </DashboardTranslationsProvider>
+        <div className="pt-[80px]">
+          <DashboardTranslationsProvider>
+            {children}
+          </DashboardTranslationsProvider>
+        </div>
       </InitialScreen>
     </>
   );

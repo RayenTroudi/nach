@@ -37,7 +37,7 @@ const Header = async () => {
   }
 
   return (
-    <header className="z-50 border-b border-input flex items-center justify-between px-4 h-[80px] w-screen bg-transparent">
+    <header className="fixed top-0 left-0 right-0 z-50 border-b border-input flex items-center justify-between px-4 h-[80px] bg-white dark:bg-slate-950">
       {/* Logo */}
       <div className="flex items-center gap-x-4">
         <Logo />

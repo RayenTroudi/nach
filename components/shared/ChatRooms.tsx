@@ -90,7 +90,7 @@ const ChatRooms = ({ chatRooms, user }: Props) => {
   return (
     <>
       {!chatRooms.length ? (
-        <div className="min-h-[calc(100vh-80px)] w-full flex">
+        <div className="h-full w-full flex overflow-hidden">
           <LeftSideBar />
           <div className="flex-1 h-full flex items-center flex-col justify-center bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-950 dark:to-slate-900">
             <NoChatAnimation className="h-[300px] md:h-[500px]" />
@@ -103,9 +103,8 @@ const ChatRooms = ({ chatRooms, user }: Props) => {
           </div>
         </div>
       ) : (
-        <div className="flex min-h-[calc(100vh-80px)] w-full">
+        <>
           <LeftSideBar />
-          <div className="flex flex-1 h-full bg-slate-50 dark:bg-slate-950">
           {/* Fixed Sidebar */}
           <aside className={`
             fixed top-[80px] left-0 bottom-0 
@@ -198,7 +197,14 @@ const ChatRooms = ({ chatRooms, user }: Props) => {
           </aside>
 
           {/* Main Content Area */}
-          <main className="flex-1 md:ml-[380px] lg:ml-[420px] h-[calc(100vh-80px)]">
+          <main className={`
+            fixed top-[80px] right-0 bottom-0 left-0
+            md:left-[380px] lg:left-[420px]
+            flex flex-col overflow-hidden bg-slate-50 dark:bg-slate-900
+            transition-transform duration-300
+            z-30 md:z-10
+            ${!selectedChatRoom ? "translate-x-full md:translate-x-0" : "translate-x-0"}
+          `}>
             <ChatRoomConversation
               selectedChatRoom={selectedChatRoom}
               user={user}
@@ -210,13 +216,12 @@ const ChatRooms = ({ chatRooms, user }: Props) => {
                 loggedInUser={user}
               />
 
-              <div className="w-full h-[70px]">
+              <div className="w-full h-[70px] flex-shrink-0">
                 <MessageInput selectedChatRoom={selectedChatRoom!} user={user} />
               </div>
             </ChatRoomConversation>
           </main>
-          </div>
-        </div>
+        </>
       )}
     </>
   );

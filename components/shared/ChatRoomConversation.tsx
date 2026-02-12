@@ -32,7 +32,7 @@ const ChatRoomConversation = ({
   const otherUser = isPrivate && selectedChatRoom ? selectedChatRoom.students?.[0] : null;
 
   return (
-    <div className={`w-full h-full flex flex-col bg-slate-50 dark:bg-slate-900 ${selectedChatRoom ? "block" : "hidden md:flex"}`}>
+    <div className={`w-full h-full flex flex-col bg-slate-50 dark:bg-slate-900 overflow-hidden ${selectedChatRoom ? "block" : "hidden md:flex"}`}>
       {!selectedChatRoom ? (
         <div className="w-full h-full flex flex-col items-center justify-center">
           <NoChatAnimation className="h-[250px] md:h-[350px]" />
@@ -44,7 +44,7 @@ const ChatRoomConversation = ({
           </p>
         </div>
       ) : (
-        <div className="flex flex-col h-full">
+        <div className="flex flex-col h-full overflow-hidden">
           {/* Header */}
           <div className="flex-shrink-0 flex items-center justify-between px-4 md:px-6 py-4 bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 shadow-sm">
             <div className="flex items-center gap-x-3 flex-1 min-w-0">
@@ -116,7 +116,7 @@ const ChatRoomConversation = ({
           </div>
 
           {/* Messages Area */}
-          <div className="flex-1 overflow-hidden">
+          <div className="flex-1 flex flex-col overflow-hidden">
             {children}
           </div>
         </div>

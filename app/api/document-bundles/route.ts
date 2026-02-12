@@ -44,6 +44,10 @@ export async function GET(request: Request) {
     let bundles = await DocumentBundle.find(query)
       .populate("uploadedBy", "firstName lastName picture")
       .populate("documents")
+      .populate({
+        path: "parentFolder",
+        select: "title price currency isFolder"
+      })
       .select("+isFolder +parentFolder") // Explicitly select these fields
       .sort({ isFolder: -1, createdAt: -1 }) // Folders first, then by date
       .lean();

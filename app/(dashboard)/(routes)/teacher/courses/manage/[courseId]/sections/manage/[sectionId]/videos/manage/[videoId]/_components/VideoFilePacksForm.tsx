@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { PencilLineIcon, Package, X, Plus } from "lucide-react";
+import { PencilLineIcon, Package, X, Plus, FolderOpen, Lock, ChevronRight, Home } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/shared";
 import { scnToast } from "@/components/ui/use-toast";
@@ -9,6 +9,14 @@ import { updateVideo } from "@/lib/actions/video.action";
 import { updateCourseStatus } from "@/lib/actions";
 import { CourseStatusEnum } from "@/lib/enums";
 import { TSection } from "@/types/models.types";
+
+interface ParentFolder {
+  _id: string;
+  title: string;
+  price: number;
+  currency: string;
+  isFolder: boolean;
+}
 
 interface DocumentBundle {
   _id: string;
@@ -18,6 +26,13 @@ interface DocumentBundle {
   currency: string;
   thumbnail?: string;
   isPublished: boolean;
+  isFolder?: boolean;
+  parentFolder?: ParentFolder;
+}
+
+interface Breadcrumb {
+  id: string | null;
+  name: string;
 }
 
 interface Props {
@@ -36,6 +51,8 @@ const VideoFilePacksForm = ({ video }: Props) => {
   const [isFetchingBundles, setIsFetchingBundles] = useState<boolean>(false);
   const [selectedFilePacks, setSelectedFilePacks] = useState<string[]>([]);
   const [availableBundles, setAvailableBundles] = useState<DocumentBundle[]>([]);
+  const [currentFolderId, setCurrentFolderId] = useState<string | null>(null);
+  const [breadcrumbs, setBreadcrumbs] = useState<Breadcrumb[]>([{ id: null, name: "Root" }]);
 
   // Initialize selected file packs
   useEffect(() => {
@@ -47,14 +64,15 @@ const VideoFilePacksForm = ({ video }: Props) => {
     }
   }, [video.filePacks]);
 
-  // Fetch available document bundles when editing
+  // Fetch available document bundles when editing or folder changes
   useEffect(() => {
     const fetchBundles = async () => {
-      if (editing && availableBundles.length === 0 && video?.sectionId?.course?.instructor?._id) {
+      if (editing && video?.sectionId?.course?.instructor?._id) {
         setIsFetchingBundles(true);
         try {
           const instructorId = video.sectionId.course.instructor._id;
-          const response = await fetch(`/api/document-bundles?instructorId=${instructorId}&published=true`);
+          const parentParam = currentFolderId === null ? 'null' : currentFolderId;
+          const response = await fetch(`/api/document-bundles?instructorId=${instructorId}&published=true&parentFolder=${parentParam}`);
           if (!response.ok) throw new Error("Failed to fetch document bundles");
           const data = await response.json();
           setAvailableBundles(data.bundles || []);
@@ -70,7 +88,7 @@ const VideoFilePacksForm = ({ video }: Props) => {
       }
     };
     fetchBundles();
-  }, [editing, availableBundles.length, video?.sectionId?.course?.instructor?._id]);
+  }, [editing, currentFolderId, video?.sectionId?.course?.instructor?._id]);
 
   // Safety check for nested properties - AFTER hooks
   if (!video?.sectionId?.course) {
@@ -87,6 +105,34 @@ const VideoFilePacksForm = ({ video }: Props) => {
         ? prev.filter((id) => id !== bundleId)
         : [...prev, bundleId]
     );
+  };
+
+  const navigateToFolder = (folderId: string | null, folderTitle: string) => {
+    setCurrentFolderId(folderId);
+    if (folderId === null) {
+      // Going to root
+      setBreadcrumbs([{ id: null, name: "Root" }]);
+    } else {
+      // Going into a folder
+      setBreadcrumbs(prev => [...prev, { id: folderId, name: folderTitle }]);
+    }
+  };
+
+  const navigateToBreadcrumb = (index: number) => {
+    const crumb = breadcrumbs[index];
+    setCurrentFolderId(crumb.id);
+    setBreadcrumbs(breadcrumbs.slice(0, index + 1));
+  };
+
+  const handleItemClick = (bundle: DocumentBundle, e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (bundle.isFolder) {
+      // Navigate into the folder
+      navigateToFolder(bundle._id, bundle.title);
+    } else {
+      // Toggle selection for non-folder items
+      toggleFilePack(bundle._id);
+    }
   };
 
   const onSubmit = async () => {
@@ -143,22 +189,47 @@ const VideoFilePacksForm = ({ video }: Props) => {
           <div className="flex-1">
             {currentFilePacks.length > 0 ? (
               <div className="space-y-2">
-                {currentFilePacks.map((pack) => (
-                  <div
-                    key={pack._id}
-                    className="flex items-center gap-2 bg-white dark:bg-slate-800 p-3 rounded-md border border-slate-300 dark:border-slate-700"
-                  >
-                    <Package size={16} className="text-brand-red-500 flex-shrink-0" />
-                    <div className="flex-1 min-w-0">
-                      <p className="font-medium text-slate-700 dark:text-slate-200 truncate">
-                        {pack.title}
-                      </p>
-                      <p className="text-sm text-slate-500 dark:text-slate-400">
-                        {pack.price} {pack.currency.toUpperCase()}
-                      </p>
+                {currentFilePacks.map((pack) => {
+                  const isInPaidFolder = pack.parentFolder && pack.parentFolder.price > 0;
+                  
+                  return (
+                    <div
+                      key={pack._id}
+                      className="flex items-center gap-2 bg-white dark:bg-slate-800 p-3 rounded-md border border-slate-300 dark:border-slate-700"
+                    >
+                      {isInPaidFolder ? (
+                        <FolderOpen size={16} className="text-amber-500 flex-shrink-0" />
+                      ) : (
+                        <Package size={16} className="text-brand-red-500 flex-shrink-0" />
+                      )}
+                      <div className="flex-1 min-w-0">
+                        <p className="font-medium text-slate-700 dark:text-slate-200 truncate flex items-center gap-2">
+                          {pack.title}
+                          {isInPaidFolder && (
+                            <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300 text-xs rounded-full">
+                              <Lock size={10} />
+                              Locked
+                            </span>
+                          )}
+                        </p>
+                        {isInPaidFolder && pack.parentFolder ? (
+                          <div className="space-y-1">
+                            <p className="text-xs text-amber-600 dark:text-amber-400">
+                              📁 Part of: {pack.parentFolder.title}
+                            </p>
+                            <p className="text-sm text-slate-500 dark:text-slate-400">
+                              Requires folder purchase: {pack.parentFolder.price} {pack.parentFolder.currency.toUpperCase()}
+                            </p>
+                          </div>
+                        ) : (
+                          <p className="text-sm text-slate-500 dark:text-slate-400">
+                            {pack.price} {pack.currency.toUpperCase()}
+                          </p>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             ) : (
               <p className="font-normal text-slate-400 dark:text-slate-500 italic">
@@ -174,6 +245,25 @@ const VideoFilePacksForm = ({ video }: Props) => {
         </div>
       ) : (
         <div className="space-y-4">
+          {/* Breadcrumb Navigation */}
+          {breadcrumbs.length > 1 && (
+            <div className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400 pb-2 border-b border-slate-200 dark:border-slate-700">
+              {breadcrumbs.map((crumb, index) => (
+                <React.Fragment key={crumb.id || 'root'}>
+                  {index > 0 && <ChevronRight size={14} />}
+                  <button
+                    onClick={() => navigateToBreadcrumb(index)}
+                    className={`hover:text-brand-red-500 transition-colors ${
+                      index === breadcrumbs.length - 1 ? 'font-semibold text-brand-red-500' : ''
+                    }`}
+                  >
+                    {index === 0 ? <Home size={14} /> : crumb.name}
+                  </button>
+                </React.Fragment>
+              ))}
+            </div>
+          )}
+
           {isFetchingBundles ? (
             <div className="flex items-center justify-center py-8">
               <Spinner size={24} className="text-brand-red-500" />
@@ -181,53 +271,101 @@ const VideoFilePacksForm = ({ video }: Props) => {
           ) : availableBundles.length === 0 ? (
             <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-md p-4">
               <p className="text-sm text-amber-800 dark:text-amber-200">
-                No published document bundles available. Create and publish document bundles first to add them to videos.
+                {currentFolderId ? "This folder is empty." : "No published document bundles available. Create and publish document bundles first to add them to videos."}
               </p>
             </div>
           ) : (
             <div className="space-y-2 max-h-96 overflow-y-auto">
               <p className="text-sm text-slate-600 dark:text-slate-400 mb-2">
-                Select file packs to offer with this video:
+                {currentFolderId ? "Select items or navigate into folders:" : "Select file packs or folders:"}
               </p>
-              {availableBundles.map((bundle) => (
-                <div
-                  key={bundle._id}
-                  onClick={() => toggleFilePack(bundle._id)}
-                  className={`flex items-center gap-3 p-3 rounded-md border-2 cursor-pointer transition-all ${
-                    selectedFilePacks.includes(bundle._id)
-                      ? "border-brand-red-500 bg-brand-red-50 dark:bg-brand-red-950/20"
-                      : "border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 hover:border-brand-red-300 dark:hover:border-brand-red-700"
-                  }`}
-                >
+              {availableBundles.map((bundle) => {
+                const isInPaidFolder = bundle.parentFolder && bundle.parentFolder.price > 0;
+                const isSelected = selectedFilePacks.includes(bundle._id);
+                
+                return (
                   <div
-                    className={`flex items-center justify-center w-5 h-5 rounded border-2 flex-shrink-0 ${
-                      selectedFilePacks.includes(bundle._id)
-                        ? "bg-brand-red-500 border-brand-red-500"
-                        : "border-slate-300 dark:border-slate-600"
+                    key={bundle._id}
+                    onClick={(e) => handleItemClick(bundle, e)}
+                    className={`flex items-center gap-3 p-3 rounded-md border-2 cursor-pointer transition-all ${
+                      isSelected
+                        ? "border-brand-red-500 bg-brand-red-50 dark:bg-brand-red-950/20"
+                        : "border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 hover:border-brand-red-300 dark:hover:border-brand-red-700"
                     }`}
                   >
-                    {selectedFilePacks.includes(bundle._id) && (
-                      <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-                      </svg>
+                    {/* Selection Checkbox - Only for non-folders */}
+                    {!bundle.isFolder && (
+                      <div
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          toggleFilePack(bundle._id);
+                        }}
+                        className={`flex items-center justify-center w-5 h-5 rounded border-2 flex-shrink-0 ${
+                          isSelected
+                            ? "bg-brand-red-500 border-brand-red-500"
+                            : "border-slate-300 dark:border-slate-600"
+                        }`}
+                      >
+                        {isSelected && (
+                          <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                          </svg>
+                        )}
+                      </div>
                     )}
-                  </div>
-                  <Package size={18} className="text-brand-red-500 flex-shrink-0" />
-                  <div className="flex-1 min-w-0">
-                    <p className="font-medium text-slate-700 dark:text-slate-200 truncate">
-                      {bundle.title}
-                    </p>
-                    {bundle.description && (
-                      <p className="text-xs text-slate-500 dark:text-slate-400 truncate">
-                        {bundle.description}
+                    
+                    {/* Icon - Different for folders */}
+                    {bundle.isFolder ? (
+                      <FolderOpen size={20} className="text-purple-500 flex-shrink-0" />
+                    ) : isInPaidFolder ? (
+                      <FolderOpen size={18} className="text-amber-500 flex-shrink-0" />
+                    ) : (
+                      <Package size={18} className="text-brand-red-500 flex-shrink-0" />
+                    )}
+                    
+                    <div className="flex-1 min-w-0">
+                      <p className="font-medium text-slate-700 dark:text-slate-200 truncate flex items-center gap-2">
+                        {bundle.title}
+                        {bundle.isFolder && (
+                          <span className="text-xs text-slate-500 dark:text-slate-400">
+                            (Click to open)
+                          </span>
+                        )}
+                        {!bundle.isFolder && isInPaidFolder && (
+                          <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300 text-xs rounded-full">
+                            <Lock size={10} />
+                            In Folder
+                          </span>
+                        )}
                       </p>
+                      {bundle.description && (
+                        <p className="text-xs text-slate-500 dark:text-slate-400 truncate">
+                          {bundle.description}
+                        </p>
+                      )}
+                      {!bundle.isFolder && isInPaidFolder && bundle.parentFolder ? (
+                        <div className="flex items-center gap-2 mt-1">
+                          <p className="text-xs text-amber-600 dark:text-amber-400">
+                            📁 {bundle.parentFolder.title}
+                          </p>
+                          <p className="text-sm font-semibold text-amber-600 dark:text-amber-400">
+                            {bundle.parentFolder.price} {bundle.parentFolder.currency.toUpperCase()}
+                          </p>
+                        </div>
+                      ) : (
+                        <p className="text-sm font-semibold text-brand-red-600 dark:text-brand-red-400">
+                          {bundle.price} {bundle.currency.toUpperCase()}
+                        </p>
+                      )}
+                    </div>
+
+                    {/* Arrow indicator for folders */}
+                    {bundle.isFolder && (
+                      <ChevronRight size={18} className="text-slate-400 dark:text-slate-500 flex-shrink-0" />
                     )}
-                    <p className="text-sm font-semibold text-brand-red-600 dark:text-brand-red-400">
-                      {bundle.price} {bundle.currency.toUpperCase()}
-                    </p>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
 
@@ -237,6 +375,9 @@ const VideoFilePacksForm = ({ video }: Props) => {
               size="sm"
               onClick={() => {
                 setIsEditing(false);
+                // Reset navigation
+                setCurrentFolderId(null);
+                setBreadcrumbs([{ id: null, name: "Root" }]);
                 // Reset to original selection
                 const originalPacks = video.filePacks?.map((pack: any) =>
                   typeof pack === "string" ? pack : pack._id

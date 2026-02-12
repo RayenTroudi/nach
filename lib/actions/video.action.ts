@@ -49,6 +49,11 @@ export const getVideoById = async (videoId: string) => {
         path: "filePacks",
         model: "DocumentBundle",
         match: { isPublished: true }, // Only show published bundles
+        populate: {
+          path: "parentFolder",
+          model: "DocumentBundle",
+          select: "title price currency isFolder",
+        },
       });
 
     if (!video) {

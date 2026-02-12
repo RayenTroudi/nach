@@ -1,12 +1,20 @@
 "use client";
 import React, { useState } from "react";
-import { Package, ShoppingCart, Check, ExternalLink } from "lucide-react";
+import { Package, ShoppingCart, Check, ExternalLink, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { scnToast } from "@/components/ui/use-toast";
 import { useRouter } from "next/navigation";
 import { Spinner } from "@/components/shared";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
+
+interface ParentFolder {
+  _id: string;
+  title: string;
+  price: number;
+  currency: string;
+  isFolder: boolean;
+}
 
 interface DocumentBundle {
   _id: string;
@@ -16,6 +24,7 @@ interface DocumentBundle {
   currency: string;
   thumbnail?: string;
   isPublished: boolean;
+  parentFolder?: ParentFolder;
 }
 
 interface Props {
@@ -47,6 +56,19 @@ const FilePacksDisplay = ({ filePacks, userId, purchasedBundleIds = [] }: Props)
     setPurchasingId(bundle._id);
 
     try {
+      // Check if bundle requires folder purchase
+      if (bundle.parentFolder && bundle.parentFolder.price > 0) {
+        const parentFolderId = bundle.parentFolder._id;
+        
+        // Check if user already purchased the parent folder
+        if (!purchasedBundleIds.includes(parentFolderId)) {
+          // Redirect to folder purchase page
+          router.push(`/storefront?folder=${parentFolderId}`);
+          setPurchasingId(null);
+          return;
+        }
+      }
+
       // Navigate to the document bundle page for purchase
       router.push(`/documents/bundle/${bundle._id}`);
     } catch (error: any) {
@@ -85,6 +107,11 @@ const FilePacksDisplay = ({ filePacks, userId, purchasedBundleIds = [] }: Props)
           {filePacks.map((bundle) => {
             const isPurchased = purchasedBundleIds.includes(bundle._id);
             
+            // Check if bundle is locked behind a paid folder
+            const isLockedInFolder = bundle.parentFolder && 
+                                     bundle.parentFolder.price > 0 && 
+                                     !purchasedBundleIds.includes(bundle.parentFolder._id);
+            
             return (
               <div
                 key={bundle._id}
@@ -105,6 +132,12 @@ const FilePacksDisplay = ({ filePacks, userId, purchasedBundleIds = [] }: Props)
                         {t("owned")}
                       </div>
                     )}
+                    {isLockedInFolder && (
+                      <div className="absolute top-2 left-2 bg-amber-500 text-white px-2 py-1 rounded-full text-xs font-semibold flex items-center gap-1">
+                        <Lock size={12} />
+                        Locked
+                      </div>
+                    )}
                   </div>
                 ) : (
                   <div className="relative w-full h-40 bg-gradient-to-br from-brand-red-500 to-brand-red-600 flex items-center justify-center">
@@ -113,6 +146,12 @@ const FilePacksDisplay = ({ filePacks, userId, purchasedBundleIds = [] }: Props)
                       <div className="absolute top-2 right-2 bg-green-500 text-white px-2 py-1 rounded-full text-xs font-semibold flex items-center gap-1">
                         <Check size={12} />
                         {t("owned")}
+                      </div>
+                    )}
+                    {isLockedInFolder && (
+                      <div className="absolute top-2 left-2 bg-amber-500 text-white px-2 py-1 rounded-full text-xs font-semibold flex items-center gap-1">
+                        <Lock size={12} />
+                        Locked
                       </div>
                     )}
                   </div>
@@ -130,13 +169,24 @@ const FilePacksDisplay = ({ filePacks, userId, purchasedBundleIds = [] }: Props)
                     </p>
                   )}
 
+                  {isLockedInFolder && (
+                    <div className="mb-3 p-2 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-md">
+                      <p className="text-xs text-amber-800 dark:text-amber-200">
+                        🔒 Part of <strong>{bundle.parentFolder!.title}</strong> folder
+                      </p>
+                      <p className="text-xs text-amber-700 dark:text-amber-300 mt-1">
+                        Purchase folder ({bundle.parentFolder!.price} {bundle.parentFolder!.currency.toUpperCase()}) to access
+                      </p>
+                    </div>
+                  )}
+
                   <div className="flex items-center justify-between mt-4 pt-4 border-t border-slate-200 dark:border-slate-800">
                     <div>
                       <div className="text-2xl font-bold text-brand-red-600 dark:text-brand-red-400">
-                        {bundle.price}
+                        {isLockedInFolder ? bundle.parentFolder!.price : bundle.price}
                       </div>
                       <div className="text-xs text-slate-500 dark:text-slate-500 uppercase">
-                        {bundle.currency}
+                        {isLockedInFolder ? bundle.parentFolder!.currency : bundle.currency}
                       </div>
                     </div>
 
@@ -148,6 +198,20 @@ const FilePacksDisplay = ({ filePacks, userId, purchasedBundleIds = [] }: Props)
                       >
                         <ExternalLink size={14} className="mr-1" />
                         {t("viewFiles")}
+                      </Button>
+                    ) : isLockedInFolder ? (
+                      <Button
+                        onClick={() => handlePurchase(bundle)}
+                        disabled={purchasingId === bundle._id}
+                        size="sm"
+                        className="bg-amber-500 hover:bg-amber-600 text-white"
+                      >
+                        {purchasingId === bundle._id ? (
+                          <Spinner size={14} className="text-white mr-1" />
+                        ) : (
+                          <Lock size={14} className="mr-1" />
+                        )}
+                        Buy Folder
                       </Button>
                     ) : (
                       <Button

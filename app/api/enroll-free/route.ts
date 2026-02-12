@@ -79,18 +79,11 @@ export async function POST(request: Request) {
       try {
         const courseWithChatRoom = await Course.findById(courseId).populate("chatRoom");
         if (courseWithChatRoom?.chatRoom?._id) {
-          // Import the functions we need
-          const { pushStudentToChatRoom } = await import("@/lib/actions/course-chat-room");
+          // Import joinChatRoom function
           const { joinChatRoom } = await import("@/lib/actions/user.action");
           
-          // Add chat room to user's joinedChatRooms array
+          // Add student to joinedChatRooms and chat room's students array
           await joinChatRoom(user._id.toString(), courseWithChatRoom.chatRoom._id.toString());
-          
-          // Add student to chat room's students array
-          await pushStudentToChatRoom({
-            chatRoomId: courseWithChatRoom.chatRoom._id.toString(),
-            studentId: user._id.toString(),
-          });
           
           console.log("Student added to group chat room successfully");
         } else {

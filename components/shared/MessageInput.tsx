@@ -51,8 +51,16 @@ const MessageInput = ({ user, selectedChatRoom }: Props) => {
     try {
       const isPrivate = isPrivateChat(selectedChatRoom);
       
+      console.log("📤 Sending message:", {
+        isPrivate,
+        roomId: selectedChatRoom._id,
+        studentsCount: selectedChatRoom.students?.length,
+        messagePreview: values.message.substring(0, 30)
+      });
+      
       if (isPrivate) {
         // Send private message
+        console.log("🔒 Sending as PRIVATE message");
         await createPrivateMessage({
           privateChatRoomId: selectedChatRoom._id,
           senderId: user._id,
@@ -61,6 +69,7 @@ const MessageInput = ({ user, selectedChatRoom }: Props) => {
         });
       } else {
         // Send group message
+        console.log("👥 Sending as GROUP message");
         await createMessage({
           chatRoomId: selectedChatRoom._id,
           senderId: user._id,

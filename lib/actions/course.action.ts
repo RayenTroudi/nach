@@ -588,14 +588,8 @@ export const pushStudentToCourse = async (params: ToggleStudentFromCourse) => {
       // Now add student to the chat room if it exists
       if (course.chatRoom && course.chatRoom._id) {
         try {
-          // Add chat room to user's joinedChatRooms array
-          await joinChatRoom(studentId, course.chatRoom._id);
-          // Add student to chat room's students array
-          const { pushStudentToChatRoom } = await import("./course-chat-room");
-          await pushStudentToChatRoom({
-            chatRoomId: course.chatRoom._id.toString(),
-            studentId: studentId,
-          });
+          // Add student to joinedChatRooms and chat room's students array
+          await joinChatRoom(studentId, course.chatRoom._id.toString());
           console.log("✅ Student added to group chat room successfully");
         } catch (chatError: any) {
           console.error("❌ Failed to add student to group chat:", chatError.message);

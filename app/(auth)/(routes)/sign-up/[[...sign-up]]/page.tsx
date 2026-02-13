@@ -4,19 +4,24 @@ import { SignUp } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
 import React, { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
+import { useLocale } from "next-intl";
+import { deDE, enUS, arSA } from "@clerk/localizations";
 
 const SignUpPage = () => {
   const { mode } = useTheme();
   const searchParams = useSearchParams();
+  const locale = useLocale();
+  const [mounted, setMounted] = useState(false);
   const [redirectUrl, setRedirectUrl] = useState<string>("/");
 
+  // Fix hydration error by only running client-side logic after mount
   useEffect(() => {
+    setMounted(true);
+    
     // Check if there's saved form data to redirect back to resume page
-    if (typeof window !== "undefined") {
-      const savedFormData = localStorage.getItem("resumeFormData");
-      if (savedFormData) {
-        setRedirectUrl("/contact/resume");
-      }
+    const savedFormData = localStorage.getItem("resumeFormData");
+    if (savedFormData) {
+      setRedirectUrl("/contact/resume");
     }
     
     // Or check if redirect URL is in query params
@@ -26,9 +31,32 @@ const SignUpPage = () => {
     }
   }, [searchParams]);
 
+  // Get Clerk localization based on current locale
+  const getLocalization = () => {
+    switch (locale) {
+      case 'de':
+        return deDE;
+      case 'ar':
+        return arSA;
+      default:
+        return enUS;
+    }
+  };
+
+  if (!mounted) {
+    return (
+      <div className="w-full flex items-center justify-center min-h-[600px] p-4">
+        <div className="flex items-center justify-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-red-500"></div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="w-full flex items-center justify-center min-h-[600px] p-4">
       <SignUp
+        localization={getLocalization()}
         appearance={{
           baseTheme: mode === "dark" ? dark : undefined,
           variables: {
@@ -43,18 +71,26 @@ const SignUpPage = () => {
             rootBox: "w-full",
             card: "shadow-lg w-full max-w-md mx-auto",
             formButtonPrimary:
-              "bg-brand-red-500 hover:bg-brand-red-600 text-white font-semibold py-3 px-4 rounded-lg transition-all duration-200",
+              "bg-brand-red-500 hover:bg-brand-red-600 text-white font-semibold py-3 px-4 rounded-lg transition-all duration-200 !w-full !block !text-center !mt-6",
             formFieldInput:
-              "border-2 border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 px-4 py-3 rounded-lg focus:ring-2 focus:ring-brand-red-500 focus:border-brand-red-500",
+              "border-2 border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 px-4 py-3 rounded-lg focus:ring-2 focus:ring-brand-red-500 focus:border-brand-red-500 !w-full",
+            formFieldInputShowPasswordButton:
+              "[html[dir='rtl']_&]:!left-3 [html[dir='rtl']_&]:!right-auto [html[dir='ltr']_&]:!right-3 [html[dir='ltr']_&]:!left-auto !text-slate-600 dark:!text-slate-400 hover:!text-slate-900 dark:hover:!text-slate-200",
             formFieldLabel:
               "text-slate-700 dark:text-slate-300 font-medium mb-2 block",
+            formFieldRow: "!mb-4",
             footerActionLink: "text-brand-red-500 hover:text-brand-red-600",
+            // Social buttons for OAuth
+            socialButtonsBlockButton:
+              "!border-2 !border-slate-300 dark:!border-slate-600 hover:!bg-slate-50 dark:hover:!bg-slate-800 !text-slate-900 dark:!text-slate-100",
+            socialButtonsBlockButtonText: "!font-medium",
           },
         }}
         signInUrl="/sign-in"
         routing="path"
         path="/sign-up"
         afterSignUpUrl={redirectUrl}
+        redirectUrl={redirectUrl}
       />
     </div>
   );

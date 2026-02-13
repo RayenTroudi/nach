@@ -30,7 +30,7 @@ export async function POST(request: Request) {
     const resend = new Resend(process.env.RESEND_API_KEY);
 
     await resend.emails.send({
-      from: 'Nach Deutschland <noreply@nachdeutschland.com>',
+      from: 'TDS - Talel Deutschland Services <noreply@nachdeutschland.com>',
       to: 'contact@nachdeutschland.com',
       subject: `New Contact Form: ${topic}`,
       html: `
@@ -44,14 +44,14 @@ export async function POST(request: Request) {
 
     // Send confirmation to user
     await resend.emails.send({
-      from: 'Nach Deutschland <noreply@nachdeutschland.com>',
+      from: 'TDS - Talel Deutschland Services <noreply@nachdeutschland.com>',
       to: email,
       subject: 'We received your message!',
       html: `
         <h2>Thank you for contacting us!</h2>
         <p>Hi ${name},</p>
         <p>We've received your message about "${topic}" and will get back to you within 24 hours.</p>
-        <p>Best regards,<br/>The Nach Deutschland Team</p>
+        <p>Best regards,<br/>The TDS Team</p>
       `,
     });
     */

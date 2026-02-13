@@ -26,6 +26,7 @@
     "migrate:videos": "tsx scripts/migrate-videos-to-mux.ts"
   },
   "dependencies": {
+    "@clerk/localizations": "^3.35.3",
     "@clerk/nextjs": "^4.29.6",
     "@clerk/themes": "^1.7.10",
     "@hello-pangea/dnd": "^16.5.0",

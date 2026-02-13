@@ -17,7 +17,7 @@ export default function SuccessStoriesSection() {
       pathway: "Study Path",
       achievement: "Accepted to TU Berlin",
       image: "🎓",
-      quote: "From Cairo to Berlin: How I got my student visa in just 3 months with Nach's guidance. The step-by-step courses made everything so clear!",
+      quote: "From Cairo to Berlin: How I got my student visa in just 3 months with TDS's guidance. The step-by-step courses made everything so clear!",
       timeframe: "3 months",
       bgColor: "bg-brand-blue-50 dark:bg-brand-blue-900/20",
     },

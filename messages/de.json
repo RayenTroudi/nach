@@ -1237,7 +1237,7 @@
     "categoryCertificate": "Zertifikat",
     "categoryGuide": "Leitfaden",
     "noDocuments": "Keine Dokumente gefunden",
-    "noDocumentsDesc": "In der Kategorie {category} sind noch keine Dokumente verfügbar.",
+    "noDocumentsDesc": "Noch keine Dokumente verfügbar. Schauen Sie bald wieder vorbei für neue Inhalte.",
     "uploadedBy": "Hochgeladen von",
     "downloads": "Downloads",
     "documents": "Dokumente",
@@ -1911,7 +1911,7 @@
       "thankYou": "Vielen Dank, dass Sie uns kontaktiert haben!",
       "weWillRespond": "Wir haben Ihre Nachricht erhalten und werden innerhalb von 24 Stunden antworten.",
       "bestRegards": "Mit freundlichen Grüßen",
-      "teamName": "Das Nach Deutschland Team"
+      "teamName": "Das TDS Team"
     },
     "booking": {
       "meetingConfirmed": "Meeting bestätigt!",

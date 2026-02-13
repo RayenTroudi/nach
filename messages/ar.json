@@ -1237,7 +1237,7 @@
     "categoryCertificate": "شهادة",
     "categoryGuide": "دليل",
     "noDocuments": "لا توجد مستندات",
-    "noDocumentsDesc": "لا توجد مستندات متاحة في فئة {category} حتى الآن.",
+    "noDocumentsDesc": "لا توجد مستندات متاحة حتى الآن. تحقق مرة أخرى قريباً للحصول على محتوى جديد.",
     "uploadedBy": "تم الرفع بواسطة",
     "downloads": "تنزيلات",
     "documents": "مستندات",
@@ -1907,7 +1907,7 @@
       "thankYou": "شكراً لتواصلك معنا!",
       "weWillRespond": "لقد تلقينا رسالتك وسنرد خلال 24 ساعة.",
       "bestRegards": "مع أطيب التحيات",
-      "teamName": "فريق Nach Deutschland"
+      "teamName": "فريق TDS"
     },
     "booking": {
       "meetingConfirmed": "تم تأكيد الاجتماع!",

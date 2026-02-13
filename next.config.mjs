@@ -9,13 +9,31 @@ const nextConfig = {
     serverComponentsExternalPackages: ["mongoose"],
   },
   images: {
-    domains: [
-      "utfs.io",
-      "img.clerk.com",
-      "images.unsplash.com",
-      "aceternity.com",
-      "image.mux.com",
-      "stream.mux.com",
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'utfs.io',
+      },
+      {
+        protocol: 'https',
+        hostname: 'img.clerk.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'aceternity.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'image.mux.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'stream.mux.com',
+      },
     ],
   },
   webpack: (config, { isServer }) => {

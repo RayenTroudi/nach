@@ -142,7 +142,7 @@ const LandingPage = async () => {
 
   return (
     <div className="flex flex-col">
-      {/* Hero Section - "Nach Deutschland" */}
+      {/* Hero Section - "TDS" */}
       <HeroSection />
       
       {/* Regular Courses Section */}

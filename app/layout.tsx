@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import "../styles/prism.css";
 import { ClerkProvider } from "@clerk/nextjs";
+import { deDE, enUS, arSA } from "@clerk/localizations";
 import ToasterProvider from "@/components/providers/ToasterProvider";
 import { Toaster } from "@/components/ui/toaster";
 import { ThemeProvider } from "@/contexts/ThemeProvider";
@@ -28,12 +29,6 @@ The platform also includes a dynamic discussion forum where learners can interac
 
 Whether you're a beginner looking to learn a new skill or a professional seeking to advance your career, our AI-powered e-learning platform is your go-to resource for quality, accessible, and personalized online education.
   `,
-  viewport: {
-    width: 'device-width',
-    initialScale: 1,
-    maximumScale: 5,
-    userScalable: true,
-  },
   icons: {
     icon: [
       { url: "/images/nobgLogo.png", sizes: "48x48", type: "image/png" },
@@ -54,6 +49,13 @@ Whether you're a beginner looking to learn a new skill or a professional seeking
   },
 };
 
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+};
+
 export default async function RootLayout({
   children,
 }: Readonly<{
@@ -63,9 +65,22 @@ export default async function RootLayout({
   const messages = await getMessages(locale);
   const direction = locale === 'ar' ? 'rtl' : 'ltr';
 
+  // Get Clerk localization based on current locale
+  const getClerkLocalization = () => {
+    switch (locale) {
+      case 'de':
+        return deDE;
+      case 'ar':
+        return arSA;
+      default:
+        return enUS;
+    }
+  };
+
   return (
     <ClerkProvider
       publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
+      localization={getClerkLocalization()}
       appearance={{
         variables: {
           colorPrimary: "#DD0000",
@@ -110,9 +125,6 @@ export default async function RootLayout({
         <ThemeProvider>
           <PageLoaderProvider>
             <html lang={locale} dir={direction} className="dark">
-              <head>
-                <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
-              </head>
               <body
                 className={
                   inter.className +

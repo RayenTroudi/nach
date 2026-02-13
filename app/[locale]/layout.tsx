@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "../globals.css";
 import "../../styles/prism.css";
 import { ClerkProvider } from "@clerk/nextjs";
+import { deDE, enUS, arSA } from "@clerk/localizations";
 import ToasterProvider from "@/components/providers/ToasterProvider";
 import { Toaster } from "@/components/ui/toaster";
 import { ThemeProvider } from "@/contexts/ThemeProvider";
@@ -42,6 +43,13 @@ Whether you're a beginner looking to learn a new skill or a professional seeking
   },
 };
 
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+};
+
 export function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
 }
@@ -64,9 +72,22 @@ export default async function LocaleLayout({
   // Determine text direction based on locale
   const direction = locale === 'ar' ? 'rtl' : 'ltr';
 
+  // Get Clerk localization based on current locale
+  const getClerkLocalization = () => {
+    switch (locale) {
+      case 'de':
+        return deDE;
+      case 'ar':
+        return arSA;
+      default:
+        return enUS;
+    }
+  };
+
   return (
     <ClerkProvider
       publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
+      localization={getClerkLocalization()}
       appearance={{
         variables: {
           colorPrimary: "#DD0000",

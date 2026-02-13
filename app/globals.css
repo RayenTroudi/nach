@@ -53,6 +53,78 @@ body,
   opacity: 0 !important;
 }
 
+/* Clerk OTP/Verification Code Inputs - Force Visibility and LTR */
+.cl-otpCodeFieldInputs,
+.cl-verificationCodeFieldInputs,
+[class*="otpCodeField"],
+[class*="verificationCodeField"] {
+  display: flex !important;
+  flex-direction: row !important;
+  justify-content: center !important;
+  align-items: center !important;
+  gap: 0.5rem !important;
+  direction: ltr !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  margin: 1rem 0 !important;
+}
+
+.cl-otpCodeFieldInput,
+.cl-verificationCodeFieldInput,
+[class*="otpCodeFieldInput"],
+[class*="verificationCodeFieldInput"] {
+  display: inline-block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  width: 3rem !important;
+  height: 3rem !important;
+  min-width: 3rem !important;
+  min-height: 3rem !important;
+  text-align: center !important;
+  font-size: 1.25rem !important;
+  font-weight: 700 !important;
+  direction: ltr !important;
+  border: 2px solid #cbd5e1 !important;
+  border-radius: 0.5rem !important;
+  background: white !important;
+  color: #0f172a !important;
+}
+
+.cl-otpCodeFieldInput:focus,
+.cl-verificationCodeFieldInput:focus,
+[class*="otpCodeFieldInput"]:focus,
+[class*="verificationCodeFieldInput"]:focus {
+  border-color: #DD0000 !important;
+  outline: none !important;
+  ring: 2px solid rgba(221, 0, 0, 0.3) !important;
+}
+
+/* Dark mode support for OTP inputs */
+.dark .cl-otpCodeFieldInput,
+.dark .cl-verificationCodeFieldInput,
+.dark [class*="otpCodeFieldInput"],
+.dark [class*="verificationCodeFieldInput"] {
+  background: #1e293b !important;
+  color: #f1f5f9 !important;
+  border-color: #475569 !important;
+}
+
+.dark .cl-otpCodeFieldInput:focus,
+.dark .cl-verificationCodeFieldInput:focus,
+.dark [class*="otpCodeFieldInput"]:focus,
+.dark [class*="verificationCodeFieldInput"]:focus {
+  border-color: #DD0000 !important;
+}
+
+/* Ensure the verification form container is visible */
+.cl-verificationCodeForm,
+[class*="verificationCodeForm"] {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  width: 100% !important;
+}
+
 /* Fix Tailwind space-x utilities for RTL */
 [dir="rtl"] .space-x-reverse > :not([hidden]) ~ :not([hidden]) {
   --tw-space-x-reverse: 1;
@@ -339,6 +411,53 @@ mux-player:not([media-paused]) ~ .absolute {
 /* Speed up input field rendering */
 .cl-formFieldInput {
   will-change: border-color;
+}
+
+/* Password toggle button positioning for RTL */
+[dir="rtl"] .cl-formFieldInputShowPasswordButton:not([name*="signOut"]),
+[dir="rtl"] button[aria-label*="password"]:not([name*="signOut"]) {
+  left: 0.75rem !important;
+  right: auto !important;
+}
+
+[dir="ltr"] .cl-formFieldInputShowPasswordButton:not([name*="signOut"]),
+[dir="ltr"] button[aria-label*="password"]:not([name*="signOut"]) {
+  right: 0.75rem !important;
+  left: auto !important;
+}
+
+/* Password input padding for icon space */
+[dir="rtl"] input[type="password"]:not([name*="signOut"]),
+[dir="rtl"] .cl-formFieldInput[name*="password"]:not([name*="signOut"]) {
+  padding-right: 1rem !important;
+  padding-left: 2.5rem !important;
+}
+
+[dir="ltr"] input[type="password"]:not([name*="signOut"]),
+[dir="ltr"] .cl-formFieldInput[name*="password"]:not([name*="signOut"]) {
+  padding-left: 1rem !important;
+  padding-right: 2.5rem !important;
+}
+
+/* Checkbox layout fix */
+.cl-formFieldInput[type="checkbox"] {
+  width: 1rem !important;
+  height: 1rem !important;
+  padding: 0 !important;
+  min-width: 1rem !important;
+  min-height: 1rem !important;
+}
+
+.cl-formFieldLabelRow:has(.cl-formFieldInput[type="checkbox"]) {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  gap: 0.5rem !important;
+  margin-bottom: 0.75rem !important;
+}
+
+.cl-formFieldLabel:has(+ .cl-formFieldInput[type="checkbox"]) {
+  margin-bottom: 0 !important;
 }
 
 /* Hide Clerk UserButton badge - Debug mode indicator */

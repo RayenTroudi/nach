@@ -2,31 +2,10 @@
 import { useTheme } from "@/contexts/ThemeProvider";
 import { SignIn } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
-import React, { useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
-import { useLocale } from "next-intl";
-import Link from "next/link";
+import React from "react";
 
 function SignInContent() {
   const { mode } = useTheme();
-  const searchParams = useSearchParams();
-  const locale = useLocale();
-  const [redirectUrl, setRedirectUrl] = useState<string>("/");
-
-  useEffect(() => {
-    // Check if there's saved form data to redirect back to resume page
-    const savedFormData = localStorage.getItem("resumeFormData");
-    if (savedFormData) {
-      setRedirectUrl("/contact/resume");
-      return;
-    }
-    
-    // Or check if redirect URL is in query params
-    const redirect = searchParams?.get("redirect") || searchParams?.get("redirect_url");
-    if (redirect) {
-      setRedirectUrl(redirect);
-    }
-  }, [searchParams]);
 
   return (
     <div className="w-full flex items-center justify-center min-h-screen p-4">
@@ -98,18 +77,7 @@ function SignInContent() {
           routing="path"
           path="/sign-in"
           signUpUrl="/sign-up"
-          redirectUrl={redirectUrl}
         />
-        
-        {/* Custom Forgot Password Link */}
-        <div className="mt-4 text-center">
-          <Link
-            href="/forgot-password"
-            className="text-sm text-brand-red-500 hover:text-brand-red-600 font-medium"
-          >
-            {locale === "ar" ? "نسيت كلمة المرور؟" : locale === "de" ? "Passwort vergessen?" : "Forgot password?"}
-          </Link>
-        </div>
       </div>
     </div>
   );

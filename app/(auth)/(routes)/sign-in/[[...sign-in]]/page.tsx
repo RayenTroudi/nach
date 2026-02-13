@@ -5,7 +5,6 @@ import { dark } from "@clerk/themes";
 import React, { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { useLocale } from "next-intl";
-import { deDE, enUS, arSA } from "@clerk/localizations";
 import Link from "next/link";
 
 const SigninPage = () => {
@@ -39,18 +38,6 @@ const SigninPage = () => {
       setRedirectUrl(redirect);
     }
   }, [searchParams]);
-
-  // Get Clerk localization based on current locale
-  const getLocalization = () => {
-    switch (locale) {
-      case 'de':
-        return deDE;
-      case 'ar':
-        return arSA;
-      default:
-        return enUS;
-    }
-  };
 
   if (!mounted) {
     return (
@@ -86,7 +73,6 @@ const SigninPage = () => {
       }>
         <div className="w-full max-w-md mx-auto">
           <SignIn
-            localization={getLocalization()}
             appearance={{
               baseTheme: mode === "dark" ? dark : undefined,
               variables: {

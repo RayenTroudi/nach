@@ -198,6 +198,7 @@ export default function AdaptiveVideoPlayer({
         playerRef.current = null;
       }
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sources, poster, autoplay, enableAutoQuality, defaultQuality, isMounted]);
 
   /**

@@ -4,13 +4,10 @@ import { SignUp } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
 import React, { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { useLocale } from "next-intl";
-import { deDE, enUS, arSA } from "@clerk/localizations";
 
 const SignUpPage = () => {
   const { mode } = useTheme();
   const searchParams = useSearchParams();
-  const locale = useLocale();
   const [mounted, setMounted] = useState(false);
   const [redirectUrl, setRedirectUrl] = useState<string>("/");
 
@@ -31,18 +28,6 @@ const SignUpPage = () => {
     }
   }, [searchParams]);
 
-  // Get Clerk localization based on current locale
-  const getLocalization = () => {
-    switch (locale) {
-      case 'de':
-        return deDE;
-      case 'ar':
-        return arSA;
-      default:
-        return enUS;
-    }
-  };
-
   if (!mounted) {
     return (
       <div className="w-full flex items-center justify-center min-h-[600px] p-4">
@@ -56,7 +41,6 @@ const SignUpPage = () => {
   return (
     <div className="w-full flex items-center justify-center min-h-[600px] p-4">
       <SignUp
-        localization={getLocalization()}
         appearance={{
           baseTheme: mode === "dark" ? dark : undefined,
           variables: {

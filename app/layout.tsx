@@ -65,36 +65,36 @@ export default async function RootLayout({
   const direction = locale === 'ar' ? 'rtl' : 'ltr';
 
   return (
-    <html lang={locale} dir={direction} suppressHydrationWarning>
-      <head>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              (function() {
-                const theme = localStorage.getItem('theme') || 'dark';
-                document.documentElement.classList.add(theme);
-              })()
-            `,
-          }}
-        />
-      </head>
-      <body
-        className={
-          inter.className +
-          " relative scroll-smooth tracking-wider antialiased w-full max-w-full overflow-x-hidden bg-slate-100/30 dark:bg-slate-950 text-slate-800 dark:text-slate-100 bg-dot-slate-950/5 dark:bg-dot-slate-50/5"
-        }
-      >
-        <ClerkProvider
-          publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
-          appearance={{
-            variables: {
-              colorPrimary: "#DD0000",
-            },
-          }}
-          afterSignInUrl="/"
-          afterSignUpUrl="/"
-          signInUrl="/sign-in"
-          signUpUrl="/sign-up"
+    <ClerkProvider
+      publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
+      appearance={{
+        variables: {
+          colorPrimary: "#DD0000",
+        },
+      }}
+      afterSignInUrl="/"
+      afterSignUpUrl="/"
+      signInUrl="/sign-in"
+      signUpUrl="/sign-up"
+    >
+      <html lang={locale} dir={direction} suppressHydrationWarning>
+        <head>
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `
+                (function() {
+                  const theme = localStorage.getItem('theme') || 'dark';
+                  document.documentElement.classList.add(theme);
+                })()
+              `,
+            }}
+          />
+        </head>
+        <body
+          className={
+            inter.className +
+            " relative scroll-smooth tracking-wider antialiased w-full max-w-full overflow-x-hidden bg-slate-100/30 dark:bg-slate-950 text-slate-800 dark:text-slate-100 bg-dot-slate-950/5 dark:bg-dot-slate-50/5"
+          }
         >
           <IntlProvider locale={locale} messages={messages}>
             <ThemeProvider>
@@ -107,8 +107,8 @@ export default async function RootLayout({
               </PageLoaderProvider>
             </ThemeProvider>
           </IntlProvider>
-        </ClerkProvider>
-      </body>
-    </html>
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }

@@ -139,8 +139,7 @@ const SigninPage = () => {
             routing="path"
             path="/sign-in"
             signUpUrl="/sign-up"
-            forceRedirectUrl={redirectUrl}
-            fallbackRedirectUrl={redirectUrl}
+            redirectUrl={redirectUrl}
           />
           
           {/* Custom Forgot Password Link */}

@@ -11,11 +11,24 @@ const ThemeContext = React.createContext<ThemeContextProps | undefined>(
 );
 
 const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
-  const [mode, setMode] = useState<string>(() =>
-    typeof window !== "undefined"
-      ? window.localStorage.getItem("theme") || "light"
-      : "light"
-  );
+  const [mode, setMode] = useState<string>("dark");
+  const [mounted, setMounted] = useState(false);
+
+  // Set initial theme from localStorage after mount
+  useEffect(() => {
+    setMounted(true);
+    const savedTheme = window.localStorage.getItem("theme") || "dark";
+    setMode(savedTheme);
+    
+    // Apply theme immediately
+    if (savedTheme === "dark") {
+      document.documentElement.classList.add("dark");
+      document.documentElement.classList.remove("light");
+    } else {
+      document.documentElement.classList.add("light");
+      document.documentElement.classList.remove("dark");
+    }
+  }, []);
 
   const themeChangeHandler = () => {
     if (mode === "dark") {
@@ -30,8 +43,11 @@ const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   useEffect(() => {
-    themeChangeHandler();
-  }, [mode]);
+    if (mounted) {
+      themeChangeHandler();
+    }
+  }, [mode, mounted]);
+  
   return (
     <ThemeContext.Provider
       value={{

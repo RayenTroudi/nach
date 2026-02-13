@@ -72,54 +72,66 @@ export default async function LocaleLayout({
   const direction = locale === 'ar' ? 'rtl' : 'ltr';
 
   return (
-    <html lang={locale} dir={direction} className="dark">
-      <body
-        className={
-          inter.className +
-          " relative scroll-smooth tracking-widest overflow-x-hidden bg-slate-100/30 dark:bg-slate-950 text-slate-800 dark:text-slate-100 bg-dot-slate-950/5 dark:bg-dot-slate-50/5"
-        }
-      >
-        <ClerkProvider
-          publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
-          appearance={{
-            variables: {
-              colorPrimary: "#DD0000",
-              colorText: "#0f172a",
-              colorBackground: "#ffffff",
-              colorInputBackground: "#ffffff",
-              colorInputText: "#0f172a",
-              colorTextSecondary: "#64748b",
-              colorDanger: "#DC2626",
-              colorSuccess: "#2D5D3F",
-              colorWarning: "#FFCE00",
-              colorShimmer: "#f1f5f9",
-              fontFamily: "Inter, sans-serif",
-              borderRadius: "0.5rem",
-            },
-            elements: {
-              card: "shadow-lg border border-slate-200 dark:border-slate-700",
-              headerTitle: "text-slate-900 dark:text-slate-100 font-bold",
-              headerSubtitle: "text-slate-600 dark:text-slate-400",
-              socialButtonsBlockButton: "border-slate-300 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-800",
-              formButtonPrimary: "bg-brand-red-500 hover:bg-brand-red-600 text-white shadow-button hover:shadow-button-hover rounded-button",
-              footerActionLink: "text-brand-red-500 hover:text-brand-red-600",
-              formFieldInput: "border-slate-300 dark:border-slate-600 focus:border-brand-red-500 focus:ring-brand-red-500",
-              formFieldLabel: "text-slate-700 dark:text-slate-300",
-              dividerLine: "bg-slate-300 dark:bg-slate-600",
-              dividerText: "text-slate-500 dark:text-slate-400",
-              footer: "hidden",
-              logoBox: "hidden",
-              logoImage: "hidden",
-            },
-            layout: {
-              logoPlacement: "none",
-              shimmer: false,
-            },
-          }}
-          afterSignInUrl="/"
-          afterSignUpUrl="/"
-          signInUrl="/sign-in"
-          signUpUrl="/sign-up"
+    <ClerkProvider
+      publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
+      appearance={{
+        variables: {
+          colorPrimary: "#DD0000",
+          colorText: "#0f172a",
+          colorBackground: "#ffffff",
+          colorInputBackground: "#ffffff",
+          colorInputText: "#0f172a",
+          colorTextSecondary: "#64748b",
+          colorDanger: "#DC2626",
+          colorSuccess: "#2D5D3F",
+          colorWarning: "#FFCE00",
+          colorShimmer: "#f1f5f9",
+          fontFamily: "Inter, sans-serif",
+          borderRadius: "0.5rem",
+        },
+        elements: {
+          card: "shadow-lg border border-slate-200 dark:border-slate-700",
+          headerTitle: "text-slate-900 dark:text-slate-100 font-bold",
+          headerSubtitle: "text-slate-600 dark:text-slate-400",
+          socialButtonsBlockButton: "border-slate-300 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-800",
+          formButtonPrimary: "bg-brand-red-500 hover:bg-brand-red-600 text-white shadow-button hover:shadow-button-hover rounded-button",
+          footerActionLink: "text-brand-red-500 hover:text-brand-red-600",
+          formFieldInput: "border-slate-300 dark:border-slate-600 focus:border-brand-red-500 focus:ring-brand-red-500",
+          formFieldLabel: "text-slate-700 dark:text-slate-300",
+          dividerLine: "bg-slate-300 dark:bg-slate-600",
+          dividerText: "text-slate-500 dark:text-slate-400",
+          footer: "hidden",
+          logoBox: "hidden",
+          logoImage: "hidden",
+        },
+        layout: {
+          logoPlacement: "none",
+          shimmer: false,
+        },
+      }}
+      afterSignInUrl={`/${locale}`}
+      afterSignUpUrl={`/${locale}`}
+      signInUrl={`/${locale}/sign-in`}
+      signUpUrl={`/${locale}/sign-up`}
+    >
+      <html lang={locale} dir={direction} suppressHydrationWarning>
+        <head>
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `
+                (function() {
+                  const theme = localStorage.getItem('theme') || 'dark';
+                  document.documentElement.classList.add(theme);
+                })()
+              `,
+            }}
+          />
+        </head>
+        <body
+          className={
+            inter.className +
+            " relative scroll-smooth tracking-widest overflow-x-hidden bg-slate-100/30 dark:bg-slate-950 text-slate-800 dark:text-slate-100 bg-dot-slate-950/5 dark:bg-dot-slate-50/5"
+          }
         >
           <NextIntlClientProvider messages={messages}>
             <ThemeProvider>
@@ -132,8 +144,8 @@ export default async function LocaleLayout({
               </PageLoaderProvider>
             </ThemeProvider>
           </NextIntlClientProvider>
-        </ClerkProvider>
-      </body>
-    </html>
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }

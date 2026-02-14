@@ -17,7 +17,7 @@ export default function BookCallPage() {
   const tCommon = useTranslations('common');
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white dark:from-slate-900 dark:to-slate-950 py-12">
+    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white dark:from-slate-900 dark:to-slate-950 pt-20 pb-12">
       <Container>
         {/* Back Button */}
         <Link href="/">

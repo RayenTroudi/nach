@@ -143,7 +143,7 @@ export default function CoursesContent() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-slate-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950">
+    <div className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-slate-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 pt-20">
       {/* Hero Section */}
       <section className="relative py-12 sm:py-16 md:py-20 overflow-hidden">
         {/* Background Pattern */}

@@ -172,7 +172,7 @@ export default function ResumeRequestPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 pt-20">
       <Container className="py-12">
         {/* Back Button */}
         <Link href="/" className="inline-flex items-center gap-2 text-slate-600 dark:text-slate-400 hover:text-brand-red-500 dark:hover:text-brand-red-400 mb-8 transition-colors">

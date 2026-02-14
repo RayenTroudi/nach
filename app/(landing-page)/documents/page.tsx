@@ -273,10 +273,10 @@ export default function DocumentsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white dark:from-slate-900 dark:to-slate-950 py-12">
+    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white dark:from-slate-900 dark:to-slate-950 pt-20 pb-12">
       <Container>
         {/* Header */}
-        <div className="text-center mb-12">
+        <div className="text-center mb-12 mt-8">
           <h1 className="text-4xl md:text-5xl font-bold text-slate-900 dark:text-slate-50 mb-4">
             {t('title')}
           </h1>

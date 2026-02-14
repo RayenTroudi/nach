@@ -357,7 +357,7 @@ export default function StorefrontPage() {
   const isPurchased = (itemId: string) => purchasedItems.has(itemId);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white dark:from-slate-900 dark:to-slate-950 py-12">
+    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white dark:from-slate-900 dark:to-slate-950 pt-20 pb-12">
       <Container>
         {/* Header */}
         <div className="text-center mb-12">

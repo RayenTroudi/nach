@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useLocale } from "next-intl";
-import { useAuth, useUser } from "@clerk/nextjs";
+import { useAuth, useUser, useSignIn } from "@clerk/nextjs";
 import Link from "next/link";
 
 export default function ResetPasswordPage() {
@@ -13,8 +13,9 @@ export default function ResetPasswordPage() {
   const [success, setSuccess] = useState(false);
   const router = useRouter();
   const locale = useLocale();
-  const { isSignedIn, isLoaded } = useAuth();
+  const { isSignedIn, isLoaded, signOut } = useAuth();
   const { user } = useUser();
+  const { signIn, setActive } = useSignIn();
   const searchParams = useSearchParams();
 
   const direction = locale === "ar" ? "rtl" : "ltr";
@@ -72,6 +73,7 @@ export default function ResetPasswordPage() {
     setLoading(true);
 
     try {
+      // Update password using Clerk's proper method
       await user.updatePassword({
         newPassword: newPassword,
         signOutOfOtherSessions: true,
@@ -91,12 +93,14 @@ export default function ResetPasswordPage() {
         });
       } catch (emailErr) {
         console.error("Failed to send confirmation email:", emailErr);
-        // Don't fail the password update if email fails
       }
 
       setSuccess(true);
-      setTimeout(() => {
-        router.push("/");
+      
+      // Sign out and redirect to sign-in to force fresh login with new password
+      setTimeout(async () => {
+        await signOut();
+        router.push("/sign-in");
       }, 2000);
     } catch (err: any) {
       console.error("Password update error:", err);
@@ -155,10 +159,10 @@ export default function ResetPasswordPage() {
               </h1>
               <p className="text-sm text-slate-600 dark:text-slate-400">
                 {locale === "ar"
-                  ? "تم تحديث كلمة المرور بنجاح. جارٍ إعادة التوجيه..."
+                  ? "تم تحديث كلمة المرور بنجاح. الرجاء تسجيل الدخول باستخدام كلمة المرور الجديدة..."
                   : locale === "de"
-                  ? "Ihr Passwort wurde erfolgreich aktualisiert. Weiterleitung..."
-                  : "Your password has been successfully updated. Redirecting..."}
+                  ? "Ihr Passwort wurde erfolgreich aktualisiert. Bitte melden Sie sich mit Ihrem neuen Passwort an..."
+                  : "Your password has been successfully updated. Please sign in with your new password..."}
               </p>
             </div>
           </div>

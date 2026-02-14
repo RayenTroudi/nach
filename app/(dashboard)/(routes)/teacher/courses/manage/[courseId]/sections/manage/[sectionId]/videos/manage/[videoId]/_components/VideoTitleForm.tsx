@@ -25,7 +25,7 @@ import { CourseStatusEnum } from "@/lib/enums";
 import { TSection } from "@/types/models.types";
 
 const formSchema = z.object({
-  title: z.string().min(5).max(50),
+  title: z.string().min(5).max(200),
 });
 
 interface Props {

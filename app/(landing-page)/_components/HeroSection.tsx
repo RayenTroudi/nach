@@ -80,7 +80,7 @@ export default function HeroSection() {
               </h1>
               
               {/* Description */}
-              <p className="text-base xs:text-lg sm:text-xl md:text-2xl lg:text-3xl text-slate-700 dark:text-slate-300 max-w-4xl mx-auto font-light leading-relaxed px-4 sm:px-6">
+              <p className="text-sm xs:text-base sm:text-lg md:text-xl lg:text-2xl text-slate-700 dark:text-slate-300 max-w-4xl mx-auto font-light leading-relaxed px-4 sm:px-6">
                 {t('heroDescription')}
               </p>
             </motion.div>

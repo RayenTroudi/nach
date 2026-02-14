@@ -59,9 +59,9 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Verify ownership
-    const instructorId = video.sectionId?.course?.instructor?._id?.toString();
-    if (!instructorId || instructorId !== userId) {
+    // Verify ownership - compare Clerk's userId with instructor's clerkId
+    const instructorClerkId = video.sectionId?.course?.instructor?.clerkId;
+    if (!instructorClerkId || instructorClerkId !== userId) {
       return NextResponse.json(
         { error: 'Unauthorized to modify this video' },
         { status: 403 }
@@ -112,6 +112,11 @@ export async function POST(req: NextRequest) {
 
   } catch (error: any) {
     console.error('[Mux API] Error creating asset:', error);
+    console.error('[Mux API] Error details:', {
+      message: error.message,
+      stack: error.stack,
+      name: error.name
+    });
     return NextResponse.json(
       { error: error.message || 'Failed to create Mux asset' },
       { status: 500 }

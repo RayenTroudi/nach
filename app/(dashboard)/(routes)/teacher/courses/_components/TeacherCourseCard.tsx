@@ -277,13 +277,14 @@ const TeacherCourseCard = ({
           </div>
         </Link>
         {course.isPublished || !course.students?.length ? (
-          <div className="absolute top-0 right-0">
+          <div className="absolute top-0 right-0" onClick={(e) => e.stopPropagation()}>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
                   size={"icon"}
                   variant={"ghost"}
                   className="w-[35px] h-[35px] rounded-full bg-slate-100/50 hover:bg-slate-100 dark:bg-slate-100 dark:hover:bg-slate-200/50  ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-0  focus-visible:ring-offset-0"
+                  onClick={(e) => e.preventDefault()}
                 >
                   <Image
                     loading="lazy"

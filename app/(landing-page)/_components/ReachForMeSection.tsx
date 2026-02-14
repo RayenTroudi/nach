@@ -1,7 +1,7 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Calendar, Phone, MessageSquare, Clock, CheckCircle2 } from "lucide-react";
+import { Calendar, MessageSquare, Clock, CheckCircle2 } from "lucide-react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { useTranslations, useLocale } from "next-intl";
@@ -14,23 +14,6 @@ export default function ReachForMeSection() {
   const rtl = isRTL(locale as 'ar' | 'en' | 'de');
 
   const contactOptions = [
-    {
-      icon: Phone,
-      title: t('bookCall'),
-      description: t('bookCallDesc'),
-      duration: t('duration30'),
-      availability: t('availabilityWeekdays'),
-      color: "from-blue-500 to-blue-600",
-      bgColor: "bg-blue-50 dark:bg-blue-900/20",
-      iconColor: "text-blue-600 dark:text-blue-400",
-      action: t('scheduleCall'),
-      href: "/contact/call",
-      features: [
-        t('feature1Call'),
-        t('feature2Call'),
-        t('feature3Call'),
-      ],
-    },
     {
       icon: Calendar,
       title: t('bookMeeting'),
@@ -104,7 +87,7 @@ export default function ReachForMeSection() {
         </motion.div>
 
         {/* Contact Cards */}
-        <div className="grid md:grid-cols-3 gap-8 mb-12">
+        <div className="grid md:grid-cols-2 gap-8 mb-12 max-w-4xl mx-auto">
           {contactOptions.map((option, idx) => {
             const Icon = option.icon;
             return (
@@ -137,10 +120,6 @@ export default function ReachForMeSection() {
                       <Clock className="w-4 h-4 flex-shrink-0" />
                       <span className="flex-1">{option.duration}</span>
                     </div>
-                    <div className="flex items-center gap-3 text-sm text-slate-600 dark:text-slate-400" dir={rtl ? "rtl" : "ltr"}>
-                      <Calendar className="w-4 h-4 flex-shrink-0" />
-                      <span className="flex-1">{option.availability}</span>
-                    </div>
                   </div>
 
                   {/* Features */}
@@ -168,30 +147,6 @@ export default function ReachForMeSection() {
             );
           })}
         </div>
-
-        {/* Bottom CTA */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-center bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-8"
-        >
-          <h3 className="text-2xl font-bold text-white mb-3">
-            {t('preferEmail')}
-          </h3>
-          <p className="text-slate-300 mb-6">
-            {t('sendEmailAt')}{" "}
-            <a
-              href="mailto:support@nachdeutschland.de"
-              className="text-brand-red-400 hover:text-brand-red-300 font-semibold underline"
-            >
-              support@nachdeutschland.de
-            </a>
-          </p>
-          <p className="text-sm text-slate-400">
-            {t('averageResponseTime')}
-          </p>
-        </motion.div>
       </div>
     </section>
   );

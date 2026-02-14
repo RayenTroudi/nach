@@ -5,7 +5,7 @@ import { Container } from "@/components/shared";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Video, Clock, CheckCircle2, Calendar, ArrowLeft } from "lucide-react";
+import { Video, CheckCircle2, Calendar, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import BookingCalendar from "@/components/shared/BookingCalendar";
 import { useTranslations } from "next-intl";
@@ -23,7 +23,7 @@ export default function BookMeetingPage() {
       <Container>
         {/* Back Button */}
         <Link href="/">
-          <Button variant="ghost" className="mb-6">
+          <Button variant="ghost" className="mb-8 mt-4">
             <ArrowLeft className="w-4 h-4 mr-2" />
             {t('backToHome')}
           </Button>
@@ -46,43 +46,6 @@ export default function BookMeetingPage() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Info Card */}
             <div className="lg:col-span-1 space-y-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Clock className="w-5 h-5 text-brand-red-500" />
-                    {t('meetingDetails')}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div>
-                    <p className="text-sm font-medium text-slate-900 dark:text-slate-50 mb-1">
-                      {t('duration')}
-                    </p>
-                    <p className="text-sm text-slate-600 dark:text-slate-400">
-                      {t('durationValue')}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium text-slate-900 dark:text-slate-50 mb-1">
-                      {t('availability')}
-                    </p>
-                    <p className="text-sm text-slate-600 dark:text-slate-400">
-                      {t('availabilityValue')}
-                      <br />
-                      {t('availabilityTime')}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium text-slate-900 dark:text-slate-50 mb-1">
-                      {t('format')}
-                    </p>
-                    <p className="text-sm text-slate-600 dark:text-slate-400">
-                      {t('formatValue')}
-                    </p>
-                  </div>
-                </CardContent>
-              </Card>
-
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
@@ -136,9 +99,8 @@ export default function BookMeetingPage() {
                     </p>
                     <div className="mb-4">
                       <p className="text-2xl font-bold text-brand-red-500">
-                        {t('price')} <span className="text-sm text-slate-600 dark:text-slate-400">{t('priceEuro')}</span>
+                        {t('price')}
                       </p>
-                      <p className="text-xs text-slate-500 dark:text-slate-400">{t('consultationDuration')}</p>
                     </div>
                       <Button 
                         onClick={() => setIsBookingOpen(true)}
@@ -149,103 +111,11 @@ export default function BookMeetingPage() {
                         {t('selectDateTime')}
                       </Button>
                     </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div className="flex items-start gap-3 p-4 bg-slate-50 dark:bg-slate-900 rounded-lg">
-                        <CheckCircle2 className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
-                        <div>
-                          <p className="font-medium text-slate-900 dark:text-slate-50 text-sm mb-1">
-                            {t('instantConfirmation')}
-                          </p>
-                          <p className="text-xs text-slate-600 dark:text-slate-400">
-                            {t('instantConfirmationDesc')}
-                          </p>
-                        </div>
-                      </div>
-                      <div className="flex items-start gap-3 p-4 bg-slate-50 dark:bg-slate-900 rounded-lg">
-                        <CheckCircle2 className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
-                        <div>
-                          <p className="font-medium text-slate-900 dark:text-slate-50 text-sm mb-1">
-                            {t('automatedReminders')}
-                          </p>
-                          <p className="text-xs text-slate-600 dark:text-slate-400">
-                            {t('automatedRemindersDesc')}
-                          </p>
-                        </div>
-                      </div>
-                      <div className="flex items-start gap-3 p-4 bg-slate-50 dark:bg-slate-900 rounded-lg">
-                        <CheckCircle2 className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
-                        <div>
-                          <p className="font-medium text-slate-900 dark:text-slate-50 text-sm mb-1">
-                            {t('inPlatformVideo')}
-                          </p>
-                          <p className="text-xs text-slate-600 dark:text-slate-400">
-                            {t('inPlatformVideoDesc')}
-                          </p>
-                        </div>
-                      </div>
-                      <div className="flex items-start gap-3 p-4 bg-slate-50 dark:bg-slate-900 rounded-lg">
-                        <CheckCircle2 className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
-                        <div>
-                          <p className="font-medium text-slate-900 dark:text-slate-50 text-sm mb-1">
-                            {t('easyRescheduling')}
-                          </p>
-                          <p className="text-xs text-slate-600 dark:text-slate-400">
-                            {t('easyReschedulingDesc')}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="border-t pt-4">
-                      <p className="text-xs text-center text-slate-500 dark:text-slate-400">
-                        {t('needHelp')}{" "}
-                        <a
-                          href="mailto:support@nachdeutschland.de"
-                          className="text-brand-red-500 hover:underline"
-                        >
-                          support@nachdeutschland.de
-                        </a>
-                      </p>
-                    </div>
                   </div>
                 </CardContent>
               </Card>
             </div>
           </div>
-
-          {/* What to Expect */}
-          <Card className="mt-8">
-            <CardHeader>
-              <CardTitle>{t('whatToExpect')}</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div>
-                <h4 className="font-medium text-slate-900 dark:text-slate-50 mb-1">
-                  {t('beforeMeeting')}
-                </h4>
-                <p className="text-sm text-slate-600 dark:text-slate-400">
-                  {t('beforeMeetingDesc')}
-                </p>
-              </div>
-              <div>
-                <h4 className="font-medium text-slate-900 dark:text-slate-50 mb-1">
-                  {t('duringMeeting')}
-                </h4>
-                <p className="text-sm text-slate-600 dark:text-slate-400">
-                  {t('duringMeetingDesc')}
-                </p>
-              </div>
-              <div>
-                <h4 className="font-medium text-slate-900 dark:text-slate-50 mb-1">
-                  {t('afterMeeting')}
-                </h4>
-                <p className="text-sm text-slate-600 dark:text-slate-400">
-                  {t('afterMeetingDesc')}
-                </p>
-              </div>
-            </CardContent>
-          </Card>
         </div>
 
         {/* Booking Modal */}

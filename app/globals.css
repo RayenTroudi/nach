@@ -224,25 +224,25 @@ body,
 
   .dark {
     /* Improved dark mode with better contrast */
-    --background: 215 28% 8%; /* slate-950 */
+    --background: 222 47% 11%; /* slate-900 - deeper, richer background */
     --foreground: 210 40% 98%;
-    --card: 217 33% 12%; /* slate-900 with more saturation */
+    --card: 217 33% 17%; /* slate-800 with more saturation - better card contrast */
     --card-foreground: 210 40% 98%;
-    --popover: 217 33% 12%;
+    --popover: 222 47% 11%;
     --popover-foreground: 210 40% 98%;
-    --primary: 0 0% 100%; /* German Red as primary in dark mode */
-    --primary-foreground: 210 40% 98%;
-    --secondary: 215 25% 20%; /* slate-800 */
+    --primary: 0 0% 98%; /* Keep white for primary in dark mode */
+    --primary-foreground: 222 47% 11%;
+    --secondary: 215 28% 17%; /* slate-800 - better secondary contrast */
     --secondary-foreground: 210 40% 98%;
-    --muted: 215 25% 20%;
-    --muted-foreground: 217 10% 65%; /* Better contrast for muted text */
-    --accent: 215 25% 20%;
+    --muted: 217 33% 17%;
+    --muted-foreground: 215 20% 70%; /* Better contrast for muted text - more readable */
+    --accent: 215 28% 17%;
     --accent-foreground: 210 40% 98%;
-    --destructive: 0 84.2% 60.2%;
+    --destructive: 0 84% 60%;
     --destructive-foreground: 210 40% 98%;
-    --border: 217 33% 25%; /* slate-700 - more visible borders */
-    --input: 217 33% 25%;
-    --ring: 48 100% 81%; /* Gold ring for dark mode */
+    --border: 215 28% 27%; /* slate-700 - more visible borders in dark mode */
+    --input: 215 28% 27%;
+    --ring: 48 96% 53%; /* Gold ring for dark mode for better visibility */
   }
 }
 
@@ -278,6 +278,10 @@ body,
   -o-border-radius: 4px;
 }
 
+.dark ::-webkit-progress-bar {
+  background-color: #334155;
+}
+
 ::-webkit-progress-value {
   background-color: #DD0000;
   border-radius: 4px;
@@ -296,10 +300,19 @@ body,
   border-radius: 5px;
 }
 
+.dark *::-webkit-scrollbar-track {
+  background: rgba(221, 0, 0, 0.1);
+}
+
 *::-webkit-scrollbar-thumb {
   background-color: #dd00008b;
   border-radius: 14px;
   border: 3px solid #DD0000;
+}
+
+.dark *::-webkit-scrollbar-thumb {
+  background-color: rgba(221, 0, 0, 0.6);
+  border-color: rgba(221, 0, 0, 0.8);
 }
 
 .ql-container {
@@ -318,6 +331,11 @@ body,
   border: 1px solid rgb(100 116 139);
   background: transparent;
 }
+
+.dark .custom-dot-list-style button {
+  border-color: rgb(71 85 105);
+}
+
 .react-multi-carousel-dot.react-multi-carousel-dot--active button {
   border: none;
   background: #DD0000 !important;
@@ -343,6 +361,10 @@ body,
 
 .circular-progress circle.bg {
   stroke: #ddd;
+}
+
+.dark .circular-progress circle.bg {
+  stroke: #475569;
 }
 
 .circular-progress circle.fg {

@@ -42,7 +42,7 @@ const ChatRoomCard = ({
         group
         ${
           selectedChatRoom && selectedChatRoom._id === chatRoom._id
-            ? "bg-brand-red-50 dark:bg-brand-red-950/20 border-l-4 border-brand-red-500"
+            ? "bg-slate-100 dark:bg-slate-800 border-l-4 border-slate-400 dark:border-slate-500"
             : "border-l-4 border-transparent"
         }
       `}

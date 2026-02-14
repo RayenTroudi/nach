@@ -28,16 +28,16 @@ const TransactionsHistory = ({ transactions }: Props) => {
     <Table className="overflow-auto">
       <TableCaption>A list of your recent withdraws.</TableCaption>
       <TableHeader>
-        <TableRow className="bg-black dark:bg-white hover:bg-black dark:hover:bg-white">
-          <TableHead className="w-[200px] text-white dark:text-black">
+        <TableRow className="bg-slate-900 dark:bg-slate-800 hover:bg-slate-900 dark:hover:bg-slate-800">
+          <TableHead className="w-[200px] text-white dark:text-slate-100">
             Transaction ID
           </TableHead>
-          <TableHead className="w-[200px] text-white dark:text-black">
+          <TableHead className="w-[200px] text-white dark:text-slate-100">
             Account ID
           </TableHead>
-          <TableHead className="text-white dark:text-black">Type</TableHead>
-          <TableHead className="text-white dark:text-black">Date</TableHead>
-          <TableHead className="text-right text-white dark:text-black">
+          <TableHead className="text-white dark:text-slate-100">Type</TableHead>
+          <TableHead className="text-white dark:text-slate-100">Date</TableHead>
+          <TableHead className="text-right text-white dark:text-slate-100">
             Amount
           </TableHead>
         </TableRow>
@@ -59,11 +59,11 @@ const TransactionsHistory = ({ transactions }: Props) => {
         ))}
       </TableBody>
       <TableFooter className="">
-        <TableRow className="bg-black dark:bg-white hover:bg-black dark:hover:bg-white">
-          <TableCell colSpan={4} className="text-white dark:text-black">
+        <TableRow className="bg-slate-900 dark:bg-slate-800 hover:bg-slate-900 dark:hover:bg-slate-800">
+          <TableCell colSpan={4} className="text-white dark:text-slate-100">
             Total
           </TableCell>
-          <TableCell className="text-right text-white dark:text-black">
+          <TableCell className="text-right text-white dark:text-slate-100">
             ${totalTransactions.toFixed(2)}
           </TableCell>
         </TableRow>

@@ -228,28 +228,35 @@ const PurchaseCourseCard = ({
                 {t('previewVideos')}
               </h3>
               <div className="space-y-2">
-                {allFreeVideos.map((video: TVideo | undefined, key: number) => (
-                  <button
-                    onClick={() => onChangeVideoToPreviewHandler(video!)}
-                    key={key}
-                    className={`w-full p-3 rounded-lg flex items-center gap-3 transition-all duration-200 ${
-                      videoToPreview?._id === video?._id || (!videoToPreview && allFreeVideos[0]?._id === video?._id)
-                        ? "bg-brand-red-50 dark:bg-brand-red-950/30 border-2 border-brand-red-500"
-                        : "bg-slate-50 dark:bg-slate-950 hover:bg-slate-100 dark:hover:bg-slate-800 border-2 border-transparent"
-                    }`}
-                  >
-                    <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                      videoToPreview?._id === video?._id || (!videoToPreview && allFreeVideos[0]?._id === video?._id)
-                        ? "bg-brand-red-500"
-                        : "bg-slate-300 dark:bg-slate-700"
-                    }`}>
-                      <LucideVideo size={16} className="text-white" />
-                    </div>
-                    <p className="flex-1 text-left text-sm font-medium text-slate-900 dark:text-slate-100 line-clamp-1">
-                      {video?.title}
-                    </p>
-                  </button>
-                ))}
+                {allFreeVideos.map((video: TVideo | undefined, key: number) => {
+                  const isSelected = videoToPreview?._id === video?._id || (!videoToPreview && allFreeVideos[0]?._id === video?._id);
+                  return (
+                    <button
+                      onClick={() => onChangeVideoToPreviewHandler(video!)}
+                      key={key}
+                      className={`w-full p-3 rounded-lg flex items-center gap-3 transition-all duration-200 ${
+                        isSelected
+                          ? "bg-brand-red-50 dark:bg-brand-red-950/30 border-2 border-brand-red-500"
+                          : "bg-slate-50 dark:bg-slate-950 hover:bg-slate-100 dark:hover:bg-slate-800 border-2 border-transparent"
+                      }`}
+                    >
+                      <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                        isSelected
+                          ? "bg-brand-red-500"
+                          : "bg-slate-300 dark:bg-slate-700"
+                      }`}>
+                        <LucideVideo size={16} className="text-white" />
+                      </div>
+                      <p className={`flex-1 text-left text-sm font-medium line-clamp-1 ${
+                        isSelected
+                          ? "text-brand-red-700 dark:text-brand-red-300"
+                          : "text-slate-900 dark:text-slate-100"
+                      }`}>
+                        {video?.title}
+                      </p>
+                    </button>
+                  );
+                })}
               </div>
             </div>
           )}
@@ -273,7 +280,7 @@ const PurchaseCourseCard = ({
                   <Link href={`/teacher/courses/manage/${course._id}`}>
                     <Button
                       name="manage-course"
-                      className="w-full bg-slate-950 dark:bg-slate-200 dark:hover:opacity-90 transition-all duration-300 ease-in-out  rounded-sm text-md font-bold"
+                      className="w-full bg-slate-900 dark:bg-slate-800 text-white dark:text-slate-100 hover:bg-slate-800 dark:hover:bg-slate-700 transition-all duration-300 ease-in-out rounded-sm text-md font-bold"
                     >
                       {t('manageYourCourse')}
                     </Button>
@@ -283,7 +290,7 @@ const PurchaseCourseCard = ({
                 <Link href={`/my-learning/${course._id}`}>
                   <Button
                     name="continue_learning"
-                    className="w-full bg-slate-950 dark:bg-slate-200 dark:hover:opacity-90 transition-all mt2 duration-300 ease-in-out rounded-sm text-md font-bold"
+                    className="w-full bg-slate-900 dark:bg-slate-800 text-white dark:text-slate-100 hover:bg-slate-800 dark:hover:bg-slate-700 transition-all mt2 duration-300 ease-in-out rounded-sm text-md font-bold"
                   >
                     {t('continueLearning')}
                   </Button>
@@ -294,7 +301,7 @@ const PurchaseCourseCard = ({
                     <DialogTrigger asChild className="">
                       <Button
                         name="buy-now"
-                        className="w-full bg-slate-950 dark:bg-slate-200 dark:hover:opacity-90 transition-all duration-300 ease-in-out  mt-2 rounded-sm text-md font-bold"
+                        className="w-full bg-slate-900 dark:bg-slate-800 text-white dark:text-slate-100 hover:bg-slate-800 dark:hover:bg-slate-700 transition-all duration-300 ease-in-out mt-2 rounded-sm text-md font-bold"
                       >
                         {t('buyNow')}
                       </Button>
@@ -442,7 +449,7 @@ const PurchaseCourseCard = ({
                   <Link href={`/teacher/courses/manage/${course._id}`}>
                     <Button
                       name="manage-course"
-                      className="w-full bg-slate-950 dark:bg-slate-200 dark:hover:opacity-90 transition-all duration-300 ease-in-out  rounded-sm text-md font-bold"
+                      className="w-full bg-slate-900 dark:bg-slate-800 text-white dark:text-slate-100 hover:bg-slate-800 dark:hover:bg-slate-700 transition-all duration-300 ease-in-out rounded-sm text-md font-bold"
                     >
                       {t('manageYourCourse')}
                     </Button>
@@ -452,7 +459,7 @@ const PurchaseCourseCard = ({
                 <Link href={`/my-learning/${course._id}`}>
                   <Button
                     name="continue_learning"
-                    className="w-full bg-slate-950 dark:bg-slate-200 dark:hover:opacity-90 transition-all duration-300 ease-in-out rounded-sm text-md font-bold"
+                    className="w-full bg-slate-900 dark:bg-slate-800 text-white dark:text-slate-100 hover:bg-slate-800 dark:hover:bg-slate-700 transition-all duration-300 ease-in-out rounded-sm text-md font-bold"
                   >
                     Continue Learning
                   </Button>

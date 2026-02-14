@@ -131,12 +131,12 @@ const TeacherCourseCard = ({
       >
         <Link
           href={`/teacher/courses/manage/${course?._id}`}
-          className="group relative w-full h-full rounded-md flex gap-4 flex-col lg:flex-row hover:bg-input/50 transition ease-in-out duration-300"
+          className="group relative w-full h-full rounded-md flex gap-4 flex-col lg:flex-row hover:bg-input/50 transition ease-in-out duration-300 cursor-pointer"
         >
-          <p className="absolute top-1/3 left-1/2  hidden  lg:group-hover:block font-bold text-[22px] text-brand-red-500 transition ease-in-out duration-300">
+          <p className="absolute top-1/3 left-1/2 -translate-x-1/2 hidden lg:group-hover:block font-bold text-[22px] text-brand-red-500 transition ease-in-out duration-300 pointer-events-none z-10">
             Edit / Manage Course
           </p>
-          <div className="w-full h-[200px] lg:w-[400px] lg:h-full relative border border-input">
+          <div className="w-full h-[200px] lg:w-[400px] lg:h-full relative border border-input pointer-events-none">
             <Badge text={course.category?.name} />
 
             <Image
@@ -152,7 +152,7 @@ const TeacherCourseCard = ({
               className=" h-[200px] lg:h-full w-full lg:w-[300px] object-cover  "
             />
           </div>
-          <div className="hidden w-full py-3 lg:grid grid-cols-3 gap-2 group-hover:opacity-5 transition ease-in-out duration-300">
+          <div className="hidden w-full py-3 lg:grid grid-cols-3 gap-2 group-hover:opacity-5 transition ease-in-out duration-300 pointer-events-none">
             <div className="flex flex-col justify-between gap-3 items-start">
               <h2 className="font-bold">{course.title}</h2>
               <p className="font-semibold text-[14px]">
@@ -232,7 +232,7 @@ const TeacherCourseCard = ({
             </div>
           </div>
 
-          <div className="flex md:flex-col lg:hidden p-4">
+          <div className="flex md:flex-col lg:hidden p-4 pointer-events-none">
             <div className="w-full flex flex-col justify-between gap-3 items-start">
               <div className="w-full flex justify-between items-center">
                 <h2 className="font-bold">{course.title}</h2>
@@ -277,7 +277,7 @@ const TeacherCourseCard = ({
           </div>
         </Link>
         {course.isPublished || !course.students?.length ? (
-          <div className="absolute top-0 right-0" onClick={(e) => e.stopPropagation()}>
+          <div className="absolute top-0 right-0 z-20" onClick={(e) => e.stopPropagation()}>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button

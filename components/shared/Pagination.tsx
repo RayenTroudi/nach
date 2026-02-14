@@ -37,9 +37,9 @@ const Pagination = ({ pageNumber, isNext }: Props) => {
         onClick={() => handleNavigation("prev")}
         className={`px-4 py-2 rounded-md text-sm font-medium ${
           pageNumber === 1
-            ? "bg-gray-200 text-gray-400 cursor-not-allowed"
-            : "bg-white text-gray-700 hover:bg-gray-100"
-        } border border-gray-300`}
+            ? "bg-slate-200 dark:bg-slate-800 text-slate-400 dark:text-slate-500 cursor-not-allowed"
+            : "bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700"
+        } border border-slate-300 dark:border-slate-700`}
       >
         Prev
       </Button>
@@ -53,9 +53,9 @@ const Pagination = ({ pageNumber, isNext }: Props) => {
         onClick={() => handleNavigation("next")}
         className={`px-4 py-2 rounded-md text-sm font-medium ${
           !isNext
-            ? "bg-gray-200 text-gray-400 cursor-not-allowed"
-            : "bg-white text-gray-700 hover:bg-gray-100"
-        } border border-gray-300`}
+            ? "bg-slate-200 dark:bg-slate-800 text-slate-400 dark:text-slate-500 cursor-not-allowed"
+            : "bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700"
+        } border border-slate-300 dark:border-slate-700`}
       >
         Next
       </Button>

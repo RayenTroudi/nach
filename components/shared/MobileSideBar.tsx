@@ -72,17 +72,18 @@ const MobileSideBar = ({
             />
           )}
         </SheetTrigger>
-        <SheetContent side="left" className=" flex flex-col gap-12">
-          <SheetHeader>
+        <SheetContent side="left" className="flex flex-col h-full">
+          <SheetHeader className="flex-shrink-0">
             <SheetTitle className="">
               <Logo isSheetOpen={true} />
             </SheetTitle>
           </SheetHeader>
-          <div className="grid grid-cols-1 gap-2">
-            {routes.map((route, key) => (
-              <MobileLeftSidebarItem key={key} {...route} />
-            ))}
-            <SignedIn>
+          <SignedIn>
+            <div className="flex-1 overflow-y-auto py-4 mb-20">
+              <div className="grid grid-cols-1 gap-2">
+                {routes.map((route, key) => (
+                  <MobileLeftSidebarItem key={key} {...route} />
+                ))}
               {/* Only admins can access instructor mode */}
               {isAdmin && (!pathname.startsWith("/teacher") ||
               pathname.includes("/section")) ? (
@@ -160,8 +161,9 @@ const MobileSideBar = ({
                   ) : null}
                 </>
               ) : null}
-            </SignedIn>
-          </div>
+              </div>
+            </div>
+          </SignedIn>
 
           <SheetFooter className="flex flex-col gap-2 absolute bottom-5 left-0 w-full px-4 ">
             {children}

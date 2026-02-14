@@ -162,11 +162,6 @@ export default function MyMeetings({ bookings: initialBookings }: MyMeetingsProp
                 {t("bookConsultation")}
               </Button>
             </Link>
-            <Link href="/contact/call">
-              <Button variant="outline" className="border-2 border-slate-200 dark:border-slate-800 hover:border-brand-red-500 dark:hover:border-brand-red-500">
-                {t("bookQuickCall")}
-              </Button>
-            </Link>
           </div>
         </div>
       </div>
@@ -338,11 +333,6 @@ export default function MyMeetings({ bookings: initialBookings }: MyMeetingsProp
           <Link href="/contact/meeting">
             <Button className="bg-brand-red-500 hover:bg-brand-red-600 text-white">
               {t("bookConsultation")}
-            </Button>
-          </Link>
-          <Link href="/contact/call">
-            <Button variant="outline" className="border-2 border-slate-200 dark:border-slate-800 hover:border-brand-red-500 dark:hover:border-brand-red-500 bg-white dark:bg-slate-900">
-              {t("quickCall")}
             </Button>
           </Link>
         </div>

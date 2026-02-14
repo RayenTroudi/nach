@@ -73,7 +73,7 @@ const Message = ({ loggedInUser, message, isLastMessage }: Props) => {
 
           <HoverCard>
             <HoverCardTrigger asChild className="cursor-pointer">
-              <div className=" max-w-[600px] p-2 bg-slate-950 dark:bg-slate-50 text-slate-50 dark:text-slate-950 rounded-t-lg rounded-br-lg ">
+              <div className=" max-w-[600px] p-2 bg-slate-200 dark:bg-slate-800 text-slate-950 dark:text-slate-50 rounded-t-lg rounded-br-lg ">
                 {message.content}
               </div>
             </HoverCardTrigger>

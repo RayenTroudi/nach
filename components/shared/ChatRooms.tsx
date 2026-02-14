@@ -117,26 +117,26 @@ const ChatRooms = ({ chatRooms, user }: Props) => {
             ${selectedChatRoom ? "-translate-x-full md:translate-x-0" : "translate-x-0"}
           `}>
             {/* Header */}
-            <div className="flex-shrink-0 p-6 border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800">
+            <div className="flex-shrink-0 p-6 border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
               <div className="flex items-center gap-3 mb-4">
-                <div className="p-2 bg-white/60 rounded-lg backdrop-blur-sm">
+                <div className="p-2 bg-slate-100 dark:bg-slate-800 rounded-lg backdrop-blur-sm">
                   <MessageCircleIcon className="text-rose-600" size={24} />
                 </div>
                 <div>
-                  <h1 className="font-bold text-xl text-slate-800">{t("title")}</h1>
-                  <p className="text-sm text-slate-600">{chatRooms.length} {t("conversations")}</p>
+                  <h1 className="font-bold text-xl text-slate-800 dark:text-slate-100">{t("title")}</h1>
+                  <p className="text-sm text-slate-600 dark:text-slate-400">{chatRooms.length} {t("conversations")}</p>
                 </div>
               </div>
 
               {/* Search Bar */}
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" size={18} />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 dark:text-slate-400" size={18} />
                 <Input
                   type="text"
                   placeholder={t("searchPlaceholder")}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10 bg-white border-slate-300 focus:ring-2 focus:ring-rose-300"
+                  className="pl-10 bg-white dark:bg-slate-800 border-slate-300 dark:border-slate-700 focus:ring-2 focus:ring-rose-300 dark:focus:ring-rose-600"
                 />
               </div>
 
@@ -146,7 +146,7 @@ const ChatRooms = ({ chatRooms, user }: Props) => {
                   size="sm"
                   variant={filterType === "all" ? "secondary" : "ghost"}
                   onClick={() => setFilterType("all")}
-                  className={`flex-1 ${filterType === "all" ? "bg-white text-rose-600" : "text-slate-700 hover:bg-white/50"}`}
+                  className={`flex-1 ${filterType === "all" ? "bg-rose-100 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400" : "text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"}`}
                 >
                   {t("filterAll")}
                 </Button>
@@ -154,7 +154,7 @@ const ChatRooms = ({ chatRooms, user }: Props) => {
                   size="sm"
                   variant={filterType === "private" ? "secondary" : "ghost"}
                   onClick={() => setFilterType("private")}
-                  className={`flex-1 ${filterType === "private" ? "bg-white text-rose-600" : "text-slate-700 hover:bg-white/50"}`}
+                  className={`flex-1 ${filterType === "private" ? "bg-rose-100 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400" : "text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"}`}
                 >
                   {t("filterPrivate")}
                 </Button>
@@ -162,7 +162,7 @@ const ChatRooms = ({ chatRooms, user }: Props) => {
                   size="sm"
                   variant={filterType === "group" ? "secondary" : "ghost"}
                   onClick={() => setFilterType("group")}
-                  className={`flex-1 ${filterType === "group" ? "bg-white text-rose-600" : "text-slate-700 hover:bg-white/50"}`}
+                  className={`flex-1 ${filterType === "group" ? "bg-rose-100 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400" : "text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"}`}
                 >
                   {t("filterGroup")}
                 </Button>
@@ -188,8 +188,8 @@ const ChatRooms = ({ chatRooms, user }: Props) => {
                   ))
                 ) : (
                   <div className="flex flex-col items-center justify-center py-12 text-center">
-                    <p className="text-slate-500 text-sm">{t("noConversations")}</p>
-                    <p className="text-slate-400 text-xs mt-1">{t("tryAdjustingFilters")}</p>
+                    <p className="text-slate-500 dark:text-slate-400 text-sm">{t("noConversations")}</p>
+                    <p className="text-slate-400 dark:text-slate-500 text-xs mt-1">{t("tryAdjustingFilters")}</p>
                   </div>
                 )}
               </div>

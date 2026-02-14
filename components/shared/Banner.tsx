@@ -14,9 +14,9 @@ const bannerVariants = cva(
   {
     variants: {
       variant: {
-        info: "bg-slate-200/80 text-slate-900 font-semibold",
-        warning: "bg-yellow-100 border-yellow-200 text-slate-900 font-semibold",
-        success: "bg-[#065f46] border-emerald-800 text-slate-200 font-semibold",
+        info: "bg-slate-200/80 dark:bg-slate-800/80 text-slate-900 dark:text-slate-100 font-semibold",
+        warning: "bg-yellow-100 dark:bg-yellow-900/80 border-yellow-200 dark:border-yellow-700 text-slate-900 dark:text-yellow-100 font-semibold",
+        success: "bg-emerald-700 dark:bg-emerald-800 border-emerald-800 dark:border-emerald-700 text-slate-200 dark:text-slate-100 font-semibold",
         destructive:
           "destructive group border-destructive bg-destructive text-destructive-foreground",
       },

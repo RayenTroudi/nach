@@ -64,8 +64,7 @@ export async function POST(req: NextRequest) {
             model: 'User'
           }
         }
-      })
-      .lean();
+      });
 
     if (!video) {
       return NextResponse.json(
@@ -74,14 +73,17 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // Type assertion for populated fields
+    const populatedVideo = video as any;
+
     console.log('[Mux] Video populated:', {
-      hasSection: !!video.sectionId,
-      hasCourse: !!(video.sectionId as any)?.course,
-      hasInstructor: !!((video.sectionId as any)?.course as any)?.instructor,
+      hasSection: !!populatedVideo.sectionId,
+      hasCourse: !!populatedVideo.sectionId?.course,
+      hasInstructor: !!populatedVideo.sectionId?.course?.instructor,
     });
 
     // Verify ownership - compare Clerk's userId with instructor's clerkId
-    const section = video.sectionId as any;
+    const section = populatedVideo.sectionId;
     const course = section?.course;
     const instructor = course?.instructor;
     

@@ -29,7 +29,7 @@ export async function GET(request: Request) {
         console.error("Error fetching user:", userError);
       }
     }
-    const isInstructor = currentDbUser?.isInstructor === true || currentDbUser?.isAdmin === true;
+    const isInstructor = currentDbUser?.isAdmin === true;
 
     const query: any = {};
     if (instructorId) {

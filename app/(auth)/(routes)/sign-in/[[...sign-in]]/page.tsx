@@ -2,14 +2,19 @@
 import { useTheme } from "@/contexts/ThemeProvider";
 import { SignIn } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
+import { useLocale, useTranslations } from "next-intl";
+import Link from "next/link";
 import React from "react";
 
 function SignInContent() {
   const { mode } = useTheme();
+  const locale = useLocale();
+  const t = useTranslations("auth");
+  const direction = locale === "ar" ? "rtl" : "ltr";
 
   return (
     <div className="w-full flex items-center justify-center min-h-screen p-4">
-      <div className="w-full max-w-md mx-auto">
+      <div className="w-full max-w-md mx-auto" dir={direction}>
         <SignIn
           appearance={{
             baseTheme: mode === "dark" ? dark : undefined,
@@ -78,6 +83,16 @@ function SignInContent() {
           path="/sign-in"
           signUpUrl="/sign-up"
         />
+        
+        {/* Custom Forgot Password Link */}
+        <div className="mt-6 text-center">
+          <Link
+            href="/forgot-password"
+            className="text-brand-red-500 hover:text-brand-red-600 font-medium text-sm transition-colors duration-200"
+          >
+            {t("forgotPassword")}
+          </Link>
+        </div>
       </div>
     </div>
   );

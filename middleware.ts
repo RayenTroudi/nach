@@ -26,6 +26,8 @@ export default authMiddleware({
     "/sign-in/",
     "/sign-up",
     "/sign-up/",
+    "/forgot-password",
+    "/reset-password",
     "/contact(.*)",
     "/documents(.*)",
     "/(en|de|ar)",
@@ -33,6 +35,8 @@ export default authMiddleware({
     "/(en|de|ar)/sign-in/",
     "/(en|de|ar)/sign-up",
     "/(en|de|ar)/sign-up/",
+    "/(en|de|ar)/forgot-password",
+    "/(en|de|ar)/reset-password",
   ],
   ignoredRoutes: [
     "/api/webhooks",

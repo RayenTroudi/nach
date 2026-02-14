@@ -11,6 +11,9 @@ import { createMuxAsset, deleteMuxAsset } from '@/lib/mux';
 import { connectToDatabase } from '@/lib/mongoose';
 import Video from '@/lib/models/video.model';
 import MuxData from '@/lib/models/muxdata.model';
+import Section from '@/lib/models/section.model';
+import Course from '@/lib/models/course.model';
+import User from '@/lib/models/user.model';
 
 export async function POST(req: NextRequest) {
   try {
@@ -43,14 +46,26 @@ export async function POST(req: NextRequest) {
 
     await connectToDatabase();
 
+    // Ensure models are registered
+    await Section.find().limit(0);
+    await Course.find().limit(0);
+    await User.find().limit(0);
+
     // Check if video exists and belongs to the user's course
-    const video = await Video.findById(videoId).populate({
-      path: 'sectionId',
-      populate: {
-        path: 'course',
-        populate: { path: 'instructor' }
-      }
-    });
+    const video = await Video.findById(videoId)
+      .populate({
+        path: 'sectionId',
+        model: 'Section',
+        populate: {
+          path: 'course',
+          model: 'Course',
+          populate: { 
+            path: 'instructor',
+            model: 'User'
+          }
+        }
+      })
+      .lean();
 
     if (!video) {
       return NextResponse.json(
@@ -59,9 +74,32 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    console.log('[Mux] Video populated:', {
+      hasSection: !!video.sectionId,
+      hasCourse: !!(video.sectionId as any)?.course,
+      hasInstructor: !!((video.sectionId as any)?.course as any)?.instructor,
+    });
+
     // Verify ownership - compare Clerk's userId with instructor's clerkId
-    const instructorClerkId = video.sectionId?.course?.instructor?.clerkId;
+    const section = video.sectionId as any;
+    const course = section?.course;
+    const instructor = course?.instructor;
+    
+    if (!section || !course || !instructor) {
+      console.error('[Mux] Population failed:', { 
+        hasSection: !!section, 
+        hasCourse: !!course, 
+        hasInstructor: !!instructor 
+      });
+      return NextResponse.json(
+        { error: 'Video data incomplete. Please ensure the video has a valid section and course.' },
+        { status: 400 }
+      );
+    }
+
+    const instructorClerkId = instructor.clerkId;
     if (!instructorClerkId || instructorClerkId !== userId) {
+      console.error('[Mux] Authorization failed:', { instructorClerkId, userId });
       return NextResponse.json(
         { error: 'Unauthorized to modify this video' },
         { status: 403 }

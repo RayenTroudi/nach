@@ -17,15 +17,19 @@ export async function GET(request: Request) {
 
     const { searchParams } = new URL(request.url);
     const instructorId = searchParams.get("instructorId");
-    const isPublished = searchParams.get("isPublished");
-    const parentFolder = searchParams.get("parentFolder"); // null for root, id for subfolder
+    const isPublished = searchParams.get("isPublished") || searchParams.get("published");
+    const parentFolder = searchParams.get("parentFolder");
 
     // Get current user to check if they're an instructor
     let currentDbUser = null;
     if (userId) {
-      currentDbUser = await UserModel.findOne({ clerkId: userId }).lean();
+      try {
+        currentDbUser = await UserModel.findOne({ clerkId: userId }).lean();
+      } catch (userError) {
+        console.error("Error fetching user:", userError);
+      }
     }
-    const isInstructor = currentDbUser?.isAdmin === true;
+    const isInstructor = currentDbUser?.isInstructor === true || currentDbUser?.isAdmin === true;
 
     const query: any = {};
     if (instructorId) {
@@ -34,23 +38,31 @@ export async function GET(request: Request) {
     if (isPublished) {
       query.isPublished = isPublished === "true";
     }
-    // Filter by parent folder (null for root items)
     if (parentFolder === "null" || parentFolder === null) {
       query.parentFolder = null;
     } else if (parentFolder) {
       query.parentFolder = parentFolder;
     }
 
+    console.log("Document bundles query:", JSON.stringify(query));
+
     let bundles = await DocumentBundle.find(query)
-      .populate("uploadedBy", "firstName lastName picture")
-      .populate("documents")
+      .populate({
+        path: "uploadedBy",
+        select: "firstName lastName picture"
+      })
+      .populate({
+        path: "documents",
+        options: { strictPopulate: false }
+      })
       .populate({
         path: "parentFolder",
         select: "title price currency isFolder"
       })
-      .select("+isFolder +parentFolder") // Explicitly select these fields
-      .sort({ isFolder: -1, createdAt: -1 }) // Folders first, then by date
-      .lean();
+      .select("+isFolder +parentFolder")
+      .sort({ isFolder: -1, createdAt: -1 })
+      .lean()
+      .exec();
 
     // For students: Filter bundles based on purchases
     if (!isInstructor && userId && currentDbUser) {
@@ -67,16 +79,26 @@ export async function GET(request: Request) {
 
       // Get parent folder data for all bundles that have parents
       const parentFolderIds = bundles
-        .filter(b => b.parentFolder)
-        .map(b => typeof b.parentFolder === 'string' ? b.parentFolder : b.parentFolder.toString());
+        .filter(b => b.parentFolder && b.parentFolder !== null)
+        .map(b => {
+          if (typeof b.parentFolder === 'object' && b.parentFolder._id) {
+            return b.parentFolder._id.toString();
+          }
+          return typeof b.parentFolder === 'string' ? b.parentFolder : b.parentFolder?.toString();
+        })
+        .filter(id => id); // Remove any undefined/null values
       
-      const parentFolders = await DocumentBundle.find({
-        _id: { $in: parentFolderIds }
-      }).lean();
+      let parentFolderMap = new Map();
       
-      const parentFolderMap = new Map(
-        parentFolders.map((pf: any) => [pf._id.toString(), pf])
-      );
+      if (parentFolderIds.length > 0) {
+        const parentFolders = await DocumentBundle.find({
+          _id: { $in: parentFolderIds }
+        }).lean();
+        
+        parentFolderMap = new Map(
+          parentFolders.map((pf: any) => [pf._id.toString(), pf])
+        );
+      }
 
       // Filter bundles
       bundles = bundles.filter(bundle => {
@@ -94,25 +116,33 @@ export async function GET(request: Request) {
 
       // Mark bundles as purchased/locked for UI
       bundles = bundles.map(bundle => {
-        const bundleId = (bundle._id as any).toString();
+        const bundleId = bundle._id ? (bundle._id as any).toString() : '';
         let isAccessible = true;
         let requiresFolderPurchase = false;
         let parentFolderPrice = 0;
 
         // Check if bundle is inside a paid folder
         if (bundle.parentFolder && !bundle.isFolder) {
-          const parentFolderId = typeof bundle.parentFolder === 'string' 
-            ? bundle.parentFolder 
-            : bundle.parentFolder.toString();
+          let parentFolderId = '';
           
-          const parentFolder = parentFolderMap.get(parentFolderId);
+          if (typeof bundle.parentFolder === 'object' && bundle.parentFolder._id) {
+            parentFolderId = bundle.parentFolder._id.toString();
+          } else if (typeof bundle.parentFolder === 'string') {
+            parentFolderId = bundle.parentFolder;
+          } else if (bundle.parentFolder) {
+            parentFolderId = bundle.parentFolder.toString();
+          }
           
-          if (parentFolder && (parentFolder as any).price > 0) {
-            // Parent folder is paid
-            requiresFolderPurchase = true;
-            parentFolderPrice = (parentFolder as any).price;
-            // Only accessible if parent folder is purchased
-            isAccessible = purchasedBundleIds.has(parentFolderId);
+          if (parentFolderId) {
+            const parentFolder = parentFolderMap.get(parentFolderId);
+            
+            if (parentFolder && (parentFolder as any).price > 0) {
+              // Parent folder is paid
+              requiresFolderPurchase = true;
+              parentFolderPrice = (parentFolder as any).price;
+              // Only accessible if parent folder is purchased
+              isAccessible = purchasedBundleIds.has(parentFolderId);
+            }
           }
         }
 
@@ -136,8 +166,10 @@ export async function GET(request: Request) {
     return NextResponse.json({ bundles });
   } catch (error: any) {
     console.error("Error fetching document bundles:", error);
+    console.error("Error stack:", error.stack);
+    console.error("Error message:", error.message);
     return NextResponse.json(
-      { error: "Failed to fetch document bundles" },
+      { error: "Failed to fetch document bundles", details: error.message },
       { status: 500 }
     );
   }

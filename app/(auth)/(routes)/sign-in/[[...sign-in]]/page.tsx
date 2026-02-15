@@ -5,7 +5,6 @@ import { dark } from "@clerk/themes";
 import { useLocale, useTranslations } from "next-intl";
 import Link from "next/link";
 import React from "react";
-import { getClerkLocalization } from "@/lib/clerk-localizations";
 
 function SignInContent() {
   const { mode } = useTheme();
@@ -13,14 +12,10 @@ function SignInContent() {
   const t = useTranslations("auth");
   const direction = locale === "ar" ? "rtl" : "ltr";
 
-  // Get Clerk localization for current locale
-  const clerkLocalization = getClerkLocalization(locale);
-
   return (
     <div className="w-full flex items-center justify-center min-h-screen p-4">
       <div className="w-full max-w-md mx-auto" dir={direction}>
         <SignIn
-          localization={clerkLocalization}
           appearance={{
             baseTheme: mode === "dark" ? dark : undefined,
             variables: {

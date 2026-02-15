@@ -5,7 +5,6 @@ import { dark } from "@clerk/themes";
 import React, { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { useLocale } from "next-intl";
-import { getClerkLocalization } from "@/lib/clerk-localizations";
 
 const SignUpPage = () => {
   const { mode } = useTheme();
@@ -14,9 +13,6 @@ const SignUpPage = () => {
   const [mounted, setMounted] = useState(false);
   const [redirectUrl, setRedirectUrl] = useState<string>("/");
   const direction = locale === "ar" ? "rtl" : "ltr";
-
-  // Get Clerk localization for current locale
-  const clerkLocalization = getClerkLocalization(locale);
 
   // Fix hydration error by only running client-side logic after mount
   useEffect(() => {
@@ -48,7 +44,6 @@ const SignUpPage = () => {
   return (
     <div className="w-full flex items-center justify-center min-h-[600px] p-4" dir={direction}>
       <SignUp
-        localization={clerkLocalization}
         appearance={{
           baseTheme: mode === "dark" ? dark : undefined,
           variables: {

@@ -8,6 +8,7 @@ export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [sent, setSent] = useState(false);
   const router = useRouter();
   const locale = useLocale();
   const t = useTranslations();
@@ -16,9 +17,34 @@ export default function ForgotPasswordPage() {
     e.preventDefault();
     setLoading(true);
     setError("");
+    setSent(false);
 
-    // Redirect directly to reset-password page with email
-    router.push(`/reset-password?email=${encodeURIComponent(email)}`);
+    try {
+      const response = await fetch("/api/auth/reset-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data?.error || "Failed to send reset email");
+      }
+
+      setSent(true);
+    } catch (err: any) {
+      setError(
+        err?.message ||
+          (locale === "ar"
+            ? "فشل إرسال رابط إعادة التعيين"
+            : locale === "de"
+            ? "Fehler beim Senden des Zurücksetz-Links"
+            : "Failed to send reset link")
+      );
+    } finally {
+      setLoading(false);
+    }
   };
 
   const direction = locale === "ar" ? "rtl" : "ltr";
@@ -47,6 +73,18 @@ export default function ForgotPasswordPage() {
               </div>
             )}
 
+            {sent && (
+              <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-4">
+                <p className="text-sm text-green-900 dark:text-green-100">
+                  {locale === "ar"
+                    ? "إذا كان هناك حساب بهذا البريد الإلكتروني، فستتلقى رابط إعادة التعيين."
+                    : locale === "de"
+                    ? "Wenn ein Konto mit dieser E-Mail existiert, erhalten Sie einen Zurücksetz-Link."
+                    : "If an account exists for this email, you will receive a reset link."}
+                </p>
+              </div>
+            )}
+
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                 {locale === "ar" ? "البريد الإلكتروني" : locale === "de" ? "E-Mail" : "Email Address"}
@@ -69,8 +107,8 @@ export default function ForgotPasswordPage() {
               className="w-full bg-brand-red-500 hover:bg-brand-red-600 text-white font-medium py-2.5 px-4 rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed text-sm"
             >
               {loading 
-                ? (locale === "ar" ? "جارٍ التوجيه..." : locale === "de" ? "Weiterleitung..." : "Redirecting...")
-                : (locale === "ar" ? "متابعة" : locale === "de" ? "Fortfahren" : "Continue")
+                ? (locale === "ar" ? "جارٍ الإرسال..." : locale === "de" ? "Wird gesendet..." : "Sending...")
+                : (locale === "ar" ? "إرسال الرابط" : locale === "de" ? "Link senden" : "Send reset link")
               }
             </button>
 

@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useLocale } from "next-intl";
-import { useSignIn } from "@clerk/nextjs";
+import { useSignIn, useUser } from "@clerk/nextjs";
 import Link from "next/link";
 
 export default function ResetPasswordPage() {
@@ -16,7 +16,8 @@ export default function ResetPasswordPage() {
   const [step, setStep] = useState<"email" | "code" | "password">("email");
   const router = useRouter();
   const locale = useLocale();
-  const { signIn, setActive } = useSignIn();
+  const { signIn, setActive, isLoaded } = useSignIn();
+  const { user, isSignedIn, isLoaded: isUserLoaded } = useUser();
   const searchParams = useSearchParams();
 
   const direction = locale === "ar" ? "rtl" : "ltr";
@@ -26,17 +27,24 @@ export default function ResetPasswordPage() {
     const emailParam = searchParams?.get("email");
     if (emailParam) {
       setEmail(emailParam);
-      // Automatically send code if email is provided
+    }
+
+    if (emailParam && isLoaded && signIn && step === "email") {
+      // Automatically send code if email is provided and Clerk is ready
       handleSendCodeAutomatically(emailParam);
     }
-  }, [searchParams]);
+  }, [searchParams, isLoaded, signIn, step]);
 
   const handleSendCodeAutomatically = async (emailAddress: string) => {
     setLoading(true);
     setError("");
 
     try {
-      await signIn?.create({
+      if (!isLoaded || !signIn) {
+        throw new Error("Auth service is not ready");
+      }
+
+      await signIn.create({
         strategy: "reset_password_email_code",
         identifier: emailAddress,
       });
@@ -61,7 +69,11 @@ export default function ResetPasswordPage() {
     setLoading(true);
 
     try {
-      await signIn?.create({
+      if (!isLoaded || !signIn) {
+        throw new Error("Auth service is not ready");
+      }
+
+      await signIn.create({
         strategy: "reset_password_email_code",
         identifier: email,
       });
@@ -86,7 +98,11 @@ export default function ResetPasswordPage() {
     setLoading(true);
 
     try {
-      const result = await signIn?.attemptFirstFactor({
+      if (!isLoaded || !signIn) {
+        throw new Error("Auth service is not ready");
+      }
+
+      const result = await signIn.attemptFirstFactor({
         strategy: "reset_password_email_code",
         code: code,
       });
@@ -137,7 +153,11 @@ export default function ResetPasswordPage() {
     setLoading(true);
 
     try {
-      const result = await signIn?.attemptFirstFactor({
+      if (!isLoaded || !signIn) {
+        throw new Error("Auth service is not ready");
+      }
+
+      const result = await signIn.attemptFirstFactor({
         strategy: "reset_password_email_code",
         code: code,
         password: newPassword,
@@ -192,6 +212,82 @@ export default function ResetPasswordPage() {
     }
   };
 
+  const handleSetPasswordSignedIn = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+
+    if (newPassword !== confirmPassword) {
+      setError(
+        locale === "ar"
+          ? "كلمات المرور غير متطابقة"
+          : locale === "de"
+          ? "Passwörter stimmen nicht überein"
+          : "Passwords do not match"
+      );
+      return;
+    }
+
+    if (newPassword.length < 8) {
+      setError(
+        locale === "ar"
+          ? "يجب أن تتكون كلمة المرور من 8 أحرف على الأقل"
+          : locale === "de"
+          ? "Das Passwort muss mindestens 8 Zeichen lang sein"
+          : "Password must be at least 8 characters"
+      );
+      return;
+    }
+
+    if (!isUserLoaded || !isSignedIn || !user) {
+      setError(
+        locale === "ar"
+          ? "الرجاء فتح رابط إعادة التعيين من بريدك الإلكتروني"
+          : locale === "de"
+          ? "Bitte öffnen Sie den Zurücksetz-Link aus Ihrer E-Mail"
+          : "Please open the reset link from your email"
+      );
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      await user.updatePassword({ newPassword });
+
+      try {
+        await fetch("/api/auth/password-changed", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: user.primaryEmailAddress?.emailAddress,
+            firstName: user.firstName,
+          }),
+        });
+      } catch (emailErr) {
+        console.error("Failed to send confirmation email:", emailErr);
+      }
+
+      setSuccess(true);
+      setTimeout(() => {
+        router.push("/dashboard");
+      }, 2000);
+    } catch (err: any) {
+      console.error("Password update error:", err);
+      setError(
+        err.errors?.[0]?.message ||
+          (locale === "ar"
+            ? "فشل تحديث كلمة المرور"
+            : locale === "de"
+            ? "Passwort konnte nicht aktualisiert werden"
+            : "Failed to update password")
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
   if (success) {
     return (
       <div className="w-full flex items-center justify-center min-h-screen p-4">
@@ -228,6 +324,103 @@ export default function ResetPasswordPage() {
                   : "Your password has been successfully updated. Redirecting to dashboard..."}
               </p>
             </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (isUserLoaded && isSignedIn) {
+    return (
+      <div className="w-full flex items-center justify-center min-h-screen p-4">
+        <div className="w-full max-w-md mx-auto" dir={direction}>
+          <div className="bg-white dark:bg-slate-800 shadow-lg rounded-lg p-6">
+            <div className="mb-6">
+              <h1 className="text-xl font-bold text-slate-900 dark:text-slate-100 mb-2">
+                {locale === "ar"
+                  ? "تعيين كلمة مرور جديدة"
+                  : locale === "de"
+                  ? "Neues Passwort festlegen"
+                  : "Set New Password"}
+              </h1>
+              <p className="text-sm text-slate-600 dark:text-slate-400">
+                {locale === "ar"
+                  ? "أدخل كلمة المرور الجديدة لحسابك"
+                  : locale === "de"
+                  ? "Geben Sie ein neues Passwort für Ihr Konto ein"
+                  : "Enter a new password for your account"}
+              </p>
+            </div>
+
+            <form onSubmit={handleSetPasswordSignedIn} className="space-y-4">
+              {error && (
+                <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-3">
+                  <p className="text-sm text-red-900 dark:text-red-100">{error}</p>
+                </div>
+              )}
+
+              <div>
+                <label
+                  htmlFor="newPassword"
+                  className="text-slate-700 dark:text-slate-300 font-medium mb-1.5 block text-sm"
+                >
+                  {locale === "ar"
+                    ? "كلمة المرور الجديدة"
+                    : locale === "de"
+                    ? "Neues Passwort"
+                    : "New Password"}
+                </label>
+                <input
+                  id="newPassword"
+                  type="password"
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  required
+                  minLength={8}
+                  className="border-2 border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 px-4 py-2.5 rounded-lg focus:ring-2 focus:ring-brand-red-500 focus:border-brand-red-500 w-full text-sm"
+                />
+              </div>
+
+              <div>
+                <label
+                  htmlFor="confirmPassword"
+                  className="text-slate-700 dark:text-slate-300 font-medium mb-1.5 block text-sm"
+                >
+                  {locale === "ar"
+                    ? "تأكيد كلمة المرور"
+                    : locale === "de"
+                    ? "Passwort bestätigen"
+                    : "Confirm Password"}
+                </label>
+                <input
+                  id="confirmPassword"
+                  type="password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  required
+                  minLength={8}
+                  className="border-2 border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 px-4 py-2.5 rounded-lg focus:ring-2 focus:ring-brand-red-500 focus:border-brand-red-500 w-full text-sm"
+                />
+              </div>
+
+              <button
+                type="submit"
+                disabled={loading}
+                className="bg-brand-red-500 hover:bg-brand-red-600 text-white font-medium py-2.5 px-4 rounded-lg transition-all duration-200 w-full text-sm disabled:opacity-50"
+              >
+                {loading
+                  ? locale === "ar"
+                    ? "جارٍ التحديث..."
+                    : locale === "de"
+                    ? "Aktualisierung..."
+                    : "Updating..."
+                  : locale === "ar"
+                  ? "تحديث كلمة المرور"
+                  : locale === "de"
+                  ? "Passwort aktualisieren"
+                  : "Update Password"}
+              </button>
+            </form>
           </div>
         </div>
       </div>

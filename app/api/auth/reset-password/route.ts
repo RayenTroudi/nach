@@ -36,7 +36,17 @@ export async function POST(req: NextRequest) {
     });
 
     // The reset URL will use Clerk's ticket parameter to sign in, then redirect to password change
-    const resetUrl = `${process.env.NEXT_PUBLIC_APP_URL}/sign-in?__clerk_ticket=${signInToken.token}&redirect_url=${encodeURIComponent('/reset-password')}`;
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL?.replace(/\/$/, "");
+    if (!appUrl) {
+      console.error("Missing NEXT_PUBLIC_APP_URL for password reset link");
+      return NextResponse.json(
+        { error: "Password reset is not configured" },
+        { status: 500 }
+      );
+    }
+
+    const redirectUrl = `${appUrl}/reset-password`;
+    const resetUrl = `${appUrl}/sign-in?__clerk_ticket=${signInToken.token}&redirect_url=${encodeURIComponent(redirectUrl)}`;
 
     // Send email via Resend
     const emailHtml = `

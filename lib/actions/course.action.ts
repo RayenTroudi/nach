@@ -553,7 +553,7 @@ export const pushStudentToCourse = async (params: ToggleStudentFromCourse) => {
     const { courseId, studentId } = params;
 
     await CourseChatRoom.find();
-    const course = await Course.findById(courseId).populate("chatRoom");
+    const course = await Course.findById(courseId).populate("chatRoom").populate("instructor");
 
     if (!course) {
       throw new Error("Course not found");
@@ -564,10 +564,15 @@ export const pushStudentToCourse = async (params: ToggleStudentFromCourse) => {
 
     // Only add student to chat room for regular courses
     if (course.courseType === CourseTypeEnum.Regular) {
+      console.log(`🔄 Processing group chat room for course: ${course.title} (${courseId})`);
+      
       // If course doesn't have a chat room, create one
       if (!course.chatRoom || !course.chatRoom._id) {
         console.log("⚠️ Regular course has no chat room, creating one now...");
         try {
+          if (!course.instructor || !course.instructor._id) {
+            throw new Error("Course instructor not found or not populated");
+          }
           const { createCourseChatRoom } = await import("./course-chat-room");
           await createCourseChatRoom({
             courseId: courseId,
@@ -581,6 +586,7 @@ export const pushStudentToCourse = async (params: ToggleStudentFromCourse) => {
           }
         } catch (createError: any) {
           console.error("❌ Failed to create chat room:", createError.message);
+          console.error("Full error stack:", createError.stack);
           // Continue even if chat room creation fails
         }
       }
@@ -588,14 +594,20 @@ export const pushStudentToCourse = async (params: ToggleStudentFromCourse) => {
       // Now add student to the chat room if it exists
       if (course.chatRoom && course.chatRoom._id) {
         try {
+          console.log(`🔄 Adding student ${studentId} to group chat room ${course.chatRoom._id}`);
           // Add student to joinedChatRooms and chat room's students array
           await joinChatRoom(studentId, course.chatRoom._id.toString());
           console.log("✅ Student added to group chat room successfully");
         } catch (chatError: any) {
           console.error("❌ Failed to add student to group chat:", chatError.message);
+          console.error("Full error stack:", chatError.stack);
           // Continue even if adding to chat fails
         }
+      } else {
+        console.log("⚠️ Warning: Chat room still doesn't exist after creation attempt");
       }
+    } else {
+      console.log(`ℹ️ Course type is ${course.courseType}, skipping group chat room logic`);
     }
   } catch (error: any) {
     console.log("PUSH STUDENT TO COURSE ERROR: ", error.message);

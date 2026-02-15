@@ -5,17 +5,9 @@ import { deDE, arSA } from "@clerk/localizations";
 // English (US) is the default, no need to import
 
 // We can extend the official localizations with custom translations
-export const clerkLocalizationDeDE = {
-  ...deDE,
-  // Add any custom German translations or overrides here
-  locale: "de-DE",
-};
+export const clerkLocalizationDeDE = deDE;
 
-export const clerkLocalizationArSA = {
-  ...arSA,
-  // Add any custom Arabic translations or overrides here
-  locale: "ar-SA",
-};
+export const clerkLocalizationArSA = arSA;
 
 // English is the default, we'll return undefined to let Clerk use its built-in English
 export const clerkLocalizationEnUS = undefined;

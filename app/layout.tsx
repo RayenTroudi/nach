@@ -88,7 +88,7 @@ export default async function RootLayout({
       >
         <ClerkProvider
           publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
-          localization={clerkLocalization}
+          localization={clerkLocalization as any}
           appearance={{
             variables: {
               colorPrimary: "#DD0000",

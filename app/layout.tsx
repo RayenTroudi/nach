@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import "../styles/prism.css";
 import { ClerkProvider } from "@clerk/nextjs";
+import { arSA, deDE, enUS } from "@clerk/localizations";
 import ToasterProvider from "@/components/providers/ToasterProvider";
 import { Toaster } from "@/components/ui/toaster";
 import { ThemeProvider } from "@/contexts/ThemeProvider";
@@ -63,6 +64,29 @@ export default async function RootLayout({
   const locale = await getLocale();
   const messages = await getMessages(locale);
   const direction = locale === 'ar' ? 'rtl' : 'ltr';
+  const baseClerkLocalization = locale === "de" ? deDE : locale === "ar" ? arSA : enUS;
+  const clerkUsernameStrings =
+    locale === "ar"
+      ? {
+          label: "اسم المستخدم",
+          placeholder: "أدخل اسم المستخدم",
+        }
+      : locale === "de"
+      ? {
+          label: "Benutzername",
+          placeholder: "Geben Sie Ihren Benutzernamen ein",
+        }
+      : {
+          label: "Username",
+          placeholder: "Enter your username",
+        };
+  const clerkLocalization = {
+    ...baseClerkLocalization,
+    formFieldLabel__username: clerkUsernameStrings.label,
+    formFieldInputPlaceholder__username: clerkUsernameStrings.placeholder,
+    formFieldLabel__emailAddress_username: clerkUsernameStrings.label,
+    formFieldInputPlaceholder__emailAddress_username: clerkUsernameStrings.placeholder,
+  };
 
   return (
     <html lang={locale} dir={direction} suppressHydrationWarning>
@@ -86,6 +110,7 @@ export default async function RootLayout({
       >
         <ClerkProvider
           publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
+          localization={clerkLocalization}
           appearance={{
             variables: {
               colorPrimary: "#DD0000",

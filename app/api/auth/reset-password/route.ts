@@ -26,16 +26,6 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const user = users[0];
-
-    // Create a password reset ticket using Clerk's API
-    // This generates a URL that allows the user to reset their password
-    const signInToken = await clerkClient.signInTokens.createSignInToken({
-      userId: user.id,
-      expiresInSeconds: 86400, // 24 hours
-    });
-
-    // The reset URL will use Clerk's ticket parameter to sign in, then redirect to password change
     const appUrl = process.env.NEXT_PUBLIC_APP_URL?.replace(/\/$/, "");
     if (!appUrl) {
       console.error("Missing NEXT_PUBLIC_APP_URL for password reset link");
@@ -44,9 +34,7 @@ export async function POST(req: NextRequest) {
         { status: 500 }
       );
     }
-
-    const redirectUrl = `${appUrl}/reset-password`;
-    const resetUrl = `${appUrl}/sign-in?__clerk_ticket=${signInToken.token}&redirect_url=${encodeURIComponent(redirectUrl)}`;
+    const resetUrl = `${appUrl}/reset-password?email=${encodeURIComponent(email)}`;
 
     // Send email via Resend
     const emailHtml = `
@@ -68,7 +56,7 @@ export async function POST(req: NextRequest) {
             </p>
             
             <p style="font-size: 16px; color: #333; margin-bottom: 20px;">
-              We received a request to reset your password for your TDS account. Click the button below to create a new password:
+              We received a request to reset your password for your TDS account. Click the button below to start the reset process. You will receive a verification code by email.
             </p>
             
             <div style="text-align: center; margin: 30px 0;">
@@ -102,7 +90,7 @@ export async function POST(req: NextRequest) {
             </p>
             
             <p style="font-size: 14px; color: #666;">
-              This link will expire in 24 hours for security reasons.
+              For security reasons, the verification code expires after a short time.
             </p>
             
             <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #e0e0e0; text-align: center;">

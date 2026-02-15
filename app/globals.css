@@ -407,9 +407,7 @@ mux-player:not([media-paused]) ~ .absolute {
 .cl-internal-b3fm6y,
 .cl-footerPagesLink,
 [data-localization-key="signIn.start.subtitle"],
-[data-localization-key="signUp.start.subtitle"],
-.cl-card > div:last-child,
-.cl-main > div:last-child {
+[data-localization-key="signUp.start.subtitle"] {
   display: none !important;
   visibility: hidden !important;
   height: 0 !important;

@@ -364,7 +364,6 @@
     },
     "student": {
       "cart": {
-        "checkoutWithFlouci": "Checkout with Flouci",
         "course": "course",
         "courses": "courses",
         "coursesInCart": "course in cart",

@@ -7,7 +7,6 @@ export default authMiddleware({
   publicRoutes: [
     "/",
     "/api/review",
-    "/api/payment_flouci/(.*)",
     "/api/uploadthing",
     "/api/webhooks",
     "/api/courses",

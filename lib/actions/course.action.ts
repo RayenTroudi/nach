@@ -552,6 +552,11 @@ export const pushStudentToCourse = async (params: ToggleStudentFromCourse) => {
     await connectToDatabase();
     const { courseId, studentId } = params;
 
+    console.log(`\n${"=".repeat(80)}`);
+    console.log(`📝 PUSH STUDENT TO COURSE`);
+    console.log(`   Course ID: ${courseId}`);
+    console.log(`   Student ID: ${studentId}`);
+
     await CourseChatRoom.find();
     const course = await Course.findById(courseId).populate("chatRoom").populate("instructor");
 
@@ -559,12 +564,18 @@ export const pushStudentToCourse = async (params: ToggleStudentFromCourse) => {
       throw new Error("Course not found");
     }
 
+    console.log(`   Course: ${course.title}`);
+    console.log(`   Course Type: ${course.courseType}`);
+    console.log(`   Instructor: ${course.instructor ? course.instructor._id : "NOT POPULATED"}`);
+    console.log(`   Chat Room ID: ${course.chatRoom ? course.chatRoom._id : "NO CHAT ROOM"}`);
+
     course.students.push(studentId);
     await course.save();
+    console.log(`✅ Student added to course.students array`);
 
     // Only add student to chat room for regular courses
     if (course.courseType === CourseTypeEnum.Regular) {
-      console.log(`🔄 Processing group chat room for course: ${course.title} (${courseId})`);
+      console.log(`\n🔄 Processing group chat room for REGULAR course...`);
       
       // If course doesn't have a chat room, create one
       if (!course.chatRoom || !course.chatRoom._id) {
@@ -583,32 +594,45 @@ export const pushStudentToCourse = async (params: ToggleStudentFromCourse) => {
           if (updatedCourse && updatedCourse.chatRoom) {
             course.chatRoom = updatedCourse.chatRoom;
             console.log("✅ Created group chat room:", course.chatRoom._id);
+          } else {
+            console.error("❌ Failed to create or fetch chat room");
           }
         } catch (createError: any) {
           console.error("❌ Failed to create chat room:", createError.message);
           console.error("Full error stack:", createError.stack);
           // Continue even if chat room creation fails
         }
+      } else {
+        console.log(`✅ Chat room already exists: ${course.chatRoom._id}`);
       }
 
       // Now add student to the chat room if it exists
       if (course.chatRoom && course.chatRoom._id) {
+        console.log(`\n🔄 Adding student to group chat room...`);
+        console.log(`   Student ID: ${studentId}`);
+        console.log(`   Chat Room ID: ${course.chatRoom._id}`);
+        
         try {
-          console.log(`🔄 Adding student ${studentId} to group chat room ${course.chatRoom._id}`);
           // Add student to joinedChatRooms and chat room's students array
           await joinChatRoom(studentId, course.chatRoom._id.toString());
-          console.log("✅ Student added to group chat room successfully");
+          console.log("✅ Student successfully added to group chat room!");
+          console.log(`   - Added to User.joinedChatRooms`);
+          console.log(`   - Added to CourseChatRoom.students`);
         } catch (chatError: any) {
-          console.error("❌ Failed to add student to group chat:", chatError.message);
+          console.error("❌ CRITICAL: Failed to add student to group chat:", chatError.message);
           console.error("Full error stack:", chatError.stack);
-          // Continue even if adding to chat fails
+          // Don't continue silently, throw to see the error
+          throw chatError;
         }
       } else {
-        console.log("⚠️ Warning: Chat room still doesn't exist after creation attempt");
+        console.error("❌ CRITICAL: Chat room still doesn't exist after creation attempt");
+        console.log(`   This student will NOT have access to the group chat!`);
       }
     } else {
-      console.log(`ℹ️ Course type is ${course.courseType}, skipping group chat room logic`);
+      console.log(`ℹ️ Course type is "${course.courseType}", skipping group chat room logic`);
     }
+    
+    console.log(`${"=".repeat(80)}\n`);
   } catch (error: any) {
     console.log("PUSH STUDENT TO COURSE ERROR: ", error.message);
     throw new Error(error.message);

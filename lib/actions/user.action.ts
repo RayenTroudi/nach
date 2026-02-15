@@ -353,18 +353,35 @@ export const joinChatRoom = async (
   skipAddingToStudents: boolean = false
 ) => {
   try {
+    console.log(`   📍 joinChatRoom called:`);
+    console.log(`      User ID: ${userId}`);
+    console.log(`      Chat Room ID: ${chatRoomId}`);
+    console.log(`      Skip adding to students: ${skipAddingToStudents}`);
+    
     await connectToDatabase();
-    await User.findByIdAndUpdate(userId, {
+    
+    // Add to user's joinedChatRooms array
+    const userUpdateResult = await User.findByIdAndUpdate(userId, {
       $addToSet: { joinedChatRooms: chatRoomId },
     });
+    
+    if (!userUpdateResult) {
+      throw new Error(`User not found with ID: ${userId}`);
+    }
+    
+    console.log(`      ✅ Added to User.joinedChatRooms`);
 
     // Only add to students array if not skipped (to avoid duplicates when creating room)
     if (!skipAddingToStudents) {
       await pushStudentToChatRoom({ chatRoomId, studentId: userId });
+      console.log(`      ✅ Added to CourseChatRoom.students via pushStudentToChatRoom`);
+    } else {
+      console.log(`      ⏭️  Skipped adding to CourseChatRoom.students`);
     }
   } catch (error: any) {
-    console.log("Error in joinChatRoom: ", error.message);
-    throw new Error(error.message);
+    console.error(`      ❌ Error in joinChatRoom:`, error.message);
+    console.error(`      Full stack:`, error.stack);
+    throw error;
   }
 };
 
@@ -426,9 +443,8 @@ export const depositToUserWallet = async (userId: string, amount: number) => {
   }
 };
 
-// Stripe-related functions removed - using Flouci payment gateway instead
-// export const withdrawEarnings = async (...)
-// export const connectUserToStripe = async (...)
+// Note: Online payment gateway integration removed - using bank transfer/payment proof system
+// Previous Stripe/Flouci functions removed
 
 export const getAllUsers = async () => {
   try {

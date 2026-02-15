@@ -25,6 +25,11 @@ import { CourseTypeEnum } from "../enums";
 
 export const createPurchase = async (params: CreatePurchaseParams) => {
   try {
+    console.log(`\n${"*".repeat(80)}`);
+    console.log(`🛒 CREATE PURCHASE INITIATED`);
+    console.log(`   Course ID: ${params.courseId}`);
+    console.log(`   User ID: ${params.userId}`);
+    
     await connectToDatabase();
 
     // check if there is a purchase for the course by the user
@@ -33,25 +38,34 @@ export const createPurchase = async (params: CreatePurchaseParams) => {
       userId: params.userId,
     });
 
-    if (exists) return;
+    if (exists) {
+      console.log(`⚠️ Purchase already exists. Skipping.`);
+      console.log(`${"*".repeat(80)}\n`);
+      return;
+    }
 
     const purchase = await Purchase.create(params);
+    console.log(`✅ Purchase record created in database`);
 
     await startTrackUserCourseProgress({
       userId: params.userId,
       courseId: params.courseId,
     });
+    console.log(`✅ User progress tracking started`);
 
     !(await alreadyEnrolled(params.courseId, params.userId)) &&
       (await pushEnrolledCourseToUser({
         courseId: params.courseId,
         userId: params.userId,
       }));
+    console.log(`✅ Course added to user's enrolled courses`);
 
+    console.log(`\n📢 Calling pushStudentToCourse...`);
     await pushStudentToCourse({
       courseId: params.courseId,
       studentId: params.userId,
     });
+    console.log(`✅ pushStudentToCourse completed\n`);
 
     await pushPurchaseToCourse({
       courseId: params.courseId,
@@ -59,6 +73,8 @@ export const createPurchase = async (params: CreatePurchaseParams) => {
     });
 
     const course: TCourse = await getCourseById({ courseId: params.courseId });
+    console.log(`📚 Course details fetched: ${course.title}`);
+    console.log(`   Course Type: ${course.courseType}`);
 
     // Use the price directly from the database without conversion
     const amount = course?.price!;
@@ -68,6 +84,7 @@ export const createPurchase = async (params: CreatePurchaseParams) => {
     // For regular courses, create private chat room with instructor
     // Note: Group chat room is handled by pushStudentToCourse
     if (course.courseType === CourseTypeEnum.Regular) {
+      console.log(`\n💬 Creating private chat room with instructor...`);
       try {
         const privateChatRoom = await createPrivateChatRoom({
           courseId: params.courseId,
@@ -81,10 +98,14 @@ export const createPurchase = async (params: CreatePurchaseParams) => {
       }
     }
 
-    console.log("✅ Purchase completed successfully. Chat rooms should be available.");
+    console.log("\n✅✅✅ PURCHASE COMPLETED SUCCESSFULLY ✅✅✅");
+    console.log(`${"*".repeat(80)}\n`);
     return JSON.parse(JSON.stringify(purchase));
   } catch (error: any) {
-    console.log("Error in createPurchase: ", error.message);
+    console.error(`\n❌❌❌ PURCHASE FAILED ❌❌❌`);
+    console.error("Error in createPurchase: ", error.message);
+    console.error("Full stack:", error.stack);
+    console.error(`${"*".repeat(80)}\n`);
     throw new Error(error.message);
   }
 };

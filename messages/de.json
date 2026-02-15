@@ -364,7 +364,6 @@
     },
     "student": {
       "cart": {
-        "checkoutWithFlouci": "Mit Flouci bezahlen",
         "course": "Kurs",
         "courses": "Kurse",
         "coursesInCart": "Kurs im Warenkorb",

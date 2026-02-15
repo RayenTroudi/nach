@@ -9,6 +9,7 @@ import DocumentBundle from "@/lib/models/document-bundle.model";
 import { getUserByClerkId } from "@/lib/actions/user.action";
 import { sendEmail } from "@/lib/actions/email.action";
 import { createPrivateChatRoom } from "@/lib/actions/private-chat-room.action";
+import { pushStudentToCourse } from "@/lib/actions/course.action";
 import { CourseTypeEnum } from "@/lib/enums";
 import { 
   getPaymentApprovedToUserEmail, 
@@ -187,37 +188,43 @@ export async function POST(request: Request) {
         if (proof.itemType === "course") {
           // Add courses to user's enrolled courses
           for (const courseId of itemIds) {
+            console.log(`\n🏦 Processing bank transfer approval for course: ${courseId}`);
+            
             if (!user.enrolledCourses) {
               user.enrolledCourses = [];
             }
             
             if (!user.enrolledCourses.includes(courseId)) {
               user.enrolledCourses.push(courseId);
+              console.log(`✅ Added course to user's enrolledCourses`);
+            } else {
+              console.log(`ℹ️  Course already in user's enrolledCourses`);
             }
 
-            // Add user to course's students
-            const course = await Course.findById(courseId).populate("instructor");
-            if (course) {
-              if (!course.students) {
-                course.students = [];
-              }
-              if (!course.students.includes(user._id)) {
-                course.students.push(user._id);
-                await course.save();
+            // Use pushStudentToCourse to properly add student to course AND group chat
+            try {
+              await pushStudentToCourse({
+                courseId: courseId.toString(),
+                studentId: user._id.toString(),
+              });
+              console.log(`✅ pushStudentToCourse completed (includes group chat enrollment)`);
+            } catch (courseError: any) {
+              console.error(`❌ Failed to add student to course:`, courseError.message);
+              // Continue with other courses even if one fails
+            }
 
-                // Create private chat room with instructor for regular courses
-                if (course.courseType === CourseTypeEnum.Regular) {
-                  try {
-                    await createPrivateChatRoom({
-                      courseId: courseId.toString(),
-                      studentId: user._id.toString(),
-                      instructorId: course.instructor._id?.toString() || course.instructor.toString(),
-                    });
-                    console.log("Private chat room created for bank transfer course purchase");
-                  } catch (chatError: any) {
-                    console.log("Warning: Failed to create private chat room:", chatError.message);
-                  }
-                }
+            // Create private chat room with instructor for regular courses
+            const course = await Course.findById(courseId).populate("instructor");
+            if (course && course.courseType === CourseTypeEnum.Regular) {
+              try {
+                await createPrivateChatRoom({
+                  courseId: courseId.toString(),
+                  studentId: user._id.toString(),
+                  instructorId: course.instructor._id?.toString() || course.instructor.toString(),
+                });
+                console.log("✅ Private chat room created for bank transfer course purchase");
+              } catch (chatError: any) {
+                console.error("❌ Failed to create private chat room:", chatError.message);
               }
             }
           }

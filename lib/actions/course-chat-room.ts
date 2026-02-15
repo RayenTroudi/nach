@@ -40,15 +40,26 @@ export const pushStudentToChatRoom = async (params: {
 }) => {
   try {
     const { chatRoomId, studentId } = params;
+    console.log(`         🔸 pushStudentToChatRoom:`);
+    console.log(`            Chat Room ID: ${chatRoomId}`);
+    console.log(`            Student ID: ${studentId}`);
+    
     await connectToDatabase();
 
     // Use $addToSet to prevent duplicate students in chat room
-    await CourseChatRoom.findByIdAndUpdate(chatRoomId, {
+    const result = await CourseChatRoom.findByIdAndUpdate(chatRoomId, {
       $addToSet: { students: studentId },
     });
+    
+    if (!result) {
+      throw new Error(`Chat room not found with ID: ${chatRoomId}`);
+    }
+    
+    console.log(`            ✅ Student added to chat room's students array`);
   } catch (error: any) {
-    console.log("PUSH STUDENT TO COURSE CHAT ROOM ERROR", error.message);
-    throw new Error(error.message);
+    console.error(`            ❌ PUSH STUDENT TO COURSE CHAT ROOM ERROR:`, error.message);
+    console.error(`            Full stack:`, error.stack);
+    throw error;
   }
 };
 

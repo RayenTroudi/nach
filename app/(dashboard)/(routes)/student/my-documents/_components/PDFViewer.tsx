@@ -27,6 +27,24 @@ export default function PDFViewer({
   const [error, setError] = useState(false);
   const [pdfjsLib, setPdfjsLib] = useState<any>(null);
 
+  // Get responsive dimensions
+  const [dimensions, setDimensions] = useState({ width: 800, height: 600 });
+
+  useEffect(() => {
+    const updateDimensions = () => {
+      const viewportWidth = window.innerWidth;
+      const isMobile = viewportWidth < 768;
+      setDimensions({
+        width: isMobile ? Math.min(viewportWidth - 20, 400) : 800,
+        height: isMobile ? Math.min(window.innerHeight * 0.6, 500) : 600
+      });
+    };
+
+    updateDimensions();
+    window.addEventListener('resize', updateDimensions);
+    return () => window.removeEventListener('resize', updateDimensions);
+  }, []);
+
   // Load PDF.js library
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -96,10 +114,13 @@ export default function PDFViewer({
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-[600px] w-[800px]">
+      <div 
+        className="flex items-center justify-center" 
+        style={{ height: dimensions.height, width: dimensions.width }}
+      >
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-red-500 mx-auto mb-4"></div>
-          <p className="text-slate-600 dark:text-slate-400">{t("loadingPDF")}</p>
+          <p className="text-slate-600 dark:text-slate-400 text-sm md:text-base">{t("loadingPDF")}</p>
         </div>
       </div>
     );
@@ -107,10 +128,13 @@ export default function PDFViewer({
 
   if (error) {
     return (
-      <div className="flex items-center justify-center h-[600px] w-[800px]">
-        <div className="text-center">
-          <p className="text-red-500 mb-4">{t("errorLoadingPDF")}</p>
-          <p className="text-slate-600 dark:text-slate-400 text-sm">
+      <div 
+        className="flex items-center justify-center" 
+        style={{ height: dimensions.height, width: dimensions.width }}
+      >
+        <div className="text-center px-4">
+          <p className="text-red-500 mb-4 text-sm md:text-base">{t("errorLoadingPDF")}</p>
+          <p className="text-slate-600 dark:text-slate-400 text-xs md:text-sm">
             {t("errorLoadingPDF")}
           </p>
         </div>

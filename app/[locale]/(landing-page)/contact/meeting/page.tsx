@@ -136,7 +136,7 @@ export default function BookMeetingPage() {
                     </p>
                     <div className="mb-4">
                       <p className="text-2xl font-bold text-brand-red-500">
-                        {t('price')} <span className="text-sm text-slate-600 dark:text-slate-400">{t('priceEuro')}</span>
+                        {t('price')}
                       </p>
                       <p className="text-xs text-slate-500 dark:text-slate-400">{t('consultationDuration')}</p>
                     </div>

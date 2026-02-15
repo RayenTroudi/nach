@@ -79,8 +79,6 @@ export default function MeetingPayment({
     }
   };
 
-  const priceInEuros = (amount / 3.3).toFixed(2);
-
   if (uploadStatus === "success") {
     return (
       <div className="text-center py-8">
@@ -132,9 +130,6 @@ export default function MeetingPayment({
             
             <div className="font-medium">{t('amountTND')}</div>
             <div className="text-lg font-bold text-brand-red-500">{amount.toFixed(2)} TND</div>
-            
-            <div className="font-medium">{t('amountEUR')}</div>
-            <div className="text-lg font-semibold">€{priceInEuros}</div>
           </div>
         </div>
 

@@ -1657,7 +1657,6 @@
       "iban": "IBAN:",
       "bic": "BIC/SWIFT:",
       "amountTND": "Betrag (TND):",
-      "amountEUR": "Betrag (EUR):",
       "important": "Wichtig:",
       "includeReference": "Geben Sie Ihren vollständigen Namen und die Buchungs-ID im Überweisungsbetreff an",
       "takePhoto": "Machen Sie ein klares Foto oder Screenshot der Überweisungsbestätigung",
@@ -1754,7 +1753,6 @@
       "iban": "IBAN:",
       "bic": "BIC/SWIFT:",
       "amountTND": "Betrag (TND):",
-      "amountEUR": "Betrag (EUR):",
       "important": "Wichtig:",
       "includeReference": "Geben Sie Ihren vollständigen Namen und die Buchungs-ID im Überweisungsbetreff an",
       "takePhoto": "Machen Sie ein klares Foto oder Screenshot der Überweisungsbestätigung",
@@ -1831,8 +1829,8 @@
       },
       "price": {
         "any": "Beliebiger Preis",
-        "under20": "Unter 20€",
-        "under40": "Unter 40€"
+        "under66": "Unter 66 TND",
+        "under132": "Unter 132 TND"
       },
       "filterButton": "Filter"
     },
@@ -2439,7 +2437,6 @@
     "bookYourConsultation": "Buchen Sie Ihre Beratung",
     "chooseTimeSlot": "Wählen Sie einen passenden Zeitpunkt für Ihre persönliche Beratung mit unseren Expertenberatern.",
     "price": "50 TND",
-    "priceEuro": "(€30)",
     "consultationDuration": "30-minütige Beratung",
     "selectDateTime": "Datum & Uhrzeit wählen",
     "instantConfirmation": "Sofortige Bestätigung",

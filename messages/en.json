@@ -1657,7 +1657,6 @@
       "iban": "IBAN:",
       "bic": "BIC/SWIFT:",
       "amountTND": "Amount (TND):",
-      "amountEUR": "Amount (EUR):",
       "important": "Important:",
       "includeReference": "Include your full name and booking ID in the transfer reference",
       "takePhoto": "Take a clear photo or screenshot of the transfer receipt",
@@ -1750,7 +1749,6 @@
       "iban": "IBAN:",
       "bic": "BIC/SWIFT:",
       "amountTND": "Amount (TND):",
-      "amountEUR": "Amount (EUR):",
       "important": "Important:",
       "includeReference": "Include your full name and booking ID in the transfer reference",
       "takePhoto": "Take a clear photo or screenshot of the transfer receipt",
@@ -1840,8 +1838,8 @@
       },
       "price": {
         "any": "Any price",
-        "under20": "Under 20€",
-        "under40": "Under 40€"
+        "under66": "Under 66 TND",
+        "under132": "Under 132 TND"
       },
       "filterButton": "Filter"
     },
@@ -2448,7 +2446,6 @@
     "bookYourConsultation": "Book Your Consultation",
     "chooseTimeSlot": "Choose a convenient time slot for your personalized consultation with our expert advisors.",
     "price": "50 TND",
-    "priceEuro": "(€30)",
     "consultationDuration": "30-minute consultation",
     "selectDateTime": "Select Date & Time",
     "instantConfirmation": "Instant Confirmation",

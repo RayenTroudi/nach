@@ -97,7 +97,7 @@ export default function ForgotPasswordPage() {
                 required
                 dir="ltr"
                 placeholder={locale === "ar" ? "بريدك الإلكتروني" : locale === "de" ? "Ihre E-Mail" : "your@email.com"}
-                className="w-full px-4 py-3 border-2 border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 rounded-lg focus:ring-2 focus:ring-brand-red-500 focus:border-brand-red-500 transition-all"
+                className="w-full px-4 py-3 border-2 border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 rounded-lg focus:border-brand-red-500 focus:outline-none transition-all"
               />
             </div>
 

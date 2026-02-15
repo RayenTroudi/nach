@@ -535,7 +535,7 @@ export default function MyDocumentsPage() {
                   </p>
                   {currentView === "root" && (
                     <Button
-                      onClick={() => (window.location.href = "/storefront")}
+                      onClick={() => (window.location.href = "/documents")}
                       className="bg-brand-red-500 hover:bg-brand-red-600"
                     >
                       {t("browseDocuments")}

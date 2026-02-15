@@ -10,6 +10,7 @@ import { CartProvider } from "@/contexts/CartContext";
 import { PageLoaderProvider } from "@/contexts/PageLoaderProvider";
 import { IntlProvider } from '@/components/providers/IntlProvider';
 import { getLocale, getMessages } from '@/lib/locale';
+import { getClerkLocalization } from "@/lib/clerk-localizations";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -63,6 +64,7 @@ export default async function RootLayout({
   const locale = await getLocale();
   const messages = await getMessages(locale);
   const direction = locale === 'ar' ? 'rtl' : 'ltr';
+  const clerkLocalization = getClerkLocalization(locale);
 
   return (
     <html lang={locale} dir={direction} suppressHydrationWarning>
@@ -86,6 +88,7 @@ export default async function RootLayout({
       >
         <ClerkProvider
           publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
+          localization={clerkLocalization}
           appearance={{
             variables: {
               colorPrimary: "#DD0000",

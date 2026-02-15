@@ -186,7 +186,7 @@ export default function ResetPasswordPage() {
         setSuccess(true);
         
         setTimeout(() => {
-          router.push("/dashboard");
+          router.push("/");
         }, 2000);
       } else {
         setError(
@@ -271,7 +271,7 @@ export default function ResetPasswordPage() {
 
       setSuccess(true);
       setTimeout(() => {
-        router.push("/dashboard");
+        router.push("/");
       }, 2000);
     } catch (err: any) {
       console.error("Password update error:", err);

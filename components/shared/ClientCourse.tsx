@@ -116,11 +116,6 @@ const ClientCourse = ({
         </h3>
         <div className="flex items-center gap-4">
           <Vector
-            icon="/icons/time.svg"
-            alt="time"
-            value={getTimeInterval(0)}
-          />
-          <Vector
             icon="/icons/graduate.svg"
             alt="graduate"
             value={`${formatNumber(course?.students?.length ?? 0)} Student(s)`}

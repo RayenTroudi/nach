@@ -82,6 +82,7 @@ const CourseIdPage = async ({ params }: { params: { courseId: string } }) => {
             course={course}
             user={user}
             userProgress={userProgress}
+            isPurchased={isPurchased}
           />
         </div>
       </div>

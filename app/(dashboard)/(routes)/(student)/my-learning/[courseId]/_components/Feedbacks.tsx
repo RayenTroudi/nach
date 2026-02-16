@@ -49,7 +49,7 @@ const Feedbacks = ({
                 <p className="font-bold text-lg md:text-xl text-center">
                   {isAllowed
                     ? t('beFirstFeedback')
-                    : t('completeCourseFirst')}
+                    : t('purchaseCourseFirst')}
                 </p>
               ) : (
                 <p className="font-bold text-lg md:text-xl text-center">

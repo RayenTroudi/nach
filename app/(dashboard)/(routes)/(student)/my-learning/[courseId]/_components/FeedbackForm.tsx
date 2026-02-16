@@ -18,6 +18,7 @@ import { cn } from "@/lib/utils";
 import { TCourse, TUser } from "@/types/models.types";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
+import { useTranslations } from 'next-intl';
 
 type Props = {
   user: TUser;
@@ -32,6 +33,7 @@ const FeedbackForm = ({
 }: Props) => {
   const { setIsLoading } = usePageLoader();
   const router = useRouter();
+  const t = useTranslations('dashboard.student.myLearning.courseCommunity');
   const [tempRating, setTempRating] = useState<number>(0);
   const [feedbackRating, setFeedbackRating] = useState<number>(0);
   const [feedback, setFeedback] = useState<string>("");
@@ -79,17 +81,17 @@ const FeedbackForm = ({
             buttonClassName
           )}
         >
-          Give Feedback
+          {t('feedbackButton')}
         </Button>
       </DrawerTrigger>
       <DrawerContent>
         <div className="w-[90%] md:w-1/2 mx-auto">
           <DrawerHeader className="w-full flex flex-col gap-y-2 ">
             <DrawerTitle className="text-4xl ">
-              What do you think about the course?
+              {t('feedbackTitle')}
             </DrawerTitle>
             <DrawerDescription>
-              Your feedback will help the instructor improve the course.
+              {t('feedbackDescription')}
             </DrawerDescription>
           </DrawerHeader>
 
@@ -121,7 +123,7 @@ const FeedbackForm = ({
               <Textarea
                 value={feedback}
                 onChange={(e) => setFeedback(e.target.value)}
-                placeholder="Please provide us with a detailed feedback about the course here ..."
+                placeholder={t('feedbackPlaceholder')}
                 className="w-full h-[200px] leading-loose"
               />
               <div className="w-full flex items-center justify-between">
@@ -138,7 +140,7 @@ const FeedbackForm = ({
               disabled={!feedback || feedback.length < 50}
               onClick={submitFeedback}
             >
-              Submit
+              {t('submit')}
             </Button>
           </DrawerFooter>
         </div>

@@ -11,9 +11,10 @@ interface Props {
   user: TUser;
   course: TCourse;
   userProgress: TUserProgress;
+  isPurchased?: boolean;
 }
 
-const CourseCommunity = ({ user, course, userProgress }: Props) => {
+const CourseCommunity = ({ user, course, userProgress, isPurchased = false }: Props) => {
   const isOwner = user._id === course.instructor._id;
   const t = useTranslations('dashboard.student.myLearning.courseCommunity');
 
@@ -81,7 +82,7 @@ const CourseCommunity = ({ user, course, userProgress }: Props) => {
             course={course}
             feedbacks={course.feedbacks}
             user={user}
-            isAllowed={userProgress?.isCompleted ?? false}
+            isAllowed={isPurchased}
           />
         </TabsContent>
       </Tabs>

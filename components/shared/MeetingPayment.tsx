@@ -129,7 +129,7 @@ export default function MeetingPayment({
             <div>BANQUE ZITOUNA</div>
             
             <div className="font-medium">{t('amountTND')}</div>
-            <div className="text-lg font-bold text-brand-red-500">{amount.toFixed(2)} TND</div>
+            <div className="text-lg font-bold text-brand-red-500">{amount} DT</div>
           </div>
         </div>
 

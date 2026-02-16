@@ -127,7 +127,7 @@ export default function BookMeetingPage() {
             <BookingCalendar
               hostId={DEFAULT_HOST_ID}
               onBookingComplete={() => setIsBookingOpen(false)}
-              price={99}
+              price={50}
               requiresPayment={true}
             />
           </DialogContent>

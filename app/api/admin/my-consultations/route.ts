@@ -36,8 +36,8 @@ export async function GET(req: NextRequest) {
 
     // Fetch bookings where this admin is the host
     const bookings = await Booking.find({ hostId: user._id })
-      .populate("userId", "name email picture")
-      .populate("hostId", "name email")
+      .populate("userId", "username firstName lastName email picture")
+      .populate("hostId", "username firstName lastName email")
       .sort({ startAt: 1 }); // Sort by start time (earliest first)
 
     return NextResponse.json(

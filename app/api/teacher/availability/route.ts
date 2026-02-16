@@ -4,41 +4,27 @@ import { connectToDatabase } from "@/lib/mongoose";
 import Availability from "@/lib/models/availability.model";
 import User from "@/lib/models/user.model";
 
-// GET - Fetch teacher's availability
+// GET - Fetch teacher's availability (Public - no auth required)
 export async function GET(req: NextRequest) {
   try {
-    const { userId } = await auth();
-
-    if (!userId) {
-      return NextResponse.json(
-        { success: false, error: "Unauthorized" },
-        { status: 401 }
-      );
-    }
-
     await connectToDatabase();
 
-    const user = await User.findOne({ clerkId: userId });
+    // Find Talel Jouini's user account to get his availability
+    const talelUser = await User.findOne({
+      $or: [
+        { username: /talel.*jouini/i },
+        { username: /jouini.*talel/i }
+      ]
+    });
 
-    if (!user) {
+    if (!talelUser) {
       return NextResponse.json(
-        { success: false, error: "User not found" },
+        { success: false, error: "Teacher not found" },
         { status: 404 }
       );
     }
 
-    // Check if user is Talel Jouini
-    const isTalelJouini = user.username.toLowerCase().includes("talel") && 
-                          user.username.toLowerCase().includes("jouini");
-    
-    if (!isTalelJouini) {
-      return NextResponse.json(
-        { success: false, error: "Forbidden - Only Talel Jouini can manage availability" },
-        { status: 403 }
-      );
-    }
-
-    const availability = await Availability.find({ userId: user._id })
+    const availability = await Availability.find({ userId: talelUser._id })
       .sort({ date: 1, startTime: 1 })
       .lean();
 

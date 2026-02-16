@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
-import { Calendar, Clock, DollarSign, User, Video, CheckCircle2, XCircle, AlertCircle } from "lucide-react";
+import { Calendar, Clock, Banknote, User, Video, CheckCircle2, XCircle, AlertCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 
@@ -10,13 +10,17 @@ interface Booking {
   _id: string;
   userId: {
     _id: string;
-    name: string;
+    username?: string;
+    firstName?: string;
+    lastName?: string;
     email: string;
     picture?: string;
   };
   hostId: {
     _id: string;
-    name: string;
+    username?: string;
+    firstName?: string;
+    lastName?: string;
     email: string;
   };
   startAt: string;
@@ -231,7 +235,7 @@ const ConsultantMeetings = ({ bookings }: ConsultantMeetingsProps) => {
                     {booking.userId?.picture ? (
                       <Image
                         src={booking.userId.picture}
-                        alt={booking.userId.name}
+                        alt={booking.userId.username || "Student"}
                         width={48}
                         height={48}
                         className="h-12 w-12 rounded-full object-cover"
@@ -242,7 +246,11 @@ const ConsultantMeetings = ({ bookings }: ConsultantMeetingsProps) => {
                       </div>
                     )}
                     <div>
-                      <h3 className="font-semibold">{booking.userId?.name || "Unknown Student"}</h3>
+                      <h3 className="font-semibold">
+                        {booking.userId?.firstName && booking.userId?.lastName
+                          ? `${booking.userId.firstName} ${booking.userId.lastName}`
+                          : booking.userId?.username || "Unknown Student"}
+                      </h3>
                       <p className="text-sm text-slate-500">{booking.userId?.email}</p>
                     </div>
                   </div>
@@ -260,8 +268,8 @@ const ConsultantMeetings = ({ bookings }: ConsultantMeetingsProps) => {
                       </span>
                     </div>
                     <div className="flex items-center gap-2 text-slate-600 dark:text-slate-400">
-                      <DollarSign className="h-4 w-4" />
-                      <span>{booking.price === 0 ? t('free') : `$${booking.price}`}</span>
+                      <Banknote className="h-4 w-4" />
+                      <span>{booking.price === 0 ? t('free') : `${booking.price} DT`}</span>
                     </div>
                   </div>
 

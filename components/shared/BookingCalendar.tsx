@@ -288,10 +288,7 @@ const BookingCalendar = ({
                       <div className="mt-3 pt-3 border-t border-slate-200 dark:border-slate-700">
                         <p className="text-sm text-slate-600 dark:text-slate-400 mb-1">{t('price')}</p>
                         <p className="text-xl font-bold text-brand-red-600 dark:text-brand-red-500">
-                          {price.toFixed(2)} TND
-                          <span className="text-sm font-normal text-slate-600 dark:text-slate-400 ml-2">
-                            (€{(price / 3.3).toFixed(2)})
-                          </span>
+                          {price} DT
                         </p>
                       </div>
                     )}

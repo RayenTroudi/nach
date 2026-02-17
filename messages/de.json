@@ -708,7 +708,9 @@
     "dribbble": "Dribbble",
     "copyright": "© 2022. TDS. Alle Rechte vorbehalten.",
     "termsConditions": "Allgemeine Geschäftsbedingungen",
-    "cookies": "Cookies"
+    "cookies": "Cookies",
+    "needHelp": "Brauchen Sie Hilfe?",
+    "contactSupport": "Kontaktieren Sie unser Support-Team für Fragen oder Unterstützung"
   },
   "errors": {
     "404": "Seite nicht gefunden",

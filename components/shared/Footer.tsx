@@ -126,7 +126,39 @@ const Footer = () => {
           </div>
         </div>
 
-        <div className="mt-6 sm:mt-8 border-t border-gray-100 pt-6 sm:pt-8 dark:border-gray-800">
+        {/* Support Contact Section */}
+        <div className="mt-8 sm:mt-10 mb-6 sm:mb-8 border-t border-gray-100 dark:border-gray-800 pt-6 sm:pt-8">
+          <div className="bg-gradient-to-r from-red-50 to-rose-50 dark:from-red-950/20 dark:to-rose-950/20 rounded-lg p-4 sm:p-6 border border-red-100 dark:border-red-900/30">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div className="flex-1">
+                <h3 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white mb-1 sm:mb-2">
+                  {t("needHelp")}
+                </h3>
+                <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">
+                  {t("contactSupport")}
+                </p>
+              </div>
+              <div className="flex items-center gap-2 sm:gap-3 bg-white dark:bg-gray-950 px-3 sm:px-4 py-2 sm:py-3 rounded-lg border border-gray-200 dark:border-gray-800 shadow-sm">
+                <svg
+                  className="h-4 w-4 sm:h-5 sm:w-5 text-red-600 dark:text-red-500 flex-shrink-0"
+                  fill="none"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+                <span className="text-sm sm:text-base font-medium text-red-600 dark:text-red-500">
+                  support@taleldeutchlandservices.com
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="border-t border-gray-100 pt-6 sm:pt-8 dark:border-gray-800">
           <div className="sm:flex sm:justify-between sm:items-center gap-4">
             <div className="flex flex-col gap-2">
               <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">

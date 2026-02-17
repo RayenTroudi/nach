@@ -374,12 +374,6 @@ export default function AdminResumesPage() {
                         <Phone className="w-4 h-4" />
                         {request.phone}
                       </div>
-                      {request.targetRole && (
-                        <div className="flex items-center gap-2 text-slate-600 dark:text-slate-400">
-                          <FileText className="w-4 h-4" />
-                          Target: {request.targetRole}
-                        </div>
-                      )}
                       <div className="flex items-center gap-2 text-slate-600 dark:text-slate-400">
                         <CreditCard className="w-4 h-4" />
                         {request.price} TND

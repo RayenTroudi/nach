@@ -262,12 +262,6 @@ export default function ResumeWorkflowPage() {
                         <Phone className="w-4 h-4" />
                         {request.phone}
                       </div>
-                      {request.targetRole && (
-                        <div className="flex items-center gap-2 text-slate-600 dark:text-slate-400 col-span-2">
-                          <Briefcase className="w-4 h-4" />
-                          <span className="font-medium">Target Role:</span> {request.targetRole}
-                        </div>
-                      )}
                     </div>
 
                     <p className="text-xs text-slate-500 dark:text-slate-500 flex items-center gap-1">

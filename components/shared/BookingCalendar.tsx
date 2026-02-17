@@ -23,10 +23,12 @@ interface TimeSlot {
   start: string;
   end: string;
   available: boolean;
+  date: string; // Date in YYYY-MM-DD format
 }
 
 interface AvailabilitySlot {
   _id: string;
+  date?: string;
   dayOfWeek: number;
   startTime: string;
   endTime: string;
@@ -42,7 +44,6 @@ const BookingCalendar = ({
   const t = useTranslations('components.bookingCalendar');
   const tAvailability = useTranslations('teacher.availability');
   const locale = useLocale();
-  const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
   const [selectedSlot, setSelectedSlot] = useState<TimeSlot | null>(null);
   const [notes, setNotes] = useState("");
   const [slots, setSlots] = useState<TimeSlot[]>([]);
@@ -52,17 +53,13 @@ const BookingCalendar = ({
   const [bookingId, setBookingId] = useState<string | null>(null);
   const { scnToast } = useToast();
 
-  // Fetch available slots when date changes
+  // Fetch available slots on mount
   useEffect(() => {
-    if (selectedDate) {
-      fetchSlots();
-    }
+    fetchSlots();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedDate]);
+  }, []);
 
   const fetchSlots = async () => {
-    if (!selectedDate) return;
-    
     setLoading(true);
     try {
       // Fetch teacher's availability
@@ -70,31 +67,42 @@ const BookingCalendar = ({
       const data = await response.json();
 
       if (response.ok && data.availability) {
-        // Filter slots for the selected day of week
-        const dayOfWeek = selectedDate.getDay();
-        const daySlots = data.availability.filter(
-          (slot: AvailabilitySlot) => slot.dayOfWeek === dayOfWeek && slot.isActive
-        );
+        const now = new Date();
+        
+        // Filter and transform the actual availability slots set by the teacher
+        const allSlots: TimeSlot[] = data.availability
+          .filter((slot: AvailabilitySlot) => {
+            // Only include active slots with valid dates
+            if (!slot.isActive || !slot.date) return false;
+            
+            const slotDate = new Date(slot.date);
+            const [startHour, startMinute] = slot.startTime.split(':').map(Number);
+            const startDateTime = new Date(slotDate);
+            startDateTime.setHours(startHour, startMinute, 0, 0);
+            
+            // Only show slots that haven't passed yet
+            return startDateTime > now;
+          })
+          .map((slot: AvailabilitySlot) => {
+            const slotDate = new Date(slot.date!);
+            const [startHour, startMinute] = slot.startTime.split(':').map(Number);
+            const [endHour, endMinute] = slot.endTime.split(':').map(Number);
 
-        // Transform to time slots for the selected date
-        const transformedSlots: TimeSlot[] = daySlots.map((slot: AvailabilitySlot) => {
-          const [startHour, startMinute] = slot.startTime.split(':').map(Number);
-          const [endHour, endMinute] = slot.endTime.split(':').map(Number);
+            const start = new Date(slotDate);
+            start.setHours(startHour, startMinute, 0, 0);
 
-          const start = new Date(selectedDate);
-          start.setHours(startHour, startMinute, 0, 0);
+            const end = new Date(slotDate);
+            end.setHours(endHour, endMinute, 0, 0);
 
-          const end = new Date(selectedDate);
-          end.setHours(endHour, endMinute, 0, 0);
+            return {
+              start: start.toISOString(),
+              end: end.toISOString(),
+              available: true,
+              date: slotDate.toISOString().split('T')[0],
+            };
+          });
 
-          return {
-            start: start.toISOString(),
-            end: end.toISOString(),
-            available: true,
-          };
-        });
-
-        setSlots(transformedSlots);
+        setSlots(allSlots);
       } else {
         setSlots([]);
       }
@@ -163,13 +171,14 @@ const BookingCalendar = ({
     }
   };
 
-  const formatDate = (date: Date) => {
+  const formatDate = (dateString: string) => {
     // Use Latin numerals for Arabic locale
     const localeString = locale === 'ar' ? 'ar-EG-u-nu-latn' : locale === 'de' ? 'de-DE' : 'en-US';
+    const date = new Date(dateString);
     return date.toLocaleDateString(localeString, {
-      weekday: "long",
+      weekday: "short",
       year: "numeric",
-      month: "long",
+      month: "short",
       day: "numeric",
     });
   };
@@ -202,22 +211,15 @@ const BookingCalendar = ({
           {/* Time Slots */}
           <Card className="shadow-lg border-2 hover:shadow-xl transition-shadow">
             <CardHeader className="pb-4">
-              <div className="flex flex-col gap-3">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <Clock className="w-5 h-5 text-brand-red-500" />
-                    <CardTitle className="text-lg">{t('availableTimeSlots')}</CardTitle>
-                  </div>
-                  {slots.length > 0 && (
-                    <Badge variant="secondary" className="text-sm">
-                      {slots.length} {slots.length === 1 ? t('slot') : t('slots')}
-                    </Badge>
-                  )}
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Clock className="w-5 h-5 text-brand-red-500" />
+                  <CardTitle className="text-lg">{t('availableTimeSlots')}</CardTitle>
                 </div>
-                {selectedDate && (
-                  <div className="text-sm font-medium text-slate-700 dark:text-slate-300 bg-slate-50 dark:bg-slate-800/50 px-3 py-2 rounded-md">
-                    {formatDate(selectedDate)}
-                  </div>
+                {slots.length > 0 && (
+                  <Badge variant="secondary" className="text-sm">
+                    {slots.length} {slots.length === 1 ? t('slot') : t('slots')}
+                  </Badge>
                 )}
               </div>
             </CardHeader>
@@ -235,23 +237,25 @@ const BookingCalendar = ({
                   <p className="text-sm text-slate-600 dark:text-slate-400">{t('tryDifferentDate')}</p>
                 </div>
               ) : (
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 max-h-[300px] overflow-y-auto p-1">
+                <div className="space-y-4 max-h-[400px] overflow-y-auto p-1">
                   {slots.map((slot, index) => (
                     <Button
                       key={index}
                       variant={selectedSlot === slot ? "default" : "outline"}
                       className={cn(
-                        "h-auto py-4 flex flex-col items-center gap-1 transition-all",
+                        "w-full h-auto py-4 px-6 flex items-center justify-between transition-all",
                         selectedSlot === slot 
-                          ? "ring-2 ring-brand-red-500 bg-brand-red-500 hover:bg-brand-red-600 shadow-md scale-105" 
-                          : "hover:scale-102 hover:shadow hover:border-brand-red-300 dark:hover:border-brand-red-700"
+                          ? "ring-2 ring-brand-red-500 bg-brand-red-500 hover:bg-brand-red-600 shadow-md" 
+                          : "hover:shadow hover:border-brand-red-300 dark:hover:border-brand-red-700"
                       )}
                       onClick={() => setSelectedSlot(slot)}
                     >
-                      <span className="font-semibold text-base">{formatTime(slot.start)}</span>
-                      <span className="text-xs opacity-70">
-                        {formatTime(slot.end)}
-                      </span>
+                      <div className="flex flex-col items-start gap-1">
+                        <span className="text-sm font-medium">{formatDate(slot.date)}</span>
+                        <span className="font-semibold text-base">
+                          {formatTime(slot.start)} - {formatTime(slot.end)}
+                        </span>
+                      </div>
                     </Button>
                   ))}
                 </div>
@@ -278,14 +282,14 @@ const BookingCalendar = ({
           )}
 
           {/* Booking Summary & Confirm */}
-          {selectedSlot && selectedDate && (
+          {selectedSlot && (
             <Card className="shadow-lg border-2 border-brand-red-300 dark:border-brand-red-700 bg-gradient-to-br from-brand-red-50 to-red-100 dark:from-slate-900 dark:to-slate-800">
               <CardContent className="pt-6">
                 <div className="space-y-4">
                   <div className="p-4 bg-white dark:bg-slate-800/80 backdrop-blur-sm rounded-lg border border-slate-200 dark:border-slate-700">
                     <p className="text-sm text-slate-600 dark:text-slate-400 mb-2">{t('youSelected')}</p>
                     <p className="font-semibold text-lg mb-1 text-slate-900 dark:text-slate-50">
-                      {formatDate(selectedDate)}
+                      {formatDate(selectedSlot.date)}
                     </p>
                     <p className="text-brand-red-600 dark:text-brand-red-400 font-medium">
                       {formatTime(selectedSlot.start)} - {formatTime(selectedSlot.end)}

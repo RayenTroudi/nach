@@ -53,11 +53,7 @@ export default function ResumeRequestPage() {
     postBacStudies: "",
     internships: "",
     trainings: "",
-    currentRole: "",
-    targetRole: "",
-    experience: "",
-    education: "",
-    skills: "",
+    professionalExperience: "",
     additionalInfo: "",
     documentUrl: "",
   });
@@ -156,11 +152,7 @@ export default function ResumeRequestPage() {
       postBacStudies: "",
       internships: "",
       trainings: "",
-      currentRole: "",
-      targetRole: "",
-      experience: "",
-      education: "",
-      skills: "",
+      professionalExperience: "",
       additionalInfo: "",
       documentUrl: "",
     });
@@ -678,67 +670,15 @@ export default function ResumeRequestPage() {
                     {t('professionalDetails')}
                   </h3>
 
-                  <div className="grid md:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-                        {t('form.currentRole')}
-                      </label>
-                      <Input
-                        placeholder={t('form.currentRolePlaceholder')}
-                        value={formData.currentRole}
-                        onChange={(e) => setFormData({ ...formData, currentRole: e.target.value })}
-                        className="border-2 border-slate-200 dark:border-slate-800"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-                        {t('form.targetRole')}
-                      </label>
-                      <Input
-                        placeholder={t('form.targetRolePlaceholder')}
-                        value={formData.targetRole}
-                        onChange={(e) => setFormData({ ...formData, targetRole: e.target.value })}
-                        className="border-2 border-slate-200 dark:border-slate-800"
-                      />
-                    </div>
-                  </div>
-
                   <div>
                     <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-                      {t('form.experience')}
+                      {t('form.professionalExperience')}
                     </label>
                     <Textarea
-                      placeholder={t('form.experiencePlaceholder')}
-                      value={formData.experience}
-                      onChange={(e) => setFormData({ ...formData, experience: e.target.value })}
+                      placeholder={t('form.professionalExperiencePlaceholder')}
+                      value={formData.professionalExperience}
+                      onChange={(e) => setFormData({ ...formData, professionalExperience: e.target.value })}
                       rows={4}
-                      className="border-2 border-slate-200 dark:border-slate-800"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-                      {t('form.education')}
-                    </label>
-                    <Textarea
-                      placeholder={t('form.educationPlaceholder')}
-                      value={formData.education}
-                      onChange={(e) => setFormData({ ...formData, education: e.target.value })}
-                      rows={3}
-                      className="border-2 border-slate-200 dark:border-slate-800"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-                      {t('form.skills')}
-                    </label>
-                    <Textarea
-                      placeholder={t('form.skillsPlaceholder')}
-                      value={formData.skills}
-                      onChange={(e) => setFormData({ ...formData, skills: e.target.value })}
-                      rows={3}
                       className="border-2 border-slate-200 dark:border-slate-800"
                     />
                   </div>

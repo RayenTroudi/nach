@@ -41,11 +41,7 @@ interface ResumeRequest {
   internships?: string;
   trainings?: string;
   desiredTraining?: string;
-  currentRole?: string;
-  targetRole?: string;
-  experience?: string;
-  education?: string;
-  skills?: string;
+  professionalExperience?: string;
   additionalInfo?: string;
   documentUrl?: string;
   paymentStatus: "pending" | "paid" | "rejected";
@@ -822,50 +818,14 @@ export default function TeacherResumeRequestsPage() {
                   <h3 className="text-lg font-semibold text-slate-950 dark:text-white mb-3 border-b pb-2">
                     {t('details.professionalDetails')}
                   </h3>
-                  <div className="grid grid-cols-2 gap-4 mb-4">
-                    {selectedRequest.currentRole && (
-                      <div>
-                        <label className="text-sm font-medium text-slate-600 dark:text-slate-400">{t('details.currentRole')}</label>
-                        <p className="text-slate-950 dark:text-white">{selectedRequest.currentRole}</p>
-                      </div>
-                    )}
-                    {selectedRequest.targetRole && (
-                      <div>
-                        <label className="text-sm font-medium text-slate-600 dark:text-slate-400">{t('details.targetRole')}</label>
-                        <p className="text-slate-950 dark:text-white">{selectedRequest.targetRole}</p>
-                      </div>
-                    )}
-                  </div>
                   
-                  {selectedRequest.experience && (
+                  {selectedRequest.professionalExperience && (
                     <div className="mb-4">
                       <label className="text-sm font-medium text-slate-600 dark:text-slate-400 block mb-1">
-                        {t('details.experience')}
+                        {t('details.professionalExperience')}
                       </label>
                       <p className="text-slate-950 dark:text-white whitespace-pre-wrap bg-slate-50 dark:bg-slate-900 p-3 rounded">
-                        {selectedRequest.experience}
-                      </p>
-                    </div>
-                  )}
-
-                  {selectedRequest.education && (
-                    <div className="mb-4">
-                      <label className="text-sm font-medium text-slate-600 dark:text-slate-400 block mb-1">
-                        {t('details.education')}
-                      </label>
-                      <p className="text-slate-950 dark:text-white whitespace-pre-wrap bg-slate-50 dark:bg-slate-900 p-3 rounded">
-                        {selectedRequest.education}
-                      </p>
-                    </div>
-                  )}
-
-                  {selectedRequest.skills && (
-                    <div>
-                      <label className="text-sm font-medium text-slate-600 dark:text-slate-400 block mb-1">
-                        {t('details.skills')}
-                      </label>
-                      <p className="text-slate-950 dark:text-white whitespace-pre-wrap bg-slate-50 dark:bg-slate-900 p-3 rounded">
-                        {selectedRequest.skills}
+                        {selectedRequest.professionalExperience}
                       </p>
                     </div>
                   )}

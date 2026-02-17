@@ -15,8 +15,7 @@ interface ResumeRequest {
   name: string;
   email: string;
   phone: string;
-  currentRole?: string;
-  targetRole?: string;
+  professionalExperience?: string;
   status: "pending" | "in_progress" | "completed" | "rejected";
   paymentStatus: "pending" | "paid" | "rejected";
   paymentProofUrl?: string;
@@ -164,13 +163,13 @@ export default function MyResumeRequestsPage() {
                     <div className="flex-1">
                       <div className="flex items-center gap-3 mb-2">
                         <CardTitle className="text-xl">
-                          {request.targetRole || "Resume Request"}
+                          Resume Request
                         </CardTitle>
                         {getStatusBadge(request.status)}
                       </div>
-                      {request.currentRole && (
-                        <p className="text-sm text-slate-600 dark:text-slate-400">
-                          Current: {request.currentRole}
+                      {request.professionalExperience && (
+                        <p className="text-sm text-slate-600 dark:text-slate-400 line-clamp-2">
+                          {request.professionalExperience}
                         </p>
                       )}
                       <p className="text-xs text-slate-500 dark:text-slate-400 mt-2">

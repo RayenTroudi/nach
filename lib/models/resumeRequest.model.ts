@@ -23,11 +23,7 @@ export interface IResumeRequest extends Document {
   internships?: string;
   trainings?: string;
   desiredTraining?: string;
-  currentRole?: string;
-  targetRole?: string;
-  experience?: string;
-  education?: string;
-  skills?: string;
+  professionalExperience?: string;
   additionalInfo?: string;
   documentUrl?: string;
   price: number;
@@ -77,11 +73,7 @@ const ResumeRequestSchema = new Schema<IResumeRequest>(
     internships: String,
     trainings: String,
     desiredTraining: String,
-    currentRole: String,
-    targetRole: String,
-    experience: String,
-    education: String,
-    skills: String,
+    professionalExperience: String,
     additionalInfo: String,
     documentUrl: String,
     price: {

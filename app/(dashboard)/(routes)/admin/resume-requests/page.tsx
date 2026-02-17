@@ -24,11 +24,7 @@ interface ResumeRequest {
   name: string;
   email: string;
   phone: string;
-  currentRole?: string;
-  targetRole?: string;
-  experience?: string;
-  education?: string;
-  skills?: string;
+  professionalExperience?: string;
   additionalInfo?: string;
   documentUrl?: string;
   price: number;
@@ -298,39 +294,10 @@ export default function AdminResumeRequestsPage() {
                   {selectedRequest?._id === request._id && (
                     <CardContent className="p-6 space-y-6">
                       {/* Professional Details */}
-                      <div className="grid md:grid-cols-2 gap-4">
-                        {request.currentRole && (
-                          <div>
-                            <label className="text-sm font-medium text-slate-700 dark:text-slate-300">Current Role</label>
-                            <p className="text-slate-950 dark:text-white">{request.currentRole}</p>
-                          </div>
-                        )}
-                        {request.targetRole && (
-                          <div>
-                            <label className="text-sm font-medium text-slate-700 dark:text-slate-300">Target Role</label>
-                            <p className="text-slate-950 dark:text-white">{request.targetRole}</p>
-                          </div>
-                        )}
-                      </div>
-
-                      {request.experience && (
+                      {request.professionalExperience && (
                         <div>
-                          <label className="text-sm font-medium text-slate-700 dark:text-slate-300">Experience</label>
-                          <p className="text-slate-950 dark:text-white whitespace-pre-wrap">{request.experience}</p>
-                        </div>
-                      )}
-
-                      {request.education && (
-                        <div>
-                          <label className="text-sm font-medium text-slate-700 dark:text-slate-300">Education</label>
-                          <p className="text-slate-950 dark:text-white whitespace-pre-wrap">{request.education}</p>
-                        </div>
-                      )}
-
-                      {request.skills && (
-                        <div>
-                          <label className="text-sm font-medium text-slate-700 dark:text-slate-300">Skills</label>
-                          <p className="text-slate-950 dark:text-white whitespace-pre-wrap">{request.skills}</p>
+                          <label className="text-sm font-medium text-slate-700 dark:text-slate-300">Professional Experience</label>
+                          <p className="text-slate-950 dark:text-white whitespace-pre-wrap">{request.professionalExperience}</p>
                         </div>
                       )}
 

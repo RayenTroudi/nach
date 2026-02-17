@@ -42,11 +42,7 @@ interface ResumeRequest {
   name: string;
   email: string;
   phone: string;
-  currentRole?: string;
-  targetRole?: string;
-  experience?: string;
-  education?: string;
-  skills?: string;
+  professionalExperience?: string;
   additionalInfo?: string;
   documentUrl?: string;
   price: number;
@@ -462,34 +458,10 @@ export default function AdminResumesPage() {
                 <div>
                   <h3 className="font-semibold mb-3">Professional Details</h3>
                   <div className="space-y-3">
-                    {selectedRequest.currentRole && (
+                    {selectedRequest.professionalExperience && (
                       <div>
-                        <p className="text-sm text-slate-600 dark:text-slate-400">Current Role</p>
-                        <p className="font-medium">{selectedRequest.currentRole}</p>
-                      </div>
-                    )}
-                    {selectedRequest.targetRole && (
-                      <div>
-                        <p className="text-sm text-slate-600 dark:text-slate-400">Target Role</p>
-                        <p className="font-medium">{selectedRequest.targetRole}</p>
-                      </div>
-                    )}
-                    {selectedRequest.experience && (
-                      <div>
-                        <p className="text-sm text-slate-600 dark:text-slate-400">Experience</p>
-                        <p className="text-sm">{selectedRequest.experience}</p>
-                      </div>
-                    )}
-                    {selectedRequest.education && (
-                      <div>
-                        <p className="text-sm text-slate-600 dark:text-slate-400">Education</p>
-                        <p className="text-sm">{selectedRequest.education}</p>
-                      </div>
-                    )}
-                    {selectedRequest.skills && (
-                      <div>
-                        <p className="text-sm text-slate-600 dark:text-slate-400">Skills</p>
-                        <p className="text-sm">{selectedRequest.skills}</p>
+                        <p className="text-sm text-slate-600 dark:text-slate-400">Professional Experience</p>
+                        <p className="text-sm whitespace-pre-wrap">{selectedRequest.professionalExperience}</p>
                       </div>
                     )}
                   </div>

@@ -34,11 +34,7 @@ interface ResumeRequest {
   name: string;
   email: string;
   phone: string;
-  currentRole?: string;
-  targetRole?: string;
-  experience?: string;
-  education?: string;
-  skills?: string;
+  professionalExperience?: string;
   additionalInfo?: string;
   documentUrl?: string;
   price: number;
@@ -344,53 +340,13 @@ export default function ResumeWorkflowPage() {
                     Professional Details
                   </h3>
                   <div className="space-y-4">
-                    {selectedRequest.currentRole && (
+                    {selectedRequest.professionalExperience && (
                       <div className="bg-slate-50 dark:bg-slate-800 p-3 rounded-lg">
-                        <p className="text-sm text-slate-600 dark:text-slate-400 mb-1">Current Role</p>
-                        <p className="font-medium">{selectedRequest.currentRole}</p>
-                      </div>
-                    )}
-                    {selectedRequest.targetRole && (
-                      <div className="bg-slate-50 dark:bg-slate-800 p-3 rounded-lg">
-                        <p className="text-sm text-slate-600 dark:text-slate-400 mb-1">Target Role</p>
-                        <p className="font-medium text-blue-600">{selectedRequest.targetRole}</p>
-                      </div>
-                    )}
-                    {selectedRequest.experience && (
-                      <div className="bg-slate-50 dark:bg-slate-800 p-3 rounded-lg">
-                        <p className="text-sm text-slate-600 dark:text-slate-400 mb-1">Experience</p>
-                        <p className="text-sm whitespace-pre-wrap">{selectedRequest.experience}</p>
+                        <p className="text-sm text-slate-600 dark:text-slate-400 mb-1">Professional Experience</p>
+                        <p className="text-sm whitespace-pre-wrap">{selectedRequest.professionalExperience}</p>
                       </div>
                     )}
                   </div>
-                </div>
-
-                <Separator />
-
-                {/* Education & Skills */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {selectedRequest.education && (
-                    <div>
-                      <h3 className="font-semibold mb-3 flex items-center gap-2">
-                        <GraduationCap className="w-5 h-5" />
-                        Education
-                      </h3>
-                      <div className="bg-slate-50 dark:bg-slate-800 p-3 rounded-lg">
-                        <p className="text-sm whitespace-pre-wrap">{selectedRequest.education}</p>
-                      </div>
-                    </div>
-                  )}
-                  {selectedRequest.skills && (
-                    <div>
-                      <h3 className="font-semibold mb-3 flex items-center gap-2">
-                        <Code className="w-5 h-5" />
-                        Skills
-                      </h3>
-                      <div className="bg-slate-50 dark:bg-slate-800 p-3 rounded-lg">
-                        <p className="text-sm whitespace-pre-wrap">{selectedRequest.skills}</p>
-                      </div>
-                    </div>
-                  )}
                 </div>
 
                 {/* Additional Information */}

@@ -193,9 +193,9 @@ export async function getUserBookings() {
       };
     }
 
+    // Fetch all bookings regardless of status
     const bookings = await Booking.find({
       userId: user._id,
-      status: { $in: ["scheduled", "completed"] },
     })
       .populate({
         path: "userId",
@@ -205,7 +205,7 @@ export async function getUserBookings() {
         path: "hostId",
         select: "firstName lastName email",
       })
-      .sort({ startAt: 1 })
+      .sort({ startAt: -1 }) // Sort by recent first
       .lean();
 
     // Filter out bookings where populate failed and log them

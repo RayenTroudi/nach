@@ -164,7 +164,9 @@ const BookingCalendar = ({
   };
 
   const formatDate = (date: Date) => {
-    return date.toLocaleDateString(locale === 'ar' ? 'ar-EG' : locale === 'de' ? 'de-DE' : 'en-US', {
+    // Use Latin numerals for Arabic locale
+    const localeString = locale === 'ar' ? 'ar-EG-u-nu-latn' : locale === 'de' ? 'de-DE' : 'en-US';
+    return date.toLocaleDateString(localeString, {
       weekday: "long",
       year: "numeric",
       month: "long",
@@ -200,15 +202,22 @@ const BookingCalendar = ({
           {/* Time Slots */}
           <Card className="shadow-lg border-2 hover:shadow-xl transition-shadow">
             <CardHeader className="pb-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <Clock className="w-5 h-5 text-brand-red-500" />
-                  <CardTitle className="text-lg">{t('availableTimeSlots')}</CardTitle>
+              <div className="flex flex-col gap-3">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Clock className="w-5 h-5 text-brand-red-500" />
+                    <CardTitle className="text-lg">{t('availableTimeSlots')}</CardTitle>
+                  </div>
+                  {slots.length > 0 && (
+                    <Badge variant="secondary" className="text-sm">
+                      {slots.length} {slots.length === 1 ? t('slot') : t('slots')}
+                    </Badge>
+                  )}
                 </div>
-                {slots.length > 0 && (
-                  <Badge variant="secondary" className="text-sm">
-                    {slots.length} {slots.length === 1 ? t('slot') : t('slots')}
-                  </Badge>
+                {selectedDate && (
+                  <div className="text-sm font-medium text-slate-700 dark:text-slate-300 bg-slate-50 dark:bg-slate-800/50 px-3 py-2 rounded-md">
+                    {formatDate(selectedDate)}
+                  </div>
                 )}
               </div>
             </CardHeader>

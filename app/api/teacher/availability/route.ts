@@ -72,17 +72,17 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Parse and validate date
-    const availabilityDate = new Date(date);
+    // Parse date string in UTC to avoid timezone shifts
+    // Ensure the date is treated as UTC midnight by appending time
+    const dateString = date.includes('T') ? date : `${date}T00:00:00.000Z`;
+    const availabilityDate = new Date(dateString);
+    
     if (isNaN(availabilityDate.getTime())) {
       return NextResponse.json(
         { success: false, error: "Invalid date format" },
         { status: 400 }
       );
     }
-
-    // Set time to start of day for consistent comparison
-    availabilityDate.setHours(0, 0, 0, 0);
 
     await connectToDatabase();
 

@@ -50,6 +50,7 @@ export default function MyMeetings({ bookings: initialBookings }: MyMeetingsProp
   });
 
   const formatDate = (dateString: string) => {
+    // Use Latin numerals for Arabic locale to avoid Eastern Arabic numerals
     const localeMap: Record<string, string> = {
       'en': 'en-US',
       'de': 'de-DE',
@@ -65,6 +66,7 @@ export default function MyMeetings({ bookings: initialBookings }: MyMeetingsProp
   };
 
   const formatTime = (dateString: string) => {
+    // Use Latin numerals for Arabic locale to avoid Eastern Arabic numerals
     const localeMap: Record<string, string> = {
       'en': 'en-US',
       'de': 'de-DE',
@@ -72,6 +74,25 @@ export default function MyMeetings({ bookings: initialBookings }: MyMeetingsProp
     };
     
     return new Date(dateString).toLocaleTimeString(localeMap[locale] || 'en-US', {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  };
+
+  // Format complete date and time together with Latin numerals
+  const formatDateTime = (dateString: string) => {
+    // Use Latin numerals for Arabic locale to avoid Eastern Arabic numerals
+    const localeMap: Record<string, string> = {
+      'en': 'en-US',
+      'de': 'de-DE',
+      'ar': 'ar-EG-u-nu-latn'
+    };
+    
+    return new Date(dateString).toLocaleString(localeMap[locale] || 'en-US', {
+      weekday: 'short',
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
       hour: "2-digit",
       minute: "2-digit",
     });
@@ -245,7 +266,7 @@ export default function MyMeetings({ bookings: initialBookings }: MyMeetingsProp
                   <div className="space-y-3">
                     <div className="flex items-center gap-2 text-slate-700 dark:text-slate-300">
                       <Calendar className="w-4 h-4" />
-                      <span className="font-semibold">{formatDate(booking.startAt)}</span>
+                      <span className="font-semibold">{formatDateTime(booking.startAt)}</span>
                     </div>
 
                     <div className="flex items-center gap-2 text-slate-600 dark:text-slate-400">

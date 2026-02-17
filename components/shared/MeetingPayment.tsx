@@ -4,9 +4,8 @@ import Image from "next/image";
 import { Upload, Check, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { scnToast } from "@/components/ui/use-toast";
-import { Spinner } from "@/components/shared";
+import { Spinner, FileUpload } from "@/components/shared";
 import axios from "axios";
-import { UploadDropzone } from "@/lib/upload-thing";
 import { Textarea } from "@/components/ui/textarea";
 import { useTranslations } from "next-intl";
 
@@ -151,36 +150,21 @@ export default function MeetingPayment({
 
         {!uploadedUrl ? (
           <div className="border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-lg overflow-hidden">
-            <UploadDropzone
+            <FileUpload
               endpoint="paymentProof"
-              onClientUploadComplete={(res) => {
-                if (res && res[0]) {
-                  const uploadedFileUrl = res[0].url;
-                  setUploadedUrl(uploadedFileUrl);
+              autoUpload={true}
+              onChange={(url) => {
+                if (url) {
+                  setUploadedUrl(url);
                   setUploadStatus("idle");
                   scnToast({
                     variant: "success",
                     title: t('fileUploaded'),
                     description: t('submitProof'),
                   });
-                } else {
-                  console.log("⚠️ Upload complete but no file URL in response");
                 }
               }}
-              onUploadError={(error: Error) => {
-                console.error("Upload error:", error);
-                scnToast({
-                  variant: "destructive",
-                  title: t('uploadFailed'),
-                  description: error.message || t('uploadFailedDesc'),
-                });
-              }}
-              appearance={{
-                container: "w-full",
-                uploadIcon: "text-slate-400",
-                label: "text-slate-700 dark:text-slate-300",
-                allowedContent: "text-slate-500 dark:text-slate-400",
-              }}
+              className="w-full"
             />
           </div>
         ) : (

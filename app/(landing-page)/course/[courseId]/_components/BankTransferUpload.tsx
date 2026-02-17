@@ -4,9 +4,8 @@ import Image from "next/image";
 import { Upload, Check, X, AlertCircle, FileText, Image as ImageIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { scnToast } from "@/components/ui/use-toast";
-import { Spinner } from "@/components/shared";
+import { Spinner, FileUpload } from "@/components/shared";
 import axios from "axios";
-import { UploadDropzone } from "@/lib/upload-thing";
 import { useTranslations } from 'next-intl';
 
 interface BankTransferUploadProps {
@@ -149,11 +148,12 @@ export default function BankTransferUpload({
         {/* UploadThing Dropzone */}
         {!uploadedUrl ? (
           <div className="border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-lg overflow-hidden">
-            <UploadDropzone
+            <FileUpload
               endpoint="paymentProof"
-              onClientUploadComplete={(res) => {
-                if (res && res[0]) {
-                  setUploadedUrl(res[0].url);
+              autoUpload={true}
+              onChange={(url) => {
+                if (url) {
+                  setUploadedUrl(url);
                   setUploadStatus("idle");
                   scnToast({
                     variant: "success",
@@ -162,20 +162,7 @@ export default function BankTransferUpload({
                   });
                 }
               }}
-              onUploadError={(error: Error) => {
-                console.error("Upload error:", error);
-                scnToast({
-                  variant: "destructive",
-                  title: t('uploadFailed'),
-                  description: error.message || t('uploadFailed'),
-                });
-              }}
-              appearance={{
-                container: "w-full",
-                uploadIcon: "text-slate-400",
-                label: "text-slate-700 dark:text-slate-300",
-                allowedContent: "text-slate-500 dark:text-slate-400",
-              }}
+              className="w-full"
             />
           </div>
         ) : (

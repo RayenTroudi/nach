@@ -12,6 +12,7 @@ import { IntlProvider } from '@/components/providers/IntlProvider';
 import { getLocale, getMessages } from '@/lib/locale';
 import { getClerkLocalization } from "@/lib/clerk-localizations";
 import { generateOrganizationSchema, generateWebsiteSchema } from "@/lib/utils/structured-data";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -179,6 +180,7 @@ export default async function RootLayout({
             </ThemeProvider>
           </IntlProvider>
         </ClerkProvider>
+        <SpeedInsights />
       </body>
     </html>
   );

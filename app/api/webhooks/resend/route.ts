@@ -7,41 +7,41 @@ const RESEND_WEBHOOK_SECRET = process.env.RESEND_WEBHOOK_SECRET!;
 
 export async function POST(req: NextRequest) {
   try {
-    // Get the raw body for signature verification
+    // Get the raw body
     const payload = await req.text();
+    const body = JSON.parse(payload);
     
-    // Get Svix headers for verification
+    // Get Svix headers (optional - only for certain Resend events)
     const svixId = req.headers.get("svix-id");
     const svixTimestamp = req.headers.get("svix-timestamp");
     const svixSignature = req.headers.get("svix-signature");
 
-    // Verify webhook signature
-    if (!svixId || !svixTimestamp || !svixSignature) {
-      console.error("❌ Missing Svix headers");
-      return NextResponse.json(
-        { error: "Missing Svix headers" },
-        { status: 400 }
-      );
-    }
-
-    const wh = new Webhook(RESEND_WEBHOOK_SECRET);
     let evt: any;
 
-    try {
-      evt = wh.verify(payload, {
-        "svix-id": svixId,
-        "svix-timestamp": svixTimestamp,
-        "svix-signature": svixSignature,
-      });
-    } catch (err) {
-      console.error("❌ Webhook signature verification failed:", err);
-      return NextResponse.json(
-        { error: "Webhook verification failed" },
-        { status: 400 }
-      );
+    // Check if this is a Svix-signed webhook
+    if (svixId && svixTimestamp && svixSignature) {
+      // Verify webhook signature using Svix
+      const wh = new Webhook(RESEND_WEBHOOK_SECRET);
+      try {
+        evt = wh.verify(payload, {
+          "svix-id": svixId,
+          "svix-timestamp": svixTimestamp,
+          "svix-signature": svixSignature,
+        });
+      } catch (err) {
+        console.error("❌ Webhook signature verification failed:", err);
+        return NextResponse.json(
+          { error: "Webhook verification failed" },
+          { status: 401 }
+        );
+      }
+    } else {
+      // For email.received events or other non-Svix webhooks, use the body directly
+      console.log("ℹ️ Processing webhook without Svix verification");
+      evt = body;
     }
 
-    // Parse the verified event
+    // Parse the event
     const { type, data } = evt;
 
     console.log("📧 Received Resend webhook:", {

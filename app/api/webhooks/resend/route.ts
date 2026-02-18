@@ -59,7 +59,7 @@ export async function POST(req: NextRequest) {
       // Forward the email to your personal email
       const forwardedEmail = await resend.emails.send({
         from: "Support <support@taleldeutchlandservices.com>",
-        to: "rayentroudi00@gmail.com",
+        to: "talel.jouini02@gmail.com",
         reply_to: from, // Allow replying directly to original sender
         subject: `[Forwarded] ${subject || "(No Subject)"}`,
         html: `
@@ -78,9 +78,9 @@ export async function POST(req: NextRequest) {
                 <p style="margin: 5px 0; color: #6b7280; font-size: 12px;"><strong>Received:</strong> ${new Date().toLocaleString()}</p>
               </div>
               
-              <div style="margin-top: 20px; padding: 20px; border-left: 4px solid #DC2626; background-color: #fef2f2;">
-                ${html || `<pre style="white-space: pre-wrap; font-family: monospace;">${text || "(Empty email)"}</pre>`}
-              </div>
+              ${html || text ? `<div style="margin-top: 20px; padding: 20px; border-left: 4px solid #DC2626; background-color: #fef2f2;">
+                ${html || `<pre style="white-space: pre-wrap; font-family: monospace;">${text}</pre>`}
+              </div>` : ''}
             </div>
             
             <div style="margin-top: 0; padding: 15px; background-color: #f9fafb; border: 1px solid #e5e7eb; border-top: none; border-radius: 0 0 8px 8px; font-size: 12px; color: #6b7280;">

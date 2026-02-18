@@ -3,7 +3,17 @@ import { connectToDatabase } from '@/lib/mongoose';
 import Course from '@/lib/models/course.model';
 
 // Base URL of the website (remove trailing slash if present)
-const BASE_URL = (process.env.NEXT_PUBLIC_SERVER_URL || 'https://www.taleldeutchlandservices.com').replace(/\/$/, '');
+// Always use production URL, ignore placeholder values
+const getBaseUrl = () => {
+  const envUrl = process.env.NEXT_PUBLIC_SERVER_URL || '';
+  // Ignore placeholder/invalid values
+  if (!envUrl || envUrl.includes('your_app_url') || envUrl.includes('localhost')) {
+    return 'https://www.taleldeutchlandservices.com';
+  }
+  return envUrl.replace(/\/$/, '');
+};
+
+const BASE_URL = getBaseUrl();
 
 // Supported locales
 const locales = ['ar', 'en', 'de'];

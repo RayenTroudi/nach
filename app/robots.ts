@@ -5,7 +5,16 @@ import { MetadataRoute } from 'next';
  * This file follows Google's robots.txt best practices
  */
 export default function robots(): MetadataRoute.Robots {
-  const BASE_URL = (process.env.NEXT_PUBLIC_SERVER_URL || 'https://www.taleldeutchlandservices.com').replace(/\/$/, '');
+  const getBaseUrl = () => {
+    const envUrl = process.env.NEXT_PUBLIC_SERVER_URL || '';
+    // Ignore placeholder/invalid values
+    if (!envUrl || envUrl.includes('your_app_url') || envUrl.includes('localhost')) {
+      return 'https://www.taleldeutchlandservices.com';
+    }
+    return envUrl.replace(/\/$/, '');
+  };
+  
+  const BASE_URL = getBaseUrl();
   
   return {
     rules: [

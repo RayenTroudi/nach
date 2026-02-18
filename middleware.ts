@@ -8,7 +8,7 @@ export default authMiddleware({
     "/",
     "/api/review",
     "/api/uploadthing",
-    "/api/webhooks",
+    "/api/webhooks(.*)",
     "/api/courses",
     "/api/ausbildung",
     "/api/video-proxy",
@@ -42,8 +42,7 @@ export default authMiddleware({
     "/(en|de|ar)/reset-password",
   ],
   ignoredRoutes: [
-    "/api/webhooks",
-    "/api/webhooks/clerk",
+    "/api/webhooks(.*)",
     "/api/ausbildung",
     "/api/video-stream",
     "/_next/static(.*)",

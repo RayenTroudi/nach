@@ -15,6 +15,7 @@ export default authMiddleware({
     "/api/video-stream",
     "/api/auth/reset-password",
     "/api/auth/password-changed",
+    "/api/health",
     "/courses/(.*)",
     "/course/(.*)",
     "/user/(.*)",
@@ -51,6 +52,7 @@ export default authMiddleware({
   ],
   ignoredRoutes: [
     "/api/webhooks(.*)",
+    "/api/health",
     "/api/ausbildung",
     "/api/video-stream",
     "/_next/static(.*)",

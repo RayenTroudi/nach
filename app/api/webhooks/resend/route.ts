@@ -59,7 +59,7 @@ export async function POST(req: NextRequest) {
       // Forward the email to your personal email
       const forwardedEmail = await resend.emails.send({
         from: "Support <support@taleldeutchlandservices.com>",
-        to: "talel.jouini02@gmail.com",
+        to: "tdss05988@gmail.com",
         reply_to: from, // Allow replying directly to original sender
         subject: `[Forwarded] ${subject || "(No Subject)"}`,
         html: `

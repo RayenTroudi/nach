@@ -11,24 +11,79 @@ import { PageLoaderProvider } from "@/contexts/PageLoaderProvider";
 import { IntlProvider } from '@/components/providers/IntlProvider';
 import { getLocale, getMessages } from '@/lib/locale';
 import { getClerkLocalization } from "@/lib/clerk-localizations";
+import { generateOrganizationSchema, generateWebsiteSchema } from "@/lib/utils/structured-data";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "TDS - Talel Deutschland Services",
-  description: `
-    Our e-learning platform is a comprehensive, AI-powered solution designed to revolutionize the way you learn. It offers a wide range of courses across various disciplines, allowing users to learn at their own pace, anytime, anywhere.
-
-The platform features an intuitive, user-friendly interface that makes navigation and course selection a breeze. It includes interactive lessons, quizzes, and practical exercises to ensure a thorough understanding of the course material.
-
-What sets our platform apart is the integration of advanced AI technologies. The AI-powered recommendation system suggests courses based on the user's interests, learning style, and past performance, providing a personalized learning experience.
-
-Moreover, our AI-driven analytics tool tracks the user's progress and identifies areas of improvement, offering tailored feedback and resources to enhance learning outcomes.
-
-The platform also includes a dynamic discussion forum where learners can interact with peers and instructors, fostering a collaborative learning environment.
-
-Whether you're a beginner looking to learn a new skill or a professional seeking to advance your career, our AI-powered e-learning platform is your go-to resource for quality, accessible, and personalized online education.
-  `,
+  metadataBase: new URL('https://www.taleldeutchlandservices.com'),
+  title: {
+    default: "TDS - Talel Deutschland Services | E-Learning & Professional Training",
+    template: "%s | TDS - Talel Deutschland Services",
+  },
+  description: `TDS (Talel Deutschland Services) - Your premier destination for professional e-learning and vocational training in Germany. Specialized courses in healthcare (Pflegefachmann/Pflegefachfrau), IT, business, and more. Multi-language support (Arabic, English, German). Expert instructors, flexible learning, career-focused education. Start your journey to success in Germany today!`,
+  keywords: [
+    'TDS',
+    'Talel Deutschland Services',
+    'e-learning Germany',
+    'online courses Germany',
+    'vocational training',
+    'Pflegefachmann',
+    'Pflegefachfrau',
+    'healthcare training',
+    'IT courses',
+    'professional development',
+    'Arabic courses Germany',
+    'German language courses',
+    'career training',
+    'online education',
+    'Deutschland Ausbildung',
+  ],
+  authors: [{ name: 'Talel Deutschland Services' }],
+  creator: 'TDS',
+  publisher: 'Talel Deutschland Services',
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+  openGraph: {
+    type: 'website',
+    locale: 'ar_SA',
+    alternateLocale: ['en_US', 'de_DE'],
+    url: 'https://www.taleldeutchlandservices.com',
+    siteName: 'TDS - Talel Deutschland Services',
+    title: 'TDS - Professional E-Learning & Training in Germany',
+    description: 'Quality online courses and professional training for success in Germany. Healthcare, IT, business courses in multiple languages.',
+    images: [
+      {
+        url: '/images/nobgLogo.png',
+        width: 1200,
+        height: 630,
+        alt: 'TDS - Talel Deutschland Services',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'TDS - Talel Deutschland Services',
+    description: 'Professional e-learning and training courses in Germany',
+    images: ['/images/nobgLogo.png'],
+  },
+  alternates: {
+    canonical: 'https://www.taleldeutchlandservices.com',
+    languages: {
+      'ar': 'https://www.taleldeutchlandservices.com/ar',
+      'en': 'https://www.taleldeutchlandservices.com/en',
+      'de': 'https://www.taleldeutchlandservices.com/de',
+    },
+  },
   icons: {
     icon: [
       { url: "/images/nobgLogo.png", sizes: "48x48", type: "image/png" },
@@ -46,6 +101,10 @@ Whether you're a beginner looking to learn a new skill or a professional seeking
   },
   formatDetection: {
     telephone: false,
+  },
+  verification: {
+    // Add your Google Search Console verification code here when you get it
+    // google: 'your-verification-code',
   },
 };
 
@@ -66,9 +125,22 @@ export default async function RootLayout({
   const direction = locale === 'ar' ? 'rtl' : 'ltr';
   const clerkLocalization = getClerkLocalization(locale);
 
+  // Generate structured data for SEO
+  const organizationSchema = generateOrganizationSchema();
+  const websiteSchema = generateWebsiteSchema();
+
   return (
     <html lang={locale} dir={direction} suppressHydrationWarning>
       <head>
+        {/* Structured Data for Google */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
+        />
         <script
           dangerouslySetInnerHTML={{
             __html: `

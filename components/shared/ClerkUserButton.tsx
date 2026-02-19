@@ -1,7 +1,5 @@
 "use client";
 import { useTheme } from "@/contexts/ThemeProvider";
-import { useLocale } from "next-intl";
-import { getClerkLocalization } from "@/lib/clerk-localizations";
 
 import { dark } from "@clerk/themes";
 import React from "react";
@@ -19,13 +17,10 @@ const DynamicUserButton = dynamic(
 
 const ClerkUserButton = () => {
   const { mode } = useTheme();
-  const locale = useLocale();
-  const clerkLocalization = getClerkLocalization(locale);
   
   return (
     <DynamicUserButton
       afterSignOutUrl="/"
-      localization={clerkLocalization as any}
       appearance={{
         baseTheme: mode === "dark" ? dark : undefined,
 

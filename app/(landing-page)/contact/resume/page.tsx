@@ -712,6 +712,7 @@ export default function ResumeRequestPage() {
                       <FileUpload
                         endpoint="documentUpload"
                         onChange={(url) => setFormData({ ...formData, documentUrl: url || "" })}
+                        autoUpload={true}
                       />
                     )}
                     <p className="text-xs text-slate-500 dark:text-slate-400 mt-2">

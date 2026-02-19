@@ -53,24 +53,29 @@ const MobileSideBar = ({
   return (
     <div className="md:hidden">
       <Sheet>
-        <SheetTrigger className="">
-          {mode === "dark" ? (
-            <Image
-              src="/icons/dark-menu.svg"
-              alt="menu"
-              width={40}
-              height={40}
-              className="flex-shrink-0"
-            />
-          ) : (
-            <Image
-              src="/icons/light-menu.svg"
-              alt="menu"
-              width={40}
-              height={40}
-              className="flex-shrink-0"
-            />
-          )}
+        <SheetTrigger asChild>
+          <button
+            className="flex items-center justify-center p-2 min-h-[44px] min-w-[44px]"
+            aria-label="Toggle mobile menu"
+          >
+            {mode === "dark" ? (
+              <Image
+                src="/icons/dark-menu.svg"
+                alt="menu"
+                width={40}
+                height={40}
+                className="flex-shrink-0"
+              />
+            ) : (
+              <Image
+                src="/icons/light-menu.svg"
+                alt="menu"
+                width={40}
+                height={40}
+                className="flex-shrink-0"
+              />
+            )}
+          </button>
         </SheetTrigger>
         <SheetContent side="left" className="flex flex-col h-full">
           <SheetHeader className="flex-shrink-0">

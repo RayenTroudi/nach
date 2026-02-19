@@ -39,7 +39,7 @@ const Header = async () => {
   return (
     <header className="fixed top-0 left-0 right-0 z-50 border-b border-input flex items-center justify-between px-4 h-[80px] bg-white dark:bg-slate-950">
       {/* Logo */}
-      <div className="flex items-center gap-x-4">
+      <div className="flex items-center">
         <Logo />
       </div>
 
@@ -47,7 +47,7 @@ const Header = async () => {
       <div className="flex-1"></div>
 
       {/* Navbar + Auth Buttons + Actions */}
-      <div className="flex items-center gap-x-4">
+      <div className="flex items-center gap-x-2 sm:gap-x-4">
         {/* Navbar Items */}
         {userId ? <Navbar isUserAdmin={mongoDbUser?.isAdmin || false} /> : null}
         
@@ -58,15 +58,15 @@ const Header = async () => {
         ) : null}
 
         <HeaderContent>
-          <div className="flex items-center gap-x-4">
-            <MobileSideBar isAdmin={mongoDbUser?.isAdmin || false}>
-              {!userId ? <MobileSignupSignInButtons /> : <SignoutButton />}
-            </MobileSideBar>
+          <div className="flex items-center gap-x-2 sm:gap-x-4">
             <SignedIn>
               <ClerkUserButton />
             </SignedIn>
             <LanguageSwitcher />
             <ThemeSwitcher />
+            <MobileSideBar isAdmin={mongoDbUser?.isAdmin || false}>
+              {!userId ? <MobileSignupSignInButtons /> : <SignoutButton />}
+            </MobileSideBar>
           </div>
         </HeaderContent>
       </div>

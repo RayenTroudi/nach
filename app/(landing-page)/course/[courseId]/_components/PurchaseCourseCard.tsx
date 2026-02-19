@@ -166,7 +166,7 @@ const PurchaseCourseCard = ({
           );
           
           // Get poster - use course thumbnail or generate from playbackId
-          const posterUrl = course?.thumbnail || (hasValidPlaybackId ? getMuxThumbnail(previewPlaybackId) : undefined);
+          const posterUrl = course?.thumbnail || (hasValidPlaybackId && previewPlaybackId ? getMuxThumbnail(previewPlaybackId) : undefined);
 
           return (
             <div className="relative w-full aspect-video">

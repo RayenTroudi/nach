@@ -5,12 +5,28 @@ import { deDE, arSA } from "@clerk/localizations";
 // English (US) is the default, no need to import
 
 // We can extend the official localizations with custom translations
-export const clerkLocalizationDeDE = deDE;
+export const clerkLocalizationDeDE = {
+  ...deDE,
+  userButton: {
+    ...(deDE.userButton || {}),
+    action__signOut: "Abmelden",
+  },
+};
 
-export const clerkLocalizationArSA = arSA;
+export const clerkLocalizationArSA = {
+  ...arSA,
+  userButton: {
+    ...(arSA.userButton || {}),
+    action__signOut: "تسجيل الخروج",
+  },
+};
 
 // English is the default, we'll return undefined to let Clerk use its built-in English
-export const clerkLocalizationEnUS = undefined;
+export const clerkLocalizationEnUS = {
+  userButton: {
+    action__signOut: "Sign out",
+  },
+};
 
 export const clerkLocalizations = {
   "en-US": clerkLocalizationEnUS,

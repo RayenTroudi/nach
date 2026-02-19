@@ -7,11 +7,13 @@ import { LogOut, Power } from "lucide-react";
 import { scnToast } from "../ui/use-toast";
 import { set } from "mongoose";
 import Spinner from "./Spinner";
+import { useTranslations } from "next-intl";
 
 const SignoutButton = ({ isSheetOpen = true }: { isSheetOpen?: boolean }) => {
   const { signOut } = useClerk();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const t = useTranslations();
 
   const onSignOutHandler = () => {
     try {
@@ -63,7 +65,7 @@ const SignoutButton = ({ isSheetOpen = true }: { isSheetOpen?: boolean }) => {
           isLoading ? "text-slate-50" : ""
         }`}
       >
-        Sign out
+        {t("common.signOut")}
       </p>
     </div>
   );

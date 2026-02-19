@@ -435,6 +435,28 @@ const MuxVideoPlayer = ({
     );
   }
 
+  // Safe metadata object - only include non-empty values
+  const safeMetadata = {
+    video_title: title || "Video",
+    ...(metadata?.video_id && { video_id: metadata.video_id }),
+    ...(metadata?.video_title && { video_title: metadata.video_title }),
+    ...(metadata?.course_id && { course_id: metadata.course_id }),
+  };
+
+  // Don't render player until mounted (SSR safety)
+  if (!isMounted) {
+    return (
+      <div 
+        className={`relative w-full bg-slate-100 dark:bg-slate-900 ${className}`}
+        style={{ paddingBottom: aspectRatioPadding }}
+      >
+        <div className="absolute inset-0 flex items-center justify-center">
+          <Spinner size={48} />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className={`w-full ${className} ${minimalHover ? 'group' : ''}`}>
       {/* Video Container */}
@@ -542,10 +564,7 @@ const MuxVideoPlayer = ({
             primaryColor="#FFFFFF"
             secondaryColor="#1E293B"
             title={title || "Video"}
-            metadata={{
-              video_title: title || "Video",
-              ...metadata,
-            }}
+            metadata={safeMetadata}
             // Accessibility
             aria-label={title ? `Video player: ${title}` : "Video player"}
             // Event handlers

@@ -80,8 +80,8 @@ const PurchaseCourseCard = ({
   
   // Only convert USD to TND, keep TND prices as-is
   const priceInDinar = course.currency?.toLowerCase() === 'usd' 
-    ? course.price! * 3.3 
-    : course.price!;
+    ? (course.price || 0) * 3.3 
+    : (course.price || 0);
   
   const toggleHeart = () => {
     if (user === null) {
@@ -101,10 +101,14 @@ const PurchaseCourseCard = ({
     console.log("Wishlist functionality temporarily disabled");
   };
 
-  const allVideos =
-    course?.sections?.map((section: TSection) => section.videos).flat() ?? [];
+  // Safely extract all videos from course sections
+  const allVideos = course?.sections
+    ?.flatMap((section: TSection) => section.videos || [])
+    .filter((video): video is TVideo => Boolean(video)) ?? [];
+  
+  // Get only free videos with valid muxData
   const allFreeVideos = allVideos.filter(
-    (video: TVideo | undefined) => video?.isFree
+    (video: TVideo) => video?.isFree && video?.muxData?.playbackId
   );
 
   const onChangeVideoToPreviewHandler = (video: TVideo) => {
@@ -150,8 +154,16 @@ const PurchaseCourseCard = ({
           </div>
         ) : (() => {
           // Calculate the playback ID once to avoid inconsistencies
-          const previewPlaybackId = videoToPreview?.muxData?.playbackId || allFreeVideos[0]?.muxData?.playbackId;
-          const hasValidPlaybackId = previewPlaybackId && previewPlaybackId.trim() !== '';
+          const previewVideo = videoToPreview || allFreeVideos[0];
+          const previewPlaybackId = previewVideo?.muxData?.playbackId;
+          
+          // Strict validation: must be a non-empty string with valid Mux format
+          const hasValidPlaybackId = Boolean(
+            previewPlaybackId && 
+            typeof previewPlaybackId === 'string' && 
+            previewPlaybackId.trim().length > 0 &&
+            previewVideo?.muxData // Ensure muxData object exists
+          );
           
           // Get poster - use course thumbnail or generate from playbackId
           const posterUrl = course?.thumbnail || (hasValidPlaybackId ? getMuxThumbnail(previewPlaybackId) : undefined);
@@ -161,17 +173,20 @@ const PurchaseCourseCard = ({
               {/* Check if there's a valid video with Mux data to display */}
               {hasValidPlaybackId ? (
                 <MuxVideoPlayer
-                  playbackId={previewPlaybackId}
-                  title={videoToPreview?.title || allFreeVideos[0]?.title || course?.title}
+                  playbackId={previewPlaybackId!}
+                  title={previewVideo?.title || course?.title || 'Video preview'}
                   poster={posterUrl}
                   metadata={{
-                    video_id: videoToPreview?._id?.toString() || allFreeVideos[0]?._id?.toString(),
-                    video_title: videoToPreview?.title || allFreeVideos[0]?.title || course?.title,
-                    course_id: course?._id?.toString(),
+                    video_id: previewVideo?._id?.toString() || '',
+                    video_title: previewVideo?.title || course?.title || 'Video preview',
+                    course_id: course?._id?.toString() || '',
                   }}
                   showControls={true}
                   minimalHover={true}
                   onLoadedData={() => console.log('Video loaded')}
+                  onError={(error) => {
+                    console.error('Mux player error:', error);
+                  }}
                 />
               ) : (
                 // Show thumbnail image when no video is available
@@ -200,17 +215,17 @@ const PurchaseCourseCard = ({
           {/* Price Section */}
           <div className="flex items-center justify-between pb-6 border-b border-slate-200 dark:border-slate-800">
             <Image
-              src={course.thumbnail!}
+              src={course.thumbnail || '/images/placeholder.jpg'}
               alt="course-thumbnail"
               width={80}
               height={53}
               className="rounded-lg shadow-md"
               style={{ width: 'auto', height: 'auto', maxWidth: '80px' }}
             />
-            {course!.price! > 0 ? (
+            {(course.price || 0) > 0 ? (
               <div className="flex items-baseline gap-2">
                 <span className="text-4xl font-bold text-brand-red-500">
-                  {transformCurrencyToSymbol(course?.currency!.toUpperCase())}{course.price}
+                  {transformCurrencyToSymbol((course.currency || 'TND').toUpperCase())}{course.price}
                 </span>
               </div>
             ) : (
@@ -312,7 +327,7 @@ const PurchaseCourseCard = ({
                         
                         <div className="flex gap-x-3 p-4 bg-white dark:bg-slate-900 rounded-lg">
                           <Image
-                            src={course.thumbnail!}
+                            src={course.thumbnail || '/images/placeholder.jpg'}
                             alt="course-thumbnail"
                             width={100}
                             height={75}
@@ -324,14 +339,14 @@ const PurchaseCourseCard = ({
                             </h3>
                             <div className="flex items-center gap-x-2">
                               <Image
-                                src={course.instructor.picture || "/images/default_profile.avif"}
+                                src={course.instructor?.picture || "/images/default_profile.avif"}
                                 width={20}
                                 height={20}
                                 alt="instructor"
                                 className="rounded-full object-cover"
                               />
                               <p className="text-xs text-slate-600 dark:text-slate-400">
-                                {course.instructor.username}
+                                {course.instructor?.username || 'Instructor'}
                               </p>
                             </div>
                             <div className="flex items-center gap-x-2 mt-1">

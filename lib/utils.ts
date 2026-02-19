@@ -564,8 +564,8 @@ export const calculateCourseRating = (
   courseRating: number;
   ratingFrom: number;
 } => {
-  // Check if feedbacks exists and is an array
-  if (!course.feedbacks || !Array.isArray(course.feedbacks) || course.feedbacks.length === 0) {
+  // Check if course exists and feedbacks exists and is an array
+  if (!course || !course.feedbacks || !Array.isArray(course.feedbacks) || course.feedbacks.length === 0) {
     return {
       courseRating: 0,
       ratingFrom: 0,

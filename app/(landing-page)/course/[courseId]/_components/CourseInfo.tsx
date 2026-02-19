@@ -21,6 +21,20 @@ const CourseInfo = ({ course }: Props) => {
   const [selectedItem, setSelectedItem] = React.useState<string | null>(null);
   const t = useTranslations('course.content');
 
+  // Early return if course data is not loaded
+  if (!course || !course._id) {
+    return (
+      <div className="w-full flex items-center justify-center py-12">
+        <div className="text-center">
+          <div className="w-16 h-16 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center mb-4 mx-auto">
+            <AlertTriangle size={24} className="text-slate-400" />
+          </div>
+          <p className="text-lg font-semibold text-slate-600 dark:text-slate-400">{t('noSectionsYet')}</p>
+        </div>
+      </div>
+    );
+  }
+
   // Check if course has meaningful content
   const hasContent = course?.sections && course.sections.length > 0 && 
     course.sections.some((section: TSection) => 

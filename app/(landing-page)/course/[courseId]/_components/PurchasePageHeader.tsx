@@ -18,6 +18,15 @@ const PurchasePageHeader = ({ course }: Props) => {
   const { courseRating, ratingFrom } = calculateCourseRating(course);
   const t = useTranslations('course.header');
 
+  // Early return if course data is not fully loaded
+  if (!course || !course._id) {
+    return (
+      <div className="relative w-full py-12 lg:py-16 flex items-center justify-center">
+        <Spinner size={50} />
+      </div>
+    );
+  }
+
   return (
     <div className="relative w-full py-12 lg:py-16">
       <Container className="relative z-10">

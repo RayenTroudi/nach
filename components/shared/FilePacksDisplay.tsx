@@ -36,6 +36,7 @@ interface Props {
 const FilePacksDisplay = ({ filePacks, userId, purchasedBundleIds = [] }: Props) => {
   const router = useRouter();
   const t = useTranslations("video");
+  const tStorefront = useTranslations("storefront");
   const [purchasingId, setPurchasingId] = useState<string | null>(null);
 
   if (!filePacks || filePacks.length === 0) {
@@ -46,8 +47,8 @@ const FilePacksDisplay = ({ filePacks, userId, purchasedBundleIds = [] }: Props)
     if (!userId) {
       scnToast({
         variant: "warning",
-        title: "Sign In Required",
-        description: "Please sign in to purchase file packs",
+        title: tStorefront("signInRequiredTitle"),
+        description: tStorefront("signInRequired"),
       });
       router.push("/sign-in");
       return;

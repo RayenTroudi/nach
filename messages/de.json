@@ -1969,6 +1969,7 @@
     "next": "Weiter",
     "fetchError": "Fehler beim Laden der Artikel",
     "checkPurchaseError": "Fehler beim Prüfen des Kaufstatus",
+    "signInRequiredTitle": "Anmeldung erforderlich",
     "signInRequired": "Bitte melden Sie sich an, um zu kaufen",
     "purchaseRequired": "Sie müssen diesen Artikel zuerst kaufen",
     "downloadFailed": "Fehler beim Herunterladen der Datei",

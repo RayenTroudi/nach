@@ -1978,6 +1978,7 @@
     "next": "Next",
     "fetchError": "Failed to load items",
     "checkPurchaseError": "Failed to check purchase status",
+    "signInRequiredTitle": "Sign In Required",
     "signInRequired": "Please sign in to purchase",
     "purchaseRequired": "You need to purchase this item first",
     "downloadFailed": "Failed to download file",

@@ -1965,6 +1965,7 @@
     "next": "التالي",
     "fetchError": "فشل تحميل العناصر",
     "checkPurchaseError": "فشل التحقق من حالة الشراء",
+    "signInRequiredTitle": "تسجيل الدخول مطلوب",
     "signInRequired": "يرجى تسجيل الدخول للشراء",
     "purchaseRequired": "تحتاج إلى شراء هذا العنصر أولاً",
     "downloadFailed": "فشل تحميل الملف",

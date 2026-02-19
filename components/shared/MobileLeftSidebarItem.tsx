@@ -12,9 +12,10 @@ interface Props {
   icon: LucideIcon;
   labelKey: string;
   href: string;
+  onClose?: () => void;
 }
 
-const MobileLeftSidebarItem = ({ icon: Icon, labelKey, href }: Props) => {
+const MobileLeftSidebarItem = ({ icon: Icon, labelKey, href, onClose }: Props) => {
   const t = useTranslations();
   const locale = useLocale();
   const pathname = usePathname();
@@ -32,10 +33,10 @@ const MobileLeftSidebarItem = ({ icon: Icon, labelKey, href }: Props) => {
   return (
     <Link
       href={finalHref}
+      onClick={onClose}
       className={`group w-full px-2 py-6 rounded-sm flex items-center justify-start gap-4 h-[30px] hover:bg-brand-red-500 duration-300 ease-in-out ${
         isActive ? "bg-brand-red-500" : ""
       }`}
-      onMouseEnter={() => console.log("Hovered")}
     >
       <Icon
         size={20}

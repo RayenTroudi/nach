@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 
 import {
   Sheet,
@@ -27,6 +27,7 @@ const MobileSideBar = ({
   isAdmin: boolean;
   children?: React.ReactNode;
 }) => {
+  const [isOpen, setIsOpen] = useState(false);
   const t = useTranslations();
   const locale = useLocale();
   const { mode } = useTheme();
@@ -52,7 +53,7 @@ const MobileSideBar = ({
 
   return (
     <div className="md:hidden">
-      <Sheet>
+      <Sheet open={isOpen} onOpenChange={setIsOpen}>
         <SheetTrigger asChild>
           <button
             className="flex items-center justify-center p-2 min-h-[44px] min-w-[44px]"
@@ -87,13 +88,14 @@ const MobileSideBar = ({
             <div className="flex-1 overflow-y-auto py-4 mb-20">
               <div className="grid grid-cols-1 gap-2">
                 {routes.map((route, key) => (
-                  <MobileLeftSidebarItem key={key} {...route} />
+                  <MobileLeftSidebarItem key={key} {...route} onClose={() => setIsOpen(false)} />
                 ))}
               {/* Only admins can access instructor mode */}
               {isAdmin && (!pathname.startsWith("/teacher") ||
               pathname.includes("/section")) ? (
                 <Link
                   href={getLocalizedHref("/teacher/courses")}
+                  onClick={() => setIsOpen(false)}
                   className={`group w-full px-2 py-6 rounded-sm flex items-center justify-start gap-4 h-[30px] hover:bg-brand-red-500 duration-300 ease-in-out ${
                     pathname === "/teacher/courses" ||
                     pathname.startsWith("/teacher/courses")
@@ -132,6 +134,7 @@ const MobileSideBar = ({
                   {!pathname.startsWith("/admin") ? (
                     <Link
                       href={getLocalizedHref("/admin/dashboard")}
+                      onClick={() => setIsOpen(false)}
                       className={`group w-full px-2 py-6 rounded-sm flex items-center justify-start gap-4 h-[30px] hover:bg-brand-red-500 duration-300 ease-in-out ${
                         pathname === "/admin/dashboard" ||
                         pathname.startsWith("/admin")

@@ -82,7 +82,7 @@ export async function POST(req: Request) {
       const mongoUser = {
         clerkId: id,
         firstName: first_name || username || "User",
-        lastName: last_name || "",
+        lastName: last_name || "N/A", // Default value for required field
         username: username || `${first_name || "User"}${last_name ? ` ${last_name}` : ""}`,
         email: email_addresses[0].email_address,
         picture: image_url || "",
@@ -106,21 +106,33 @@ export async function POST(req: Request) {
     if (eventType === "user.updated") {
       const { id, email_addresses, image_url, first_name, last_name } =
         evt.data;
+      
+      console.log("🔄 Updating user in MongoDB...");
+      console.log("🔑 Clerk ID:", id);
+      
       // Do something with the user created event:  Update a new user in our database*
       const updatedData = {
         clerkId: id,
         data: {
-          firstName: first_name,
-          lastName: last_name,
-          userName: `${first_name} ${last_name ? ` ${last_name}` : ""}`,
+          firstName: first_name || "User",
+          lastName: last_name || "N/A",
+          userName: `${first_name || "User"}${last_name ? ` ${last_name}` : ""}`,
           email: email_addresses[0].email_address,
           picture: image_url,
         },
       };
 
-      const updatedUser = await updateUser(updatedData);
-
-      return NextResponse.json({ message: "User Updated", updatedUser });
+      try {
+        const updatedUser = await updateUser(updatedData);
+        console.log("✅ User updated successfully in MongoDB");
+        return NextResponse.json({ message: "User Updated", updatedUser });
+      } catch (error: any) {
+        console.error("❌ Error updating user in MongoDB:", error);
+        return NextResponse.json(
+          { message: "Error updating user", error: error.message },
+          { status: 500 }
+        );
+      }
     }
 
     if (eventType === "user.deleted") {

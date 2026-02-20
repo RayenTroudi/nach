@@ -13,11 +13,7 @@ const ManagePage = async () => {
   const { userId } = auth();
   if (!userId) return redirect("/sign-in");
 
-  let student: TUser = {} as TUser;
-
-  try {
-    student = await getUserByClerkId({ clerkId: userId! });
-  } catch (error: any) {}
+  const student = await getUserByClerkId({ clerkId: userId! });
 
   return (
     <ProtectedRoute user={student}>

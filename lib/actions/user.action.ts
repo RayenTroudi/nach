@@ -20,7 +20,7 @@ import {
   PushEnrolledCourseToUser,
   UpdateUserParams,
 } from "@/types/shared.types";
-import { auth } from "@clerk/nextjs/server";
+import { auth, currentUser } from "@clerk/nextjs/server";
 import { TCourse } from "@/types/models.types";
 import { deleteUserPurchases } from "./purchase.action";
 import { deleteUserComments } from "./comment.action";
@@ -131,7 +131,8 @@ export const getUserByClerkId = async (params: GetUserByClerkIdParams) => {
     await ChatRoomMessage.find();
     await PrivateChatRoom.find();
     await PrivateChatMessage.find();
-    const user = await User.findOne({ clerkId: params.clerkId })
+    
+    let user = await User.findOne({ clerkId: params.clerkId })
       .populate({
         path: "createdCourses",
         populate: [
@@ -218,8 +219,40 @@ export const getUserByClerkId = async (params: GetUserByClerkIdParams) => {
         ],
       });
 
+    // If user doesn't exist in MongoDB, create from Clerk data
+    // This handles cases where webhook didn't fire or failed
+    if (!user) {
+      console.log("⚠️ User not found in MongoDB, creating from Clerk data...");
+      console.log("🔑 Clerk ID:", params.clerkId);
+      
+      const clerkUser = await currentUser();
+      
+      if (!clerkUser) {
+        throw new Error("User not found in Clerk");
+      }
+      
+      console.log("✅ Clerk user found:", clerkUser.emailAddresses[0]?.emailAddress);
+      
+      // Create user in MongoDB from Clerk data
+      const mongoUser = {
+        clerkId: clerkUser.id,
+        firstName: clerkUser.firstName || clerkUser.username || "User",
+        lastName: clerkUser.lastName || "N/A",
+        username: clerkUser.username || `${clerkUser.firstName || "User"}${clerkUser.lastName ? ` ${clerkUser.lastName}` : ""}`,
+        email: clerkUser.emailAddresses[0]?.emailAddress || "",
+        picture: clerkUser.imageUrl || "",
+      };
+      
+      console.log("💾 Creating user in MongoDB:", mongoUser.email);
+      
+      user = await createUser(mongoUser);
+      
+      console.log("✅ User created successfully in MongoDB");
+    }
+
     return JSON.parse(JSON.stringify(user));
   } catch (error: any) {
+    console.error("❌ Error in getUserByClerkId:", error.message);
     throw new Error(error.message);
   }
 };

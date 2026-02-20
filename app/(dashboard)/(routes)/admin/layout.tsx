@@ -12,11 +12,8 @@ const AdminLayout = async ({ children }: { children: React.ReactNode }) => {
 
   if (!userId) return redirect("/sign-in");
 
-  let user: TUser = {} as TUser;
-
-  try {
-    user = await getUserByClerkId({ clerkId: userId! });
-  } catch (error: any) {}
+  const user = await getUserByClerkId({ clerkId: userId! });
+  
   return <ProtectedRoute user={user}>{children}</ProtectedRoute>;
 };
 

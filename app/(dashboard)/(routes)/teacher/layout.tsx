@@ -13,18 +13,11 @@ const TeacherLayout = async ({ children }: { children: React.ReactNode }) => {
 
   if (!userId) return redirect("/sign-in");
 
-  let user: TUser = {} as TUser;
-
-  try {
-    user = await getUserByClerkId({ clerkId: userId! });
-    
-    // Only admins can access teacher/instructor routes
-    if (!user.isAdmin) {
-      console.log("Access denied: User is not an admin");
-      return redirect("/");
-    }
-  } catch (error: any) {
-    console.log("TeacherLayout Error: ", error.message);
+  const user = await getUserByClerkId({ clerkId: userId! });
+  
+  // Only admins can access teacher/instructor routes
+  if (!user.isAdmin) {
+    console.log("Access denied: User is not an admin");
     return redirect("/");
   }
 

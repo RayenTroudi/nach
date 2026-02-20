@@ -1,6 +1,6 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 
-const publicRoutes = createRouteMatcher([
+const isPublicRoute = createRouteMatcher([
   "/",
   "/api/review",
   "/api/uploadthing",
@@ -31,8 +31,8 @@ const publicRoutes = createRouteMatcher([
   "/(en|de|ar)/reset-password",
 ]);
 
-export default clerkMiddleware((auth, req) => {
-  if (!publicRoutes(req)) {
+export default clerkMiddleware((auth, request) => {
+  if (!isPublicRoute(request)) {
     auth().protect();
   }
 });

@@ -1,11 +1,11 @@
 import { Skeleton } from "@/components/ui/skeleton";
-import dynamic from "next/dynamic";
+import dynamicImport from "next/dynamic";
 import React, { Suspense } from "react";
 import InitialScreen from "../_components/InitialScreen";
 
 export const dynamic = "force-dynamic";
 
-const DynamicHeader = dynamic(() => import("@/components/shared/Header"), {
+const DynamicHeader = dynamicImport(() => import("@/components/shared/Header"), {
   loading: () => <Skeleton className="w-full h-[80px]" />,
   ssr: true,
 });

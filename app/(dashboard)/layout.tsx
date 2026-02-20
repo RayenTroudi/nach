@@ -1,5 +1,5 @@
 import { Skeleton } from "@/components/ui/skeleton";
-import dynamic from "next/dynamic";
+import dynamicImport from "next/dynamic";
 import React from "react";
 import InitialScreen from "../_components/InitialScreen";
 import PageLoader from "../_components/PageLoader";
@@ -7,7 +7,7 @@ import DashboardTranslationsProvider from "./_components/DashboardTranslationsPr
 
 export const dynamic = "force-dynamic";
 
-const Header = dynamic(() => import("@/components/shared/Header"), {
+const Header = dynamicImport(() => import("@/components/shared/Header"), {
   loading: () => <Skeleton className="w-full h-[80px]" />,
 });
 

@@ -5,6 +5,7 @@ import { TUser } from "@/types/models.types";
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import React from "react";
+import UserDebugLogger from "@/components/shared/UserDebugLogger";
 
 export const dynamic = "force-dynamic";
 
@@ -31,7 +32,12 @@ const TeacherLayout = async ({ children }: { children: React.ReactNode }) => {
     return redirect("/");
   }
 
-  return <ProtectedRoute user={user} requireAdmin={true}>{children}</ProtectedRoute>;
+  return (
+    <ProtectedRoute user={user} requireAdmin={true}>
+      <UserDebugLogger user={user} component="Teacher Layout" />
+      {children}
+    </ProtectedRoute>
+  );
 };
 
 export default TeacherLayout;

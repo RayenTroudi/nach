@@ -6,6 +6,7 @@ import { getUserByClerkId } from "@/lib/actions";
 import { redirect } from "next/navigation";
 import { TUser } from "@/types/models.types";
 import ProfileForm from "./_components/ProfileForm";
+import UserDebugLogger from "@/components/shared/UserDebugLogger";
 
 export const dynamic = "force-dynamic";
 
@@ -28,6 +29,7 @@ const page = async () => {
 
   return (
     <ProtectedRoute user={student}>
+      <UserDebugLogger user={student} component="Manage Page" />
       <div className="flex gap-4">
         <LeftSideBar />
         <ProfileForm user={student} />

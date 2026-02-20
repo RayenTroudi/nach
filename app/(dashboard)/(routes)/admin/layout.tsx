@@ -4,6 +4,7 @@ import { TUser } from "@/types/models.types";
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import React from "react";
+import UserDebugLogger from "@/components/shared/UserDebugLogger";
 
 export const dynamic = "force-dynamic";
 
@@ -24,7 +25,12 @@ const AdminLayout = async ({ children }: { children: React.ReactNode }) => {
     firstName: user?.firstName,
   });
   
-  return <ProtectedRoute user={user}>{children}</ProtectedRoute>;
+  return (
+    <ProtectedRoute user={user}>
+      <UserDebugLogger user={user} component="Admin Layout" />
+      {children}
+    </ProtectedRoute>
+  );
 };
 
 export default AdminLayout;

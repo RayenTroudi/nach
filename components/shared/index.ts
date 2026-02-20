@@ -42,4 +42,6 @@ export { default as BookMeetingButton } from "@/components/shared/BookMeetingBut
 export { default as BookingCalendar } from "@/components/shared/BookingCalendar";
 export { default as MyMeetings } from "@/components/shared/MyMeetings";
 export { default as ConsultantMeetings } from "@/components/shared/ConsultantMeetings";
+export { default as UserDebugLogger } from "@/components/shared/UserDebugLogger";
+export { default as ClientDebugMonitor } from "@/components/shared/ClientDebugMonitor";
 

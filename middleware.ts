@@ -13,6 +13,7 @@ export default authMiddleware({
     "/api/auth/reset-password",
     "/api/auth/password-changed",
     "/api/health",
+    "/api/me",
     "/courses/(.*)",
     "/course/(.*)",
     "/user/(.*)",
@@ -31,8 +32,19 @@ export default authMiddleware({
     "/(en|de|ar)/forgot-password",
     "/(en|de|ar)/reset-password",
   ],
+  ignoredRoutes: [
+    "/api/webhooks(.*)",
+    "/api/health",
+    "/_next/static(.*)",
+    "/_next/image(.*)",
+    "/favicon.ico",
+  ],
+  // Required when using a custom Clerk domain (clerk.taleldeutchlandservices.com)
+  // so the middleware can resolve the session handshake cross-domain.
+  domain: process.env.NEXT_PUBLIC_APP_URL || "https://www.taleldeutchlandservices.com",
+  isSatellite: process.env.NEXT_PUBLIC_CLERK_IS_SATELLITE === "true",
 });
 
 export const config = {
-  matcher: ["/((?!.+\\.[\\w]+$|_next).*)", "/", "/(api|trpc)(.*)"],
+  matcher: ["/((?!_next|.*\\..*).*)", "/(api|trpc)(.*)"],
 };

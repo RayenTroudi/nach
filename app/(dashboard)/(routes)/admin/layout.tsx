@@ -9,10 +9,20 @@ export const dynamic = "force-dynamic";
 
 const AdminLayout = async ({ children }: { children: React.ReactNode }) => {
   const { userId } = auth();
+  console.log("🔑 [Admin Layout] Clerk userId:", userId);
 
   if (!userId) return redirect("/sign-in");
 
+  console.log("🔍 [Admin Layout] Fetching user from MongoDB...");
   const user = await getUserByClerkId({ clerkId: userId! });
+  
+  console.log("👤 [Admin Layout] User data:", {
+    hasUser: !!user,
+    userId: user?._id,
+    email: user?.email,
+    isAdmin: user?.isAdmin,
+    firstName: user?.firstName,
+  });
   
   return <ProtectedRoute user={user}>{children}</ProtectedRoute>;
 };

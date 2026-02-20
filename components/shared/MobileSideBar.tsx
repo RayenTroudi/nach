@@ -33,6 +33,12 @@ const MobileSideBar = ({
   const { mode } = useTheme();
   const pathname = usePathname();
   
+  console.log("📱 MobileSideBar - Rendering:", {
+    isAdmin,
+    pathname,
+    isOpen,
+  });
+  
   // Check if current pathname uses locale
   const pathnameHasLocale = pathname.startsWith('/ar/') || pathname.startsWith('/en/') || pathname.startsWith('/de/');
   const getLocalizedHref = (href: string) => {
@@ -50,6 +56,13 @@ const MobileSideBar = ({
     : isAdminView
     ? adminRoutes
     : studentRoutes;
+
+  console.log("📱 MobileSideBar - Routes:", {
+    isTeacherView,
+    isAdminView,
+    routesCount: routes.length,
+    routeType: isTeacherView ? 'teacher' : isAdminView ? 'admin' : 'student',
+  });
 
   return (
     <div className="md:hidden">

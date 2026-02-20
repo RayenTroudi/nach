@@ -11,6 +11,13 @@ function LeftSideBar() {
     : pathname?.startsWith("/teacher") || pathname?.includes("/section")
     ? teacherRoutes
     : studentRoutes;
+
+  console.log("🔲 LeftSideBar - Rendering:", {
+    pathname,
+    routesCount: routes.length,
+    routeType: pathname?.startsWith("/admin") ? 'admin' : pathname?.startsWith("/teacher") || pathname?.includes("/section") ? 'teacher' : 'student',
+  });
+
   return (
     <div className="hidden shadow-sm border-r border-input min-h-screen w-24 lg:w-80 text-slate-950 dark:text-slate-200 md:flex flex-col gap-12 p-4 ">
       <div className="flex flex-col gap-6 mt-4">

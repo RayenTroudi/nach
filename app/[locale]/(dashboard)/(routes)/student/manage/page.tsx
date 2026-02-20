@@ -9,9 +9,20 @@ import ProfileForm from "@/app/(dashboard)/(routes)/(student)/manage/_components
 
 const ManagePage = async () => {
   const { userId } = auth();
+  console.log("🔑 [Locale/student/Manage Page] Clerk userId:", userId);
+  
   if (!userId) return redirect("/sign-in");
 
+  console.log("🔍 [Locale/student/Manage Page] Fetching user from MongoDB...");
   const student = await getUserByClerkId({ clerkId: userId! });
+  
+  console.log("👤 [Locale/student/Manage Page] Student data:", {
+    hasStudent: !!student,
+    studentId: student?._id,
+    email: student?.email,
+    isAdmin: student?.isAdmin,
+    firstName: student?.firstName,
+  });
 
   return (
     <ProtectedRoute user={student}>

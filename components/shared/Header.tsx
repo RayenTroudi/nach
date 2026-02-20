@@ -21,16 +21,23 @@ import ClerkUserButton from "./ClerkUserButton";
 
 const Header = async () => {
   const { userId } = auth();
+  console.log("🔍 [Header] Starting - Clerk userId:", userId);
+  
   let mongoDbUser = null;
   
   if (userId) {
+    console.log("🔍 [Header] Fetching MongoDB user...");
     mongoDbUser = await getUserByClerkId({ clerkId: userId! });
-    console.log("🔍 Header - MongoDB User:", {
+    console.log("🔍 [Header] MongoDB User fetched:", {
       clerkId: userId,
+      mongoId: mongoDbUser?._id,
       isAdmin: mongoDbUser?.isAdmin,
       firstName: mongoDbUser?.firstName,
       email: mongoDbUser?.email,
+      hasUser: !!mongoDbUser,
     });
+  } else {
+    console.log("⚠️ [Header] No Clerk userId - user not authenticated");
   }
 
   return (

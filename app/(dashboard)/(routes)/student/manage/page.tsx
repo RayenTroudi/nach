@@ -11,9 +11,20 @@ export const dynamic = "force-dynamic";
 
 const ManagePage = async () => {
   const { userId } = auth();
+  console.log("🔑 [Student/Manage Page] Clerk userId:", userId);
+  
   if (!userId) return redirect("/sign-in");
 
+  console.log("🔍 [Student/Manage Page] Fetching user from MongoDB...");
   const student = await getUserByClerkId({ clerkId: userId! });
+  
+  console.log("👤 [Student/Manage Page] Student data:", {
+    hasStudent: !!student,
+    studentId: student?._id,
+    email: student?.email,
+    isAdmin: student?.isAdmin,
+    firstName: student?.firstName,
+  });
 
   return (
     <ProtectedRoute user={student}>

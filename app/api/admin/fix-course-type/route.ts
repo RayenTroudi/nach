@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { auth } from "@clerk/nextjs";
+import { auth } from "@clerk/nextjs/server";
 import { connectToDatabase } from "@/lib/mongoose";
 import Course from "@/lib/models/course.model";
 import { getUserByClerkId } from "@/lib/actions/user.action";

@@ -20,7 +20,7 @@ import {
   PushEnrolledCourseToUser,
   UpdateUserParams,
 } from "@/types/shared.types";
-import { auth } from "@clerk/nextjs";
+import { auth } from "@clerk/nextjs/server";
 import { TCourse } from "@/types/models.types";
 import { deleteUserPurchases } from "./purchase.action";
 import { deleteUserComments } from "./comment.action";

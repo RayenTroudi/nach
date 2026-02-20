@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/mongoose";
-import { auth } from "@clerk/nextjs";
+import { auth } from "@clerk/nextjs/server";
 import ResumeRequestModel from "@/lib/models/resumeRequest.model";
 import BookingModel from "@/lib/models/booking.model";
 import PaymentProofModel from "@/lib/models/payment-proof.model";

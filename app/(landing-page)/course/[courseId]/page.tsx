@@ -4,7 +4,7 @@ import { alreadyEnrolled, getUserByClerkId } from "@/lib/actions/user.action";
 import { isCourseOwner } from "@/lib/actions/course.action";
 import { TCourse } from "@/types/models.types";
 import { TUser } from "../../../../types/models.types";
-import { auth } from "@clerk/nextjs";
+import { auth } from "@clerk/nextjs/server";
 import { Spinner } from "@/components/shared";
 import {
   CourseInfo,

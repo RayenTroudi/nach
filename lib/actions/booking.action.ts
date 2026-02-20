@@ -4,7 +4,7 @@ import { connectToDatabase } from "../mongoose";
 import Booking from "../models/booking.model";
 import { sendEmail } from "./email.action";
 import { getUserByClerkId } from "./user.action";
-import { auth } from "@clerk/nextjs";
+import { auth } from "@clerk/nextjs/server";
 import { nanoid } from "nanoid";
 
 interface CreateBookingParams {

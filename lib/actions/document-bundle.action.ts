@@ -4,7 +4,7 @@ import { connectToDatabase } from "../mongoose";
 import DocumentBundle from "../models/document-bundle.model";
 import DocumentModel from "../models/document.model";
 import { getUserByClerkId } from "./user.action";
-import { auth } from "@clerk/nextjs";
+import { auth } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
 
 /**

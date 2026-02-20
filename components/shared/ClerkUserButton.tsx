@@ -21,6 +21,7 @@ const ClerkUserButton = () => {
   return (
     <DynamicUserButton
       afterSignOutUrl="/"
+      showName={false}
       appearance={{
         baseTheme: mode === "dark" ? dark : undefined,
 
@@ -43,9 +44,19 @@ const ClerkUserButton = () => {
               display: "none !important",
             },
           },
+          userButtonPopoverCard: {
+            pointerEvents: "auto"
+          },
+          userButtonPopoverActions: {
+            pointerEvents: "auto"
+          }
         },
       }}
-    ></DynamicUserButton>
+    >
+      {/* UserButton.MenuItems is used to add custom menu items */}
+      {/* UserButton.UserProfilePage is used to add custom user profile pages */}
+      {/* UserButton.UserProfileLink is used to add custom links in the user button */}
+    </DynamicUserButton>
   );
 };
 

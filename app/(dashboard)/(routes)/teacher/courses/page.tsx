@@ -1,5 +1,5 @@
 import { getTeacherCourses } from "@/lib/actions/user.action";
-import { auth } from "@clerk/nextjs";
+import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { TeacherCourses } from "./_components";
 import { TUser } from "@/types/models.types";

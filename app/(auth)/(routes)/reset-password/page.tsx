@@ -29,39 +29,39 @@ export default function ResetPasswordPage() {
       setEmail(emailParam);
     }
 
+    const handleSendCodeAutomatically = async (emailAddress: string) => {
+      setLoading(true);
+      setError("");
+
+      try {
+        if (!isLoaded || !signIn) {
+          throw new Error("Auth service is not ready");
+        }
+
+        await signIn.create({
+          strategy: "reset_password_email_code",
+          identifier: emailAddress,
+        });
+        setStep("code");
+      } catch (err: any) {
+        setError(
+          err.errors?.[0]?.message ||
+            (locale === "ar"
+              ? "فشل إرسال رمز التحقق"
+              : locale === "de"
+              ? "Fehler beim Senden des Bestätigungscodes"
+              : "Failed to send verification code")
+        );
+      } finally {
+        setLoading(false);
+      }
+    };
+
     if (emailParam && isLoaded && signIn && step === "email") {
       // Automatically send code if email is provided and Clerk is ready
       handleSendCodeAutomatically(emailParam);
     }
-  }, [searchParams, isLoaded, signIn, step]);
-
-  const handleSendCodeAutomatically = async (emailAddress: string) => {
-    setLoading(true);
-    setError("");
-
-    try {
-      if (!isLoaded || !signIn) {
-        throw new Error("Auth service is not ready");
-      }
-
-      await signIn.create({
-        strategy: "reset_password_email_code",
-        identifier: emailAddress,
-      });
-      setStep("code");
-    } catch (err: any) {
-      setError(
-        err.errors?.[0]?.message ||
-          (locale === "ar"
-            ? "فشل إرسال رمز التحقق"
-            : locale === "de"
-            ? "Fehler beim Senden des Bestätigungscodes"
-            : "Failed to send verification code")
-      );
-    } finally {
-      setLoading(false);
-    }
-  };
+  }, [searchParams, isLoaded, signIn, step, locale]);
 
   const handleSendCode = async (e: React.FormEvent) => {
     e.preventDefault();

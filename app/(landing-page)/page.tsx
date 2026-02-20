@@ -1,4 +1,3 @@
-"use server";
 import {
   Container,
 } from "@/components/shared";
@@ -13,7 +12,7 @@ import FrequentQuestionsSection from "./_components/FrequentQuestionsSection";
 import AusbildungSection from "./_components/AusbildungSection";
 import ReachForMeSection from "./_components/ReachForMeSection";
 import { TCategory, TCourse, TUser } from "@/types/models.types";
-import { auth } from "@clerk/nextjs";
+import { auth } from "@clerk/nextjs/server";
 import DocumentModel from "@/lib/models/document.model";
 import DocumentBundle from "@/lib/models/document-bundle.model";
 import { connectToDatabase } from "@/lib/mongoose";

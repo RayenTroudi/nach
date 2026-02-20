@@ -1,9 +1,8 @@
-"use server";
 import Feedbacks from "@/app/(dashboard)/(routes)/(student)/my-learning/[courseId]/_components/Feedbacks";
 import { getCourseById, getUserByClerkId } from "@/lib/actions";
 import { TUser } from "@/types/models.types";
 
-import { auth } from "@clerk/nextjs";
+import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { StepBack } from "../../manage/[courseId]/sections/manage/[sectionId]/_components";
 

@@ -4,7 +4,7 @@ import DocumentModel from "@/lib/models/document.model";
 import DocumentBundle from "@/lib/models/document-bundle.model";
 import DocumentPurchase from "@/lib/models/document-purchase.model";
 import UserModel from "@/lib/models/user.model";
-import { auth } from "@clerk/nextjs";
+import { auth } from "@clerk/nextjs/server";
 import "@/lib/models/user.model"; // Import to register User model for populate
 
 /**

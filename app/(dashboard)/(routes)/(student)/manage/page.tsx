@@ -1,7 +1,7 @@
 import ProtectedRoute from "@/components/shared/ProtectedRoute";
 import React from "react";
 import { LeftSideBar } from "@/components/shared";
-import { auth } from "@clerk/nextjs";
+import { auth } from "@clerk/nextjs/server";
 import { getUserByClerkId } from "@/lib/actions";
 import { redirect } from "next/navigation";
 import { TUser } from "@/types/models.types";

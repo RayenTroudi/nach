@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { auth } from "@clerk/nextjs";
+import { auth } from "@clerk/nextjs/server";
 import { getAllCourses } from "@/lib/actions/course.action";
 import { getUserByClerkId } from "@/lib/actions/user.action";
 import { CourseTypeEnum } from "@/lib/enums";

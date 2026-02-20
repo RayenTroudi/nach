@@ -1,9 +1,8 @@
-"use server";
 import { LeftSideBar, MobileSideBar } from "@/components/shared";
 import ProtectedRoute from "@/components/shared/ProtectedRoute";
 import { getUserByClerkId } from "@/lib/actions";
 import { TUser } from "@/types/models.types";
-import { auth } from "@clerk/nextjs";
+import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import React from "react";
 

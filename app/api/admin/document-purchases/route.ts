@@ -1,4 +1,4 @@
-import { auth } from "@clerk/nextjs";
+import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/mongoose";
 import DocumentPurchase from "@/lib/models/document-purchase.model";

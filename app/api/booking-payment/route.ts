@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/mongoose";
 import Booking from "@/lib/models/booking.model";
-import { auth } from "@clerk/nextjs";
+import { auth } from "@clerk/nextjs/server";
 import { sendEmail } from "@/lib/actions/email.action";
 import { getPaymentRequestToAdminEmail } from "@/lib/utils/email-templates";
 

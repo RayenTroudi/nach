@@ -1,5 +1,5 @@
 import { BookMeetingButton } from "@/components/shared";
-import { currentUser } from "@clerk/nextjs";
+import { currentUser } from "@clerk/nextjs/server";
 import { Container } from "@/components/shared";
 
 const BookingDemoPage = async () => {

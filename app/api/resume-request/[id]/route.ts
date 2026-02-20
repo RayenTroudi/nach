@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/mongoose";
 import ResumeRequestModel from "@/lib/models/resumeRequest.model";
-import { auth } from "@clerk/nextjs";
+import { auth } from "@clerk/nextjs/server";
 import User from "@/lib/models/user.model";
 import Course from "@/lib/models/course.model";
 import { createPrivateChatRoom } from "@/lib/actions/private-chat-room.action";

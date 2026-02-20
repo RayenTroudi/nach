@@ -1,6 +1,6 @@
 import { Banner, CourseStepHeader } from "@/components/shared";
 import { getCourseById } from "@/lib/actions/course.action";
-import { auth } from "@clerk/nextjs";
+import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import {
   DescriptionForm,

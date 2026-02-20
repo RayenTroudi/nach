@@ -1,7 +1,7 @@
 import { Button } from "../ui/button";
 
 import Link from "next/link";
-import { SignedIn, SignedOut, UserButton, auth } from "@clerk/nextjs";
+import { auth } from "@clerk/nextjs/server";
 import {
   HeaderContent,
   Logo,
@@ -59,9 +59,7 @@ const Header = async () => {
 
         <HeaderContent>
           <div className="flex items-center gap-x-2 sm:gap-x-4">
-            <SignedIn>
-              <ClerkUserButton />
-            </SignedIn>
+            {userId && <ClerkUserButton />}
             <LanguageSwitcher />
             <ThemeSwitcher />
             <MobileSideBar isAdmin={mongoDbUser?.isAdmin || false}>

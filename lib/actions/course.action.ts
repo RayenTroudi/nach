@@ -1,5 +1,5 @@
 "use server";
-import { auth } from "@clerk/nextjs";
+import { auth } from "@clerk/nextjs/server";
 import Course from "../models/course.model";
 import { CourseStatusEnum, CourseTypeEnum, CourseLevelEnum } from "../enums";
 import Comment from "../models/comment.model";

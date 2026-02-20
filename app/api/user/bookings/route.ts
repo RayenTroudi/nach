@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { auth } from "@clerk/nextjs";
+import { auth } from "@clerk/nextjs/server";
 import { getUserBookings } from "@/lib/actions/booking.action";
 
 export const dynamic = "force-dynamic";

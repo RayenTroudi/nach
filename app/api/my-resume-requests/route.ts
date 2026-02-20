@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/mongoose";
 import ResumeRequestModel from "@/lib/models/resumeRequest.model";
 import UserModel from "@/lib/models/user.model";
-import { auth, currentUser } from "@clerk/nextjs";
+import { auth, currentUser } from "@clerk/nextjs/server";
 
 export async function GET(req: NextRequest) {
   try {

@@ -8,7 +8,7 @@ import {
   TUserCourseVideoCompleted,
 } from "@/types/models.types";
 import { WatchScreen } from "@/components/shared";
-import { auth } from "@clerk/nextjs";
+import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { isCourseOwner } from "@/lib/actions/course.action";
 import ProtectedRoute from "@/components/shared/ProtectedRoute";

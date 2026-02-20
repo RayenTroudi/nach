@@ -6,7 +6,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { auth } from '@clerk/nextjs';
+import { auth } from '@clerk/nextjs/server';
 import { createMuxAsset, deleteMuxAsset } from '@/lib/mux';
 import { connectToDatabase } from '@/lib/mongoose';
 import Video from '@/lib/models/video.model';

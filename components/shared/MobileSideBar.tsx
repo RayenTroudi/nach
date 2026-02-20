@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import {
   Sheet,
@@ -14,7 +14,7 @@ import Logo from "./Logo";
 import { usePathname } from "next/navigation";
 import { adminRoutes, studentRoutes, teacherRoutes } from "@/lib/data";
 import { MobileLeftSidebarItem } from ".";
-import { SignedIn } from "@clerk/nextjs";
+import { SignedIn, useAuth, useUser } from "@clerk/nextjs";
 import Image from "next/image";
 import Link from "next/link";
 import { useTheme } from "@/contexts/ThemeProvider";
@@ -32,12 +32,25 @@ const MobileSideBar = ({
   const locale = useLocale();
   const { mode } = useTheme();
   const pathname = usePathname();
+  const { isLoaded: authLoaded, userId, sessionId } = useAuth();
+  const { isLoaded: userLoaded, isSignedIn, user } = useUser();
   
   console.log("📱 MobileSideBar - Rendering:", {
     isAdmin,
     pathname,
     isOpen,
   });
+
+  useEffect(() => {
+    console.log("🔐 MobileSideBar - Clerk client state:", {
+      authLoaded,
+      userLoaded,
+      isSignedIn,
+      userId,
+      sessionId,
+      email: user?.primaryEmailAddress?.emailAddress,
+    });
+  }, [authLoaded, userLoaded, isSignedIn, userId, sessionId, user]);
   
   // Check if current pathname uses locale
   const pathnameHasLocale = pathname.startsWith('/ar/') || pathname.startsWith('/en/') || pathname.startsWith('/de/');

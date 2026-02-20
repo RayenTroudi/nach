@@ -14,6 +14,7 @@ const PUBLIC_ROUTES = [
   "/api/auth/password-changed",
   "/api/health",
   "/api/me",
+  "/api/debug/user",
   "/courses/(.*)",
   "/course/(.*)",
   "/user/(.*)",
@@ -36,28 +37,42 @@ const PUBLIC_ROUTES = [
 const IGNORED_ROUTES = [
   "/api/webhooks(.*)",
   "/api/health",
+  "/api/debug/user",
   "/_next/static(.*)",
   "/_next/image(.*)",
   "/favicon.ico",
+  "/_vercel/speed-insights(.*)",
 ];
 
 export default authMiddleware({
   publicRoutes: PUBLIC_ROUTES,
   ignoredRoutes: IGNORED_ROUTES,
+  debug: true, // Enable debug mode
   afterAuth(auth, req) {
+    console.log("🔐 [Middleware] Auth check:", {
+      url: req.url,
+      pathname: req.nextUrl.pathname,
+      userId: auth.userId,
+      isPublicRoute: auth.isPublicRoute,
+      sessionClaims: !!auth.sessionClaims,
+    });
+
     // For public routes: always pass through regardless of token state.
     // This breaks the interstitial 401 loop caused by an expired session
     // cookie on pages that don't require authentication.
     if (auth.isPublicRoute) {
+      console.log("✅ [Middleware] Public route - allowing access");
       return NextResponse.next();
     }
 
     // For protected routes: if not signed in, redirect to sign-in.
     if (!auth.userId) {
+      console.log("❌ [Middleware] No userId - redirecting to sign-in");
       return redirectToSignIn({ returnBackUrl: req.url });
     }
 
     // Signed in — continue.
+    console.log("✅ [Middleware] Authenticated - allowing access");
     return NextResponse.next();
   },
 });

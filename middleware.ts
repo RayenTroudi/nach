@@ -37,7 +37,6 @@ const PUBLIC_ROUTES = [
 const IGNORED_ROUTES = [
   "/api/webhooks(.*)",
   "/api/health",
-  "/api/debug/user",
   "/_next/static(.*)",
   "/_next/image(.*)",
   "/favicon.ico",

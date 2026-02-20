@@ -5,6 +5,8 @@ import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import React from "react";
 
+export const dynamic = "force-dynamic";
+
 const AdminLayout = async ({ children }: { children: React.ReactNode }) => {
   const { userId } = auth();
 

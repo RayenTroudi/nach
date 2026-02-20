@@ -11,6 +11,8 @@ import {
   getPaymentRejectedToUserEmail 
 } from "@/lib/utils/email-templates";
 
+export const dynamic = "force-dynamic";
+
 /**
  * GET /api/document-purchases/[id]
  * Get a specific purchase by ID

@@ -18,6 +18,8 @@ import DocumentBundle from "@/lib/models/document-bundle.model";
 import { connectToDatabase } from "@/lib/mongoose";
 import { CourseTypeEnum } from "@/lib/enums";
 
+export const dynamic = "force-dynamic";
+
 const LandingPage = async () => {
   const { userId } = auth();
 

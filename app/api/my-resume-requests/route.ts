@@ -4,6 +4,8 @@ import ResumeRequestModel from "@/lib/models/resumeRequest.model";
 import UserModel from "@/lib/models/user.model";
 import { auth, currentUser } from "@clerk/nextjs/server";
 
+export const dynamic = "force-dynamic";
+
 export async function GET(req: NextRequest) {
   try {
     const { userId } = auth();

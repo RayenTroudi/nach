@@ -6,6 +6,8 @@ import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { StepBack } from "../../manage/[courseId]/sections/manage/[sectionId]/_components";
 
+export const dynamic = "force-dynamic";
+
 type Props = {
   params: {
     courseId: string;

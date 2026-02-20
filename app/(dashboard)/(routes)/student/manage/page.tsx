@@ -7,6 +7,8 @@ import { redirect } from "next/navigation";
 import { TUser } from "@/types/models.types";
 import ProfileForm from "@/app/(dashboard)/(routes)/(student)/manage/_components/ProfileForm";
 
+export const dynamic = "force-dynamic";
+
 const ManagePage = async () => {
   const { userId } = auth();
   if (!userId) return redirect("/sign-in");

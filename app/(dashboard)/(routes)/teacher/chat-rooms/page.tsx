@@ -6,6 +6,8 @@ import { redirect } from "next/navigation";
 import React from "react";
 import { combineAndNormalizeChatRooms } from "@/lib/utils/chat-utils";
 
+export const dynamic = "force-dynamic";
+
 const TeacherChatRoomsPage = async () => {
   const { userId } = auth();
 

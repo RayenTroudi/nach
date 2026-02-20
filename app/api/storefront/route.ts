@@ -7,6 +7,8 @@ import UserModel from "@/lib/models/user.model";
 import { auth } from "@clerk/nextjs/server";
 import "@/lib/models/user.model"; // Import to register User model for populate
 
+export const dynamic = "force-dynamic";
+
 /**
  * GET /api/storefront
  * Get all published documents and bundles for sale on the homepage/storefront

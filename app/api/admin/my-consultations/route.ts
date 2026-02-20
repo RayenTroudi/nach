@@ -4,9 +4,11 @@ import { connectToDatabase } from "@/lib/mongoose";
 import Booking from "@/lib/models/booking.model";
 import User from "@/lib/models/user.model";
 
+export const dynamic = "force-dynamic";
+
 export async function GET(req: NextRequest) {
   try {
-    const { userId } = await auth();
+    const { userId } = auth();
 
     if (!userId) {
       return NextResponse.json(

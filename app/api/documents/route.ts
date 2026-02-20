@@ -4,6 +4,8 @@ import { connectToDatabase } from "@/lib/mongoose";
 import DocumentModel from "@/lib/models/document.model";
 import UserModel from "@/lib/models/user.model";
 
+export const dynamic = "force-dynamic";
+
 // GET /api/documents - List all documents (with filtering)
 export async function GET(request: Request) {
   try {

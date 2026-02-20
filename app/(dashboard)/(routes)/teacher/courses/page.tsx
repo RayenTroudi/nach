@@ -5,6 +5,8 @@ import { TeacherCourses } from "./_components";
 import { TUser } from "@/types/models.types";
 import { EmptyCoursesState } from "./_components/EmptyCoursesState";
 
+export const dynamic = "force-dynamic";
+
 const TeacherCoursesPage = async () => {
   const { userId } = auth();
 

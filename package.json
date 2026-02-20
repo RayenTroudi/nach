@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "npm run validate:translations && next build",
+    "clean": "rm -rf .next",
+    "build": "npm run clean && npm run validate:translations && next build",
     "start": "next start",
     "lint": "next lint",
     "seed": "tsx scripts/seed.ts",

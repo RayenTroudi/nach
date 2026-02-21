@@ -50,37 +50,19 @@ export default authMiddleware({
   debug: true, // Enable debug mode
   afterAuth(auth, req) {
     const pathname = req.nextUrl.pathname;
-    const hasSessionClaims = !!auth.sessionClaims;
-    const hasUserId = !!auth.userId;
-    const hasSessionId = !!auth.sessionId;
     
     console.log("🔐 [Middleware] Auth check:", {
       pathname,
       userId: auth.userId || 'null',
       sessionId: auth.sessionId || 'null',
       isPublicRoute: auth.isPublicRoute,
-      hasSessionClaims,
-      hasUserId,
-      hasSessionId,
+      hasSessionClaims: !!auth.sessionClaims,
     });
 
-    // For public routes: always pass through regardless of token state.
-    if (auth.isPublicRoute) {
-      console.log("✅ [Middleware] Public route - allowing access");
-      return NextResponse.next();
-    }
-
-    // IMPORTANT: With custom Clerk domain, auth.userId might be null even when authenticated
-    // Allow if we have ANY sign of authentication (sessionId, sessionClaims, or userId)
-    // Let server-side auth() in pages handle the authoritative check
-    if (hasSessionId || hasSessionClaims || hasUserId) {
-      console.log("✅ [Middleware] Has auth signals - allowing (server will validate)");
-      return NextResponse.next();
-    }
-
-    // No auth signals at all - redirect to sign-in
-    console.log("❌ [Middleware] No auth signals - redirecting to sign-in");
-    return redirectToSignIn({ returnBackUrl: req.url });
+    // Always allow - let server-side pages handle auth checks
+    // With custom Clerk domain, middleware auth is unreliable
+    console.log("✅ [Middleware] Allowing all requests - server will validate");
+    return NextResponse.next();
   },
 });
 

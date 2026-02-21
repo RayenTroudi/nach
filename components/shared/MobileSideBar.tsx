@@ -52,9 +52,10 @@ const MobileSideBar = ({
       email: user?.primaryEmailAddress?.emailAddress,
       hasUser: !!user,
       // Critical: Check what's causing auth failure
-      showMenu: authLoaded && userLoaded && !!userId,
+      showMenu: authLoaded && userLoaded && (!!userId || !!user),
+      hasChildren: !!children,
     });
-  }, [authLoaded, userLoaded, isSignedIn, userId, sessionId, user]);
+  }, [authLoaded, userLoaded, isSignedIn, userId, sessionId, user, children]);
   
   // Check if current pathname uses locale
   const pathnameHasLocale = pathname.startsWith('/ar/') || pathname.startsWith('/en/') || pathname.startsWith('/de/');
@@ -123,7 +124,7 @@ const MobileSideBar = ({
                 ))}
               </div>
             </div>
-          ) : userId ? (
+          ) : (userId || user) ? (
             <div className="flex-1 overflow-y-auto py-4 mb-20">
               <div className="grid grid-cols-1 gap-2">
                 {routes.map((route, key) => (

@@ -78,6 +78,7 @@ const PurchaseCoursePage = async ({
                     course={course}
                     isEnrolled={isEnrolled}
                     isCourseOwner={isOwner}
+                    serverUserId={userId}
                   />
                 </div>
               </div>

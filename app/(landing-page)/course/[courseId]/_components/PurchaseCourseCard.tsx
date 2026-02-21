@@ -29,12 +29,14 @@ interface Props {
   course: TCourse;
   isEnrolled: boolean;
   isCourseOwner: boolean;
+  serverUserId?: string | null;
 }
 
 const PurchaseCourseCard = ({
   course,
   isEnrolled,
   isCourseOwner,
+  serverUserId,
 }: Props) => {
   const router = useRouter();
   const t = useTranslations('course.purchase');
@@ -83,8 +85,8 @@ const PurchaseCourseCard = ({
     : (course.price || 0);
   
   const toggleHeart = () => {
-    if (user === null) {
-      console.log("the user", user);
+    if (!serverUserId) {
+      console.log("No user ID, redirecting to sign-in");
       return router.push("/sign-in");
     }
     // TODO: Implement wishlist functionality when WishlistContext is created
@@ -279,7 +281,7 @@ const PurchaseCourseCard = ({
           {course.price! > 0 ? (
             <div className="space-y-3 pt-4 border-t border-slate-200 dark:border-slate-800">
               
-            {isUserLoaded && isSignedIn && user ? (
+            {serverUserId ? (
               <>
               {isCourseOwner ? (
                 <div className="mt-2  w-full flex flex-col gap-y-1">
@@ -385,7 +387,7 @@ const PurchaseCourseCard = ({
                 </>
               )}
               </>
-            ) : isUserLoaded ? (
+            ) : (
               <>
               <Separator className="h-[3px] mt-2 mb-2" />
               <div className="w-full flex flex-col gap-y-2">
@@ -408,12 +410,12 @@ const PurchaseCourseCard = ({
                 </Link>
               </div>
               </>
-            ) : null}
+            )}
             </div>
           ) : (
             <div className="space-y-3 pt-4 border-t border-slate-200 dark:border-slate-800">
             {/* FREE COURSE LOGIC */}
-            {isUserLoaded && isSignedIn && user ? (
+            {serverUserId ? (
               <>
               {!isCourseOwner && !isEnrolled ? (
                 <Button
@@ -484,7 +486,7 @@ const PurchaseCourseCard = ({
                 </Link>
               ) : null}
                 </>
-            ) : isUserLoaded ? (
+            ) : (
               <>
               <Separator className="h-[3px] mt-2 mb-2" />
               <div className="w-full flex flex-col gap-y-2">
@@ -507,7 +509,7 @@ const PurchaseCourseCard = ({
                 </Link>
               </div>
               </>
-            ) : null}
+            )}
             </div>
           )}
         </div>

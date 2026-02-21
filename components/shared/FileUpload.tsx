@@ -22,6 +22,14 @@ function FileUpload({ endpoint, onChange, className, autoUpload = false }: Props
     onUploadError: (error) => {
       const errorMessage = error.message;
       
+      console.error("[FileUpload Error]", { endpoint, error: errorMessage });
+      
+      // Check for authentication error
+      if (errorMessage.includes("Unauthorized") || errorMessage.includes("401")) {
+        toast.error("Please sign in to upload files. Your form data has been saved.");
+        return;
+      }
+      
       // Check if it's a file size error
       if (errorMessage.includes("bigger than allowed") || errorMessage.includes("File size")) {
         toast.error("File is too large! Maximum file size is 8MB. Please compress or use a smaller file.");

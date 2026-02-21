@@ -33,8 +33,6 @@ const PUBLIC_ROUTE_MATCHERS: RegExp[] = [
   /^\/(en|de|ar)\/reset-password$/,
 ];
 
-const isPublicRoute = (pathname: string) =>
-  PUBLIC_ROUTE_MATCHERS.some((matcher) => matcher.test(pathname));
 
 const IGNORED_ROUTES = [
   "/api/webhooks(.*)",
@@ -46,7 +44,7 @@ const IGNORED_ROUTES = [
 ];
 
 export default authMiddleware({
-  publicRoutes: (req) => isPublicRoute(req.nextUrl.pathname),
+  publicRoutes: PUBLIC_ROUTE_MATCHERS,
   ignoredRoutes: IGNORED_ROUTES,
   debug: true, // Enable debug mode
   afterAuth(auth, req) {

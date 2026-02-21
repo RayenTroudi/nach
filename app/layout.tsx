@@ -13,6 +13,10 @@ import { getLocale, getMessages } from '@/lib/locale';
 import { getClerkLocalization } from "@/lib/clerk-localizations";
 import { generateOrganizationSchema, generateWebsiteSchema } from "@/lib/utils/structured-data";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { validateClerkEnvironment } from "@/lib/clerk-env-validator";
+
+// Validate Clerk configuration on server startup (dev only)
+validateClerkEnvironment();
 
 const inter = Inter({ subsets: ["latin"] });
 

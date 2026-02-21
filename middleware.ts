@@ -24,6 +24,7 @@ const PUBLIC_ROUTE_MATCHERS: RegExp[] = [
   /^\/sign-up(?:\/.*)?$/,
   /^\/forgot-password$/,
   /^\/reset-password$/,
+  /^\/force-signout$/,  // Allow cookie cleanup
   /^\/contact(?:\/.*)?$/,
   /^\/documents(?:\/.*)?$/,
   /^\/(en|de|ar)$/,

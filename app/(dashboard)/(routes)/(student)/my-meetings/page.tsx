@@ -26,8 +26,5 @@ const MyMeetingsPage = async () => {
     </div>
   );
 };
-    </div>
-  );
-};
 
 export default MyMeetingsPage;

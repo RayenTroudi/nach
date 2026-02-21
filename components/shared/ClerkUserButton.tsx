@@ -4,17 +4,8 @@ import { UserButton } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
 import React from "react";
 
-interface ClerkUserButtonProps {
-  serverUserId?: string | null;
-}
-
-const ClerkUserButton = ({ serverUserId }: ClerkUserButtonProps) => {
+const ClerkUserButton = () => {
   const { mode } = useTheme();
-  
-  // Only render if server confirms user is authenticated
-  if (!serverUserId) {
-    return null;
-  }
   
   return (
     <UserButton
@@ -54,7 +45,7 @@ const ClerkUserButton = ({ serverUserId }: ClerkUserButtonProps) => {
       {/* UserButton.MenuItems is used to add custom menu items */}
       {/* UserButton.UserProfilePage is used to add custom user profile pages */}
       {/* UserButton.UserProfileLink is used to add custom links in the user button */}
-    </DynamicUserButton>
+    </UserButton>
   );
 };
 

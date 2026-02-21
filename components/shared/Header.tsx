@@ -63,7 +63,7 @@ const Header = async () => {
 
         <HeaderContent>
           <div className="flex items-center gap-x-2 sm:gap-x-4">
-            <ClerkUserButton serverUserId={userId} />
+            {userId && <ClerkUserButton />}
             <LanguageSwitcher />
             <ThemeSwitcher />
             <MobileSideBar isAdmin={mongoDbUser?.isAdmin || false} serverUserId={userId}>

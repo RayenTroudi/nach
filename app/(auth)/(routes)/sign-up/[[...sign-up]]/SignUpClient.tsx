@@ -77,6 +77,7 @@ export default function SignUpClient() {
         }}
         routing="path"
         path="/sign-up"
+        signInUrl="/sign-in"
         afterSignUpUrl={redirectUrl}
       />
     </div>

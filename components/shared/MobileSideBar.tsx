@@ -50,6 +50,9 @@ const MobileSideBar = ({
       userId,
       sessionId,
       email: user?.primaryEmailAddress?.emailAddress,
+      hasUser: !!user,
+      // Critical: Check what's causing auth failure
+      showMenu: authLoaded && userLoaded && !!userId,
     });
   }, [authLoaded, userLoaded, isSignedIn, userId, sessionId, user]);
   
@@ -120,7 +123,7 @@ const MobileSideBar = ({
                 ))}
               </div>
             </div>
-          ) : isSignedIn && userId ? (
+          ) : userId ? (
             <div className="flex-1 overflow-y-auto py-4 mb-20">
               <div className="grid grid-cols-1 gap-2">
                 {routes.map((route, key) => (

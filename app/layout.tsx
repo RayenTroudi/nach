@@ -182,10 +182,8 @@ export default async function RootLayout({
               colorPrimary: "#DD0000",
             },
           }}
-          afterSignInUrl={process.env.NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL}
-          afterSignUpUrl={process.env.NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL}
-          signInUrl={process.env.NEXT_PUBLIC_CLERK_SIGN_IN_URL}
-          signUpUrl={process.env.NEXT_PUBLIC_CLERK_SIGN_UP_URL}
+          signInUrl="/sign-in"
+          signUpUrl="/sign-up"
         >
           <IntlProvider locale={locale} messages={messages}>
             <ThemeProvider>

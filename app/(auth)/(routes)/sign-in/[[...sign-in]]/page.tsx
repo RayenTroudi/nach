@@ -81,9 +81,6 @@ function SignInContent() {
           }}
           routing="path"
           path="/sign-in"
-          signUpUrl="/sign-up"
-          redirectUrl="/"
-          afterSignInUrl="/"
         />
         
         {/* Custom Forgot Password Link */}

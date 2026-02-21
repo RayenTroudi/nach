@@ -11,7 +11,9 @@ const SignUpPage = () => {
   const searchParams = useSearchParams();
   const locale = useLocale();
   const [mounted, setMounted] = useState(false);
-  const [redirectUrl, setRedirectUrl] = useState<string>("/");
+  const [redirectUrl, setRedirectUrl] = useState<string>(
+    process.env.NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL || "/"
+  );
   const direction = locale === "ar" ? "rtl" : "ltr";
 
   // Fix hydration error by only running client-side logic after mount
@@ -73,11 +75,9 @@ const SignUpPage = () => {
             socialButtonsBlockButtonText: "!font-medium",
           },
         }}
-        signInUrl="/sign-in"
         routing="path"
         path="/sign-up"
         afterSignUpUrl={redirectUrl}
-        redirectUrl={redirectUrl}
       />
     </div>
   );

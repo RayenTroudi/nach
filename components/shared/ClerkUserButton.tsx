@@ -12,11 +12,21 @@ const DynamicUserButton = dynamic(
     loading: () => (
       <Skeleton className="w-[32px] h-[32px] rounded-full bg-red-500" />
     ),
+    ssr: false, // Disable SSR for UserButton to prevent hydration issues
   }
 );
 
-const ClerkUserButton = () => {
+interface ClerkUserButtonProps {
+  serverUserId?: string | null;
+}
+
+const ClerkUserButton = ({ serverUserId }: ClerkUserButtonProps) => {
   const { mode } = useTheme();
+  
+  // Only render if server confirms user is authenticated
+  if (!serverUserId) {
+    return null;
+  }
   
   return (
     <DynamicUserButton

@@ -52,40 +52,35 @@ export default authMiddleware({
     const pathname = req.nextUrl.pathname;
     const hasSessionClaims = !!auth.sessionClaims;
     const hasUserId = !!auth.userId;
+    const hasSessionId = !!auth.sessionId;
     
     console.log("🔐 [Middleware] Auth check:", {
       pathname,
       userId: auth.userId || 'null',
+      sessionId: auth.sessionId || 'null',
       isPublicRoute: auth.isPublicRoute,
       hasSessionClaims,
       hasUserId,
-      sessionId: auth.sessionId || 'null',
+      hasSessionId,
     });
 
     // For public routes: always pass through regardless of token state.
-    // This breaks the interstitial 401 loop caused by an expired session
-    // cookie on pages that don't require authentication.
     if (auth.isPublicRoute) {
       console.log("✅ [Middleware] Public route - allowing access");
       return NextResponse.next();
     }
 
-    // Special case: If we have session claims but no userId yet (race condition)
-    // Allow the request and let the client-side Clerk handle it
-    if (hasSessionClaims && !hasUserId) {
-      console.log("⚠️ [Middleware] Has session claims but userId not yet available - allowing");
+    // IMPORTANT: With custom Clerk domain, auth.userId might be null even when authenticated
+    // Allow if we have ANY sign of authentication (sessionId, sessionClaims, or userId)
+    // Let server-side auth() in pages handle the authoritative check
+    if (hasSessionId || hasSessionClaims || hasUserId) {
+      console.log("✅ [Middleware] Has auth signals - allowing (server will validate)");
       return NextResponse.next();
     }
 
-    // For protected routes: if not signed in, redirect to sign-in.
-    if (!auth.userId) {
-      console.log("❌ [Middleware] No userId - redirecting to sign-in");
-      return redirectToSignIn({ returnBackUrl: req.url });
-    }
-
-    // Signed in — continue.
-    console.log("✅ [Middleware] Authenticated - allowing access");
-    return NextResponse.next();
+    // No auth signals at all - redirect to sign-in
+    console.log("❌ [Middleware] No auth signals - redirecting to sign-in");
+    return redirectToSignIn({ returnBackUrl: req.url });
   },
 });
 

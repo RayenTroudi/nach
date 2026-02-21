@@ -28,7 +28,7 @@ const MobileSideBar = ({
 }: {
   isAdmin: boolean;
   children?: React.ReactNode;
-  serverUserId: string | null;
+  serverUserId: string | null | undefined;
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const t = useTranslations();
@@ -122,10 +122,10 @@ const MobileSideBar = ({
           <SheetHeader className="flex-shrink-0">
             <SheetTitle className="">
               <Logo isSheetOpen={true} />
-            </Use server-side auth as source of truth - no loading needed! */}
-          {isAuthenticated
-            </div>
-          ) : (userId || user) ? (
+            </SheetTitle>
+          </SheetHeader>
+          {/* Use server-side auth as source of truth - no loading needed! */}
+          {isAuthenticated ? (
             <div className="flex-1 overflow-y-auto py-4 mb-20">
               <div className="grid grid-cols-1 gap-2">
                 {routes.map((route, key) => (

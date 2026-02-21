@@ -41,19 +41,21 @@ export function validateClerkEnvironment() {
 
   // Warn about production keys on localhost
   if (isProdPublishableKey && isProdSecretKey) {
-    console.warn('\n⚠️  WARNING: Using PRODUCTION keys on localhost!');
-    console.warn('   This works but requires:');
-    console.warn('   1. Add http://localhost:3000 to "Allowed origins" in Clerk Dashboard');
-    console.warn('      → Dashboard → Settings → Domains → Allowed origins');
-    console.warn('   2. Custom domain must be fully configured (Pro/Enterprise plan required)');
-    console.warn('   3. If you see "jwk-remote-missing" errors:');
-    console.warn('      → Clear all cookies for localhost:3000');
-    console.warn('      → Visit http://localhost:3000/force-signout');
-    console.warn('      → Sign in again');
-    console.warn('\n   💡 TIP: For easier development, consider using pk_test_/sk_test_ keys');
-    console.warn('       on localhost and pk_live_/sk_live_ only in production.');
+    console.error('\n❌ ERROR: Using PRODUCTION keys on localhost is NOT recommended!');
+    console.error('   This causes inconsistent authentication behavior:');
+    console.error('   - Random null userId');
+    console.error('   - Unexpected sign-outs');
+    console.error('   - Protected route redirect failures');
+    console.error('   - jwk-remote-missing errors');
+    console.error('\n   ✅ SOLUTION: Use DEVELOPMENT keys for localhost');
+    console.error('   Edit .env.local and switch to:');
+    console.error('   NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_...');
+    console.error('   CLERK_SECRET_KEY=sk_test_...');
+    console.error('\n   Then visit http://localhost:3000/force-signout to clear cookies');
+    console.error('\n   Production keys should ONLY be used in production deployment!');
   } else {
-    console.log('✅ Using TEST/DEVELOPMENT keys - perfect for localhost!');
+    console.log('✅ Using DEVELOPMENT keys - perfect for localhost!');
+    console.log('   Reliable authentication, no domain configuration needed.');
   }
 
   // Check for custom API URL (usually not needed)

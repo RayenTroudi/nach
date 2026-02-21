@@ -17,7 +17,6 @@ import { useUser } from "@clerk/nextjs";
 import { useTranslations } from 'next-intl';
 
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import { SignedIn, SignedOut } from "@clerk/nextjs";
 import Link from "next/link";
 import { TCourse, TSection, TVideo } from "@/types/models.types";
 import { scnToast } from "@/components/ui/use-toast";
@@ -47,7 +46,7 @@ const PurchaseCourseCard = ({
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isFilled, setIsFilled] = useState(false);
-  const { user } = useUser();
+  const { user, isLoaded: isUserLoaded, isSignedIn } = useUser();
   const [isInCart, setIsInCart] = useState(false);
 
   // Update wishlist and cart state when they change
@@ -280,7 +279,8 @@ const PurchaseCourseCard = ({
           {course.price! > 0 ? (
             <div className="space-y-3 pt-4 border-t border-slate-200 dark:border-slate-800">
               
-            <SignedIn>
+            {isUserLoaded && isSignedIn && user ? (
+              <>
               {isCourseOwner ? (
                 <div className="mt-2  w-full flex flex-col gap-y-1">
                   <Link href={`/my-learning/${course._id}`}>
@@ -384,8 +384,9 @@ const PurchaseCourseCard = ({
                   </Dialog>
                 </>
               )}
-            </SignedIn>
-            <SignedOut>
+              </>
+            ) : isUserLoaded ? (
+              <>
               <Separator className="h-[3px] mt-2 mb-2" />
               <div className="w-full flex flex-col gap-y-2">
                 <Link href="/sign-up">
@@ -406,12 +407,14 @@ const PurchaseCourseCard = ({
                   </Button>
                 </Link>
               </div>
-            </SignedOut>
+              </>
+            ) : null}
             </div>
           ) : (
             <div className="space-y-3 pt-4 border-t border-slate-200 dark:border-slate-800">
             {/* FREE COURSE LOGIC */}
-            <SignedIn>
+            {isUserLoaded && isSignedIn && user ? (
+              <>
               {!isCourseOwner && !isEnrolled ? (
                 <Button
                   name="enroll-free"
@@ -480,8 +483,9 @@ const PurchaseCourseCard = ({
                   </Button>
                 </Link>
               ) : null}
-            </SignedIn>
-            <SignedOut>
+                </>
+            ) : isUserLoaded ? (
+              <>
               <Separator className="h-[3px] mt-2 mb-2" />
               <div className="w-full flex flex-col gap-y-2">
                 <Link href="/sign-up">
@@ -502,7 +506,8 @@ const PurchaseCourseCard = ({
                   </Button>
                 </Link>
               </div>
-            </SignedOut>
+              </>
+            ) : null}
             </div>
           )}
         </div>

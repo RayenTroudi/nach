@@ -14,11 +14,12 @@ import Logo from "./Logo";
 import { usePathname } from "next/navigation";
 import { adminRoutes, studentRoutes, teacherRoutes } from "@/lib/data";
 import { MobileLeftSidebarItem } from ".";
-import { SignedIn, useAuth, useUser } from "@clerk/nextjs";
+import { useAuth, useUser } from "@clerk/nextjs";
 import Image from "next/image";
 import Link from "next/link";
 import { useTheme } from "@/contexts/ThemeProvider";
 import { useTranslations, useLocale } from "next-intl";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const MobileSideBar = ({
   isAdmin,
@@ -110,7 +111,16 @@ const MobileSideBar = ({
               <Logo isSheetOpen={true} />
             </SheetTitle>
           </SheetHeader>
-          <SignedIn>
+          {/* Show loading skeleton while auth is loading */}
+          {!authLoaded || !userLoaded ? (
+            <div className="flex-1 overflow-y-auto py-4 mb-20">
+              <div className="grid grid-cols-1 gap-3">
+                {[1, 2, 3, 4, 5].map((i) => (
+                  <Skeleton key={i} className="w-full h-12 rounded-md" />
+                ))}
+              </div>
+            </div>
+          ) : isSignedIn && userId ? (
             <div className="flex-1 overflow-y-auto py-4 mb-20">
               <div className="grid grid-cols-1 gap-2">
                 {routes.map((route, key) => (
@@ -197,7 +207,13 @@ const MobileSideBar = ({
               ) : null}
               </div>
             </div>
-          </SignedIn>
+          ) : (
+            <div className="flex-1 flex items-center justify-center py-4">
+              <p className="text-slate-500 dark:text-slate-400 text-sm">
+                {t("auth.pleaseSignIn") || "Please sign in to view menu"}
+              </p>
+            </div>
+          )}
 
           <SheetFooter className="flex flex-col gap-2 absolute bottom-5 left-0 w-full px-4 ">
             {children}

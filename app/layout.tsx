@@ -134,6 +134,16 @@ export default async function RootLayout({
   const organizationSchema = generateOrganizationSchema();
   const websiteSchema = generateWebsiteSchema();
 
+  // Clerk configuration - handle custom domain for production
+  const isProduction = process.env.NODE_ENV === 'production';
+  const clerkPublishableKey = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY || '';
+  const isProductionKeys = clerkPublishableKey.startsWith('pk_live_');
+  
+  // Custom domain configuration for production keys
+  const clerkDomain = isProduction && isProductionKeys 
+    ? 'clerk.taleldeutchlandservices.com' 
+    : undefined;
+
   return (
     <html lang={locale} dir={direction} suppressHydrationWarning>
       <head>
@@ -165,6 +175,7 @@ export default async function RootLayout({
       >
         <ClerkProvider
           publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
+          domain={clerkDomain}
           localization={clerkLocalization as any}
           appearance={{
             variables: {

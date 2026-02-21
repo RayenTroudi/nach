@@ -150,7 +150,7 @@ const LandingPage = async () => {
       <CoursesSection courses={regularCourses} />
 
       {/* Documents Section - Replaces "Featured Courses" */}
-      <DocumentsSection documents={items} />
+      <DocumentsSection documents={items} serverUserId={userId} />
 
       {/* Frequent Questions Section with Related Courses - Replaces "Your German Pathway" */}
       <FrequentQuestionsSection courses={courses} />

@@ -97,15 +97,16 @@ interface DocumentItem {
 
 interface DocumentsSectionProps {
   documents: DocumentItem[];
+  serverUserId?: string | null;
 }
 
-export default function DocumentsSection({ documents }: DocumentsSectionProps) {
+export default function DocumentsSection({ documents, serverUserId }: DocumentsSectionProps) {
   const t = useTranslations('documentsSection');
   const tStorefront = useTranslations('storefront');
   const locale = useLocale();
   const isRTL = locale === 'ar';
   const router = useRouter();
-  const { user, isSignedIn } = useUser();
+  const isSignedIn = !!serverUserId;
   const [mounted, setMounted] = useState(false);
   const [carouselRef, setCarouselRef] = useState<any>(null);
   
@@ -189,7 +190,7 @@ export default function DocumentsSection({ documents }: DocumentsSectionProps) {
   };
   
   const handlePurchase = (item: DocumentItem) => {
-    if (!isSignedIn) {
+    if (!serverUserId) {
       toast.error(tStorefront("signInRequired"));
       router.push("/sign-in");
       return;

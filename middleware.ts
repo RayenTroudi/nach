@@ -48,12 +48,17 @@ export default authMiddleware({
   ignoredRoutes: IGNORED_ROUTES,
   debug: true, // Enable debug mode
   afterAuth(auth, req) {
+    const pathname = req.nextUrl.pathname;
+    const hasSessionClaims = !!auth.sessionClaims;
+    const hasUserId = !!auth.userId;
+    
     console.log("🔐 [Middleware] Auth check:", {
-      url: req.url,
-      pathname: req.nextUrl.pathname,
-      userId: auth.userId,
+      pathname,
+      userId: auth.userId || 'null',
       isPublicRoute: auth.isPublicRoute,
-      sessionClaims: !!auth.sessionClaims,
+      hasSessionClaims,
+      hasUserId,
+      sessionId: auth.sessionId || 'null',
     });
 
     // For public routes: always pass through regardless of token state.
@@ -61,6 +66,13 @@ export default authMiddleware({
     // cookie on pages that don't require authentication.
     if (auth.isPublicRoute) {
       console.log("✅ [Middleware] Public route - allowing access");
+      return NextResponse.next();
+    }
+
+    // Special case: If we have session claims but no userId yet (race condition)
+    // Allow the request and let the client-side Clerk handle it
+    if (hasSessionClaims && !hasUserId) {
+      console.log("⚠️ [Middleware] Has session claims but userId not yet available - allowing");
       return NextResponse.next();
     }
 

@@ -5,6 +5,7 @@ import InitialScreen from "../_components/InitialScreen";
 import PageLoader from "../_components/PageLoader";
 import DashboardTranslationsProvider from "./_components/DashboardTranslationsProvider";
 import ClientDebugMonitor from "@/components/shared/ClientDebugMonitor";
+import ClerkSessionSync from "@/components/shared/ClerkSessionSync";
 
 export const dynamic = "force-dynamic";
 
@@ -16,6 +17,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <>
       <ClientDebugMonitor />
+      <ClerkSessionSync />
       <PageLoader />
 
       <InitialScreen>

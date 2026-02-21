@@ -44,4 +44,5 @@ export { default as MyMeetings } from "@/components/shared/MyMeetings";
 export { default as ConsultantMeetings } from "@/components/shared/ConsultantMeetings";
 export { default as UserDebugLogger } from "@/components/shared/UserDebugLogger";
 export { default as ClientDebugMonitor } from "@/components/shared/ClientDebugMonitor";
+export { default as ClerkSessionSync } from "@/components/shared/ClerkSessionSync";
 

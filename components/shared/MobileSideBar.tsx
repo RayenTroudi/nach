@@ -24,9 +24,11 @@ import { Skeleton } from "@/components/ui/skeleton";
 const MobileSideBar = ({
   isAdmin,
   children,
+  serverUserId,
 }: {
   isAdmin: boolean;
   children?: React.ReactNode;
+  serverUserId: string | null;
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const t = useTranslations();
@@ -36,14 +38,20 @@ const MobileSideBar = ({
   const { isLoaded: authLoaded, userId, sessionId } = useAuth();
   const { isLoaded: userLoaded, isSignedIn, user } = useUser();
   
+  // Use server-side userId as source of truth, fallback to client-side
+  const isAuthenticated = !!serverUserId || !!(userId || user);
+  
   console.log("📱 MobileSideBar - Rendering:", {
     isAdmin,
     pathname,
     isOpen,
+    serverUserId,
+    isAuthenticated,
   });
 
   useEffect(() => {
-    console.log("🔐 MobileSideBar - Clerk client state:", {
+    console.log("🔐 MobileSideBar - Auth state:", {
+      serverUserId,
       authLoaded,
       userLoaded,
       isSignedIn,
@@ -51,11 +59,12 @@ const MobileSideBar = ({
       sessionId,
       email: user?.primaryEmailAddress?.emailAddress,
       hasUser: !!user,
-      // Critical: Check what's causing auth failure
-      showMenu: authLoaded && userLoaded && (!!userId || !!user),
+      isAuthenticated,
+      // Critical: Check what's being used
+      usingServerAuth: !!serverUserId,
       hasChildren: !!children,
     });
-  }, [authLoaded, userLoaded, isSignedIn, userId, sessionId, user, children]);
+  }, [serverUserId, authLoaded, userLoaded, isSignedIn, userId, sessionId, user, children, isAuthenticated]);
   
   // Check if current pathname uses locale
   const pathnameHasLocale = pathname.startsWith('/ar/') || pathname.startsWith('/en/') || pathname.startsWith('/de/');
@@ -113,16 +122,8 @@ const MobileSideBar = ({
           <SheetHeader className="flex-shrink-0">
             <SheetTitle className="">
               <Logo isSheetOpen={true} />
-            </SheetTitle>
-          </SheetHeader>
-          {/* Show loading skeleton while auth is loading */}
-          {!authLoaded || !userLoaded ? (
-            <div className="flex-1 overflow-y-auto py-4 mb-20">
-              <div className="grid grid-cols-1 gap-3">
-                {[1, 2, 3, 4, 5].map((i) => (
-                  <Skeleton key={i} className="w-full h-12 rounded-md" />
-                ))}
-              </div>
+            </Use server-side auth as source of truth - no loading needed! */}
+          {isAuthenticated
             </div>
           ) : (userId || user) ? (
             <div className="flex-1 overflow-y-auto py-4 mb-20">

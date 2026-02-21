@@ -66,7 +66,7 @@ const Header = async () => {
             {userId && <ClerkUserButton />}
             <LanguageSwitcher />
             <ThemeSwitcher />
-            <MobileSideBar isAdmin={mongoDbUser?.isAdmin || false}>
+            <MobileSideBar isAdmin={mongoDbUser?.isAdmin || false} serverUserId={userId}>
               {!userId ? <MobileSignupSignInButtons /> : <SignoutButton />}
             </MobileSideBar>
           </div>

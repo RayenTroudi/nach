@@ -1,54 +1,19 @@
-"use client";
 import { LeftSideBar } from "@/components/shared";
-import React, { useEffect, useState } from "react";
-import { useAuth } from "@clerk/nextjs";
+import React from "react";
+import { auth } from "@clerk/nextjs/server";
 import MyMeetings from "@/components/shared/MyMeetings";
-import { Spinner } from "@/components/shared";
-import { useRouter } from "next/navigation";
+import { redirect } from "next/navigation";
+import { getUserBookings } from "@/lib/actions/booking.action";
 
-const MyMeetingsPage = () => {
-  const { userId, isLoaded } = useAuth();
-  const router = useRouter();
-  const [userBookings, setUserBookings] = useState<any[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+const MyMeetingsPage = async () => {
+  const { userId } = auth();
 
-  useEffect(() => {
-    if (isLoaded && !userId) {
-      router.push("/sign-in");
-      return;
-    }
-
-    if (userId) {
-      fetchBookings();
-    }
-  }, [userId, isLoaded, router]);
-
-  const fetchBookings = async () => {
-    try {
-      setIsLoading(true);
-      const response = await fetch("/api/user/bookings");
-      const data = await response.json();
-      
-      if (data.success) {
-        setUserBookings(data.bookings);
-      }
-    } catch (error) {
-      console.error("Error fetching meetings:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  if (!isLoaded || isLoading) {
-    return (
-      <div className="flex gap-4">
-        <LeftSideBar />
-        <div className="p-6 w-full flex items-center justify-center min-h-screen">
-          <Spinner />
-        </div>
-      </div>
-    );
+  if (!userId) {
+    redirect("/sign-in");
   }
+
+  const result = await getUserBookings();
+  const userBookings = result.success ? result.bookings : [];
   
   return (
     <div className="flex gap-4">
@@ -58,6 +23,9 @@ const MyMeetingsPage = () => {
           <MyMeetings bookings={userBookings} />
         </div>
       </div>
+    </div>
+  );
+};
     </div>
   );
 };

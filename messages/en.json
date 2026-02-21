@@ -87,7 +87,8 @@
     "signInWithGithub": "Sign in with Github",
     "createAccount": "Create Account",
     "continueWith": "Continue with",
-    "or": "OR"
+    "or": "OR",
+    "pleaseSignIn": "Please sign in to view menu"
   },
   "courses": {
     "courseContent": "Course Content",

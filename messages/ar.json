@@ -87,7 +87,8 @@
     "signInWithGithub": "الدخول عبر جيت هاب",
     "createAccount": "إنشاء حساب",
     "continueWith": "المتابعة مع",
-    "or": "أو"
+    "or": "أو",
+    "pleaseSignIn": "يرجى تسجيل الدخول لعرض القائمة"
   },
   "courses": {
     "courseContent": "محتوى الدورة",

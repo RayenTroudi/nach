@@ -87,7 +87,8 @@
     "signInWithGithub": "Mit Github anmelden",
     "createAccount": "Konto erstellen",
     "continueWith": "Fortfahren mit",
-    "or": "ODER"
+    "or": "ODER",
+    "pleaseSignIn": "Bitte melden Sie sich an, um das Menü anzuzeigen"
   },
   "courses": {
     "courseContent": "Kursinhalt",

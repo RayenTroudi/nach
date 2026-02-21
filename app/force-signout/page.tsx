@@ -84,10 +84,10 @@ export default function ForceSignOutPage() {
 
             <div className="bg-blue-50 border border-blue-200 rounded p-4">
               <h2 className="font-semibold text-blue-900 mb-2">
-                🔧 Fixing "jwk-remote-missing" Error:
+                🔧 Fixing &ldquo;jwk-remote-missing&rdquo; Error:
               </h2>
               <ol className="list-decimal list-inside text-sm text-blue-800 space-y-1">
-                <li>Click "Clear All Cookies" below</li>
+                <li>Click &ldquo;Clear All Cookies&rdquo; below</li>
                 <li>Close all browser tabs for this site</li>
                 <li>Open a new tab and visit the site again</li>
                 <li>Sign in with your credentials</li>
@@ -122,7 +122,7 @@ export default function ForceSignOutPage() {
             <div className="bg-gray-50 rounded p-4 text-xs text-gray-600">
               <p className="font-semibold mb-1">📝 What causes this error?</p>
               <p>
-                The "jwk-remote-missing" error occurs when your browser has authentication 
+                The &ldquo;jwk-remote-missing&rdquo; error occurs when your browser has authentication 
                 cookies from a different Clerk instance (e.g., development cookies while 
                 using production keys, or vice versa). Clearing cookies fixes this.
               </p>

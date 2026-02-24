@@ -20,7 +20,7 @@ export default async function CoursesPage() {
     
     // Filter for regular courses only
     courses = allCourses.filter(
-      (course) => course.courseType === CourseTypeEnum.Regular
+      (course: TCourse) => course.courseType === CourseTypeEnum.Regular
     );
   } catch (error: any) {
     console.error("Error fetching courses:", error);

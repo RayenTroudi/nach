@@ -293,11 +293,11 @@ export default function DocumentsSection({ documents, serverUserId }: DocumentsS
                     viewport={{ once: true }}
                     transition={{ delay: idx * 0.1 }}
                   >
-                    <Card className="hover:shadow-lg transition-shadow group relative">
-                      <CardHeader>
-                        <div className="flex items-start gap-3">
+                    <Card className="hover:shadow-lg transition-shadow group relative h-full flex flex-col">
+                      <CardHeader className="p-4 sm:p-6">
+                        <div className="flex items-start gap-2 sm:gap-3">
                           <div
-                            className={`p-3 rounded-lg group-hover:brightness-110 transition-all ${
+                            className={`p-2 sm:p-3 rounded-lg group-hover:brightness-110 transition-all flex-shrink-0 ${
                               item.itemType === "bundle"
                                 ? "bg-purple-50 dark:bg-purple-900/20"
                                 : "bg-brand-red-50 dark:bg-brand-red-900/20"
@@ -305,70 +305,72 @@ export default function DocumentsSection({ documents, serverUserId }: DocumentsS
                           >
                             {item.itemType === "bundle" ? (
                               <FolderOpen
-                                className={`w-6 h-6 ${
+                                className={`w-5 h-5 sm:w-6 sm:h-6 ${
                                   item.itemType === "bundle"
                                     ? "text-purple-500"
                                     : "text-brand-red-500"
                                 }`}
                               />
                             ) : (
-                              <FileText className="w-6 h-6 text-brand-red-500" />
+                              <FileText className="w-5 h-5 sm:w-6 sm:h-6 text-brand-red-500" />
                             )}
                           </div>
                           <div className="flex-1 min-w-0">
-                            <div className="flex items-center gap-2 mb-2 flex-wrap">
-                              <Badge variant="outline">
+                            <div className="flex items-center gap-1.5 sm:gap-2 mb-1.5 sm:mb-2 flex-wrap">
+                              <Badge dir="auto" variant="outline" className="text-xs">
                                 {item.category}
                               </Badge>
                               {item.itemType === "bundle" && !(item.isFolder || ((!item.documents || item.documents.length === 0) && item.childBundleCount && item.childBundleCount > 0)) && (
-                                <Badge variant="secondary" className="text-xs">
+                                <Badge variant="secondary" className="text-[10px] sm:text-xs px-1.5 sm:px-2 py-0.5">
                                   Bundle
                                 </Badge>
                               )}
                               {(item.isFolder || (item.itemType === "bundle" && (!item.documents || item.documents.length === 0))) && item.childBundleCount !== undefined && item.childBundleCount > 0 && (
-                                <Badge variant="outline" className="text-xs bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-400 border-blue-300 dark:border-blue-700">
+                                <Badge variant="outline" className="text-[10px] sm:text-xs bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-400 border-blue-300 dark:border-blue-700 px-1.5 sm:px-2 py-0.5">
                                   📁 {item.childBundleCount} {item.childBundleCount === 1 ? 'bundle' : 'bundles'}
                                 </Badge>
                               )}
                             </div>
-                            <h3 className="text-lg font-semibold line-clamp-2">
+                            <h3 dir="auto" className="text-base sm:text-lg font-semibold line-clamp-2">
                               {item.title}
                             </h3>
                           </div>
                         </div>
                       </CardHeader>
                       
-                      <CardContent>
+                      <CardContent className="p-4 sm:p-6 pt-0 flex-1 flex flex-col">
                   {item.description && (
-                    <p className="text-sm text-slate-600 dark:text-slate-400 mb-4 line-clamp-3">
+                    <p dir="auto" className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mb-3 sm:mb-4 sm:line-clamp-3">
                       {item.description}
                     </p>
                   )}
 
                   {/* Meta Info */}
-                  <div className="flex items-center justify-between text-xs text-slate-600 dark:text-slate-400 mb-4 pb-4 border-b">
+                  <div className="flex items-center justify-between text-[11px] sm:text-xs text-slate-600 dark:text-slate-400 mb-3 sm:mb-4 pb-3 sm:pb-4 border-b">
                     {item.itemType === "document" ? (
                       <>
                         <div className="flex items-center gap-1">
                           <Download className="w-3 h-3" />
-                          {item.downloads || 0} {t("downloads")}
+                          <span className="truncate">{item.downloads || 0} {t("downloads")}</span>
                         </div>
                         <div className="flex items-center gap-1">
-                          <Calendar className="w-3 h-3" />
-                          <span suppressHydrationWarning>
+                          <Calendar className="w-3 h-3 flex-shrink-0" />
+                          <span suppressHydrationWarning className="truncate">
                             {formatDate(item.createdAt)}
                           </span>
                         </div>
                       </>
                     ) : (
                       <>
-                        <div className="flex items-center gap-1">
-                          <FileText className="w-3 h-3" />
-                          {(item.isFolder || ((!item.documents || item.documents.length === 0) && item.childBundleCount)) 
-                            ? `${item.totalFileCount || 0} ${tStorefront("totalFiles")}`
-                            : `${item.documents?.length || 0} ${t("documents")}`}
+                        <div className="flex items-center gap-1 min-w-0">
+                          <FileText className="w-3 h-3 flex-shrink-0" />
+                          <span className="truncate">
+                            {(item.isFolder || ((!item.documents || item.documents.length === 0) && item.childBundleCount)) 
+                              ? `${item.totalFileCount || 0} ${tStorefront("totalFiles")}`
+                              : `${item.documents?.length || 0} ${t("documents")}`}
+                          </span>
                         </div>
-                        <span>{(item.isFolder || ((!item.documents || item.documents.length === 0) && item.childBundleCount)) 
+                        <span className="truncate text-right">{(item.isFolder || ((!item.documents || item.documents.length === 0) && item.childBundleCount)) 
                           ? `${item.childBundleCount || 0} ${tStorefront("bundlesCount")}`
                           : "Bundle"}</span>
                       </>
@@ -377,12 +379,12 @@ export default function DocumentsSection({ documents, serverUserId }: DocumentsS
 
                   {/* Price */}
                   {item.itemType === "bundle" && (
-                    <div className="mb-4 pb-4 border-b">
+                    <div className="mb-3 sm:mb-4 pb-3 sm:pb-4 border-b">
                       <div className="flex items-center justify-between">
-                        <span className="text-sm text-slate-600 dark:text-slate-400">
+                        <span dir="auto" className="text-xs sm:text-sm text-slate-600 dark:text-slate-400">
                           {tStorefront("price")}:
                         </span>
-                        <span className="text-xl font-bold text-brand-red-500">
+                        <span className="text-lg sm:text-xl font-bold text-brand-red-500">
                           {isFree ? "Free" : `${item.price} ${item.currency?.toUpperCase() || 'EUR'}`}
                         </span>
                       </div>
@@ -390,12 +392,12 @@ export default function DocumentsSection({ documents, serverUserId }: DocumentsS
                   )}
                   
                   {item.itemType === "document" && item.isForSale && (
-                    <div className="mb-4 pb-4 border-b">
+                    <div className="mb-3 sm:mb-4 pb-3 sm:pb-4 border-b">
                       <div className="flex items-center justify-between">
-                        <span className="text-sm text-slate-600 dark:text-slate-400">
+                        <span dir="auto" className="text-xs sm:text-sm text-slate-600 dark:text-slate-400">
                           {tStorefront("price")}:
                         </span>
-                        <span className="text-xl font-bold text-brand-red-500">
+                        <span className="text-lg sm:text-xl font-bold text-brand-red-500">
                           {`${item.price} ${item.currency?.toUpperCase() || 'EUR'}`}
                         </span>
                       </div>
@@ -404,42 +406,42 @@ export default function DocumentsSection({ documents, serverUserId }: DocumentsS
 
                   {/* Actions */}
                   {item.itemType === "bundle" ? (
-                    <div className="space-y-2">
+                    <div className="space-y-1.5 sm:space-y-2 mt-auto">
                       <Button
                         variant="outline"
                         size="sm"
                         onClick={() => handleBundlePreview(item)}
-                        className="w-full"
+                        className="w-full text-xs sm:text-sm h-8 sm:h-9"
                       >
-                        <Eye className="w-4 h-4 mr-1" />
-                        {tStorefront("previewContents")}
+                        <Eye className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1" />
+                        <span dir="auto" className="truncate">{tStorefront("previewContents")}</span>
                       </Button>
                       <Button
                         size="sm"
                         onClick={() => handlePurchase(item)}
-                        className="w-full bg-brand-red-500 hover:bg-brand-red-600"
+                        className="w-full bg-brand-red-500 hover:bg-brand-red-600 text-xs sm:text-sm h-8 sm:h-9"
                       >
-                        <ShoppingCart className="w-4 h-4 mr-1" />
-                        {tStorefront("buyNow")}
+                        <ShoppingCart className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1" />
+                        <span dir="auto" className="truncate">{tStorefront("buyNow")}</span>
                       </Button>
                     </div>
                   ) : item.isForSale ? (
                     <Button
                       size="sm"
-                      className="w-full bg-brand-red-500 hover:bg-brand-red-600"
+                      className="w-full bg-brand-red-500 hover:bg-brand-red-600 text-xs sm:text-sm h-8 sm:h-9 mt-auto"
                       onClick={() => handlePurchase(item)}
                     >
-                      <ShoppingCart className="w-4 h-4 mr-2" />
-                      {tStorefront("buyNow")}
+                      <ShoppingCart className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1.5" />
+                      <span dir="auto" className="truncate">{tStorefront("buyNow")}</span>
                     </Button>
                   ) : (
                     <Button
                       size="sm"
-                      className="w-full bg-brand-red-500 hover:bg-brand-red-600"
+                      className="w-full bg-brand-red-500 hover:bg-brand-red-600 text-xs sm:text-sm h-8 sm:h-9 mt-auto"
                       onClick={() => handleDownload(item)}
                     >
-                      <Download className="w-4 h-4 mr-2" />
-                      {t("download")}
+                      <Download className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1.5" />
+                      <span dir="auto" className="truncate">{t("download")}</span>
                     </Button>
                   )}
                       </CardContent>
@@ -467,63 +469,63 @@ export default function DocumentsSection({ documents, serverUserId }: DocumentsS
       {/* Bundle Preview Dialog */}
       {previewBundle && (
         <Dialog open={isBundlePreviewOpen} onOpenChange={setIsBundlePreviewOpen}>
-          <DialogContent className="sm:max-w-[600px] max-h-[80vh] overflow-y-auto">
-            <DialogHeader>
-              <DialogTitle className="flex items-center gap-2">
-                <FolderOpen className="w-5 h-5 text-brand-red-500" />
-                {previewBundle.title}
+          <DialogContent className="max-w-[95vw] sm:max-w-[600px] max-h-[90vh] p-4 sm:p-6 gap-4">
+            <DialogHeader dir="auto" className="space-y-2">
+              <DialogTitle className="flex items-center gap-2 text-base sm:text-lg break-words">
+                <FolderOpen className="w-4 h-4 sm:w-5 sm:h-5 text-brand-red-500 flex-shrink-0" />
+                <span dir="auto" className="break-words line-clamp-2">{previewBundle.title}</span>
               </DialogTitle>
-              <DialogDescription>
+              <DialogDescription dir="auto" className="break-words whitespace-normal text-xs sm:text-sm">
                 {tStorefront("bundlePreviewDescription")}
               </DialogDescription>
             </DialogHeader>
             
-            <div className="space-y-4 py-4">
+            <div className="space-y-3 sm:space-y-4 overflow-y-auto max-h-[calc(90vh-180px)] -mx-4 sm:-mx-6 px-4 sm:px-6">
               {/* Bundle Info */}
-              <div className="bg-slate-50 dark:bg-slate-900 p-4 rounded-lg space-y-2">
-                <div className="flex justify-between items-center">
-                  <span className="text-sm font-medium text-slate-700 dark:text-slate-300">
+              <div className="bg-slate-50 dark:bg-slate-900 p-3 sm:p-4 rounded-lg space-y-2">
+                <div className="flex justify-between items-center gap-2">
+                  <span dir="auto" className="text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-300 truncate">
                     {tStorefront("totalDocuments")}:
                   </span>
-                  <span className="text-lg font-bold text-brand-red-500">
+                  <span className="text-base sm:text-lg font-bold text-brand-red-500 flex-shrink-0">
                     {previewBundle.documents?.length || 0}
                   </span>
                 </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-sm font-medium text-slate-700 dark:text-slate-300">
+                <div className="flex justify-between items-center gap-2">
+                  <span dir="auto" className="text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-300 truncate">
                     {tStorefront("price")}:
                   </span>
-                  <span className="text-lg font-bold text-brand-red-500">
+                  <span className="text-base sm:text-lg font-bold text-brand-red-500 flex-shrink-0 break-words">
                     {formatPrice(previewBundle.price || 0, previewBundle.currency || 'EUR')}
                   </span>
                 </div>
               </div>
 
               {/* Documents List */}
-              <div className="space-y-2">
-                <h4 className="font-semibold text-sm text-slate-700 dark:text-slate-300">
+              <div className="space-y-1.5 sm:space-y-2">
+                <h4 dir="auto" className="font-semibold text-xs sm:text-sm text-slate-700 dark:text-slate-300">
                   {tStorefront("documentsInBundle")}:
                 </h4>
-                <div className="space-y-2 max-h-[300px] overflow-y-auto">
+                <div className="space-y-1.5 sm:space-y-2 max-h-[250px] sm:max-h-[300px] overflow-y-auto overflow-x-hidden -mr-2 pr-2">
                   {previewBundle.documents && previewBundle.documents.length > 0 ? (
                     previewBundle.documents.map((doc) => (
                       <div
                         key={doc._id}
-                        className="flex items-center gap-3 p-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg"
+                        className="flex items-center gap-2 sm:gap-3 p-2 sm:p-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg"
                       >
-                        <div className="flex-shrink-0 w-8 h-8 bg-brand-red-100 dark:bg-brand-red-900/20 rounded flex items-center justify-center">
-                          <FileText className="w-4 h-4 text-brand-red-500" />
+                        <div className="flex-shrink-0 w-7 h-7 sm:w-8 sm:h-8 bg-brand-red-100 dark:bg-brand-red-900/20 rounded flex items-center justify-center">
+                          <FileText className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-brand-red-500" />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <p className="text-sm font-medium text-slate-900 dark:text-slate-100 truncate">
+                          <p dir="auto" className="text-xs sm:text-sm font-medium text-slate-900 dark:text-slate-100 truncate">
                             {doc.title}
                           </p>
                         </div>
-                        <Lock className="w-4 h-4 text-slate-400" />
+                        <Lock className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-400 flex-shrink-0" />
                       </div>
                     ))
                   ) : (
-                    <p className="text-sm text-slate-500 dark:text-slate-400 text-center py-4">
+                    <p dir="auto" className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 text-center py-3 sm:py-4">
                       {tStorefront("noDocumentsInBundle")}
                     </p>
                   )}
@@ -531,8 +533,8 @@ export default function DocumentsSection({ documents, serverUserId }: DocumentsS
               </div>
 
               {/* Call to Action */}
-              <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">
-                <p className="text-sm text-blue-900 dark:text-blue-100 mb-3">
+              <div className="bg-blue-50 dark:bg-blue-900/20 p-3 sm:p-4 rounded-lg sticky bottom-0">
+                <p dir="auto" className="text-xs sm:text-sm text-blue-900 dark:text-blue-100 mb-2 sm:mb-3 break-words">
                   {tStorefront("bundlePurchasePrompt")}
                 </p>
                 <Button
@@ -540,10 +542,10 @@ export default function DocumentsSection({ documents, serverUserId }: DocumentsS
                     setIsBundlePreviewOpen(false);
                     handlePurchase(previewBundle);
                   }}
-                  className="w-full bg-brand-red-500 hover:bg-brand-red-600"
+                  className="w-full bg-brand-red-500 hover:bg-brand-red-600 text-xs sm:text-sm h-9 sm:h-10"
                 >
-                  <ShoppingCart className="w-4 h-4 mr-2" />
-                  {tStorefront("buyNow")} - {formatPrice(previewBundle.price || 0, previewBundle.currency || 'EUR')}
+                  <ShoppingCart className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1.5 sm:mr-2 flex-shrink-0" />
+                  <span dir="auto" className="truncate">{tStorefront("buyNow")} - {formatPrice(previewBundle.price || 0, previewBundle.currency || 'EUR')}</span>
                 </Button>
               </div>
             </div>
@@ -554,29 +556,29 @@ export default function DocumentsSection({ documents, serverUserId }: DocumentsS
       {/* Folder Preview Dialog */}
       {previewFolder && isFolderPreviewOpen && (
         <Dialog open={isFolderPreviewOpen} onOpenChange={setIsFolderPreviewOpen}>
-          <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
-            <DialogHeader>
+          <DialogContent className="max-w-[95vw] sm:max-w-2xl max-h-[90vh] p-4 sm:p-6 gap-4">
+            <DialogHeader dir="auto" className="space-y-2">
               <div className="flex items-center gap-2">
-                <Folder className="w-6 h-6 text-purple-500" />
-                <DialogTitle className="text-2xl">{previewFolder.title}</DialogTitle>
+                <Folder className="w-4 h-4 sm:w-5 sm:h-5 sm:w-6 sm:h-6 text-purple-500 flex-shrink-0" />
+                <DialogTitle dir="auto" className="text-base sm:text-lg sm:text-2xl break-words line-clamp-2">{previewFolder.title}</DialogTitle>
               </div>
-              <DialogDescription className="text-base mt-2">
+              <DialogDescription dir="auto" className="text-xs sm:text-sm sm:text-base break-words whitespace-normal">
                 {previewFolder.description || tStorefront("noDescription")}
               </DialogDescription>
             </DialogHeader>
 
-            <div className="space-y-6">
+            <div className="space-y-3 sm:space-y-4 sm:space-y-6 overflow-y-auto max-h-[calc(90vh-200px)] -mx-4 sm:-mx-6 px-4 sm:px-6">
               {/* Folder Info */}
-              <div className="grid grid-cols-2 gap-4 p-4 bg-slate-50 dark:bg-slate-800 rounded-lg">
-                <div>
-                  <p className="text-sm text-slate-600 dark:text-slate-400">{tStorefront("category")}</p>
-                  <Badge variant="outline">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 p-3 sm:p-4 bg-slate-50 dark:bg-slate-800 rounded-lg">
+                <div className="min-w-0">
+                  <p dir="auto" className="text-xs sm:text-sm text-slate-600 dark:text-slate-400">{tStorefront("category")}</p>
+                  <Badge dir="auto" variant="outline" className="mt-1 text-xs">
                     {previewFolder.category}
                   </Badge>
                 </div>
-                <div>
-                  <p className="text-sm text-slate-600 dark:text-slate-400">{tStorefront("price")}</p>
-                  <p className="text-lg font-bold text-brand-red-500">
+                <div className="min-w-0">
+                  <p dir="auto" className="text-xs sm:text-sm text-slate-600 dark:text-slate-400">{tStorefront("price")}</p>
+                  <p className="text-base sm:text-lg font-bold text-brand-red-500 break-words">
                     {formatPrice(previewFolder.price || 0, previewFolder.currency || 'EUR')}
                   </p>
                 </div>
@@ -584,55 +586,55 @@ export default function DocumentsSection({ documents, serverUserId }: DocumentsS
 
               {/* Bundles Inside */}
               <div>
-                <div className="flex items-center gap-2 mb-3">
-                  <h3 className="text-lg font-semibold">{tStorefront("bundlesInside") || "Bundles Inside"}</h3>
-                  <Badge variant="secondary">
+                <div className="flex items-center gap-2 mb-2 sm:mb-3 flex-wrap">
+                  <h3 dir="auto" className="text-sm sm:text-base sm:text-lg font-semibold">{tStorefront("bundlesInside") || "Bundles Inside"}</h3>
+                  <Badge variant="secondary" className="text-xs">
                     {previewFolder.childBundleCount || 0} {previewFolder.childBundleCount === 1 ? 'bundle' : 'bundles'}
                   </Badge>
                 </div>
                 
-                <div className="space-y-3 max-h-[400px] overflow-y-auto pr-2">
+                <div className="space-y-2 sm:space-y-3 max-h-[300px] sm:max-h-[400px] overflow-y-auto overflow-x-hidden -mr-2 pr-1 sm:pr-2">
                   {previewFolder.childBundles && previewFolder.childBundles.length > 0 ? (
                     previewFolder.childBundles.map((bundle: any) => (
                       <div
                         key={bundle._id}
                         className="border rounded-lg overflow-hidden bg-white dark:bg-slate-800/50"
                       >
-                        <div className="flex items-center gap-3 p-3 bg-slate-50 dark:bg-slate-800">
-                          <div className="flex-shrink-0 w-10 h-10 bg-purple-100 dark:bg-purple-900/20 rounded flex items-center justify-center">
-                            <FolderOpen className="w-5 h-5 text-purple-500" />
+                        <div className="flex items-center gap-2 sm:gap-3 p-2 sm:p-3 bg-slate-50 dark:bg-slate-800">
+                          <div className="flex-shrink-0 w-8 h-8 sm:w-10 sm:h-10 bg-purple-100 dark:bg-purple-900/20 rounded flex items-center justify-center">
+                            <FolderOpen className="w-4 h-4 sm:w-5 sm:h-5 text-purple-500" />
                           </div>
                           <div className="flex-1 min-w-0">
-                            <p className="text-sm font-medium text-slate-900 dark:text-slate-100">
+                            <p dir="auto" className="text-xs sm:text-sm font-medium text-slate-900 dark:text-slate-100 truncate">
                               {bundle.title}
                             </p>
-                            <p className="text-xs text-slate-500 dark:text-slate-400">
+                            <p className="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400">
                               {bundle.fileCount} {bundle.fileCount === 1 ? 'document' : 'documents'}
                             </p>
                           </div>
-                          <Badge variant="outline" className="text-xs bg-purple-50 text-purple-700 dark:bg-purple-900/20 dark:text-purple-400">
+                          <Badge variant="outline" className="text-[10px] sm:text-xs bg-purple-50 text-purple-700 dark:bg-purple-900/20 dark:text-purple-400 flex-shrink-0">
                             Bundle
                           </Badge>
                         </div>
                         {bundle.documents && bundle.documents.length > 0 && (
-                          <div className="p-3 space-y-2 bg-slate-50/50 dark:bg-slate-900/50">
-                            <p className="text-xs font-medium text-slate-600 dark:text-slate-400 mb-2">
+                          <div className="p-2 sm:p-3 space-y-1.5 sm:space-y-2 bg-slate-50/50 dark:bg-slate-900/50">
+                            <p dir="auto" className="text-[11px] sm:text-xs font-medium text-slate-600 dark:text-slate-400 mb-2">
                               {tStorefront("filesPreview") || "Files Preview"} ({bundle.documents.length})
                             </p>
                             {bundle.documents.slice(0, 3).map((doc: any, idx: number) => (
                               <div
                                 key={doc._id || idx}
-                                className="flex items-center gap-2 p-2 bg-white dark:bg-slate-800 rounded border border-slate-200 dark:border-slate-700"
+                                className="flex items-center gap-1.5 sm:gap-2 p-1.5 sm:p-2 bg-white dark:bg-slate-800 rounded border border-slate-200 dark:border-slate-700"
                               >
-                                <FileText className="w-4 h-4 text-slate-400 flex-shrink-0" />
-                                <span className="text-xs text-slate-700 dark:text-slate-300 truncate flex-1">
+                                <FileText className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-400 flex-shrink-0" />
+                                <span dir="auto" className="text-[11px] sm:text-xs text-slate-700 dark:text-slate-300 truncate flex-1">
                                   {doc.title || doc.fileName}
                                 </span>
                                 <Lock className="w-3 h-3 text-amber-500 flex-shrink-0" />
                               </div>
                             ))}
                             {bundle.documents.length > 3 && (
-                              <p className="text-xs text-slate-500 dark:text-slate-400 text-center pt-1">
+                              <p dir="auto" className="text-xs text-slate-500 dark:text-slate-400 text-center pt-1">
                                 +{bundle.documents.length - 3} {tStorefront("moreFiles") || "more files"}
                               </p>
                             )}
@@ -641,7 +643,7 @@ export default function DocumentsSection({ documents, serverUserId }: DocumentsS
                       </div>
                     ))
                   ) : (
-                    <p className="text-sm text-slate-500 dark:text-slate-400 text-center py-4">
+                    <p dir="auto" className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 text-center py-3 sm:py-4">
                       {tStorefront("noBundlesInFolder") || "No bundles in this folder"}
                     </p>
                   )}
@@ -649,8 +651,8 @@ export default function DocumentsSection({ documents, serverUserId }: DocumentsS
               </div>
 
               {/* Call to Action */}
-              <div className="bg-purple-50 dark:bg-purple-900/20 p-4 rounded-lg">
-                <p className="text-sm text-purple-900 dark:text-purple-100 mb-3">
+              <div className="bg-purple-50 dark:bg-purple-900/20 p-3 sm:p-4 rounded-lg sticky bottom-0">
+                <p dir="auto" className="text-xs sm:text-sm text-purple-900 dark:text-purple-100 mb-2 sm:mb-3 break-words">
                   {tStorefront("folderPurchasePrompt") || "Purchase this folder to access all bundles inside"}
                 </p>
                 <Button
@@ -658,10 +660,10 @@ export default function DocumentsSection({ documents, serverUserId }: DocumentsS
                     setIsFolderPreviewOpen(false);
                     handlePurchase(previewFolder);
                   }}
-                  className="w-full bg-brand-red-500 hover:bg-brand-red-600"
+                  className="w-full bg-brand-red-500 hover:bg-brand-red-600 text-xs sm:text-sm h-9 sm:h-10"
                 >
-                  <ShoppingCart className="w-4 h-4 mr-2" />
-                  {tStorefront("buyNow")} - {formatPrice(previewFolder.price || 0, previewFolder.currency || 'EUR')}
+                  <ShoppingCart className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1.5 sm:mr-2 flex-shrink-0" />
+                  <span dir="auto" className="truncate">{tStorefront("buyNow")} - {formatPrice(previewFolder.price || 0, previewFolder.currency || 'EUR')}</span>
                 </Button>
               </div>
             </div>

@@ -283,7 +283,7 @@ export default function AusbildungSection() {
         {/* Jobs Grid */}
         {!loading && !error && displayedJobs.length > 0 && (
           <>
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8 justify-items-center">
               {displayedJobs.map((job, idx) => (
                 <motion.div
                   key={job.id}
@@ -291,6 +291,7 @@ export default function AusbildungSection() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: idx * 0.1 }}
+                  className="w-full max-w-md md:max-w-none"
                 >
                   <Card className="p-6 h-full flex flex-col hover:shadow-xl transition-all duration-300 border-2 hover:border-brand-red-200 dark:hover:border-brand-red-800 group">
                     <div className="flex items-start justify-between mb-4">

@@ -27,3 +27,4 @@ export {
   updateCourse,
   deleteCourseById,
 } from "./course.action";
+export { getAusbildungJobs } from "./ausbildung.actions";

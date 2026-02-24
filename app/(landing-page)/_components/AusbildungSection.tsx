@@ -8,6 +8,7 @@ import { MapPin, Briefcase, Clock, ExternalLink, Search, Filter, X, Building2 } 
 import { Spinner } from "@/components/shared";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslations } from "next-intl";
+import { getAusbildungJobs } from "@/lib/actions/ausbildung.actions";
 
 interface AusbildungJob {
   id: string;
@@ -64,13 +65,15 @@ export default function AusbildungSection() {
       const search = customSearch || searchTerm;
       const loc = customLocation || location;
       
-      const response = await fetch(`/api/ausbildung?search=${encodeURIComponent(search)}&location=${encodeURIComponent(loc)}`);
-      if (!response.ok) throw new Error("Failed to fetch jobs");
+      const result = await getAusbildungJobs(search, loc);
       
-      const data = await response.json();
-      setJobs(data.opportunities || []);
-      setDisplayCount(6); // Reset display count on new search
-      setError(null);
+      if (result.success) {
+        setJobs(result.opportunities || []);
+        setDisplayCount(6); // Reset display count on new search
+        setError(null);
+      } else {
+        throw new Error(result.error || "Failed to fetch jobs");
+      }
     } catch (err) {
       setError("Failed to load job opportunities");
       console.error(err);

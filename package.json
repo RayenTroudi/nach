@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "clean": "rm -rf .next",
+    "clean": "if exist .next rmdir /s /q .next",
     "build": "npm run clean && npm run validate:translations && next build",
     "start": "next start",
     "lint": "next lint",

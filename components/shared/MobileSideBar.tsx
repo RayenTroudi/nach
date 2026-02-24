@@ -138,8 +138,8 @@ const MobileSideBar = ({
                   href={getLocalizedHref("/teacher/courses")}
                   onClick={() => setIsOpen(false)}
                   className={`group w-full px-2 py-6 rounded-sm flex items-center justify-start gap-4 h-[30px] hover:bg-brand-red-500 duration-300 ease-in-out ${
-                    pathname === "/teacher/courses" ||
-                    pathname.startsWith("/teacher/courses")
+                    pathname === getLocalizedHref("/teacher/courses") ||
+                    pathname.startsWith(`${getLocalizedHref("/teacher/courses")}/`)
                       ? "bg-brand-red-500"
                       : ""
                   }`}
@@ -150,8 +150,8 @@ const MobileSideBar = ({
                     width={26}
                     height={26}
                     className={`w-[35px] h-[35px] invert group-hover:invert-0 ${
-                      pathname === "/teacher/courses" ||
-                      pathname.startsWith(`/teacher/courses/`) ||
+                      pathname === getLocalizedHref("/teacher/courses") ||
+                      pathname.startsWith(`${getLocalizedHref("/teacher/courses")}/`) ||
                       mode === "dark"
                         ? "invert-0"
                         : ""
@@ -159,8 +159,8 @@ const MobileSideBar = ({
                   />
                   <p
                     className={`text-[15px] text-slate-950 dark:text-slate-200 font-semibold group-hover:text-slate-200 block ${
-                      pathname === "/teacher/courses" ||
-                      pathname.startsWith(`/teacher/courses/`)
+                      pathname === getLocalizedHref("/teacher/courses") ||
+                      pathname.startsWith(`${getLocalizedHref("/teacher/courses")}/`)
                         ? "text-white"
                         : ""
                     }`}
@@ -177,8 +177,8 @@ const MobileSideBar = ({
                       href={getLocalizedHref("/admin/dashboard")}
                       onClick={() => setIsOpen(false)}
                       className={`group w-full px-2 py-6 rounded-sm flex items-center justify-start gap-4 h-[30px] hover:bg-brand-red-500 duration-300 ease-in-out ${
-                        pathname === "/admin/dashboard" ||
-                        pathname.startsWith("/admin")
+                        pathname === getLocalizedHref("/admin/dashboard") ||
+                        pathname.startsWith(`${getLocalizedHref("/admin")}/`)
                           ? "bg-brand-red-500"
                           : ""
                       }`}
@@ -189,8 +189,8 @@ const MobileSideBar = ({
                         width={26}
                         height={26}
                         className={`w-[35px] h-[35px] invert group-hover:invert-0 ${
-                          pathname === "/admin/dashboard" ||
-                          pathname.startsWith(`/admin/dashboard/`) ||
+                          pathname === getLocalizedHref("/admin/dashboard") ||
+                          pathname.startsWith(`${getLocalizedHref("/admin")}/`) ||
                           mode === "dark"
                             ? "invert-0"
                             : ""
@@ -198,8 +198,8 @@ const MobileSideBar = ({
                       />
                       <p
                         className={`text-[15px] text-slate-950 dark:text-slate-200 font-semibold group-hover:text-white block ${
-                          pathname === "/admin/dashboard" ||
-                          pathname.startsWith(`/admin/dashboard/`)
+                          pathname === getLocalizedHref("/admin/dashboard") ||
+                          pathname.startsWith(`${getLocalizedHref("/admin")}/`)
                             ? "text-slate-200"
                             : ""
                         }`}

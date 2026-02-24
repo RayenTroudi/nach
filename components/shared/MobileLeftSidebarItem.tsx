@@ -28,12 +28,8 @@ const MobileLeftSidebarItem = ({ icon: Icon, labelKey, href, onClose }: Props) =
   const pathnameHasLocale = pathname.startsWith('/ar/') || pathname.startsWith('/en/') || pathname.startsWith('/de/');
   const finalHref = pathnameHasLocale && !hasLocale ? `/${locale}${href}` : href;
   
-  // Improved active state logic to prevent false matches
-  // For home route, only match exact path
-  // For other routes, match exact path or child routes
-  const isActive = pathname === finalHref || 
-    (finalHref !== '/' && finalHref !== `/${locale}` && finalHref !== `/en` && finalHref !== `/ar` && finalHref !== `/de` && 
-     pathname.startsWith(`${finalHref}/`));
+  // Only match exact path to prevent multiple items being active
+  const isActive = pathname === finalHref;
 
   return (
     <Link

@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "clean": "if exist .next rmdir /s /q .next",
-    "build": "npm run clean && npm run validate:translations && next build",
+    "build": "npm run validate:translations && next build",
     "start": "next start",
     "lint": "next lint",
     "seed": "tsx scripts/seed.ts",

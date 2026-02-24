@@ -129,8 +129,8 @@ const Footer = () => {
         {/* Support Contact Section */}
         <div className="mt-8 sm:mt-10 mb-6 sm:mb-8 border-t border-gray-100 dark:border-gray-800 pt-6 sm:pt-8">
           <div className="bg-gradient-to-r from-red-50 to-rose-50 dark:from-red-950/20 dark:to-rose-950/20 rounded-lg p-4 sm:p-6 border border-red-100 dark:border-red-900/30">
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-              <div className="flex-1">
+            <div className="flex flex-col items-start gap-4">
+              <div className="w-full">
                 <h3 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white mb-1 sm:mb-2">
                   {t("needHelp")}
                 </h3>
@@ -138,7 +138,7 @@ const Footer = () => {
                   {t("contactSupport")}
                 </p>
               </div>
-              <div className="flex items-center gap-2 sm:gap-3 bg-white dark:bg-gray-950 px-3 sm:px-4 py-2 sm:py-3 rounded-lg border border-gray-200 dark:border-gray-800 shadow-sm">
+              <div className="w-full sm:w-auto flex items-center gap-2 sm:gap-3 bg-white dark:bg-gray-950 px-3 sm:px-4 py-2 sm:py-3 rounded-lg border border-gray-200 dark:border-gray-800 shadow-sm">
                 <svg
                   className="h-4 w-4 sm:h-5 sm:w-5 text-red-600 dark:text-red-500 flex-shrink-0"
                   fill="none"
@@ -150,7 +150,7 @@ const Footer = () => {
                 >
                   <path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                 </svg>
-                <span className="text-sm sm:text-base font-medium text-red-600 dark:text-red-500">
+                <span className="text-xs sm:text-sm md:text-base font-medium text-red-600 dark:text-red-500 break-all">
                   support@taleldeutchlandservices.com
                 </span>
               </div>

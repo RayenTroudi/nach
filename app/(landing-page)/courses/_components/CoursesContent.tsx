@@ -22,12 +22,15 @@ import { Card } from "@/components/ui/card";
 import { CourseTypeEnum, CourseLevelEnum } from "@/lib/enums";
 import { useTranslations } from "next-intl";
 
-export default function CoursesContent() {
+interface CoursesContentProps {
+  initialCourses: TCourse[];
+}
+
+export default function CoursesContent({ initialCourses }: CoursesContentProps) {
   const t = useTranslations('coursesPage');
-  const [courses, setCourses] = useState<TCourse[]>([]);
-  const [filteredCourses, setFilteredCourses] = useState<TCourse[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [initialLoad, setInitialLoad] = useState(true);
+  const [courses, setCourses] = useState<TCourse[]>(initialCourses);
+  const [filteredCourses, setFilteredCourses] = useState<TCourse[]>(initialCourses);
+  const [loading, setLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [selectedLevel, setSelectedLevel] = useState<string | null>(null);
@@ -46,46 +49,19 @@ export default function CoursesContent() {
     { value: CourseLevelEnum.Advanced, label: t('levels.advanced'), color: "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400" },
   ];
 
+  // Update courses when initialCourses prop changes
   useEffect(() => {
-    fetchCourses();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    setCourses(initialCourses);
+    setFilteredCourses(initialCourses);
+  }, [initialCourses]);
 
   useEffect(() => {
     filterCourses();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [courses, searchTerm, selectedCategory, selectedLevel]);
 
-  const fetchCourses = async () => {
-    try {
-      setLoading(true);
-      const response = await fetch("/api/courses?type=regular");
-      
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      
-      const data = await response.json();
-      
-      if (data.success && Array.isArray(data.courses)) {
-        setCourses(data.courses);
-        setFilteredCourses(data.courses);
-      } else {
-        setCourses([]);
-        setFilteredCourses([]);
-      }
-    } catch (error) {
-      console.error("Error fetching courses:", error);
-      setCourses([]);
-      setFilteredCourses([]);
-    } finally {
-      setLoading(false);
-      setInitialLoad(false);
-    }
-  };
-
   const filterCourses = () => {
-    // Start with all courses (already filtered by API for type=regular)
+    // Start with all courses (already filtered by server for type=regular)
     let filtered = [...courses];
 
     // Search filter
@@ -121,26 +97,6 @@ export default function CoursesContent() {
   };
 
   const hasActiveFilters = searchTerm || selectedCategory !== "all" || selectedLevel;
-
-  // Show full-screen loader on initial page load
-  if (initialLoad) {
-    return (
-      <div className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-slate-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 flex items-center justify-center">
-        <div className="text-center">
-          <div className="relative">
-            <Spinner size={64} className="text-brand-red-500 mx-auto mb-4" />
-            <div className="absolute inset-0 w-16 h-16 border-4 border-brand-red-200 dark:border-brand-red-900 rounded-full mx-auto"></div>
-          </div>
-          <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-50 mb-2">
-            {t('loading.title')}
-          </h2>
-          <p className="text-slate-600 dark:text-slate-400">
-            {t('loading.subtitle')}
-          </p>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-slate-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 pt-20">

@@ -19,6 +19,23 @@ const handleAuth = async () => {
   return { userId };
 };
 
+// Auth handler that allows unauthenticated uploads for specific endpoints
+const handleAuthOptional = async () => {
+  try {
+    const { userId } = auth();
+    
+    console.log("[UploadThing Auth Optional]", {
+      userId: userId || 'null (allowed)',
+      timestamp: new Date().toISOString()
+    });
+    
+    return { userId: userId || null };
+  } catch (error) {
+    console.log("[UploadThing Auth Optional] Auth failed, allowing anonymous upload");
+    return { userId: null };
+  }
+};
+
 // FileRouter for your app, can contain multiple FileRoutes
 export const ourFileRouter = {
   courseThumbnail: f({ image: { maxFileSize: "4MB", maxFileCount: 1 } })
@@ -37,7 +54,7 @@ export const ourFileRouter = {
     image: { maxFileSize: "4MB", maxFileCount: 1 },
     pdf: { maxFileSize: "4MB", maxFileCount: 1 }
   })
-    .middleware(async () => await handleAuth())
+    .middleware(async () => await handleAuthOptional())
     .onUploadComplete(() => {}),
 
   documentUpload: f({ 

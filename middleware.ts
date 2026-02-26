@@ -43,7 +43,8 @@ const IGNORED_ROUTES = [
   "/api/resume-request", // Resume request creation (public)
   "/api/resume-request/(.*)", // Resume request details (public)
   "/api/resume-payment", // Resume payment proof (public, no auth needed)
-  "/api/admin/(.*)", // Admin routes handle their own auth
+  "/api/admin/(.*)", // Admin API routes handle their own auth
+  "/admin/(.*)", // Admin dashboard pages (protected by layout)
   "/_next/static(.*)",
   "/_next/image(.*)",
   "/favicon.ico",

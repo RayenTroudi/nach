@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import axios from "axios";
 import Image from "next/image";
+import { getDocumentPurchases, approveDocumentPurchase, rejectDocumentPurchase } from "./actions";
 import {
   Check,
   X,
@@ -79,15 +79,21 @@ export default function AdminDocumentPurchasesPage() {
   const fetchPurchases = async () => {
     try {
       setIsLoading(true);
-      const response = await axios.get("/api/admin/document-purchases");
-      if (response.data.purchases) {
-        setAllPurchases(response.data.purchases);
+      const response = await getDocumentPurchases();
+      if (response.success && response.data) {
+        setAllPurchases(response.data);
+      } else {
+        scnToast({
+          title: "Error",
+          description: response.error || "Failed to fetch purchases",
+          variant: "destructive",
+        });
       }
     } catch (error: any) {
       console.error("Error fetching purchases:", error);
       scnToast({
         title: "Error",
-        description: error.response?.data?.error || "Failed to fetch purchases",
+        description: error.message || "Failed to fetch purchases",
         variant: "destructive",
       });
     } finally {
@@ -110,11 +116,9 @@ export default function AdminDocumentPurchasesPage() {
 
     try {
       setActionLoading(true);
-      const response = await axios.patch(`/api/document-purchases/${selectedPurchase._id}`, {
-        paymentStatus: "completed",
-      });
+      const response = await approveDocumentPurchase(selectedPurchase._id);
 
-      if (response.data) {
+      if (response.success) {
         scnToast({
           title: "Success",
           description: "Purchase approved! Student now has access to the document(s).",
@@ -128,12 +132,18 @@ export default function AdminDocumentPurchasesPage() {
 
         setIsViewDialogOpen(false);
         setAdminNotes("");
+      } else {
+        scnToast({
+          title: "Error",
+          description: response.error || "Failed to approve purchase",
+          variant: "destructive",
+        });
       }
     } catch (error: any) {
       console.error("Error approving purchase:", error);
       scnToast({
         title: "Error",
-        description: error.response?.data?.error || "Failed to approve purchase",
+        description: error.message || "Failed to approve purchase",
         variant: "destructive",
       });
     } finally {
@@ -155,11 +165,9 @@ export default function AdminDocumentPurchasesPage() {
 
     try {
       setActionLoading(true);
-      const response = await axios.patch(`/api/document-purchases/${selectedPurchase._id}`, {
-        paymentStatus: "rejected",
-      });
+      const response = await rejectDocumentPurchase(selectedPurchase._id, adminNotes);
 
-      if (response.data) {
+      if (response.success) {
         scnToast({
           title: "Success",
           description: "Purchase rejected. Student will be notified.",
@@ -173,12 +181,18 @@ export default function AdminDocumentPurchasesPage() {
 
         setIsViewDialogOpen(false);
         setAdminNotes("");
+      } else {
+        scnToast({
+          title: "Error",
+          description: response.error || "Failed to reject purchase",
+          variant: "destructive",
+        });
       }
     } catch (error: any) {
       console.error("Error rejecting purchase:", error);
       scnToast({
         title: "Error",
-        description: error.response?.data?.error || "Failed to reject purchase",
+        description: error.message || "Failed to reject purchase",
         variant: "destructive",
       });
     } finally {

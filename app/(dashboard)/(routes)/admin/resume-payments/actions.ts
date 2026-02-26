@@ -1,6 +1,5 @@
 "use server";
 
-import { auth } from "@clerk/nextjs/server";
 import { connectToDatabase } from "@/lib/mongoose";
 import ResumeRequestModel from "@/lib/models/resumeRequest.model";
 import User from "@/lib/models/user.model";
@@ -14,18 +13,6 @@ import {
 
 export async function getResumeRequests() {
   try {
-    let userId = null;
-    try {
-      const authResult = await auth();
-      userId = authResult.userId;
-    } catch (authError) {
-      console.error("[getResumeRequests] Auth error:", authError);
-    }
-
-    if (!userId) {
-      return { success: false, error: "Unauthorized" };
-    }
-
     await connectToDatabase();
 
     const requests = await ResumeRequestModel.find({})
@@ -49,18 +36,6 @@ export async function getResumeRequests() {
 
 export async function approvePayment(requestId: string, adminNotes: string) {
   try {
-    let userId = null;
-    try {
-      const authResult = await auth();
-      userId = authResult.userId;
-    } catch (authError) {
-      console.error("[approvePayment] Auth error:", authError);
-    }
-
-    if (!userId) {
-      return { success: false, error: "Unauthorized" };
-    }
-
     await connectToDatabase();
 
     const updatedRequest = await ResumeRequestModel.findByIdAndUpdate(
@@ -70,7 +45,6 @@ export async function approvePayment(requestId: string, adminNotes: string) {
         status: "in_progress",
         adminNotes,
         approvedAt: new Date(),
-        approvedBy: userId,
       },
       { new: true }
     ).lean();
@@ -223,18 +197,6 @@ export async function approvePayment(requestId: string, adminNotes: string) {
 
 export async function rejectPayment(requestId: string, adminNotes: string) {
   try {
-    let userId = null;
-    try {
-      const authResult = await auth();
-      userId = authResult.userId;
-    } catch (authError) {
-      console.error("[rejectPayment] Auth error:", authError);
-    }
-
-    if (!userId) {
-      return { success: false, error: "Unauthorized" };
-    }
-
     if (!adminNotes.trim()) {
       return { success: false, error: "Please provide a reason for rejection" };
     }
@@ -248,7 +210,6 @@ export async function rejectPayment(requestId: string, adminNotes: string) {
         status: "rejected",
         adminNotes,
         rejectedAt: new Date(),
-        rejectedBy: userId,
       },
       { new: true }
     ).lean();

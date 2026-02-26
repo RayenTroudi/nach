@@ -1,23 +1,10 @@
 "use server";
 
-import { auth } from "@clerk/nextjs/server";
 import { connectToDatabase } from "@/lib/mongoose";
 import DocumentPurchase from "@/lib/models/document-purchase.model";
 
 export async function getDocumentPurchases() {
   try {
-    let userId = null;
-    try {
-      const authResult = await auth();
-      userId = authResult.userId;
-    } catch (authError) {
-      console.error("[getDocumentPurchases] Auth error:", authError);
-    }
-
-    if (!userId) {
-      return { success: false, error: "Unauthorized" };
-    }
-
     await connectToDatabase();
 
     const purchases = await DocumentPurchase.find({})
@@ -58,18 +45,6 @@ export async function getDocumentPurchases() {
 
 export async function approveDocumentPurchase(purchaseId: string) {
   try {
-    let userId = null;
-    try {
-      const authResult = await auth();
-      userId = authResult.userId;
-    } catch (authError) {
-      console.error("[approveDocumentPurchase] Auth error:", authError);
-    }
-
-    if (!userId) {
-      return { success: false, error: "Unauthorized" };
-    }
-
     await connectToDatabase();
 
     const updatedPurchase = await DocumentPurchase.findByIdAndUpdate(
@@ -77,7 +52,6 @@ export async function approveDocumentPurchase(purchaseId: string) {
       {
         paymentStatus: "completed",
         approvedAt: new Date(),
-        approvedBy: userId,
       },
       { new: true }
     ).lean() as any;
@@ -103,18 +77,6 @@ export async function approveDocumentPurchase(purchaseId: string) {
 
 export async function rejectDocumentPurchase(purchaseId: string, adminNotes: string) {
   try {
-    let userId = null;
-    try {
-      const authResult = await auth();
-      userId = authResult.userId;
-    } catch (authError) {
-      console.error("[rejectDocumentPurchase] Auth error:", authError);
-    }
-
-    if (!userId) {
-      return { success: false, error: "Unauthorized" };
-    }
-
     if (!adminNotes.trim()) {
       return { success: false, error: "Please provide a reason for rejection" };
     }
@@ -127,7 +89,6 @@ export async function rejectDocumentPurchase(purchaseId: string, adminNotes: str
         paymentStatus: "rejected",
         adminNotes,
         rejectedAt: new Date(),
-        rejectedBy: userId,
       },
       { new: true }
     ).lean() as any;

@@ -47,7 +47,8 @@ export default function AdminResumePaymentsPage() {
   const [selectedRequest, setSelectedRequest] = useState<ResumeRequest | null>(null);
   const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
   const [adminNotes, setAdminNotes] = useState("");
-  const [actionLoading, setActionLoading] = useState(false);
+  const [approveLoading, setApproveLoading] = useState(false);
+  const [rejectLoading, setRejectLoading] = useState(false);
 
   const filteredRequests = statusFilter === "all" 
     ? requests 
@@ -95,7 +96,7 @@ export default function AdminResumePaymentsPage() {
     if (!selectedRequest) return;
 
     try {
-      setActionLoading(true);
+      setApproveLoading(true);
       const response = await approvePayment(selectedRequest._id, adminNotes);
 
       if (response.success) {
@@ -128,7 +129,7 @@ export default function AdminResumePaymentsPage() {
         variant: "destructive",
       });
     } finally {
-      setActionLoading(false);
+      setApproveLoading(false);
     }
   };
 
@@ -145,7 +146,7 @@ export default function AdminResumePaymentsPage() {
     }
 
     try {
-      setActionLoading(true);
+      setRejectLoading(true);
       const response = await rejectPayment(selectedRequest._id, adminNotes);
 
       if (response.success) {
@@ -178,7 +179,7 @@ export default function AdminResumePaymentsPage() {
         variant: "destructive",
       });
     } finally {
-      setActionLoading(false);
+      setRejectLoading(false);
     }
   };
 
@@ -449,24 +450,30 @@ export default function AdminResumePaymentsPage() {
                       <Button
                         variant="outline"
                         onClick={() => setIsViewDialogOpen(false)}
-                        disabled={actionLoading}
+                        disabled={approveLoading || rejectLoading}
                       >
                         {t('close')}
                       </Button>
                       <Button
                         variant="destructive"
                         onClick={handleRejectPayment}
-                        disabled={actionLoading}
+                        disabled={approveLoading || rejectLoading}
                       >
-                        <X className="w-4 h-4 mr-2" />
-                        {t('reject')}
+                        {rejectLoading ? (
+                          <Spinner />
+                        ) : (
+                          <>
+                            <X className="w-4 h-4 mr-2" />
+                            {t('reject')}
+                          </>
+                        )}
                       </Button>
                       <Button
                         onClick={handleApprovePayment}
-                        disabled={actionLoading}
+                        disabled={approveLoading || rejectLoading}
                         className="bg-green-600 hover:bg-green-700"
                       >
-                        {actionLoading ? (
+                        {approveLoading ? (
                           <Spinner />
                         ) : (
                           <>

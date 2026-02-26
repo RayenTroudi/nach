@@ -1,8 +1,8 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import axios from "axios";
 import Image from "next/image";
+import { getAdminBookings, updateBookingStatus } from "./actions";
 import { 
   Check, 
   X, 
@@ -87,22 +87,24 @@ export default function AdminBookingsPage() {
   const fetchBookings = async (page: number = 1) => {
     try {
       setIsLoading(true);
-      const params = new URLSearchParams({
-        page: page.toString(),
-        limit: "100",
-      });
 
-      const response = await axios.get(`/api/admin/bookings?${params}`);
+      const response = await getAdminBookings(page, 100);
       
-      if (response.data.success) {
-        setAllBookings(response.data.bookings);
-        setPagination(response.data.pagination);
+      if (response.success) {
+        setAllBookings(response.bookings);
+        setPagination(response.pagination);
+      } else {
+        scnToast({
+          title: t('error'),
+          description: response.error || t('errorFetching'),
+          variant: "destructive",
+        });
       }
     } catch (error: any) {
       console.error("Error fetching bookings:", error);
       scnToast({
         title: t('error'),
-        description: error.response?.data?.error || t('errorFetching'),
+        description: error.message || t('errorFetching'),
         variant: "destructive",
       });
     } finally {
@@ -126,13 +128,13 @@ export default function AdminBookingsPage() {
 
     try {
       setActionLoading(true);
-      const response = await axios.post("/api/admin/approve-booking", {
-        bookingId: selectedBooking._id,
-        action: "approve",
-        adminNotes,
-      });
+      const response = await updateBookingStatus(
+        selectedBooking._id,
+        "approve",
+        adminNotes
+      );
 
-      if (response.data.success) {
+      if (response.success) {
         scnToast({
           title: t('success'),
           description: t('bookingApprovedDesc'),
@@ -150,12 +152,18 @@ export default function AdminBookingsPage() {
         setIsViewDialogOpen(false);
         setSelectedBooking(null);
         setAdminNotes("");
+      } else {
+        scnToast({
+          title: t('error'),
+          description: response.error || t('errorApproving'),
+          variant: "destructive",
+        });
       }
     } catch (error: any) {
       console.error("Error approving booking:", error);
       scnToast({
         title: t('error'),
-        description: error.response?.data?.error || t('errorApproving'),
+        description: error.message || t('errorApproving'),
         variant: "destructive",
       });
     } finally {
@@ -168,13 +176,13 @@ export default function AdminBookingsPage() {
 
     try {
       setActionLoading(true);
-      const response = await axios.post("/api/admin/approve-booking", {
-        bookingId: selectedBooking._id,
-        action: "reject",
-        adminNotes,
-      });
+      const response = await updateBookingStatus(
+        selectedBooking._id,
+        "reject",
+        adminNotes
+      );
 
-      if (response.data.success) {
+      if (response.success) {
         scnToast({
           title: t('success'),
           description: t('bookingRejectedDesc'),
@@ -192,12 +200,18 @@ export default function AdminBookingsPage() {
         setIsViewDialogOpen(false);
         setSelectedBooking(null);
         setAdminNotes("");
+      } else {
+        scnToast({
+          title: t('error'),
+          description: response.error || t('errorRejecting'),
+          variant: "destructive",
+        });
       }
     } catch (error: any) {
       console.error("Error rejecting booking:", error);
       scnToast({
         title: t('error'),
-        description: error.response?.data?.error || t('errorRejecting'),
+        description: error.message || t('errorRejecting'),
         variant: "destructive",
       });
     } finally {

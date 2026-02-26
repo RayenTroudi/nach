@@ -1,8 +1,8 @@
 "use client";
 import { useEffect, useState } from "react";
-import axios from "axios";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
+import { getResumeRequests, approvePayment, rejectPayment } from "./actions";
 import { 
   Check, 
   X, 
@@ -56,18 +56,24 @@ export default function AdminResumePaymentsPage() {
   const fetchRequests = async () => {
     try {
       setIsLoading(true);
-      const response = await axios.get("/api/resume-request");
+      const response = await getResumeRequests();
       
-      console.log("Resume requests data:", response.data.resumeRequests);
+      console.log("Resume requests data:", response.data);
       
-      if (response.data.success) {
-        setRequests(response.data.resumeRequests);
+      if (response.success && response.data) {
+        setRequests(response.data);
+      } else {
+        scnToast({
+          title: "Error",
+          description: response.error || "Failed to fetch resume requests",
+          variant: "destructive",
+        });
       }
     } catch (error: any) {
       console.error("Error fetching resume requests:", error);
       scnToast({
         title: "Error",
-        description: error.response?.data?.error || "Failed to fetch resume requests",
+        description: error.message || "Failed to fetch resume requests",
         variant: "destructive",
       });
     } finally {
@@ -90,13 +96,9 @@ export default function AdminResumePaymentsPage() {
 
     try {
       setActionLoading(true);
-      const response = await axios.patch(`/api/resume-request/${selectedRequest._id}`, {
-        paymentStatus: "paid",
-        status: "in_progress",
-        adminNotes,
-      });
+      const response = await approvePayment(selectedRequest._id, adminNotes);
 
-      if (response.data.success) {
+      if (response.success) {
         scnToast({
           title: "Success",
           description: "Payment approved! Resume request is now available for the instructor.",
@@ -111,12 +113,18 @@ export default function AdminResumePaymentsPage() {
         );
 
         setIsViewDialogOpen(false);
+      } else {
+        scnToast({
+          title: "Error",
+          description: response.error || "Failed to approve payment",
+          variant: "destructive",
+        });
       }
     } catch (error: any) {
       console.error("Error approving payment:", error);
       scnToast({
         title: "Error",
-        description: error.response?.data?.error || "Failed to approve payment",
+        description: error.message || "Failed to approve payment",
         variant: "destructive",
       });
     } finally {
@@ -138,13 +146,9 @@ export default function AdminResumePaymentsPage() {
 
     try {
       setActionLoading(true);
-      const response = await axios.patch(`/api/resume-request/${selectedRequest._id}`, {
-        paymentStatus: "rejected",
-        status: "rejected",
-        adminNotes,
-      });
+      const response = await rejectPayment(selectedRequest._id, adminNotes);
 
-      if (response.data.success) {
+      if (response.success) {
         scnToast({
           title: "Success",
           description: "Payment rejected. Student will be notified.",
@@ -159,6 +163,24 @@ export default function AdminResumePaymentsPage() {
         );
 
         setIsViewDialogOpen(false);
+      } else {
+        scnToast({
+          title: "Error",
+          description: response.error || "Failed to reject payment",
+          variant: "destructive",
+        });
+      }
+    } catch (error: any) {
+      console.error("Error rejecting payment:", error);
+      scnToast({
+        title: "Error",
+        description: error.message || "Failed to reject payment",
+        variant: "destructive",
+      });
+    } finally {
+      setActionLoading(false);
+    }
+  };        setIsViewDialogOpen(false);
       }
     } catch (error: any) {
       console.error("Error rejecting payment:", error);

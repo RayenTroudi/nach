@@ -6,7 +6,15 @@ import { auth } from "@clerk/nextjs/server";
 
 export async function POST(req: NextRequest) {
   try {
-    const { userId } = auth();
+    // Safely get userId - don't fail if not authenticated
+    let userId = null;
+    try {
+      const authResult = auth();
+      userId = authResult.userId;
+    } catch (authError) {
+      console.log("No authentication found, proceeding without userId");
+    }
+    
     const body = await req.json();
 
     console.log("Received resume request data:", JSON.stringify(body, null, 2));

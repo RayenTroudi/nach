@@ -16,6 +16,7 @@ const PUBLIC_ROUTES = [
   "/api/health",
   "/api/me",
   "/api/debug/user",
+  "/api/resume-request",
   "/courses(.*)",
   "/course(.*)",
   "/user(.*)",

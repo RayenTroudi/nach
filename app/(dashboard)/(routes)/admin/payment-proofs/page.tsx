@@ -1,8 +1,8 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import axios from "axios";
 import Image from "next/image";
+import { getPaymentProofs, updatePaymentProofStatus } from "./actions";
 import { 
   Check, 
   X, 
@@ -102,23 +102,25 @@ export default function PaymentProofsAdminPage() {
   const fetchProofs = async (page: number = 1) => {
     try {
       setIsLoading(true);
-      const params = new URLSearchParams({
-        page: page.toString(),
-        limit: "100", // Fetch more at once to reduce API calls
-      });
 
-      const response = await axios.get(`/api/admin/payment-proofs?${params}`);
+      const response = await getPaymentProofs(page, 100, "all");
       
-      if (response.data.success) {
-        setAllProofs(response.data.data.proofs);
-        setPagination(response.data.data.pagination);
+      if (response.success && response.data) {
+        setAllProofs(response.data.proofs);
+        setPagination(response.data.pagination);
+      } else {
+        scnToast({
+          variant: "destructive",
+          title: t('errorTitle'),
+          description: response.error || t('errorLoadingProofs'),
+        });
       }
     } catch (error: any) {
       console.error("Fetch proofs error:", error);
       scnToast({
         variant: "destructive",
         title: t('errorTitle'),
-        description: error.response?.data?.error || t('errorLoadingProofs'),
+        description: error.message || t('errorLoadingProofs'),
       });
     } finally {
       setIsLoading(false);
@@ -148,13 +150,13 @@ export default function PaymentProofsAdminPage() {
 
     try {
       setActionLoading(true);
-      const response = await axios.post("/api/admin/payment-proofs", {
+      const response = await updatePaymentProofStatus(
         proofId,
         status,
-        adminNotes: adminNotes.trim() || undefined,
-      });
+        adminNotes.trim() || undefined
+      );
 
-      if (response.data.success) {
+      if (response.success) {
         scnToast({
           variant: "success",
           title: status === "approved" ? t('proofApproved') : t('proofRejected'),
@@ -171,13 +173,19 @@ export default function PaymentProofsAdminPage() {
         );
         setIsViewDialogOpen(false);
         setAdminNotes("");
+      } else {
+        scnToast({
+          variant: "destructive",
+          title: t('errorTitle'),
+          description: response.error || (status === "approved" ? t('errorApproving') : t('errorRejecting')),
+        });
       }
     } catch (error: any) {
       console.error("Action error:", error);
       scnToast({
         variant: "destructive",
         title: t('errorTitle'),
-        description: error.response?.data?.error || (status === "approved" ? t('errorApproving') : t('errorRejecting')),
+        description: error.message || (status === "approved" ? t('errorApproving') : t('errorRejecting')),
       });
     } finally {
       setActionLoading(false);

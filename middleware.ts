@@ -44,7 +44,7 @@ const IGNORED_ROUTES = [
   "/api/resume-request/(.*)", // Resume request details (public)
   "/api/resume-payment", // Resume payment proof (public, no auth needed)
   "/api/admin/(.*)", // Admin API routes handle their own auth
-  "/admin/(.*)", // Admin dashboard pages (protected by layout)
+
   "/_next/static(.*)",
   "/_next/image(.*)",
   "/favicon.ico",
@@ -55,9 +55,22 @@ export default authMiddleware({
   publicRoutes: PUBLIC_ROUTES,
   ignoredRoutes: IGNORED_ROUTES,
   debug: false, // Disable debug in production
+  clockSkewInMs: 60000, // Allow 60 seconds clock skew tolerance
   afterAuth(auth, req) {
-    // Always allow - let server-side pages handle auth checks
-    // With custom Clerk domain, middleware auth is unreliable
+    // Allow public routes through
+    if (auth.isPublicRoute) {
+      return NextResponse.next();
+    }
+    
+    // For protected routes, check if user has valid session
+    // If no userId (expired or invalid token), redirect to sign-in
+    if (!auth.userId && !auth.isPublicRoute) {
+      const signInUrl = new URL('/sign-in', req.url);
+      signInUrl.searchParams.set('redirect_url', req.url);
+      return NextResponse.redirect(signInUrl);
+    }
+    
+    // Valid session - allow through
     return NextResponse.next();
   },
 });

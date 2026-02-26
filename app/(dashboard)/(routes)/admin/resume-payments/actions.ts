@@ -14,7 +14,13 @@ import {
 
 export async function getResumeRequests() {
   try {
-    const { userId } = await auth();
+    let userId = null;
+    try {
+      const authResult = await auth();
+      userId = authResult.userId;
+    } catch (authError) {
+      console.error("[getResumeRequests] Auth error:", authError);
+    }
 
     if (!userId) {
       return { success: false, error: "Unauthorized" };
@@ -43,7 +49,13 @@ export async function getResumeRequests() {
 
 export async function approvePayment(requestId: string, adminNotes: string) {
   try {
-    const { userId } = await auth();
+    let userId = null;
+    try {
+      const authResult = await auth();
+      userId = authResult.userId;
+    } catch (authError) {
+      console.error("[approvePayment] Auth error:", authError);
+    }
 
     if (!userId) {
       return { success: false, error: "Unauthorized" };
@@ -211,7 +223,13 @@ export async function approvePayment(requestId: string, adminNotes: string) {
 
 export async function rejectPayment(requestId: string, adminNotes: string) {
   try {
-    const { userId } = await auth();
+    let userId = null;
+    try {
+      const authResult = await auth();
+      userId = authResult.userId;
+    } catch (authError) {
+      console.error("[rejectPayment] Auth error:", authError);
+    }
 
     if (!userId) {
       return { success: false, error: "Unauthorized" };

@@ -399,12 +399,6 @@ export function getPaymentRejectedToUserEmail(params: PaymentRejectedToUserParam
               </ul>
             </div>
 
-            <div style="text-align: center; margin: 30px 0;">
-              <a href="${resubmitUrl}" style="${emailStyles.button}">
-                Upload New Payment Proof →
-              </a>
-            </div>
-
             <p style="color: #6b7280; font-size: 14px; text-align: center;">
               Need help? Contact us at <a href="mailto:${SUPPORT_EMAIL}" style="color: #1e40af;">${SUPPORT_EMAIL}</a>
             </p>

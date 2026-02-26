@@ -16,11 +16,21 @@ export async function PATCH(
   { params }: { params: { id: string } }
 ) {
   try {
-    const { userId } = auth();
+    // Safely get auth without throwing
+    let userId = null;
+    try {
+      const authResult = auth();
+      userId = authResult.userId;
+    } catch (authError) {
+      console.error("[Resume Request PATCH] Auth error:", authError);
+    }
 
     if (!userId) {
+      console.error("[Resume Request PATCH] No userId - unauthorized");
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
+
+    console.log("[Resume Request PATCH] Authenticated user:", userId);
 
     const body = await req.json();
     const { status, paymentStatus, adminNotes, completedResumeUrl } = body;

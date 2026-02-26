@@ -39,6 +39,8 @@ const PUBLIC_ROUTES = [
 const IGNORED_ROUTES = [
   "/api/webhooks(.*)",
   "/api/health",
+  "/api/resume-request/(.*)", // Let API route handle its own auth
+  "/api/admin/(.*)", // Admin routes handle their own auth
   "/_next/static(.*)",
   "/_next/image(.*)",
   "/favicon.ico",

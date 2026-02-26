@@ -90,7 +90,7 @@ export default function AdminBookingsPage() {
 
       const response = await getAdminBookings(page, 100);
       
-      if (response.success) {
+      if (response.success && response.bookings) {
         setAllBookings(response.bookings);
         setPagination(response.pagination);
       } else {

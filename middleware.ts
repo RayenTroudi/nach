@@ -39,17 +39,10 @@ const PUBLIC_ROUTES = [
 const IGNORED_ROUTES = [
   "/api/webhooks(.*)",
   "/api/health",
-  "/api/uploadthing(.*)", // UploadThing file uploads
-  // Student payment-related routes
-  "/api/resume-request", // Resume request creation
-  "/api/resume-request/(.*)", // Resume request details
-  "/api/resume-payment", // Resume payment proof
-  "/api/my-resume-requests", // User's resume requests
-  "/api/submit-payment-proof", // Payment proof submission
-  "/api/my-payment-proofs", // User's payment proofs
-  "/api/booking-payment", // Booking payment submission
-  "/api/user/bookings", // User bookings
-  "/api/document-purchases(.*)", // Document purchases (all routes)
+  "/api/uploadthing(.*)", // UploadThing file uploads (uses own auth)
+  "/api/resume-request", // Resume request creation (public)
+  "/api/resume-request/(.*)", // Resume request details (public)
+  "/api/resume-payment", // Resume payment proof (public, no auth needed)
   "/api/admin/(.*)", // Admin routes handle their own auth
   "/_next/static(.*)",
   "/_next/image(.*)",

@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/mongoose";
 import ResumeRequestModel from "@/lib/models/resumeRequest.model";
-import { auth } from "@clerk/nextjs/server";
 import { sendEmail } from "@/lib/actions/email.action";
 import { getPaymentRequestToAdminEmail } from "@/lib/utils/email-templates";
 
@@ -12,11 +11,6 @@ export const dynamic = "force-dynamic";
 export async function POST(request: Request) {
   try {
     await connectToDatabase();
-    const { userId } = auth();
-
-    if (!userId) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
 
     const body = await request.json();
     const { proofUrl, bookingId, amount, notes } = body;
@@ -40,8 +34,7 @@ export async function POST(request: Request) {
     
     console.log("✅ Valid payment proof submission:", { 
       proofUrl: proofUrl.substring(0, 50) + '...', 
-      bookingId,
-      userId 
+      bookingId
     });
     
     const resumeRequest = await ResumeRequestModel.findById(bookingId);

@@ -103,7 +103,7 @@ export async function POST(req: NextRequest) {
       professionalExperience,
       additionalInfo,
       documentUrl,
-      price: 49,
+      price: 100,
       paymentStatus: "pending",
       status: "pending",
     });

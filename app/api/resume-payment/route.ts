@@ -54,7 +54,7 @@ export async function POST(request: Request) {
     }
     resumeRequest.paymentProofUrl = proofUrl;
     resumeRequest.paymentStatus = "pending";
-    resumeRequest.price = 49;
+    resumeRequest.price = amount || 100; // Use the amount from request or default to 100
     
     if (notes) {
       resumeRequest.additionalInfo = resumeRequest.additionalInfo 

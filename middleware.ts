@@ -52,21 +52,10 @@ const IGNORED_ROUTES = [
 export default authMiddleware({
   publicRoutes: PUBLIC_ROUTES,
   ignoredRoutes: IGNORED_ROUTES,
-  debug: true, // Enable debug mode
+  debug: false, // Disable debug in production
   afterAuth(auth, req) {
-    const pathname = req.nextUrl.pathname;
-    
-    console.log("🔐 [Middleware] Auth check:", {
-      pathname,
-      userId: auth.userId || 'null',
-      sessionId: auth.sessionId || 'null',
-      isPublicRoute: auth.isPublicRoute,
-      hasSessionClaims: !!auth.sessionClaims,
-    });
-
     // Always allow - let server-side pages handle auth checks
     // With custom Clerk domain, middleware auth is unreliable
-    console.log("✅ [Middleware] Allowing all requests - server will validate");
     return NextResponse.next();
   },
 });

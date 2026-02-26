@@ -240,6 +240,7 @@ export async function rejectPayment(requestId: string, adminNotes: string) {
     }
 
     // Send rejection email to user
+    let emailSent = false;
     try {
       console.log(`\n📧 Sending rejection email to: ${updatedRequest.email}`);
       const resubmitUrl = `${process.env.NEXT_PUBLIC_SERVER_URL}/contact/resume`;
@@ -253,20 +254,28 @@ export async function rejectPayment(requestId: string, adminNotes: string) {
         resubmitUrl,
       });
 
-      await sendEmail({
+      const emailResult = await sendEmail({
         to: updatedRequest.email,
         subject: "⚠️ Payment Review Required - Action Needed",
         html: emailHtml,
       });
 
-      console.log("✅ Rejection email sent to user:", updatedRequest.email);
+      if (emailResult.success) {
+        console.log("✅ Rejection email sent to user:", updatedRequest.email);
+        emailSent = true;
+      } else {
+        console.error("❌ Error sending rejection email:", emailResult.error);
+      }
     } catch (emailError: any) {
-      console.error("❌ Error sending rejection email:", emailError.message);
-      // Don't fail the whole request if email fails
+      console.error("❌ Exception sending rejection email:", emailError.message);
     }
 
     return { 
-      success: true, 
+      success: true,
+      emailSent,
+      message: emailSent 
+        ? "Payment rejected and user notified via email" 
+        : "Payment rejected but email notification failed. Please contact the user manually.",
       data: {
         ...updatedRequest,
         _id: updatedRequest._id.toString(),

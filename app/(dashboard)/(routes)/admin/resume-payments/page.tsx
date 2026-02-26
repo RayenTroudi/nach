@@ -151,8 +151,11 @@ export default function AdminResumePaymentsPage() {
 
       if (response.success) {
         scnToast({
-          title: "Success",
-          description: "Payment rejected. Student will be notified.",
+          title: response.emailSent ? "Success" : "Warning",
+          description: response.message || (response.emailSent 
+            ? "Payment rejected. Student will be notified." 
+            : "Payment rejected but email failed. Contact student manually."),
+          variant: response.emailSent ? "default" : "destructive",
         });
 
         setRequests(prev =>

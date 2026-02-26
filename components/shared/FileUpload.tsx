@@ -10,19 +10,38 @@ interface Props {
   endpoint: keyof typeof ourFileRouter;
   className?: string;
   autoUpload?: boolean; // New prop to enable auto-upload on file selection
+  onUploadStart?: () => void; // Callback when upload starts
+  onUploadError?: () => void; // Callback when upload fails
 }
 
-function FileUpload({ endpoint, onChange, className, autoUpload = false }: Props) {
+function FileUpload({ endpoint, onChange, className, autoUpload = false, onUploadStart, onUploadError: onUploadErrorCallback }: Props) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { startUpload, isUploading } = useUploadThing(endpoint, {
     onClientUploadComplete: (res) => {
-      onChange(res?.[0]?.url);
-      toast.success("File uploaded successfully!");
+      // Validate that we have a valid URL before calling onChange
+      const uploadedUrl = res?.[0]?.url;
+      if (uploadedUrl && typeof uploadedUrl === 'string' && uploadedUrl.trim() !== '') {
+        onChange(uploadedUrl);
+        toast.success("File uploaded successfully!");
+      } else {
+        console.error("[FileUpload] Invalid URL received:", res);
+        toast.error("Upload failed - invalid URL received. Please try again.");
+        onChange(undefined); // Clear any previous URL
+        if (onUploadErrorCallback) {
+          onUploadErrorCallback();
+        }
+      }
     },
     onUploadError: (error) => {
       const errorMessage = error.message;
       
       console.error("[FileUpload Error]", { endpoint, error: errorMessage });
+      
+      // Notify parent component of error
+      onChange(undefined); // Clear any previous URL
+      if (onUploadErrorCallback) {
+        onUploadErrorCallback();
+      }
       
       // Check for authentication error
       if (errorMessage.includes("Unauthorized") || errorMessage.includes("401")) {
@@ -37,6 +56,11 @@ function FileUpload({ endpoint, onChange, className, autoUpload = false }: Props
         toast.error(errorMessage || "Upload failed. Please try again.");
       }
     },
+    onUploadBegin: () => {
+      if (onUploadStart) {
+        onUploadStart();
+      }
+    },
   });
 
   // Handler for auto-upload mode
@@ -45,7 +69,34 @@ function FileUpload({ endpoint, onChange, className, autoUpload = false }: Props
     if (!files || files.length === 0) return;
 
     const fileArray = Array.from(files);
-    await startUpload(fileArray);
+    
+    try {
+      if (onUploadStart) {
+        onUploadStart();
+      }
+      const result = await startUpload(fileArray);
+      
+      // Additional validation after upload completes
+      if (!result || result.length === 0 || !result[0]?.url) {
+        console.error("[FileUpload] No valid result from upload:", result);
+        toast.error("Upload failed - no file URL received. Please try again.");
+        onChange(undefined);
+        if (onUploadErrorCallback) {
+          onUploadErrorCallback();
+        }
+      }
+    } catch (error) {
+      console.error("[FileUpload] Upload failed:", error);
+      onChange(undefined);
+      if (onUploadErrorCallback) {
+        onUploadErrorCallback();
+      }
+    }
+    
+    // Reset the file input so the same file can be selected again if needed
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
   };
 
   // If auto-upload is enabled, use a custom input

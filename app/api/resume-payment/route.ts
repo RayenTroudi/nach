@@ -21,12 +21,28 @@ export async function POST(request: Request) {
     const body = await request.json();
     const { proofUrl, bookingId, amount, notes } = body;
 
-    if (!proofUrl || !bookingId) {
+    // Validate proofUrl is present and is a valid string
+    if (!proofUrl || typeof proofUrl !== 'string' || proofUrl.trim() === '') {
+      console.error("❌ Invalid or missing proofUrl:", { proofUrl, bookingId });
       return NextResponse.json(
-        { error: "Missing required fields" },
+        { error: "Payment proof URL is required and must be valid" },
         { status: 400 }
       );
     }
+    
+    if (!bookingId || typeof bookingId !== 'string') {
+      console.error("❌ Invalid or missing bookingId:", { proofUrl, bookingId });
+      return NextResponse.json(
+        { error: "Booking ID is required and must be valid" },
+        { status: 400 }
+      );
+    }
+    
+    console.log("✅ Valid payment proof submission:", { 
+      proofUrl: proofUrl.substring(0, 50) + '...', 
+      bookingId,
+      userId 
+    });
     
     const resumeRequest = await ResumeRequestModel.findById(bookingId);
 

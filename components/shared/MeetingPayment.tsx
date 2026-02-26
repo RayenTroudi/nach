@@ -26,11 +26,23 @@ export default function MeetingPayment({
   const [uploadedUrl, setUploadedUrl] = useState<string | null>(null);
   const [notes, setNotes] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [uploadStatus, setUploadStatus] = useState<"idle" | "success" | "error">("idle");
+  const [uploadStatus, setUploadStatus] = useState<"idle" | "uploading" | "success" | "error">("idle");
+  const [isUploading, setIsUploading] = useState(false);
 
   const handleSubmitProof = async () => {
     
-    if (!uploadedUrl) {
+    // Prevent submission if upload is in progress
+    if (isUploading) {
+      scnToast({
+        variant: "destructive",
+        title: t('uploadInProgress') || "Upload in progress",
+        description: t('waitForUpload') || "Please wait for the upload to complete.",
+      });
+      return;
+    }
+    
+    // Validate URL exists and is not empty
+    if (!uploadedUrl || uploadedUrl.trim() === '') {
       scnToast({
         variant: "destructive",
         title: t('noFileUploaded'),
@@ -63,6 +75,11 @@ export default function MeetingPayment({
         }
       } else {
         console.log("⚠️ Response success was false:", response.data);
+        scnToast({
+          variant: "destructive",
+          title: t('submissionFailed'),
+          description: response.data.error || t('submissionFailedDesc'),
+        });
       }
     } catch (error: any) {
       console.error("❌ Submit error:", error);
@@ -153,19 +170,42 @@ export default function MeetingPayment({
             <FileUpload
               endpoint="paymentProof"
               autoUpload={true}
+              onUploadStart={() => {
+                setIsUploading(true);
+                setUploadedUrl(null); // Clear any previous URL
+                console.log("📤 Upload started...");
+              }}
               onChange={(url) => {
-                if (url) {
+                setIsUploading(false);
+                if (url && typeof url === 'string' && url.trim() !== '') {
                   setUploadedUrl(url);
                   setUploadStatus("idle");
+                  console.log("✅ Upload complete. URL:", url);
                   scnToast({
                     variant: "success",
                     title: t('fileUploaded'),
                     description: t('submitProof'),
                   });
+                } else {
+                  console.error("❌ Invalid URL received:", url);
+                  setUploadedUrl(null);
                 }
+              }}
+              onUploadError={() => {
+                setIsUploading(false);
+                setUploadedUrl(null);
+                setUploadStatus("error");
+                console.error("❌ Upload failed");
               }}
               className="w-full"
             />
+            {isUploading && (
+              <div className="mt-2 text-center">
+                <p className="text-sm text-blue-600 dark:text-blue-400 font-medium">
+                  Uploading... Please wait and do not close this window.
+                </p>
+              </div>
+            )}
           </div>
         ) : (
           <div className="border-2 border-green-300 dark:border-green-700 rounded-lg p-4">
@@ -179,7 +219,12 @@ export default function MeetingPayment({
               <Button
                 variant="ghost"
                 size="sm"
-                onClick={() => setUploadedUrl(null)}
+                onClick={() => {
+                  setUploadedUrl(null);
+                  setUploadStatus("idle");
+                  setIsUploading(false);
+                  console.log("🔄 File cleared, ready for new upload");
+                }}
               >
                 {t('changeFile')}
               </Button>
@@ -214,11 +259,16 @@ export default function MeetingPayment({
         {/* Submit Button */}
         <Button
           onClick={handleSubmitProof}
-          disabled={!uploadedUrl || isSubmitting}
+          disabled={!uploadedUrl || isSubmitting || isUploading}
           className="w-full"
           size="lg"
         >
-          {isSubmitting ? (
+          {isUploading ? (
+            <>
+              <Spinner />
+              {t('uploading') || 'Uploading...'}
+            </>
+          ) : isSubmitting ? (
             <>
               <Spinner />
               {t('submitting')}
@@ -227,6 +277,19 @@ export default function MeetingPayment({
             t('submitProof')
           )}
         </Button>
+
+        {/* Helper text */}
+        {!uploadedUrl && !isUploading && (
+          <p className="text-xs text-center text-amber-600 dark:text-amber-400 font-medium">
+            ⚠️ {t('uploadRequired') || 'Please upload payment proof to continue'}
+          </p>
+        )}
+        
+        {isUploading && (
+          <p className="text-xs text-center text-blue-600 dark:text-blue-400 font-medium">
+            ⏳ {t('uploadingWait') || 'Upload in progress, please wait...'}
+          </p>
+        )}
 
         <p className="text-xs text-center text-slate-500">
           {t('confirmAuthentic')}

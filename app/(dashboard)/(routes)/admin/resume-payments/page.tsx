@@ -180,18 +180,6 @@ export default function AdminResumePaymentsPage() {
     } finally {
       setActionLoading(false);
     }
-  };        setIsViewDialogOpen(false);
-      }
-    } catch (error: any) {
-      console.error("Error rejecting payment:", error);
-      scnToast({
-        title: "Error",
-        description: error.response?.data?.error || "Failed to reject payment",
-        variant: "destructive",
-      });
-    } finally {
-      setActionLoading(false);
-    }
   };
 
   const getStatusColor = (status: string) => {

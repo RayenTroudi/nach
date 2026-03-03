@@ -24,7 +24,9 @@
     "delete:videos": "tsx scripts/delete-all-videos.ts",
     "encode:video": "tsx scripts/encode-uploadthing-videos.ts",
     "encode:batch": "tsx scripts/batch-encode-videos.ts",
-    "migrate:videos": "tsx scripts/migrate-videos-to-mux.ts"
+    "migrate:videos": "tsx scripts/migrate-videos-to-mux.ts",
+    "test:webhook": "node scripts/test-clerk-webhook.js",
+    "sync:users": "node scripts/sync-clerk-users.js"
   },
   "dependencies": {
     "@clerk/localizations": "^3.35.3",

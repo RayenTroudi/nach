@@ -35,9 +35,26 @@ export async function GET(request: Request) {
       }, { status: 401 });
     }
 
-    const user = await UserModel.findOne({ clerkId: userId });
+    // Get user from database, create if doesn't exist
+    let user = await UserModel.findOne({ clerkId: userId });
     if (!user) {
-      return NextResponse.json({ error: "User not found" }, { status: 404 });
+      // Get user details from Clerk
+      const clerkUser = await currentUser();
+      if (!clerkUser) {
+        return NextResponse.json({ 
+          error: "Authentication required. Please sign in to view your purchases." 
+        }, { status: 401 });
+      }
+
+      // Create user in database
+      user = await UserModel.create({
+        clerkId: userId,
+        email: clerkUser.emailAddresses[0]?.emailAddress || "",
+        firstName: clerkUser.firstName || "",
+        lastName: clerkUser.lastName || "",
+        picture: clerkUser.imageUrl || "",
+        username: clerkUser.username || clerkUser.emailAddresses[0]?.emailAddress?.split("@")[0] || "",
+      });
     }
 
     // Get all purchases (pending, completed, rejected) so student can see status

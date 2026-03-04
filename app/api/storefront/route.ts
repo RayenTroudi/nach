@@ -83,6 +83,7 @@ export async function GET(request: Request) {
     let documentsTotal = 0;
     if (!type || type === "document") {
       // Show all public documents (both free and for sale) that are NOT part of any bundle
+      // Only show files explicitly marked as public
       const docQuery: any = { 
         isPublic: true
       };
@@ -129,10 +130,10 @@ export async function GET(request: Request) {
       if (parentFolder === "null" || parentFolder === null) {
         // Root level: Show bundles that are either:
         // 1. At root level (parentFolder is null), OR
-        // 2. Inside folders BUT have a price > 0 (for sale separately)
+        // 2. Inside folders BUT have a price set (including free, price >= 0) for sale separately
         bundleQuery.$or = [
           { parentFolder: null },
-          { parentFolder: { $ne: null }, price: { $gt: 0 } }
+          { parentFolder: { $ne: null }, price: { $gte: 0 } }
         ];
       } else if (parentFolder) {
         bundleQuery.parentFolder = parentFolder; // Items inside specific folder

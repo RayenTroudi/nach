@@ -41,12 +41,12 @@ const LandingPage = async () => {
     // Fetch documents and bundles using storefront logic
     await connectToDatabase();
     
-    // Fetch published bundles - include both root level and priced bundles inside folders
+    // Fetch published bundles - include both root level and bundles with prices (including free) inside folders
     const bundles = await DocumentBundle.find({ 
       isPublished: true,
       $or: [
         { parentFolder: null }, // Root level bundles
-        { parentFolder: { $ne: null }, price: { $gt: 0 } } // Priced bundles inside folders (for separate sale)
+        { parentFolder: { $ne: null }, price: { $gte: 0 } } // Bundles inside folders with price set (including free)
       ]
     })
       .populate("uploadedBy", "firstName lastName")
@@ -117,6 +117,7 @@ const LandingPage = async () => {
       );
     
     // Fetch all public documents (both free and for sale) that are NOT part of any bundle
+    // Only show files explicitly marked as public
     const docQuery: any = { isPublic: true };
     
     // Only add $nin filter if there are bundled documents
@@ -130,6 +131,9 @@ const LandingPage = async () => {
       .limit(6) // Increased to show more documents
       .lean();
     
+    console.log(`[Homepage] Found ${docs.length} documents for homepage display (query: isPublic=true only, not in bundles)`);
+    console.log(`[Homepage] Sample docs isPublic values:`, docs.slice(0, 3).map((d: any) => ({ title: d.title, isPublic: d.isPublic, isForSale: d.isForSale })));
+    
     // Combine and add itemType
     const allItems: Array<any & { itemType: string; createdAt: string | Date }> = [
       ...docs.map((doc) => ({ ...doc, itemType: "document" })),
@@ -142,6 +146,13 @@ const LandingPage = async () => {
       .slice(0, 12);
     
     console.log(`[Homepage] Combined items before serialization: ${items.length} total (${items.filter((i: any) => i.itemType === 'bundle').length} bundles, ${items.filter((i: any) => i.itemType === 'document').length} documents)`);
+    
+    // Debug: Log free vs paid items
+    const freeBundles = items.filter((i: any) => i.itemType === 'bundle' && (!i.price || i.price === 0)).length;
+    const paidBundles = items.filter((i: any) => i.itemType === 'bundle' && i.price > 0).length;
+    const freeDocuments = items.filter((i: any) => i.itemType === 'document' && (!i.price || i.price === 0)).length;
+    const paidDocuments = items.filter((i: any) => i.itemType === 'document' && i.price > 0).length;
+    console.log(`[Homepage] Price breakdown - Free bundles: ${freeBundles}, Paid bundles: ${paidBundles}, Free docs: ${freeDocuments}, Paid docs: ${paidDocuments}`);
     
     items = JSON.parse(JSON.stringify(items));
   } catch (error: any) {

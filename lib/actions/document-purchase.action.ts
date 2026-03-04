@@ -10,6 +10,7 @@ import { revalidatePath } from "next/cache";
 
 /**
  * Create a document purchase record
+ * If purchasing a folder, also grants access to all child bundles
  */
 export async function createDocumentPurchase(params: {
   itemType: "document" | "bundle";
@@ -57,6 +58,57 @@ export async function createDocumentPurchase(params: {
       await DocumentBundle.findByIdAndUpdate(params.itemId, {
         $push: { purchases: purchase._id },
       });
+      
+      // Check if this is a folder purchase
+      const bundle = await DocumentBundle.findById(params.itemId).lean();
+      if (bundle && bundle.isFolder) {
+        console.log(`[Purchase] Folder purchased: ${bundle.title}, granting access to child bundles...`);
+        
+        // Find all child bundles in this folder
+        const childBundles = await DocumentBundle.find({
+          parentFolder: params.itemId,
+          isPublished: true
+        }).lean();
+        
+        console.log(`[Purchase] Found ${childBundles.length} child bundles to grant access`);
+        
+        // Create purchase records for each child bundle
+        for (const childBundle of childBundles) {
+          try {
+            // Check if already purchased
+            const existingChildPurchase = await DocumentPurchase.findOne({
+              userId: user._id,
+              itemType: "bundle",
+              itemId: childBundle._id,
+            });
+            
+            if (!existingChildPurchase) {
+              const childPurchase = await DocumentPurchase.create({
+                userId: user._id,
+                itemType: "bundle",
+                itemModelName: "DocumentBundle",
+                itemId: childBundle._id,
+                amount: 0, // Child bundles are granted, not purchased directly
+                currency: params.currency,
+                paymentMethod: params.paymentMethod || "bank_transfer",
+                paymentStatus: "completed",
+                notes: `Granted via folder purchase: ${bundle.title}`,
+              });
+              
+              await DocumentBundle.findByIdAndUpdate(childBundle._id, {
+                $push: { purchases: childPurchase._id },
+              });
+              
+              console.log(`[Purchase] Granted access to child bundle: ${childBundle.title}`);
+            }
+          } catch (childError: any) {
+            console.error(`[Purchase] Error granting access to child bundle ${childBundle.title}:`, childError.message);
+            // Continue with other bundles even if one fails
+          }
+        }
+        
+        console.log(`[Purchase] Completed granting access to all child bundles`);
+      }
     } else {
       await DocumentModel.findByIdAndUpdate(params.itemId, {
         $push: { purchases: purchase._id },
@@ -109,6 +161,7 @@ export async function getUserPurchasedDocuments() {
 
 /**
  * Check if user has purchased an item
+ * For bundles inside folders, also checks if parent folder was purchased
  */
 export async function hasUserPurchased(params: {
   itemType: "document" | "bundle";
@@ -122,6 +175,7 @@ export async function hasUserPurchased(params: {
 
     const user = await getUserByClerkId({ clerkId: userId });
 
+    // Check direct purchase
     const purchase = await DocumentPurchase.findOne({
       userId: user._id,
       itemType: params.itemType,
@@ -129,7 +183,26 @@ export async function hasUserPurchased(params: {
       paymentStatus: "completed",
     });
 
-    return !!purchase;
+    if (purchase) return true;
+
+    // If checking a bundle, also check if parent folder was purchased
+    if (params.itemType === "bundle") {
+      const bundle = await DocumentBundle.findById(params.itemId).lean();
+      
+      if (bundle && bundle.parentFolder) {
+        // Check if parent folder was purchased
+        const folderPurchase = await DocumentPurchase.findOne({
+          userId: user._id,
+          itemType: "bundle",
+          itemId: bundle.parentFolder,
+          paymentStatus: "completed",
+        });
+        
+        if (folderPurchase) return true;
+      }
+    }
+
+    return false;
   } catch (error: any) {
     console.error("Check purchase error:", error);
     return false;
@@ -177,5 +250,36 @@ export async function getDocumentPurchases(instructorId?: string) {
   } catch (error: any) {
     console.error("Get document purchases error:", error);
     throw new Error(error.message);
+  }
+}
+
+/**
+ * Get all accessible bundle IDs for a user
+ * Includes bundles purchased directly and bundles granted via folder purchases
+ */
+export async function getUserAccessibleBundleIds(): Promise<string[]> {
+  try {
+    await connectToDatabase();
+    const { userId } = auth();
+
+    if (!userId) return [];
+
+    const user = await getUserByClerkId({ clerkId: userId });
+
+    // Get all bundle purchases (including those granted via folder purchase)
+    const purchases = await DocumentPurchase.find({
+      userId: user._id,
+      itemType: "bundle",
+      paymentStatus: "completed",
+    }).lean();
+
+    const accessibleBundleIds = new Set(
+      purchases.map(p => p.itemId.toString())
+    );
+
+    return Array.from(accessibleBundleIds);
+  } catch (error: any) {
+    console.error("Get accessible bundle IDs error:", error);
+    return [];
   }
 }

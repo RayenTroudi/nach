@@ -127,7 +127,13 @@ export async function GET(request: Request) {
       
       // Filter by parent folder
       if (parentFolder === "null" || parentFolder === null) {
-        bundleQuery.parentFolder = null; // Root level items
+        // Root level: Show bundles that are either:
+        // 1. At root level (parentFolder is null), OR
+        // 2. Inside folders BUT have a price > 0 (for sale separately)
+        bundleQuery.$or = [
+          { parentFolder: null },
+          { parentFolder: { $ne: null }, price: { $gt: 0 } }
+        ];
       } else if (parentFolder) {
         bundleQuery.parentFolder = parentFolder; // Items inside specific folder
       }
@@ -137,11 +143,23 @@ export async function GET(request: Request) {
       }
       
       if (search) {
-        bundleQuery.$or = [
+        // Preserve existing $or if it exists (for parentFolder logic)
+        const searchConditions = [
           { title: { $regex: search, $options: "i" } },
           { description: { $regex: search, $options: "i" } },
           { tags: { $in: [new RegExp(search, "i")] } },
         ];
+        
+        if (bundleQuery.$or) {
+          // Combine parent folder OR with search OR using $and
+          bundleQuery.$and = [
+            { $or: bundleQuery.$or },
+            { $or: searchConditions }
+          ];
+          delete bundleQuery.$or;
+        } else {
+          bundleQuery.$or = searchConditions;
+        }
       }
 
       console.log("[Storefront API] Bundle query:", JSON.stringify(bundleQuery));

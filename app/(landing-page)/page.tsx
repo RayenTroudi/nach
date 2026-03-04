@@ -41,16 +41,21 @@ const LandingPage = async () => {
     // Fetch documents and bundles using storefront logic
     await connectToDatabase();
     
-    // Fetch published bundles first - only root level bundles (not inside folders)
+    // Fetch published bundles - include both root level and priced bundles inside folders
     const bundles = await DocumentBundle.find({ 
       isPublished: true,
-      parentFolder: null // Only show root-level items on homepage
+      $or: [
+        { parentFolder: null }, // Root level bundles
+        { parentFolder: { $ne: null }, price: { $gt: 0 } } // Priced bundles inside folders (for separate sale)
+      ]
     })
       .populate("uploadedBy", "firstName lastName")
       .populate("documents", "title fileName")
       .sort({ createdAt: -1 })
-      .limit(3)
+      .limit(6) // Increased from 3 to show more bundles
       .lean();
+    
+    console.log(`[Homepage] Found ${bundles.length} bundles for homepage display`);
     
     // Add folder metadata for folders
     const bundlesWithMetadata = await Promise.all(bundles.map(async (bundle: any) => {
@@ -122,7 +127,7 @@ const LandingPage = async () => {
     const docs = await DocumentModel.find(docQuery)
       .populate("uploadedBy", "firstName lastName")
       .sort({ createdAt: -1 })
-      .limit(3)
+      .limit(6) // Increased to show more documents
       .lean();
     
     // Combine and add itemType
@@ -131,10 +136,12 @@ const LandingPage = async () => {
       ...bundlesWithMetadata.map((bundle) => ({ ...bundle, itemType: "bundle" }))
     ];
     
-    // Sort by createdAt and limit to 6 total items
+    // Sort by createdAt and limit to 12 total items (more items for better homepage display)
     items = allItems
       .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-      .slice(0, 6);
+      .slice(0, 12);
+    
+    console.log(`[Homepage] Combined items before serialization: ${items.length} total (${items.filter((i: any) => i.itemType === 'bundle').length} bundles, ${items.filter((i: any) => i.itemType === 'document').length} documents)`);
     
     items = JSON.parse(JSON.stringify(items));
   } catch (error: any) {

@@ -95,7 +95,7 @@ const ClientCourse = ({
             </AvatarFallback>
           </Avatar>
           <span className=" text-slate-800 dark:text-slate-400 text-[14px]">
-            {course.instructor.username}
+            {course.instructor.firstName} {course.instructor.lastName}
           </span>
         </div>
 

@@ -55,7 +55,7 @@ export default async function Page({ params }: PageProps) {
     (course: TCourse) => course.isPublished
   );
   const instructorPicture = user.picture || "/images/default_profile.avif";
-  const instructorUsername = user.username;
+  const instructorFullName = `${user.firstName} ${user.lastName}`;
 
   const studentIds = new Set();
   publishedCourses.forEach((course) => {
@@ -71,7 +71,7 @@ export default async function Page({ params }: PageProps) {
         <div className="w-full md:w-fit flex flex-col items-center justify-center space-y-2">
           <Image
             src={instructorPicture}
-            alt={instructorUsername}
+            alt={instructorFullName}
             width={288}
             height={288}
             className="rounded-full mb-4 md:mb-0"
@@ -79,7 +79,7 @@ export default async function Page({ params }: PageProps) {
         </div>
         <div className="flex-1 space-y-6">
           <h1 className="text-4xl font-bold text-slate-950 dark:text-slate-200">
-            {instructorUsername}
+            {instructorFullName}
           </h1>
           <div className="space-y-4">
             <span className="inline-block p-2 bg-blue-100 text-blue-800 text-xs font-semibold rounded dark:bg-blue-200 dark:text-blue-800">

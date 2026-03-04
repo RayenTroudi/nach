@@ -107,7 +107,7 @@ const PurchasePageHeader = ({ course }: Props) => {
                 <div className="flex flex-col">
                   <span className="text-xs text-slate-300">{t('createdBy')}</span>
                   <span className="font-semibold group-hover:text-brand-red-300 transition-colors">
-                    {course.instructor.username}
+                    {course.instructor.firstName} {course.instructor.lastName}
                   </span>
                 </div>
               </Link>

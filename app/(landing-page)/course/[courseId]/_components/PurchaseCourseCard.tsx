@@ -348,7 +348,7 @@ const PurchaseCourseCard = ({
                                 className="rounded-full object-cover"
                               />
                               <p className="text-xs text-slate-600 dark:text-slate-400">
-                                {course.instructor?.username || 'Instructor'}
+                                {course.instructor?.firstName && course.instructor?.lastName ? `${course.instructor.firstName} ${course.instructor.lastName}` : 'Instructor'}
                               </p>
                             </div>
                             <div className="flex items-center gap-x-2 mt-1">

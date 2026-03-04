@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { FileText, Clock, CheckCircle2, XCircle, Download, Plus } from "lucide-react";
+import { FileText, Clock, CheckCircle2, XCircle, Download, Plus, RefreshCw } from "lucide-react";
 import { Spinner } from "@/components/shared";
 import { toast } from "sonner";
 import Link from "next/link";
@@ -33,6 +33,7 @@ interface MyResumeRequestsClientProps {
 export default function MyResumeRequestsClient({ serverUserId }: MyResumeRequestsClientProps) {
   const [requests, setRequests] = useState<ResumeRequest[]>([]);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
     if (serverUserId) {
@@ -40,22 +41,51 @@ export default function MyResumeRequestsClient({ serverUserId }: MyResumeRequest
     }
   }, [serverUserId]);
 
-  const fetchRequests = async () => {
+  // Auto-refresh every 30 seconds if there are in-progress requests
+  useEffect(() => {
+    const hasInProgress = requests.some(req => req.status === "in_progress" || req.paymentStatus === "pending");
+    
+    if (!hasInProgress || !serverUserId) return;
+
+    const interval = setInterval(() => {
+      fetchRequests(true); // Silent refresh
+    }, 30000); // 30 seconds
+
+    return () => clearInterval(interval);
+  }, [requests, serverUserId]);
+
+  const fetchRequests = async (silent = false) => {
+    if (!silent) {
+      setRefreshing(true);
+    }
     try {
-      const response = await fetch("/api/my-resume-requests");
+      const response = await fetch("/api/my-resume-requests", {
+        cache: 'no-store',
+        headers: {
+          'Cache-Control': 'no-cache'
+        }
+      });
       
       if (response.ok) {
         const data = await response.json();
         console.log("Resume requests data:", data.resumeRequests);
         setRequests(data.resumeRequests || []);
+        if (!silent) {
+          toast.success("Resume requests updated");
+        }
       } else {
         setRequests([]);
       }
     } catch (error) {
-      toast.error("Failed to fetch resume requests");
+      if (!silent) {
+        toast.error("Failed to fetch resume requests");
+      }
       setRequests([]);
     } finally {
       setLoading(false);
+      if (!silent) {
+        setRefreshing(false);
+      }
     }
   };
 
@@ -125,12 +155,23 @@ export default function MyResumeRequestsClient({ serverUserId }: MyResumeRequest
                 <p className="text-slate-600 dark:text-slate-400">Track your professional resume requests</p>
               </div>
             </div>
-            <Link href="/contact/resume">
-              <Button className="bg-green-600 hover:bg-green-700 text-white">
-                <Plus className="w-4 h-4 mr-2" />
-                New Request
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                onClick={() => fetchRequests()}
+                disabled={refreshing}
+                className="border-slate-300 dark:border-slate-700"
+              >
+                <RefreshCw className={`w-4 h-4 mr-2 ${refreshing ? 'animate-spin' : ''}`} />
+                Refresh
               </Button>
-            </Link>
+              <Link href="/contact/resume">
+                <Button className="bg-green-600 hover:bg-green-700 text-white">
+                  <Plus className="w-4 h-4 mr-2" />
+                  New Request
+                </Button>
+              </Link>
+            </div>
           </div>
         </div>
 

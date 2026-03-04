@@ -5,6 +5,7 @@ import UserModel from "@/lib/models/user.model";
 import { auth, currentUser } from "@clerk/nextjs/server";
 
 export const dynamic = "force-dynamic";
+export const revalidate = 0; // Disable caching
 
 export async function GET(req: NextRequest) {
   try {
@@ -47,6 +48,14 @@ export async function GET(req: NextRequest) {
     const resumeRequests = await ResumeRequestModel.find(query)
       .sort({ createdAt: -1 })
       .lean();
+
+    console.log("Fetched resume requests:", resumeRequests.map(r => ({
+      id: r._id,
+      status: r.status,
+      hasCompletedResumeUrl: !!r.completedResumeUrl,
+      hasMotivationLetter: !!r.completedMotivationLetterUrl,
+      hasMotivationLetter2: !!r.completedMotivationLetter2Url
+    })));
 
     // Calculate helper flags
     const hasInProgress = resumeRequests.some(req => req.status === "in_progress");

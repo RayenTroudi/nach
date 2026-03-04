@@ -32,7 +32,9 @@ export interface IResumeRequest extends Document {
   status: "pending" | "in_progress" | "completed" | "rejected";
   adminNotes?: string;
   completedResumeUrl?: string;
-  completedMotivationLetterUrl?: string;  completedMotivationLetter2Url?: string;  createdAt: Date;
+  completedMotivationLetterUrl?: string;
+  completedMotivationLetter2Url?: string;
+  createdAt: Date;
   updatedAt: Date;
 }
 

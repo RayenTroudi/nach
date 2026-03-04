@@ -48,7 +48,13 @@ export async function POST(request: Request) {
       { new: true }
     );
 
-    console.log("Resume complete API - Updated document:", updatedRequest);
+    console.log("Resume complete API - Updated document:", {
+      id: updatedRequest?._id,
+      status: updatedRequest?.status,
+      completedResumeUrl: updatedRequest?.completedResumeUrl,
+      completedMotivationLetterUrl: updatedRequest?.completedMotivationLetterUrl,
+      completedMotivationLetter2Url: updatedRequest?.completedMotivationLetter2Url
+    });
 
     if (!updatedRequest) {
       return NextResponse.json(

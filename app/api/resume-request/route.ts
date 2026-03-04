@@ -151,7 +151,14 @@ export async function GET(req: NextRequest) {
 
     console.log("Fetched resume requests count:", resumeRequests.length);
     if (resumeRequests.length > 0) {
-      console.log("First resume request sample:", JSON.stringify(resumeRequests[0], null, 2));
+      console.log("First resume request sample:", {
+        id: resumeRequests[0]._id,
+        status: resumeRequests[0].status,
+        paymentStatus: resumeRequests[0].paymentStatus,
+        completedResumeUrl: resumeRequests[0].completedResumeUrl || 'null',
+        completedMotivationLetterUrl: resumeRequests[0].completedMotivationLetterUrl || 'null',
+        completedMotivationLetter2Url: resumeRequests[0].completedMotivationLetter2Url || 'null'
+      });
     }
 
     return NextResponse.json({ 

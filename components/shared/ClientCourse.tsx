@@ -14,6 +14,7 @@ import CourseCardFooter from "./CourseCardFooter";
 import Badge from "./Badge";
 import { BorderBeam } from "@/components/magicui/border-beam";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 
 const Vector = ({
   icon,
@@ -45,6 +46,7 @@ const ClientCourse = ({
   children,
   href,
 }: Props) => {
+  const t = useTranslations("courseCard");
   const { courseRating, ratingFrom } = calculateCourseRating(course);
 
   const isFree = false;
@@ -118,7 +120,7 @@ const ClientCourse = ({
           <Vector
             icon="/icons/graduate.svg"
             alt="graduate"
-            value={`${formatNumber(course?.students?.length ?? 0)} Student(s)`}
+            value={`${formatNumber(course?.students?.length ?? 0)} ${course?.students?.length === 1 ? t("student") : t("students")}`}
           />
         </div>
         <div className="flex items-center gap-2">

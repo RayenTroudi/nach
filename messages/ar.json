@@ -90,6 +90,12 @@
     "or": "أو",
     "pleaseSignIn": "يرجى تسجيل الدخول لعرض القائمة"
   },
+  "courseCard": {
+    "viewMore": "عرض المزيد",
+    "free": "مجاني",
+    "student": "طالب",
+    "students": "طلاب"
+  },
   "courses": {
     "courseContent": "محتوى الدورة",
     "allCourses": "جميع الدورات",

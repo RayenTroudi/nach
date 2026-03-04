@@ -1,5 +1,7 @@
+"use client";
 import React from "react";
 import { transformCurrencyToSymbol } from "@/lib/utils";
+import { useTranslations } from "next-intl";
 
 const CourseCardFooter = ({
   priceOff,
@@ -12,6 +14,7 @@ const CourseCardFooter = ({
   isFree: boolean;
   currency?: string;
 }) => {
+  const t = useTranslations("courseCard");
   const currencySymbol = transformCurrencyToSymbol(currency.toUpperCase());
   
   return (
@@ -25,7 +28,7 @@ const CourseCardFooter = ({
                   <s className="text-slate-950 dark:text-slate-200 ">
                     {currencySymbol}{price}
                   </s>
-                  <span className="text-[#55BE24] font-bold">Free</span>
+                  <span className="text-[#55BE24] font-bold">{t("free")}</span>
                 </>
               ) : (
                 <>
@@ -44,7 +47,7 @@ const CourseCardFooter = ({
         </div>
       </div>
       <p className="text-[15px] text-slate-950 dark:text-slate-200 font-semibold group-hover:text-brand-red-500">
-        View More
+        {t("viewMore")}
       </p>
     </div>
   );

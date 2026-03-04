@@ -90,6 +90,12 @@
     "or": "OR",
     "pleaseSignIn": "Please sign in to view menu"
   },
+  "courseCard": {
+    "viewMore": "View More",
+    "free": "Free",
+    "student": "Student",
+    "students": "Students"
+  },
   "courses": {
     "courseContent": "Course Content",
     "allCourses": "All Courses",

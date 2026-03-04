@@ -199,14 +199,26 @@ export async function POST(request: Request) {
     // Get or create user in database
     let user = await UserModel.findOne({ clerkId: userId });
     if (!user) {
-      user = await UserModel.create({
-        clerkId: userId,
-        email: clerkUser.emailAddresses[0].emailAddress,
-        firstName: clerkUser.firstName || "",
-        lastName: clerkUser.lastName || "",
-        username: clerkUser.username || clerkUser.emailAddresses[0].emailAddress,
-        photo: clerkUser.imageUrl,
-      });
+      const userEmail = clerkUser.emailAddresses[0]?.emailAddress || "";
+      
+      // Check if user exists by email (might have old clerkId)
+      user = await UserModel.findOne({ email: userEmail });
+      
+      if (user) {
+        // Update the clerkId if user exists with this email
+        user.clerkId = userId;
+        await user.save();
+      } else {
+        // Create new user
+        user = await UserModel.create({
+          clerkId: userId,
+          email: userEmail,
+          firstName: clerkUser.firstName || "",
+          lastName: clerkUser.lastName || "",
+          username: clerkUser.username || userEmail.split('@')[0],
+          picture: clerkUser.imageUrl || "",
+        });
+      }
     }
 
     // Check if user is admin/instructor

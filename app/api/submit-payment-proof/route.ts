@@ -45,18 +45,30 @@ export async function POST(request: Request) {
         );
       }
 
-      // Create user in MongoDB
-      const mongoUser = {
-        clerkId: clerkUser.id,
-        firstName: clerkUser.firstName || clerkUser.username || "User",
-        lastName: clerkUser.lastName || "User", // Provide default if empty
-        username: clerkUser.username || `${clerkUser.firstName || "User"}${clerkUser.lastName ? ` ${clerkUser.lastName}` : ""}`,
-        email: clerkUser.emailAddresses[0]?.emailAddress || "",
-        picture: clerkUser.imageUrl || "",
-      };
+      const userEmail = clerkUser.emailAddresses[0]?.emailAddress || "";
+      
+      // Check if user exists by email (might have old clerkId)
+      user = await User.findOne({ email: userEmail });
+      
+      if (user) {
+        // Update the clerkId if user exists with this email
+        user.clerkId = clerkId;
+        await user.save();
+        console.log("🔵 User clerkId updated: ✅");
+      } else {
+        // Create user in MongoDB
+        const mongoUser = {
+          clerkId: clerkUser.id,
+          firstName: clerkUser.firstName || clerkUser.username || "User",
+          lastName: clerkUser.lastName || "User",
+          username: clerkUser.username || `${clerkUser.firstName || "User"}${clerkUser.lastName ? ` ${clerkUser.lastName}` : ""}`,
+          email: userEmail,
+          picture: clerkUser.imageUrl || "",
+        };
 
-      user = await User.create(mongoUser);
-      console.log("🔵 User synced to DB: ✅");
+        user = await User.create(mongoUser);
+        console.log("🔵 User synced to DB: ✅");
+      }
     }
 
     const body = await request.json();

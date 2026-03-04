@@ -64,16 +64,26 @@ export async function POST(req: NextRequest) {
     if (userId) {
       let user = await UserModel.findOne({ clerkId: userId });
       
-      // If user doesn't exist in UserModel, create a minimal entry
+      // If user doesn't exist in UserModel, check by email and create if needed
       if (!user) {
-        user = await UserModel.create({
-          clerkId: userId,
-          email: email,
-          firstName: firstName,
-          lastName: lastName,
-          username: email.split('@')[0],
-          picture: '',
-        });
+        // Check if user exists by email (might have old clerkId)
+        user = await UserModel.findOne({ email: email });
+        
+        if (user) {
+          // Update the clerkId if user exists with this email
+          user.clerkId = userId;
+          await user.save();
+        } else {
+          // Create a minimal entry
+          user = await UserModel.create({
+            clerkId: userId,
+            email: email,
+            firstName: firstName,
+            lastName: lastName,
+            username: email.split('@')[0],
+            picture: '',
+          });
+        }
       }
       
       mongoUserId = user._id;

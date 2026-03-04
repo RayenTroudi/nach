@@ -97,14 +97,26 @@ export async function POST(request: Request) {
         return NextResponse.json({ error: "User not found" }, { status: 404 });
       }
 
-      user = await UserModel.create({
-        clerkId: clerkUser.id,
-        firstName: clerkUser.firstName || "User",
-        lastName: clerkUser.lastName || "User",
-        email: clerkUser.emailAddresses[0]?.emailAddress,
-        username: clerkUser.username || clerkUser.emailAddresses[0]?.emailAddress,
-        photo: clerkUser.imageUrl,
-      });
+      const userEmail = clerkUser.emailAddresses[0]?.emailAddress || "";
+      
+      // Check if user exists by email (might have old clerkId)
+      user = await UserModel.findOne({ email: userEmail });
+      
+      if (user) {
+        // Update the clerkId if user exists with this email
+        user.clerkId = clerkUser.id;
+        await user.save();
+      } else {
+        // Create new user
+        user = await UserModel.create({
+          clerkId: clerkUser.id,
+          firstName: clerkUser.firstName || "User",
+          lastName: clerkUser.lastName || "User",
+          email: userEmail,
+          username: clerkUser.username || userEmail.split('@')[0],
+          picture: clerkUser.imageUrl || "",
+        });
+      }
     }
 
     // Check if user is admin/instructor

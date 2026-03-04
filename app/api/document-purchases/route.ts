@@ -37,6 +37,7 @@ export async function GET(request: Request) {
 
     // Get user from database, create if doesn't exist
     let user = await UserModel.findOne({ clerkId: userId });
+    
     if (!user) {
       // Get user details from Clerk
       const clerkUser = await currentUser();
@@ -46,15 +47,26 @@ export async function GET(request: Request) {
         }, { status: 401 });
       }
 
-      // Create user in database
-      user = await UserModel.create({
-        clerkId: userId,
-        email: clerkUser.emailAddresses[0]?.emailAddress || "",
-        firstName: clerkUser.firstName || "",
-        lastName: clerkUser.lastName || "",
-        picture: clerkUser.imageUrl || "",
-        username: clerkUser.username || clerkUser.emailAddresses[0]?.emailAddress?.split("@")[0] || "",
-      });
+      const userEmail = clerkUser.emailAddresses[0]?.emailAddress || "";
+      
+      // Check if user exists by email (might have old clerkId)
+      user = await UserModel.findOne({ email: userEmail });
+      
+      if (user) {
+        // Update the clerkId if user exists with this email
+        user.clerkId = userId;
+        await user.save();
+      } else {
+        // Create new user in database
+        user = await UserModel.create({
+          clerkId: userId,
+          email: userEmail,
+          firstName: clerkUser.firstName || "",
+          lastName: clerkUser.lastName || "",
+          picture: clerkUser.imageUrl || "",
+          username: clerkUser.username || userEmail.split("@")[0] || "",
+        });
+      }
     }
 
     // Get all purchases (pending, completed, rejected) so student can see status
@@ -148,14 +160,26 @@ export async function POST(request: Request) {
 
     let user = await UserModel.findOne({ clerkId: userId });
     if (!user) {
-      user = await UserModel.create({
-        clerkId: userId,
-        email: clerkUser.emailAddresses[0]?.emailAddress || "",
-        firstName: clerkUser.firstName || "",
-        lastName: clerkUser.lastName || "",
-        username: clerkUser.username || clerkUser.emailAddresses[0]?.emailAddress?.split("@")[0] || "",
-        picture: clerkUser.imageUrl || "",
-      });
+      const userEmail = clerkUser.emailAddresses[0]?.emailAddress || "";
+      
+      // Check if user exists by email (might have old clerkId)
+      user = await UserModel.findOne({ email: userEmail });
+      
+      if (user) {
+        // Update the clerkId if user exists with this email
+        user.clerkId = userId;
+        await user.save();
+      } else {
+        // Create new user in database
+        user = await UserModel.create({
+          clerkId: userId,
+          email: userEmail,
+          firstName: clerkUser.firstName || "",
+          lastName: clerkUser.lastName || "",
+          username: clerkUser.username || userEmail.split("@")[0] || "",
+          picture: clerkUser.imageUrl || "",
+        });
+      }
     }
 
     const body = await request.json();

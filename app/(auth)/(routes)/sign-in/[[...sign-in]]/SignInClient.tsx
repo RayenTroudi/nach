@@ -3,6 +3,7 @@ import { useTheme } from "@/contexts/ThemeProvider";
 import { SignIn } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
 import { useLocale, useTranslations } from "next-intl";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import React from "react";
 
@@ -10,7 +11,11 @@ export default function SignInClient() {
   const { mode } = useTheme();
   const locale = useLocale();
   const t = useTranslations("auth");
+  const searchParams = useSearchParams();
   const direction = locale === "ar" ? "rtl" : "ltr";
+  
+  // Get redirect URL from query params
+  const redirectUrl = searchParams.get('redirect_url') || '/';
 
   return (
     <div className="w-full flex items-center justify-center min-h-screen p-4">
@@ -82,6 +87,7 @@ export default function SignInClient() {
           routing="path"
           path="/sign-in"
           signUpUrl="/sign-up"
+          redirectUrl={redirectUrl}
         />
         
         {/* Custom Forgot Password Link */}

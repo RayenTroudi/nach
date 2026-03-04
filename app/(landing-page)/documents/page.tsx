@@ -160,6 +160,22 @@ export default function DocumentsPage() {
     fetchDocuments();
   }, [fetchDocuments]);
 
+  // Check for purchase intent after sign-in
+  useEffect(() => {
+    const purchaseItemId = searchParams.get('purchase');
+    if (purchaseItemId && isSignedIn && items.length > 0) {
+      const item = items.find((i) => i._id === purchaseItemId);
+      if (item) {
+        setSelectedItem(item);
+        setIsDialogOpen(true);
+        // Remove the purchase param from URL
+        const newParams = new URLSearchParams(searchParams.toString());
+        newParams.delete('purchase');
+        router.replace(`/documents?${newParams.toString()}`, { scroll: false });
+      }
+    }
+  }, [searchParams, isSignedIn, items, router]);
+
   // Search with debounce
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -238,7 +254,9 @@ export default function DocumentsPage() {
   const handlePurchase = (item: DocumentItem) => {
     if (!isSignedIn) {
       toast.error(tStorefront("signInRequired"));
-      router.push("/sign-in");
+      // Redirect to sign-in with return URL containing purchase intent
+      const returnUrl = `/documents?purchase=${item._id}`;
+      router.push(`/sign-in?redirect_url=${encodeURIComponent(returnUrl)}`);
       return;
     }
     setSelectedItem(item);

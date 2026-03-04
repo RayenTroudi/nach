@@ -46,15 +46,22 @@ const CourseIdPage = async ({ params }: { params: { courseId: string } }) => {
     courseOwner = await isCourseOwner(course._id, user._id);
     
     console.log("[my-learning] Access check:", {
-      userId: user._id,
+      userId: user._id.toString(),
       courseId: params.courseId,
+      courseObjectId: course._id.toString(),
       isPurchased,
       courseOwner,
-      enrolledCourses: user.enrolledCourses,
+      enrolledCoursesIds: user.enrolledCourses.map((c: any) => c._id?.toString() || c.toString()),
+      enrolledCoursesCount: user.enrolledCourses.length,
     });
   } catch (error: any) {
-    console.error("[my-learning] Error loading course:", error);
-    redirect(`/my-learning`);
+    console.error("[my-learning] Error loading course:", {
+      message: error.message,
+      stack: error.stack,
+      courseId: params.courseId,
+    });
+    // Don't redirect on error - instead show error page
+    throw error;
   }
 
   if (!isPurchased && !courseOwner) {

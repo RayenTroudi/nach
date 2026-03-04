@@ -105,8 +105,14 @@ export async function GET(request: Request) {
     return NextResponse.json({ purchases: enrichedPurchases });
   } catch (error: any) {
     console.error("Error fetching purchased documents:", error);
+    console.error("Error stack:", error?.stack);
+    console.error("Error message:", error?.message);
     return NextResponse.json(
-      { error: "Failed to fetch purchased documents" },
+      { 
+        error: "Failed to fetch purchased documents",
+        details: error?.message || "Unknown error",
+        stack: process.env.NODE_ENV === "development" ? error?.stack : undefined
+      },
       { status: 500 }
     );
   }
@@ -144,11 +150,11 @@ export async function POST(request: Request) {
     if (!user) {
       user = await UserModel.create({
         clerkId: userId,
-        email: clerkUser.emailAddresses[0].emailAddress,
+        email: clerkUser.emailAddresses[0]?.emailAddress || "",
         firstName: clerkUser.firstName || "",
         lastName: clerkUser.lastName || "",
-        username: clerkUser.username || clerkUser.emailAddresses[0].emailAddress,
-        photo: clerkUser.imageUrl,
+        username: clerkUser.username || clerkUser.emailAddresses[0]?.emailAddress?.split("@")[0] || "",
+        picture: clerkUser.imageUrl || "",
       });
     }
 

@@ -97,7 +97,7 @@ export default function DocumentsPage() {
   const router = useRouter();
   const t = useTranslations('documentsPage');
   const tStorefront = useTranslations('storefront');
-  const { user, isSignedIn } = useUser();
+  const { user, isSignedIn, isLoaded } = useUser();
 
   const [items, setItems] = useState<DocumentItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -252,6 +252,12 @@ export default function DocumentsPage() {
   
   // Handle purchase
   const handlePurchase = (item: DocumentItem) => {
+    // Wait for Clerk to load user state
+    if (!isLoaded) {
+      toast.error(tStorefront("loadingPleaseWait"));
+      return;
+    }
+    
     if (!isSignedIn) {
       toast.error(tStorefront("signInRequired"));
       // Redirect to sign-in with return URL containing purchase intent
@@ -467,7 +473,8 @@ export default function DocumentsPage() {
                         <Button
                           size="sm"
                           onClick={() => handlePurchase(item)}
-                          className="w-full bg-brand-red-500 hover:bg-brand-red-600 text-xs sm:text-sm h-8 sm:h-9"
+                          disabled={!isLoaded}
+                          className="w-full bg-brand-red-500 hover:bg-brand-red-600 text-xs sm:text-sm h-8 sm:h-9 disabled:opacity-50"
                         >
                           <ShoppingCart className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1" />
                           <span dir="auto" className="truncate">{tStorefront("buyNow")}</span>
@@ -478,7 +485,8 @@ export default function DocumentsPage() {
                       <Button
                         size="sm"
                         onClick={() => handlePurchase(item)}
-                        className="w-full bg-brand-red-500 hover:bg-brand-red-600 text-xs sm:text-sm h-8 sm:h-9 mt-auto"
+                        disabled={!isLoaded}
+                        className="w-full bg-brand-red-500 hover:bg-brand-red-600 text-xs sm:text-sm h-8 sm:h-9 mt-auto disabled:opacity-50"
                       >
                         <ShoppingCart className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1" />
                         <span dir="auto" className="truncate">{tStorefront("buyNow")}</span>
@@ -656,7 +664,8 @@ export default function DocumentsPage() {
                     setIsBundlePreviewOpen(false);
                     handlePurchase(previewBundle);
                   }}
-                  className="w-full bg-brand-red-500 hover:bg-brand-red-600 text-xs sm:text-sm h-9 sm:h-10"
+                  disabled={!isLoaded}
+                  className="w-full bg-brand-red-500 hover:bg-brand-red-600 text-xs sm:text-sm h-9 sm:h-10 disabled:opacity-50"
                 >
                   <ShoppingCart className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1.5 sm:mr-2 flex-shrink-0" />
                   <span dir="auto" className="truncate">{tStorefront("buyNow")} - {formatPrice(previewBundle.price || 0, previewBundle.currency || 'EUR')}</span>
@@ -774,7 +783,8 @@ export default function DocumentsPage() {
                     setIsFolderPreviewOpen(false);
                     handlePurchase(previewFolder);
                   }}
-                  className="w-full bg-brand-red-500 hover:bg-brand-red-600 text-xs sm:text-sm h-9 sm:h-10"
+                  disabled={!isLoaded}
+                  className="w-full bg-brand-red-500 hover:bg-brand-red-600 text-xs sm:text-sm h-9 sm:h-10 disabled:opacity-50"
                 >
                   <ShoppingCart className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1.5 sm:mr-2 flex-shrink-0" />
                   <span dir="auto" className="truncate">{tStorefront("buyNow")} - {formatPrice(previewFolder.price || 0, previewFolder.currency || 'EUR')}</span>

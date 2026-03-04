@@ -6,6 +6,8 @@ import { NextResponse } from "next/server";
 import { createPrivateChatRoom } from "@/lib/actions/private-chat-room.action";
 import { CourseTypeEnum } from "@/lib/enums";
 
+export const dynamic = "force-dynamic";
+
 export async function POST(request: Request) {
   try {
     const { userId } = auth();

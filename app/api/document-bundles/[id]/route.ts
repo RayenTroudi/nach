@@ -4,6 +4,8 @@ import { connectToDatabase } from "@/lib/mongoose";
 import DocumentBundle from "@/lib/models/document-bundle.model";
 import UserModel from "@/lib/models/user.model";
 
+export const dynamic = "force-dynamic";
+
 /**
  * GET /api/document-bundles/[id]
  * Get a single document bundle

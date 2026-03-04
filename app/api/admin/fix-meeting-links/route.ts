@@ -4,6 +4,8 @@ import { connectToDatabase } from "@/lib/mongoose";
 import Booking from "@/lib/models/booking.model";
 import User from "@/lib/models/user.model";
 
+export const dynamic = "force-dynamic";
+
 /**
  * Migration endpoint to fix existing meeting links
  * GET /api/admin/fix-meeting-links

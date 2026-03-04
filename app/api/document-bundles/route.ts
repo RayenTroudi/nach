@@ -5,6 +5,8 @@ import DocumentBundle from "@/lib/models/document-bundle.model";
 import UserModel from "@/lib/models/user.model";
 import DocumentPurchase from "@/lib/models/document-purchase.model";
 
+export const dynamic = "force-dynamic";
+
 /**
  * GET /api/document-bundles
  * Get all document bundles (optionally filtered by instructor)

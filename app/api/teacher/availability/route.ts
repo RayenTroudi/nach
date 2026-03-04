@@ -4,6 +4,8 @@ import { connectToDatabase } from "@/lib/mongoose";
 import Availability from "@/lib/models/availability.model";
 import User from "@/lib/models/user.model";
 
+export const dynamic = "force-dynamic";
+
 // GET - Fetch teacher's availability (Public - no auth required)
 export async function GET(req: NextRequest) {
   try {

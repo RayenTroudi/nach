@@ -16,6 +16,8 @@ import {
   getPaymentRejectedToUserEmail 
 } from "@/lib/utils/email-templates";
 
+export const dynamic = "force-dynamic";
+
 const ADMIN_EMAIL = "talel.jouini02@gmail.com";
 
 // GET: List all payment proofs with filters

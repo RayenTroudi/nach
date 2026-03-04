@@ -4,6 +4,8 @@ import { connectToDatabase } from "@/lib/mongoose";
 import DocumentPurchase from "@/lib/models/document-purchase.model";
 import UserModel from "@/lib/models/user.model";
 
+export const dynamic = "force-dynamic";
+
 /**
  * GET /api/document-purchases/check?itemType=bundle&itemId=xxx
  * Check if user has purchased an item

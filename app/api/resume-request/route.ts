@@ -4,6 +4,8 @@ import ResumeRequestModel from "@/lib/models/resumeRequest.model";
 import UserModel from "@/lib/models/user.model";
 import { auth } from "@clerk/nextjs/server";
 
+export const dynamic = "force-dynamic";
+
 export async function POST(req: NextRequest) {
   try {
     // Safely get userId - don't fail if not authenticated

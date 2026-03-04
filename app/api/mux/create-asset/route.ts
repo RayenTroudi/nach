@@ -15,6 +15,8 @@ import Section from '@/lib/models/section.model';
 import Course from '@/lib/models/course.model';
 import User from '@/lib/models/user.model';
 
+export const dynamic = "force-dynamic";
+
 export async function POST(req: NextRequest) {
   try {
     const { userId } = auth();

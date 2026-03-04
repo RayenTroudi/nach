@@ -4,6 +4,8 @@ import { connectToDatabase } from "@/lib/mongoose";
 import Course from "@/lib/models/course.model";
 import { getUserByClerkId } from "@/lib/actions/user.action";
 
+export const dynamic = "force-dynamic";
+
 // This route allows admins to manually set a course's type
 // Usage: POST /api/admin/fix-course-type
 // Body: { courseId: "xxx", courseType: "most_frequent_questions" }

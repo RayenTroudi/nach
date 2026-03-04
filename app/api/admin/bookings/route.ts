@@ -4,6 +4,8 @@ import { connectToDatabase } from "@/lib/mongoose";
 import Booking from "@/lib/models/booking.model";
 import { getUserByClerkId } from "@/lib/actions";
 
+export const dynamic = "force-dynamic";
+
 export async function GET(req: NextRequest) {
   try {
     const { userId } = auth();

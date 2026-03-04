@@ -6,6 +6,8 @@ import UserModel from "@/lib/models/user.model";
 import "@/lib/models/document.model";
 import "@/lib/models/document-bundle.model";
 
+export const dynamic = "force-dynamic";
+
 /**
  * GET /api/admin/document-purchases
  * Get all document purchases for admin review

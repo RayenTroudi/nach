@@ -10,6 +10,8 @@ import {
   getPaymentRejectedToUserEmail 
 } from "@/lib/utils/email-templates";
 
+export const dynamic = "force-dynamic";
+
 export async function POST(req: NextRequest) {
   try {
     const { userId } = auth();

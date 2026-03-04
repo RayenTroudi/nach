@@ -9,6 +9,8 @@ import DocumentBundle from "@/lib/models/document-bundle.model";
 import { sendEmail } from "@/lib/actions/email.action";
 import { getPaymentRequestToAdminEmail } from "@/lib/utils/email-templates";
 
+export const dynamic = "force-dynamic";
+
 const ADMIN_EMAIL = "talel.jouini02@gmail.com";
 
 export async function POST(request: Request) {

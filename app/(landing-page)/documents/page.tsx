@@ -404,9 +404,9 @@ export default function DocumentsPage() {
                           </span>
                         </div>
                         <span className="font-semibold text-brand-red-600 truncate text-right ml-2">
-                          {(item.isFolder || ((!item.documents || item.documents.length === 0) && item.childBundleCount)) 
-                            ? `${item.childBundleCount || 0} ${tStorefront("bundlesCount")}`
-                            : `${item.price} ${item.currency?.toUpperCase() || 'EUR'}`}
+                          {item.price !== undefined && item.price !== null 
+                            ? `${item.price} ${item.currency?.toUpperCase() || 'EUR'}`
+                            : `${item.childBundleCount || 0} ${tStorefront("bundlesCount")}`}
                         </span>
                       </div>
                     ) : item.isForSale ? (

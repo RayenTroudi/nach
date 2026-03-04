@@ -60,7 +60,7 @@ export async function createDocumentPurchase(params: {
       });
       
       // Check if this is a folder purchase
-      const bundle = await DocumentBundle.findById(params.itemId).lean();
+      const bundle = await DocumentBundle.findById(params.itemId).select('+isFolder').lean() as any;
       if (bundle && bundle.isFolder) {
         console.log(`[Purchase] Folder purchased: ${bundle.title}, granting access to child bundles...`);
         
@@ -187,7 +187,7 @@ export async function hasUserPurchased(params: {
 
     // If checking a bundle, also check if parent folder was purchased
     if (params.itemType === "bundle") {
-      const bundle = await DocumentBundle.findById(params.itemId).lean();
+      const bundle = await DocumentBundle.findById(params.itemId).select('+parentFolder').lean() as any;
       
       if (bundle && bundle.parentFolder) {
         // Check if parent folder was purchased

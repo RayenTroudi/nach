@@ -82,7 +82,7 @@ const ChatRoomConversation = ({
               {/* Chat Info */}
               <div className="flex-1 min-w-0">
                 <h2 className="font-semibold text-base text-slate-900 dark:text-slate-100 truncate">
-                  {isPrivate ? otherUser?.username : selectedChatRoom.courseId.title}
+                  {isPrivate ? `${otherUser?.firstName} ${otherUser?.lastName}` : selectedChatRoom.courseId.title}
                 </h2>
                 <div className="flex items-center gap-x-2 mt-0.5">
                   {!isPrivate && (
@@ -98,7 +98,7 @@ const ChatRoomConversation = ({
                         </AvatarFallback>
                       </Avatar>
                       <p className="text-xs text-slate-500 dark:text-slate-400">
-                        {selectedChatRoom.instructorAdmin.username}
+                        {`${selectedChatRoom.instructorAdmin.firstName} ${selectedChatRoom.instructorAdmin.lastName}`}
                       </p>
                       <span className="hidden md:inline-block px-2 py-0.5 text-[10px] font-semibold rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400">
                         {t("instructor")}

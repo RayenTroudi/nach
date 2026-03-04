@@ -50,7 +50,7 @@ const Message = ({ loggedInUser, message, isLastMessage }: Props) => {
               </Avatar>
             </HoverCardTrigger>
             <HoverCardContent className="w-fit h-fit py-1 px-2 rounded-full mt-2 bg-input">
-              <p className="text-xs font-bold"> {message.senderId.username} </p>
+              <p className="text-xs font-bold"> {`${message.senderId.firstName} ${message.senderId.lastName}`} </p>
             </HoverCardContent>
           </HoverCard>
         </div>
@@ -67,7 +67,7 @@ const Message = ({ loggedInUser, message, isLastMessage }: Props) => {
               </Avatar>
             </HoverCardTrigger>
             <HoverCardContent className="w-fit h-fit py-1 px-2 rounded-full mt-2 bg-input">
-              <p className="text-xs font-bold"> {message.senderId.username} </p>
+              <p className="text-xs font-bold"> {`${message.senderId.firstName} ${message.senderId.lastName}`} </p>
             </HoverCardContent>
           </HoverCard>
 

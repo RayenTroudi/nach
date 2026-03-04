@@ -80,7 +80,7 @@ const ChatRoomCard = ({
         <div className="flex-1 min-w-0 flex flex-col gap-y-1">
           <div className="flex items-center gap-x-2">
             <h2 className="font-semibold text-sm text-slate-900 dark:text-slate-100 truncate flex-1">
-              {isPrivate ? otherUser?.username : chatRoom.courseId.title}
+              {isPrivate ? `${otherUser?.firstName} ${otherUser?.lastName}` : chatRoom.courseId.title}
             </h2>
             {isPrivate && (
               <span className="px-2 py-0.5 text-[10px] font-semibold rounded-full bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 flex-shrink-0">
@@ -96,13 +96,13 @@ const ChatRoomCard = ({
 
         {chatRoomUnreadMessages.length ? (
           <p className="text-slate-900 dark:text-slate-100 font-semibold truncate text-xs">
-            {chatRoomUnreadMessages.at(-1)?.unreadMessage.senderId?.username || "Unknown user"}: {chatRoomUnreadMessages.at(-1)?.unreadMessage.content}
+            {`${chatRoomUnreadMessages.at(-1)?.unreadMessage.senderId?.firstName} ${chatRoomUnreadMessages.at(-1)?.unreadMessage.senderId?.lastName}` || "Unknown user"}: {chatRoomUnreadMessages.at(-1)?.unreadMessage.content}
           </p>
         ) : (
           <>
             {lastMessage ? (
               <p className="text-slate-500 dark:text-slate-400 font-normal truncate text-xs">
-                {lastMessage.senderId?.username || "Unknown user"}: {lastMessage.content}
+                {`${lastMessage.senderId?.firstName} ${lastMessage.senderId?.lastName}` || "Unknown user"}: {lastMessage.content}
               </p>
             ) : isPrivate ? (
               <p className="text-slate-400 dark:text-slate-500 font-normal text-xs italic">
@@ -121,7 +121,7 @@ const ChatRoomCard = ({
                   </AvatarFallback>
                 </Avatar>
                 <p className="text-slate-500 dark:text-slate-400 font-medium text-xs">
-                  {chatRoom.instructorAdmin.username}
+                  {`${chatRoom.instructorAdmin.firstName} ${chatRoom.instructorAdmin.lastName}`}
                 </p>
                 <span className="hidden lg:inline-block px-2 py-0.5 text-[10px] font-semibold rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400">
                   Instructor

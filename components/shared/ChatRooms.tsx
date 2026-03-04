@@ -63,7 +63,7 @@ const ChatRooms = ({ chatRooms, user }: Props) => {
   // Filter chat rooms based on search and filter type
   const filteredChatRooms = chatRooms.filter((room) => {
     const matchesSearch = room.courseId.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      room.instructorAdmin.username.toLowerCase().includes(searchQuery.toLowerCase());
+      `${room.instructorAdmin.firstName} ${room.instructorAdmin.lastName}`.toLowerCase().includes(searchQuery.toLowerCase());
     
     const isPrivate = room.students?.length === 1;
     const matchesFilter = 

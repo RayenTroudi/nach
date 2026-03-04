@@ -59,14 +59,19 @@ const VideoPlayer = ({ video, isLoading, poster }: Props) => {
   }
 
   // Check if video has Mux data
-  if (!video || !video.muxData?.playbackId) {
+  const hasValidMuxData = video && video.muxData && typeof video.muxData === 'object' && video.muxData.playbackId && video.muxData.playbackId.length > 0;
+  
+  if (!hasValidMuxData) {
     console.error("[VideoPlayer] Missing video data:", {
       hasVideo: !!video,
       videoTitle: video?.title,
       videoId: video?._id,
       hasMuxData: !!video?.muxData,
+      muxDataType: typeof video?.muxData,
       muxDataContent: video?.muxData,
       hasPlaybackId: !!video?.muxData?.playbackId,
+      playbackIdValue: video?.muxData?.playbackId,
+      playbackIdLength: video?.muxData?.playbackId?.length,
       hasVideoUrl: !!video?.videoUrl
     });
     
@@ -94,13 +99,26 @@ const VideoPlayer = ({ video, isLoading, poster }: Props) => {
     );
   }
 
+  // At this point we know video and muxData exist
+  // Extract playbackId safely
+  const playbackId = typeof video.muxData === 'object' && video.muxData.playbackId 
+    ? video.muxData.playbackId 
+    : '';
+  
+  console.log("[VideoPlayer] About to render MuxVideoPlayer:", {
+    videoTitle: video.title,
+    playbackId: playbackId,
+    hasPlaybackId: !!playbackId,
+    playbackIdLength: playbackId.length
+  });
+
   // Generate poster from Mux if not provided
-  const posterUrl = poster || getMuxThumbnail(video.muxData.playbackId);
+  const posterUrl = poster || getMuxThumbnail(playbackId);
 
   return (
     <div className="w-full lg:flex-1 bg-slate-50 dark:bg-slate-950 border-b lg:border-b-0 lg:border-r border-slate-200 dark:border-slate-800">
       <MuxVideoPlayer
-        playbackId={video.muxData.playbackId}
+        playbackId={playbackId}
         title={video.title}
         poster={posterUrl}
         metadata={{

@@ -165,6 +165,7 @@ export default async function RootLayout({
       >
         <ClerkProvider
           publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
+          domain={process.env.NEXT_PUBLIC_CLERK_DOMAIN || undefined}
           localization={clerkLocalization as any}
           appearance={{
             variables: {

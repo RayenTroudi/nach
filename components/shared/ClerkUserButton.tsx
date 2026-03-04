@@ -1,11 +1,22 @@
 "use client";
 import { useTheme } from "@/contexts/ThemeProvider";
-import { UserButton } from "@clerk/nextjs";
+import { UserButton, useUser } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
 import React from "react";
 
 const ClerkUserButton = () => {
   const { mode } = useTheme();
+  const { isLoaded, isSignedIn } = useUser();
+  
+  if (!isLoaded) {
+    return (
+      <div className="w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-800 animate-pulse" />
+    );
+  }
+
+  if (!isSignedIn) {
+    return null;
+  }
   
   return (
     <UserButton

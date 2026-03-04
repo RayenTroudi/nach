@@ -176,8 +176,15 @@ export async function GET(request: Request) {
 
       console.log("[Storefront API] Found bundles:", bdls.length);
       
-      // Apply access control logic for students
-      const { userId } = auth();
+      // Apply access control logic for students (optional - works without auth)
+      let userId;
+      try {
+        const authResult = auth();
+        userId = authResult.userId;
+      } catch (error) {
+        console.log("Auth check skipped for storefront browsing");
+      }
+      
       let currentDbUser = null;
       let isInstructor = false;
       let purchasedBundleIds = new Set<string>();

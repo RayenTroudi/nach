@@ -17,6 +17,10 @@ const PUBLIC_ROUTES = [
   "/api/me",
   "/api/debug/user",
   "/api/resume-request",
+  "/api/storefront(.*)",
+  "/api/documents(.*)",
+  "/api/document-bundles(.*)",
+  "/api/document-purchases(.*)",
   "/courses(.*)",
   "/course(.*)",
   "/user(.*)",
@@ -29,6 +33,7 @@ const PUBLIC_ROUTES = [
   "/force-signout",
   "/contact(.*)",
   "/documents(.*)",
+  "/storefront(.*)",
   "/(en|de|ar)",
   "/(en|de|ar)/sign-in(.*)",
   "/(en|de|ar)/sign-up(.*)",
@@ -55,10 +60,15 @@ export default authMiddleware({
   publicRoutes: PUBLIC_ROUTES,
   ignoredRoutes: IGNORED_ROUTES,
   debug: false, // Disable debug in production
-  clockSkewInMs: 60000, // Allow 60 seconds clock skew tolerance
+  clockSkewInMs: 300000, // Allow 5 minutes clock skew tolerance for production
   afterAuth(auth, req) {
     // Allow public routes through
     if (auth.isPublicRoute) {
+      return NextResponse.next();
+    }
+    
+    // For API routes, let them handle their own auth
+    if (req.nextUrl.pathname.startsWith('/api/')) {
       return NextResponse.next();
     }
     

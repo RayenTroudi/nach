@@ -17,10 +17,20 @@ const ADMIN_EMAIL = "talel.jouini02@gmail.com";
 export async function GET(request: Request) {
   try {
     await connectToDatabase();
-    const { userId } = auth();
+    
+    // Try to get auth, but don't fail if not authenticated
+    let userId;
+    try {
+      const authResult = auth();
+      userId = authResult.userId;
+    } catch (error) {
+      console.log("Auth check failed, continuing without user");
+    }
 
     if (!userId) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return NextResponse.json({ 
+        error: "Authentication required. Please sign in to view your purchases." 
+      }, { status: 401 });
     }
 
     const user = await UserModel.findOne({ clerkId: userId });
@@ -90,15 +100,25 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   try {
     await connectToDatabase();
-    const { userId } = auth();
-
-    if (!userId) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    
+    // Try to get auth
+    let userId;
+    let clerkUser;
+    try {
+      const authResult = auth();
+      userId = authResult.userId;
+      if (userId) {
+        clerkUser = await currentUser();
+      }
+    } catch (error) {
+      console.log("Auth check failed:", error);
     }
 
-    const clerkUser = await currentUser();
-    if (!clerkUser) {
-      return NextResponse.json({ error: "User not found" }, { status: 404 });
+    if (!userId || !clerkUser) {
+      return NextResponse.json({ 
+        error: "Authentication required. Please sign in to make a purchase.",
+        authError: true 
+      }, { status: 401 });
     }
 
     let user = await UserModel.findOne({ clerkId: userId });

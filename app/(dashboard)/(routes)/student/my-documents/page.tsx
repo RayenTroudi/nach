@@ -219,6 +219,38 @@ export default function MyDocumentsPage() {
       return [];
     } else if (currentView === "bundle" && currentBundleId) {
       // Show documents of the current bundle
+      // First, check if it's a direct bundle purchase
+      const directBundlePurchase = purchases.find(
+        p => p.itemType === "bundle" && p.itemId?._id === currentBundleId && !p.itemId?.isFolder
+      );
+      
+      if (directBundlePurchase && directBundlePurchase.itemId?.documents) {
+        const bundleItem = directBundlePurchase.itemId;
+        const documents = bundleItem.documents;
+        if (!documents) return []; // Additional guard for TypeScript
+        
+        return documents.map(doc => ({
+          _id: `doc-${doc._id}`,
+          itemType: "document" as const,
+          amount: 0,
+          currency: directBundlePurchase.currency,
+          paymentStatus: directBundlePurchase.paymentStatus,
+          paymentMethod: directBundlePurchase.paymentMethod,
+          createdAt: directBundlePurchase.createdAt,
+          itemId: {
+            _id: doc._id,
+            title: doc.title,
+            description: "",
+            category: "",
+            fileUrl: doc.fileUrl,
+            fileName: doc.fileName,
+            fileSize: doc.fileSize,
+            uploadedBy: bundleItem.uploadedBy,
+          }
+        }));
+      }
+      
+      // Otherwise, check if it's a child bundle within a folder
       const folderPurchase = purchases.find(p => p.itemId?.isFolder);
       if (folderPurchase && folderPurchase.itemId?.childBundles) {
         const bundle = folderPurchase.itemId.childBundles.find(b => b._id === currentBundleId);
@@ -342,6 +374,9 @@ export default function MyDocumentsPage() {
       
       if (currentView === "root" && isFolder) {
         navigateToFolder(purchase);
+      } else if (currentView === "root" && isBundle && !isFolder) {
+        // Navigate to standalone bundle at root level
+        navigateToBundle(itemId._id, itemId.title);
       } else if (currentView === "folder" && isBundle) {
         navigateToBundle(itemId._id, itemId.title);
       }
@@ -350,7 +385,7 @@ export default function MyDocumentsPage() {
     const handleCardClick = () => {
       if (!canAccess) return;
       
-      if ((isFolder || (isBundle && currentView === "folder"))) {
+      if ((isFolder || isBundle) && (currentView === "root" || currentView === "folder")) {
         handleCardDoubleClick();
       }
     };
@@ -359,7 +394,11 @@ export default function MyDocumentsPage() {
       <Card
         key={purchase._id}
         id={isBundle ? `bundle-${itemId._id}` : undefined}
-        className={`transition-all h-full flex flex-col ${(isFolder || (isBundle && currentView === "folder")) && canAccess ? 'cursor-pointer hover:shadow-xl hover:scale-105 hover:border-brand-red-300 dark:hover:border-brand-red-700' : 'hover:shadow-lg'}`}
+        className={`transition-all h-full flex flex-col ${
+          (isFolder || isBundle) && (currentView === "root" || (isBundle && currentView === "folder")) && canAccess 
+            ? 'cursor-pointer hover:shadow-xl hover:scale-105 hover:border-brand-red-300 dark:hover:border-brand-red-700' 
+            : 'hover:shadow-lg'
+        }`}
         onClick={handleCardClick}
       >
         <CardHeader className="pb-3">
@@ -424,9 +463,9 @@ export default function MyDocumentsPage() {
           )}
 
           {/* Double-click hint for folders/bundles */}
-          {((currentView === "root" && isFolder) || (currentView === "folder" && isBundle)) && canAccess && (
+          {((currentView === "root" && (isFolder || isBundle)) || (currentView === "folder" && isBundle)) && canAccess && (
             <div className="text-center py-2 text-xs text-slate-500 dark:text-slate-400">
-              💡 Double-click to open
+              💡 {currentView === "root" && isBundle && !isFolder ? "Click to view documents" : "Double-click to open"}
             </div>
           )}
 

@@ -56,29 +56,46 @@ const WatchScreen = ({
     
     for (const section of course.sections) {
       if (section.videos && section.videos.length > 0) {
-        return section.videos[0];
+        // Return first video that has either videoUrl or muxData
+        for (const video of section.videos) {
+          if (video && (video.videoUrl || video.muxData)) {
+            return video;
+          }
+        }
       }
     }
     return null;
   };
 
-  const [videoToWatch, setVideoToWatch] = useState<TVideo | null>(getFirstVideo());
+  const [videoToWatch, setVideoToWatch] = useState<TVideo | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(true);
   
-  // Debug logging
+  // Set initial video after component mounts
   useEffect(() => {
     const firstVideo = getFirstVideo();
-    console.log("[WatchScreen] Initial video:", {
-      hasFirstVideo: !!firstVideo,
-      title: firstVideo?.title,
-      videoUrl: firstVideo?.videoUrl,
-      hasMuxData: !!firstVideo?.muxData,
-      muxPlaybackId: firstVideo?.muxData?.playbackId,
-      totalSections: course?.sections?.length,
-      totalVideos: allVideos.length
+    if (firstVideo && !videoToWatch) {
+      console.log("[WatchScreen] Setting initial video:", {
+        title: firstVideo.title,
+        videoUrl: firstVideo.videoUrl,
+        hasMuxData: !!firstVideo.muxData,
+        muxPlaybackId: firstVideo.muxData?.playbackId,
+      });
+      setVideoToWatch(firstVideo);
+    }
+  }, [course]);
+  
+  // Debug logging
+  useEffect(() => {
+    console.log("[WatchScreen] Component state:", {
+      hasCourse: !!course,
+      totalSections: course?.sections?.length || 0,
+      totalVideos: allVideos.length,
+      currentVideo: videoToWatch?.title || "None",
+      hasMuxData: !!videoToWatch?.muxData,
+      muxPlaybackId: videoToWatch?.muxData?.playbackId,
     });
-  }, []);
+  }, [videoToWatch, course]);
     
   const onChangeVideoToWatchHandler = (video: TVideo) => {
     console.log("[WatchScreen] Video selected:", {
@@ -123,7 +140,7 @@ const WatchScreen = ({
           <div className="relative flex flex-col lg:flex-row w-full bg-white dark:bg-slate-950">
             {/* Video Player Section - Enhanced with Toggle Button */}
             <div className={`w-full transition-all duration-500 ease-in-out ${isSidebarOpen ? 'lg:flex-1' : 'lg:w-full'} relative`}>
-              {videoToWatch && videoToWatch.videoUrl ? (
+              {videoToWatch && (videoToWatch.videoUrl || videoToWatch.muxData) ? (
                 <div className="relative bg-black">
                   <VideoPlayer
                     video={videoToWatch}

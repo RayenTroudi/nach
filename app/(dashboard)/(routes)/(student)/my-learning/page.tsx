@@ -24,30 +24,41 @@ const MyLearningPage = async () => {
     redirect("/sign-in");
   }
 
-  const student = await getUserByClerkId({ clerkId: userId });
+  let student;
+  try {
+    student = await getUserByClerkId({ clerkId: userId });
+  } catch (error) {
+    console.error("Error fetching user:", error);
+    // If user fetch fails, redirect to home
+    redirect("/");
+  }
+
+  // Safely handle enrolled courses
+  const enrolledCourses = student?.enrolledCourses || [];
   
-  const studentEnrolledCoursesCategories: TCategory[] = student?.enrolledCourses
-    ?.filter(
+  const studentEnrolledCoursesCategories: TCategory[] = enrolledCourses
+    .filter(
       (course: TCourse, index: number, self: TCourse[]) =>
         index ===
         self.findIndex(
-          (c: TCourse) => c.category._id === course.category._id
+          (c: TCourse) => c?.category?._id === course?.category?._id
         )
     )
-    ?.map((course: TCourse) => course.category) ?? [];
+    .map((course: TCourse) => course.category)
+    .filter(Boolean); // Remove any undefined/null categories
 
   return (
     <div className="flex gap-4">
       <LeftSideBar />
       <div className="p-6 w-full">
         <div className="flex flex-col items-start gap-10 ">
-          {student?.enrolledCourses?.length ? (
+          {enrolledCourses.length > 0 ? (
             <>
               <h2 className="text-3xl font-bold text-slate-950 dark:text-slate-200">
                 {t("title")}
               </h2>
               <Courses
-                enrolledCourses={student?.enrolledCourses!}
+                enrolledCourses={enrolledCourses}
                 enrolledCoursesCategories={studentEnrolledCoursesCategories}
               />
             </>

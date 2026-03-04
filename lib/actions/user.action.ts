@@ -127,10 +127,14 @@ export const getUserByClerkId = async (params: GetUserByClerkIdParams) => {
     connectToDatabase();
 
     // Initialize models for Mongoose to recognize them
-    await CourseChatRoom.find();
-    await ChatRoomMessage.find();
-    await PrivateChatRoom.find();
-    await PrivateChatMessage.find();
+    try {
+      await CourseChatRoom.find().limit(1);
+      await ChatRoomMessage.find().limit(1);
+      await PrivateChatRoom.find().limit(1);
+      await PrivateChatMessage.find().limit(1);
+    } catch (modelError) {
+      console.warn("Warning: Some chat models may not be initialized:", modelError);
+    }
     
     let user = await User.findOne({ clerkId: params.clerkId })
       .populate({
@@ -171,6 +175,7 @@ export const getUserByClerkId = async (params: GetUserByClerkIdParams) => {
           {
             path: "messages",
             model: "ChatRoomMessage",
+            options: { limit: 50, sort: { createdAt: -1 } }, // Limit messages to prevent overload
             populate: {
               path: "senderId",
               model: "User",
@@ -194,6 +199,7 @@ export const getUserByClerkId = async (params: GetUserByClerkIdParams) => {
           {
             path: "messages",
             model: "ChatRoomMessage",
+            options: { limit: 50, sort: { createdAt: -1 } }, // Limit messages to prevent overload
             populate: {
               path: "senderId",
               model: "User",
@@ -211,13 +217,15 @@ export const getUserByClerkId = async (params: GetUserByClerkIdParams) => {
           {
             path: "messages",
             model: "PrivateChatMessage",
+            options: { limit: 50, sort: { createdAt: -1 } }, // Limit messages to prevent overload
             populate: {
               path: "senderId",
               model: "User",
             },
           },
         ],
-      });
+      })
+      .lean(); // Use lean() to get plain objects and improve performance
 
     // If user doesn't exist in MongoDB, create from Clerk data
     // This handles cases where webhook didn't fire or failed
@@ -245,14 +253,25 @@ export const getUserByClerkId = async (params: GetUserByClerkIdParams) => {
       
       console.log("💾 Creating user in MongoDB:", mongoUser.email);
       
-      user = await createUser(mongoUser);
+      const newUser = await createUser(mongoUser);
       
       console.log("✅ User created successfully in MongoDB");
+      
+      // Return the new user with empty arrays for relationships
+      return JSON.parse(JSON.stringify({
+        ...newUser,
+        enrolledCourses: [],
+        createdCourses: [],
+        joinedChatRooms: [],
+        ownChatRooms: [],
+        privateChatRooms: [],
+      }));
     }
 
     return JSON.parse(JSON.stringify(user));
   } catch (error: any) {
     console.error("❌ Error in getUserByClerkId:", error.message);
+    console.error("❌ Stack trace:", error.stack);
     throw new Error(error.message);
   }
 };

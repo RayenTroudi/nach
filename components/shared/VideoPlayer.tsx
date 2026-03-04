@@ -49,6 +49,16 @@ const VideoPlayer = ({ video, isLoading, poster }: Props) => {
 
   // Check if video has Mux data
   if (!video || !video.muxData?.playbackId) {
+    console.error("[VideoPlayer] Missing video data:", {
+      hasVideo: !!video,
+      videoTitle: video?.title,
+      videoId: video?._id,
+      hasMuxData: !!video?.muxData,
+      muxDataContent: video?.muxData,
+      hasPlaybackId: !!video?.muxData?.playbackId,
+      hasVideoUrl: !!video?.videoUrl
+    });
+    
     return (
       <div className="w-full lg:flex-1 bg-slate-50 dark:bg-slate-950 border-b lg:border-b-0 lg:border-r border-slate-200 dark:border-slate-800">
         <div className="relative w-full" style={{ paddingBottom: "56.25%" }}>
@@ -59,8 +69,13 @@ const VideoPlayer = ({ video, isLoading, poster }: Props) => {
                 Video not available or still processing
               </p>
               <p className="text-sm text-slate-500 dark:text-slate-500">
-                Please check back in a few minutes
+                {video?.title ? `"${video.title}"` : 'Unknown video'}
               </p>
+              {process.env.NODE_ENV === 'development' && (
+                <p className="text-xs text-slate-400 mt-2">
+                  Missing: {!video?.muxData ? 'muxData' : !video.muxData.playbackId ? 'playbackId' : 'video'}
+                </p>
+              )}
             </div>
           </div>
         </div>

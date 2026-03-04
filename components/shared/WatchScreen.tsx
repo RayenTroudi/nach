@@ -65,8 +65,29 @@ const WatchScreen = ({
   const [videoToWatch, setVideoToWatch] = useState<TVideo | null>(getFirstVideo());
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(true);
+  
+  // Debug logging
+  useEffect(() => {
+    const firstVideo = getFirstVideo();
+    console.log("[WatchScreen] Initial video:", {
+      hasFirstVideo: !!firstVideo,
+      title: firstVideo?.title,
+      videoUrl: firstVideo?.videoUrl,
+      hasMuxData: !!firstVideo?.muxData,
+      muxPlaybackId: firstVideo?.muxData?.playbackId,
+      totalSections: course?.sections?.length,
+      totalVideos: allVideos.length
+    });
+  }, []);
     
   const onChangeVideoToWatchHandler = (video: TVideo) => {
+    console.log("[WatchScreen] Video selected:", {
+      title: video.title,
+      videoUrl: video.videoUrl,
+      hasMuxData: !!video.muxData,
+      muxPlaybackId: video.muxData?.playbackId,
+      videoId: video._id
+    });
     setIsLoading(true);
     setVideoToWatch(video);
     setIsDescriptionExpanded(false); // Reset description state when changing videos

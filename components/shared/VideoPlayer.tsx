@@ -9,6 +9,7 @@ interface Props {
   video: TVideo;
   isLoading: boolean;
   poster?: string;
+  autoPlay?: boolean;
 }
 
 /**
@@ -16,7 +17,7 @@ interface Props {
  * Updated to use best-practice MuxVideoPlayer component
  * All videos are now streamed via Mux with adaptive bitrate
  */
-const VideoPlayer = ({ video, isLoading, poster }: Props) => {
+const VideoPlayer = ({ video, isLoading, poster, autoPlay = false }: Props) => {
   const [isMounted, setIsMounted] = useState<boolean>(false);
 
   useEffect(() => {
@@ -121,6 +122,7 @@ const VideoPlayer = ({ video, isLoading, poster }: Props) => {
         playbackId={playbackId}
         title={video.title}
         poster={posterUrl}
+        autoPlay={autoPlay}
         metadata={{
           video_id: video._id?.toString(),
           video_title: video.title,

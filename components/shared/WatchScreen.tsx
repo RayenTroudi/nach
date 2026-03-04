@@ -70,6 +70,7 @@ const WatchScreen = ({
   const [videoToWatch, setVideoToWatch] = useState<TVideo | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(true);
+  const [shouldAutoPlay, setShouldAutoPlay] = useState<boolean>(false);
   
   // Set initial video after component mounts
   useEffect(() => {
@@ -82,6 +83,7 @@ const WatchScreen = ({
         muxPlaybackId: firstVideo.muxData?.playbackId,
       });
       setVideoToWatch(firstVideo);
+      setShouldAutoPlay(false); // Don't autoplay the first video
     }
   }, [course]);
   
@@ -107,6 +109,7 @@ const WatchScreen = ({
     });
     setIsLoading(true);
     setVideoToWatch(video);
+    setShouldAutoPlay(true); // Autoplay when user selects a video
     setIsDescriptionExpanded(false); // Reset description state when changing videos
     // Remove video immediately without unnecessary delay
     setIsLoading(false);
@@ -146,6 +149,7 @@ const WatchScreen = ({
                     video={videoToWatch}
                     isLoading={isLoading}
                     poster={course?.thumbnail!}
+                    autoPlay={shouldAutoPlay}
                   />
                   
                   {/* Video Title Overlay - Modern Design - Moved up to avoid controls */}

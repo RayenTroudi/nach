@@ -1876,6 +1876,7 @@
   "documentsPage": {
     "title": "Essential Documents",
     "subtitle": "Download templates, guides, and forms to streamline your German immigration journey",
+    "loading": "Loading documents...",
     "searchPlaceholder": "Search documents, guides, templates...",
     "allCategories": "All Categories",
     "showing": "Showing {count} of {total} items",

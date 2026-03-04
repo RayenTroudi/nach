@@ -1867,6 +1867,7 @@
   "documentsPage": {
     "title": "Dokumentenbibliothek",
     "subtitle": "Laden Sie wesentliche Dokumente, Leitfäden und Vorlagen für Ihre Reise nach Deutschland herunter",
+    "loading": "Dokumente werden geladen...",
     "searchPlaceholder": "Dokumente, Leitfäden, Vorlagen durchsuchen...",
     "allCategories": "Alle Kategorien",
     "showing": "Zeige {count} von {total} Elementen",

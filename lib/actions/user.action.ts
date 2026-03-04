@@ -39,6 +39,34 @@ export const createUser = async (params: CreateUserParams) => {
     
     console.log("Creating user with params:", params);
     
+    // Check if user already exists by clerkId or email to prevent duplicates
+    const existingUser = await User.findOne({
+      $or: [
+        { clerkId: params.clerkId },
+        { email: params.email }
+      ]
+    });
+    
+    if (existingUser) {
+      console.log("User already exists, returning existing user:", existingUser.email);
+      
+      // Update the existing user with latest data from Clerk
+      const updatedUser = await User.findByIdAndUpdate(
+        existingUser._id,
+        {
+          firstName: params.firstName,
+          lastName: params.lastName,
+          username: params.username,
+          email: params.email,
+          picture: params.picture,
+        },
+        { new: true }
+      );
+      
+      return JSON.parse(JSON.stringify(updatedUser));
+    }
+    
+    // Create new user if doesn't exist
     const user = await User.create(params);
     
     console.log("User created successfully:", user);
@@ -46,6 +74,22 @@ export const createUser = async (params: CreateUserParams) => {
     return JSON.parse(JSON.stringify(user));
   } catch (error: any) {
     console.error("Error in createUser:", error.message);
+    
+    // Handle duplicate key error gracefully
+    if (error.code === 11000) {
+      console.log("Duplicate key error, fetching existing user...");
+      const existingUser = await User.findOne({
+        $or: [
+          { clerkId: params.clerkId },
+          { email: params.email }
+        ]
+      });
+      
+      if (existingUser) {
+        return JSON.parse(JSON.stringify(existingUser));
+      }
+    }
+    
     throw new Error(`Failed to create user: ${error.message}`);
   }
 };

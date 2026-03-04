@@ -43,7 +43,6 @@ const PUBLIC_ROUTES = [
 const IGNORED_ROUTES = [
   "/api/webhooks(.*)",
   "/api/health",
-  "/api/uploadthing(.*)", // UploadThing file uploads (uses own auth)
   "/api/resume-payment", // Resume payment proof (public, no auth needed)
   "/api/admin/(.*)", // Admin API routes handle their own auth
 

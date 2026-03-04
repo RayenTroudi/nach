@@ -119,24 +119,28 @@ const SectionsToWatch = ({
               <div className="flex flex-col items-start gap-x-1 w-full">
                 {section?.videos?.length ? (
                   <>
-                    {section!.videos!.map((video: TVideo, index: number) => (
-                      <div key={video._id} className="w-full">
-                        {isStudent ? (
-                          <div
-                            className={`w-full flex items-center gap-3 p-3 rounded-xl transition-all duration-200 group cursor-pointer
-                              ${
-                                !video?.videoUrl 
-                                  ? "pointer-events-none opacity-40" 
-                                  : "hover:bg-gradient-to-r ltr:hover:from-slate-100 rtl:hover:from-transparent ltr:hover:to-transparent rtl:hover:to-slate-100 dark:ltr:hover:from-slate-800 dark:rtl:hover:from-transparent dark:ltr:hover:to-transparent dark:rtl:hover:to-slate-800"
-                              } 
-                              ${
-                                video._id === selectedVideo._id
-                                  ? "bg-gradient-to-r ltr:from-brand-red-50 rtl:from-transparent ltr:to-transparent rtl:to-brand-red-50 dark:ltr:from-brand-red-950/30 dark:rtl:from-transparent dark:ltr:to-transparent dark:rtl:to-brand-red-950/30 ltr:border-l-4 rtl:border-r-4 border-brand-red-500 shadow-sm"
-                                  : "ltr:border-l-4 rtl:border-r-4 border-transparent"
-                              }
-                            `}
-                            onClick={() => onChangeVideoToWatchHandler(video)}
-                          >
+                    {section!.videos!.map((video: TVideo, index: number) => {
+                      // Check if video is available (has videoUrl OR muxData playbackId)
+                      const isVideoAvailable = Boolean(video?.videoUrl || video?.muxData?.playbackId);
+                      
+                      return (
+                        <div key={video._id} className="w-full">
+                          {isStudent ? (
+                            <div
+                              className={`w-full flex items-center gap-3 p-3 rounded-xl transition-all duration-200 group cursor-pointer
+                                ${
+                                  !isVideoAvailable
+                                    ? "pointer-events-none opacity-40" 
+                                    : "hover:bg-gradient-to-r ltr:hover:from-slate-100 rtl:hover:from-transparent ltr:hover:to-transparent rtl:hover:to-slate-100 dark:ltr:hover:from-slate-800 dark:rtl:hover:from-transparent dark:ltr:hover:to-transparent dark:rtl:hover:to-slate-800"
+                                } 
+                                ${
+                                  video._id === selectedVideo._id
+                                    ? "bg-gradient-to-r ltr:from-brand-red-50 rtl:from-transparent ltr:to-transparent rtl:to-brand-red-50 dark:ltr:from-brand-red-950/30 dark:rtl:from-transparent dark:ltr:to-transparent dark:rtl:to-brand-red-950/30 ltr:border-l-4 rtl:border-r-4 border-brand-red-500 shadow-sm"
+                                    : "ltr:border-l-4 rtl:border-r-4 border-transparent"
+                                }
+                              `}
+                              onClick={() => onChangeVideoToWatchHandler(video)}
+                            >
                             <div className="flex items-center gap-3 flex-1 min-w-0">
                               <div className={`flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center ${
                                 video._id === selectedVideo._id
@@ -158,7 +162,7 @@ const SectionsToWatch = ({
                           <div
                             className={`w-full flex items-center gap-3 p-3 rounded-lg transition-all duration-200 cursor-pointer
                               ${
-                                !video?.videoUrl 
+                                !isVideoAvailable
                                   ? "pointer-events-none opacity-40" 
                                   : "hover:bg-slate-50 dark:hover:bg-slate-800/50"
                               } 
@@ -175,7 +179,7 @@ const SectionsToWatch = ({
                                 ? 'bg-brand-red-500 text-white'
                                 : 'bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-400'
                             }`}>
-                              {video.videoUrl ? (
+                              {isVideoAvailable ? (
                                 <Video size={16} />
                               ) : (
                                 <VideoOff size={16} />
@@ -191,7 +195,8 @@ const SectionsToWatch = ({
                           </div>
                         )}
                       </div>
-                    ))}
+                      );
+                    })}
                   </>
                 ) : (
                   <div className="flex items-center gap-2 p-3 rounded-lg bg-yellow-50 dark:bg-yellow-950/20 border border-yellow-200 dark:border-yellow-800">

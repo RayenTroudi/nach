@@ -19,7 +19,18 @@ interface Props {
 const VideoPlayer = ({ video, isLoading, poster }: Props) => {
   const [isMounted, setIsMounted] = useState<boolean>(false);
 
-  useEffect(() => setIsMounted(true), []);
+  useEffect(() => {
+    console.log("[VideoPlayer] Rendering with video:", {
+      title: video?.title,
+      videoId: video?._id,
+      hasMuxData: !!video?.muxData,
+      muxDataType: typeof video?.muxData,
+      muxDataKeys: video?.muxData ? Object.keys(video.muxData) : [],
+      muxData: video?.muxData,
+      playbackId: video?.muxData?.playbackId,
+    });
+    setIsMounted(true);
+  }, [video]);
 
   // Show loading state before mounting
   if (!isMounted) {

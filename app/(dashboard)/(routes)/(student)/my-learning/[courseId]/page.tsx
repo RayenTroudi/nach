@@ -51,8 +51,8 @@ const CourseIdPage = async ({ params }: { params: { courseId: string } }) => {
       courseObjectId: course._id.toString(),
       isPurchased,
       courseOwner,
-      enrolledCoursesIds: user.enrolledCourses.map((c: any) => c._id?.toString() || c.toString()),
-      enrolledCoursesCount: user.enrolledCourses.length,
+      enrolledCoursesIds: user.enrolledCourses?.map((c: any) => c._id?.toString() || c.toString()) || [],
+      enrolledCoursesCount: user.enrolledCourses?.length || 0,
     });
   } catch (error: any) {
     console.error("[my-learning] Error loading course:", {

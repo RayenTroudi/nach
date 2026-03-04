@@ -87,9 +87,10 @@ const nextConfig = {
   poweredByHeader: false,
   // Disable CSS minification to prevent issues with Tailwind's group/name syntax
   productionBrowserSourceMaps: false,
-  compiler: {
-    removeConsole: process.env.NODE_ENV === "production",
-  },
+  // Temporarily keep console logs for debugging production issues
+  // compiler: {
+  //   removeConsole: process.env.NODE_ENV === "production",
+  // },
 };
 
 export default withNextIntl(nextConfig);

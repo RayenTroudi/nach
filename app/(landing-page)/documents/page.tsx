@@ -166,6 +166,7 @@ export default function DocumentsPage() {
     if (purchaseItemId && isSignedIn && items.length > 0) {
       const item = items.find((i) => i._id === purchaseItemId);
       if (item) {
+        console.log('[Documents] Restoring purchase intent after sign-in:', item.title);
         setSelectedItem(item);
         setIsDialogOpen(true);
         // Remove the purchase param from URL
@@ -175,6 +176,17 @@ export default function DocumentsPage() {
       }
     }
   }, [searchParams, isSignedIn, items, router]);
+
+  // Debug: Log dialog state changes
+  useEffect(() => {
+    console.log('[Documents] Dialog state changed:', {
+      isDialogOpen,
+      hasSelectedItem: !!selectedItem,
+      selectedItemTitle: selectedItem?.title,
+      isLoaded,
+      isSignedIn
+    });
+  }, [isDialogOpen, selectedItem, isLoaded, isSignedIn]);
 
   // Search with debounce
   useEffect(() => {
@@ -251,20 +263,30 @@ export default function DocumentsPage() {
   };
   
   // Handle purchase
-  const handlePurchase = (item: DocumentItem) => {
+  const handlePurchase = (item: DocumentItem, event?: React.MouseEvent) => {
+    // Prevent any event propagation
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+    
     // Wait for Clerk to load user state
     if (!isLoaded) {
+      console.log('[Documents] User state not loaded yet');
       toast.error(tStorefront("loadingPleaseWait"));
       return;
     }
     
     if (!isSignedIn) {
+      console.log('[Documents] User not signed in, redirecting to sign-in');
       toast.error(tStorefront("signInRequired"));
       // Redirect to sign-in with return URL containing purchase intent
       const returnUrl = `/documents?purchase=${item._id}`;
       router.push(`/sign-in?redirect_url=${encodeURIComponent(returnUrl)}`);
       return;
     }
+    
+    console.log('[Documents] Opening payment dialog for:', item.title);
     setSelectedItem(item);
     setIsDialogOpen(true);
   };
@@ -471,8 +493,13 @@ export default function DocumentsPage() {
                           <span dir="auto" className="truncate">{tStorefront("previewContents")}</span>
                         </Button>
                         <Button
+                          type="button"
                           size="sm"
-                          onClick={() => handlePurchase(item)}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            handlePurchase(item, e);
+                          }}
                           disabled={!isLoaded}
                           className="w-full bg-brand-red-500 hover:bg-brand-red-600 text-xs sm:text-sm h-8 sm:h-9 disabled:opacity-50"
                         >
@@ -483,8 +510,13 @@ export default function DocumentsPage() {
                     ) : item.isForSale ? (
                       // Document for sale - show only purchase button
                       <Button
+                        type="button"
                         size="sm"
-                        onClick={() => handlePurchase(item)}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          handlePurchase(item, e);
+                        }}
                         disabled={!isLoaded}
                         className="w-full bg-brand-red-500 hover:bg-brand-red-600 text-xs sm:text-sm h-8 sm:h-9 mt-auto disabled:opacity-50"
                       >
@@ -660,9 +692,12 @@ export default function DocumentsPage() {
                   {tStorefront("bundlePurchasePrompt")}
                 </p>
                 <Button
-                  onClick={() => {
+                  type="button"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
                     setIsBundlePreviewOpen(false);
-                    handlePurchase(previewBundle);
+                    handlePurchase(previewBundle, e);
                   }}
                   disabled={!isLoaded}
                   className="w-full bg-brand-red-500 hover:bg-brand-red-600 text-xs sm:text-sm h-9 sm:h-10 disabled:opacity-50"
@@ -779,9 +814,12 @@ export default function DocumentsPage() {
                   {tStorefront("folderPurchasePrompt") || "Purchase this folder to access all bundles inside"}
                 </p>
                 <Button
-                  onClick={() => {
+                  type="button"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
                     setIsFolderPreviewOpen(false);
-                    handlePurchase(previewFolder);
+                    handlePurchase(previewFolder, e);
                   }}
                   disabled={!isLoaded}
                   className="w-full bg-brand-red-500 hover:bg-brand-red-600 text-xs sm:text-sm h-9 sm:h-10 disabled:opacity-50"

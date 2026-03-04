@@ -219,7 +219,7 @@ export const getUserByClerkId = async (params: GetUserByClerkIdParams) => {
           {
             path: "messages",
             model: "ChatRoomMessage",
-            options: { limit: 50, sort: { createdAt: -1 } }, // Limit messages to prevent overload
+            options: { limit: 50, sort: { createdAt: 1 } },
             populate: {
               path: "senderId",
               model: "User",
@@ -243,7 +243,7 @@ export const getUserByClerkId = async (params: GetUserByClerkIdParams) => {
           {
             path: "messages",
             model: "ChatRoomMessage",
-            options: { limit: 50, sort: { createdAt: -1 } }, // Limit messages to prevent overload
+            options: { limit: 50, sort: { createdAt: 1 } },
             populate: {
               path: "senderId",
               model: "User",
@@ -261,7 +261,7 @@ export const getUserByClerkId = async (params: GetUserByClerkIdParams) => {
           {
             path: "messages",
             model: "PrivateChatMessage",
-            options: { limit: 50, sort: { createdAt: -1 } }, // Limit messages to prevent overload
+            options: { limit: 50, sort: { createdAt: 1 } },
             populate: {
               path: "senderId",
               model: "User",

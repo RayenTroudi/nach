@@ -69,6 +69,7 @@ export const getPrivateChatRoom = async (privateChatRoomId: string) => {
       .populate("courseId")
       .populate({
         path: "messages",
+        options: { sort: { createdAt: 1 } },
         populate: {
           path: "senderId",
           model: "User",

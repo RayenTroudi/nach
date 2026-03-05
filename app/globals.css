@@ -496,3 +496,95 @@ mux-player:not([media-paused]) ~ .absolute {
   width: 0 !important;
   height: 0 !important;
 }
+
+/* PDF.js Text Layer Styles - Prevent text corruption and overlapping */
+.textLayer {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+  opacity: 1;
+  line-height: 1.0;
+  text-align: initial;
+  white-space: pre;
+  cursor: text;
+  transform-origin: 0% 0%;
+}
+
+.textLayer > span,
+.textLayer > br {
+  color: transparent;
+  position: absolute;
+  white-space: pre;
+  cursor: text;
+  transform-origin: 0% 0%;
+}
+
+/* Text selection still works even though text is transparent */
+.textLayer ::selection {
+  background: rgba(0, 0, 255, 0.3);
+}
+
+.textLayer ::-moz-selection {
+  background: rgba(0, 0, 255, 0.3);
+}
+
+/* Fix text rendering issues */
+.textLayer span {
+  font-family: sans-serif;
+  font-size: 1px;
+  line-height: 1;
+  display: inline-block;
+}
+
+/* Prevent text wrapping */
+.textLayer > span {
+  white-space: nowrap;
+}
+
+/* Ensure proper stacking */
+.textLayer {
+  z-index: 2;
+  pointer-events: none;
+}
+
+.textLayer > * {
+  pointer-events: auto;
+}
+
+/* PDF Viewer Container Styles */
+.pdf-viewer-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pdf-viewer-container iframe,
+.pdf-viewer-container object,
+.pdf-viewer-container embed {
+  border: none;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+/* Ensure PDF content is centered within iframe */
+.pdf-viewer-container iframe {
+  background-color: #525659;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Mobile improvements for PDF viewer */
+@media (max-width: 768px) {
+  .pdf-viewer-container {
+    touch-action: pan-x pan-y pinch-zoom;
+  }
+  
+  .pdf-viewer-container iframe,
+  .pdf-viewer-container object,
+  .pdf-viewer-container embed {
+    box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.1);
+  }
+}

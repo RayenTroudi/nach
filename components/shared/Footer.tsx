@@ -165,7 +165,15 @@ const Footer = () => {
                 © 2026. TDS (Talel Deutschland Services). All rights reserved.
               </p>
               <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">
-                Developed by Rayen Troudi
+                Developed by{" "}
+                <a
+                  href="https://rayentroudi.work"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="hover:opacity-75 transition underline"
+                >
+                  Rayen Troudi
+                </a>
               </p>
             </div>
 

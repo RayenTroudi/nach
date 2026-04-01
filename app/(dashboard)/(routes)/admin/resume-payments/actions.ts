@@ -1,6 +1,5 @@
 "use server";
 
-import { auth } from "@clerk/nextjs/server";
 import { connectToDatabase } from "@/lib/mongoose";
 import ResumeRequestModel from "@/lib/models/resumeRequest.model";
 import User from "@/lib/models/user.model";
@@ -12,29 +11,8 @@ import {
   getPaymentRejectedToUserEmail 
 } from "@/lib/utils/email-templates";
 
-// Helper function to verify admin access
-async function verifyAdminAccess() {
-  const { userId } = auth();
-  
-  if (!userId) {
-    throw new Error("Unauthorized - Please sign in");
-  }
-
-  await connectToDatabase();
-  const user = await User.findOne({ clerkId: userId });
-
-  if (!user || !user.isAdmin) {
-    throw new Error("Unauthorized - Admin access required");
-  }
-
-  return user;
-}
-
 export async function getResumeRequests() {
   try {
-    // Verify admin access
-    await verifyAdminAccess();
-    
     await connectToDatabase();
 
     const requests = await ResumeRequestModel.find({})
@@ -58,9 +36,6 @@ export async function getResumeRequests() {
 
 export async function approvePayment(requestId: string, adminNotes: string) {
   try {
-    // Verify admin access
-    await verifyAdminAccess();
-    
     await connectToDatabase();
 
     const updatedRequest = await ResumeRequestModel.findByIdAndUpdate(
@@ -222,9 +197,6 @@ export async function approvePayment(requestId: string, adminNotes: string) {
 
 export async function rejectPayment(requestId: string, adminNotes: string) {
   try {
-    // Verify admin access
-    await verifyAdminAccess();
-    
     if (!adminNotes.trim()) {
       return { success: false, error: "Please provide a reason for rejection" };
     }

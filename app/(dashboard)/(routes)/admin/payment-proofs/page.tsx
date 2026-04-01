@@ -236,16 +236,16 @@ export default function PaymentProofsAdminPage() {
     <div className="flex">
       <LeftSideBar />
       
-      <div className="p-6 flex-1">
+      <div className="p-4 pt-16 md:pt-4 md:p-6 flex-1 min-w-0">
       <div className="mb-6">
-        <h1 className="text-3xl font-bold mb-2">{t('title')}</h1>
+        <h1 className="text-2xl md:text-3xl font-bold mb-2">{t('title')}</h1>
         <p className="text-slate-600 dark:text-slate-400">
           {t('subtitle')}
         </p>
       </div>
 
       {/* Filters */}
-      <div className="flex gap-2 mb-6">
+      <div className="flex flex-wrap gap-2 mb-6">
         <Button
           onClick={() => setStatusFilter("all")}
           variant={statusFilter === "all" ? "default" : "outline"}
@@ -376,7 +376,7 @@ export default function PaymentProofsAdminPage() {
                 </div>
 
                 {/* Actions */}
-                <div className="flex flex-col gap-2 md:w-32">
+                <div className="flex flex-row flex-wrap md:flex-col gap-2 md:w-32">
                   <Button
                     onClick={() => handleViewProof(proof)}
                     variant="outline"
@@ -441,7 +441,7 @@ export default function PaymentProofsAdminPage() {
       {/* View Proof Dialog */}
       {selectedProof && (
         <Dialog open={isViewDialogOpen} onOpenChange={setIsViewDialogOpen}>
-          <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+          <DialogContent className="w-[95vw] sm:max-w-4xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>{t('proofDetails')}</DialogTitle>
             </DialogHeader>
@@ -472,7 +472,7 @@ export default function PaymentProofsAdminPage() {
               </div>
 
               {/* User & Payment Info */}
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <p className="text-sm font-semibold text-slate-600 dark:text-slate-400">{t('studentInfo')}</p>
                   <p className="font-medium">

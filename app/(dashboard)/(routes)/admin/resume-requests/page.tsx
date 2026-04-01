@@ -179,7 +179,7 @@ export default function AdminResumeRequestsPage() {
       <LeftSideBar />
       
       <div className="flex-1 overflow-auto">
-        <div className="p-8">
+        <div className="p-4 pt-16 md:pt-8 md:p-8">
           {/* Header */}
           <div className="mb-8">
             <div className="flex items-center gap-3 mb-4">
@@ -187,13 +187,13 @@ export default function AdminResumeRequestsPage() {
                 <FileText className="w-8 h-8 text-green-600" />
               </div>
               <div>
-                <h1 className="text-3xl font-bold text-slate-950 dark:text-white">Resume Requests</h1>
+                <h1 className="text-2xl md:text-3xl font-bold text-slate-950 dark:text-white">Resume Requests</h1>
                 <p className="text-slate-600 dark:text-slate-400">Manage customer resume creation requests</p>
               </div>
             </div>
 
             {/* Stats */}
-            <div className="grid grid-cols-4 gap-4 mb-6">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
               <Card className="border-2 border-slate-200 dark:border-slate-800">
                 <CardContent className="p-4">
                   <div className="text-2xl font-bold text-slate-950 dark:text-white">
@@ -229,7 +229,7 @@ export default function AdminResumeRequestsPage() {
             </div>
 
             {/* Filter */}
-            <div className="flex gap-2">
+            <div className="flex flex-wrap gap-2">
               {["all", "pending", "in_progress", "completed", "rejected"].map((status) => (
                 <Button
                   key={status}
@@ -260,7 +260,7 @@ export default function AdminResumeRequestsPage() {
                   className="border-2 border-slate-200 dark:border-slate-800 hover:shadow-lg transition-shadow"
                 >
                   <CardHeader className="bg-slate-50 dark:bg-slate-900">
-                    <div className="flex items-start justify-between">
+                    <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
                       <div className="flex-1">
                         <div className="flex items-center gap-3 mb-2">
                           <CardTitle className="text-xl">{request.name}</CardTitle>

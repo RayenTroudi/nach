@@ -47,11 +47,11 @@ const MyConsultationsClient = ({ serverUserId }: MyConsultationsClientProps) => 
   return (
     <div className="flex flex-col lg:flex-row w-full min-h-screen">
       <LeftSideBar />
-      <div className="flex-1 p-6">
-        <div className="mb-6 flex items-center gap-3">
+      <div className="flex-1 p-4 pt-16 md:pt-6 md:p-6">
+        <div className="mb-6 flex items-center gap-3 flex-wrap">
           <Video className="h-8 w-8 text-brand-red-500" />
           <div>
-            <h1 className="text-3xl font-bold">{t('title')}</h1>
+            <h1 className="text-2xl md:text-3xl font-bold">{t('title')}</h1>
             <p className="text-muted-foreground">
               {t('subtitle')}
             </p>

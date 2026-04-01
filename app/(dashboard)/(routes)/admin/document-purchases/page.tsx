@@ -252,7 +252,7 @@ export default function AdminDocumentPurchasesPage() {
   return (
     <div className="flex min-h-screen">
       <LeftSideBar />
-      <div className="flex-1 min-h-screen bg-gradient-to-b from-slate-50 to-white dark:from-slate-900 dark:to-slate-950 p-8">
+      <div className="flex-1 min-h-screen bg-gradient-to-b from-slate-50 to-white dark:from-slate-900 dark:to-slate-950 p-4 pt-16 md:pt-8 md:p-8">
         <div className="max-w-7xl mx-auto">
           {/* Header */}
           <div className="mb-8">
@@ -368,7 +368,7 @@ export default function AdminDocumentPurchasesPage() {
                     </div>
 
                     {/* Actions */}
-                    <div className="flex flex-col gap-2 md:w-32">
+                    <div className="flex flex-row flex-wrap md:flex-col gap-2 md:w-32">
                       <Button
                         onClick={() => handleViewPurchase(purchase)}
                         variant="outline"
@@ -415,7 +415,7 @@ export default function AdminDocumentPurchasesPage() {
         {/* View Dialog */}
         {selectedPurchase && (
           <Dialog open={isViewDialogOpen} onOpenChange={setIsViewDialogOpen}>
-            <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+            <DialogContent className="w-[95vw] sm:max-w-4xl max-h-[90vh] overflow-y-auto">
               <DialogHeader>
                 <DialogTitle>Purchase Details</DialogTitle>
               </DialogHeader>
@@ -435,7 +435,7 @@ export default function AdminDocumentPurchasesPage() {
                 )}
 
                 {/* User & Item Info */}
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <p className="text-sm font-semibold text-slate-600 dark:text-slate-400 mb-1">
                       Student Info

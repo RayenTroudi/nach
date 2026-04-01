@@ -210,11 +210,11 @@ export default function AdminResumePaymentsPage() {
   return (
     <div className="flex gap-4">
       <LeftSideBar />
-      <div className="flex-1 p-6">
+      <div className="flex-1 p-4 pt-16 md:pt-6 md:p-6 min-w-0">
         <div className="max-w-7xl mx-auto">
           {/* Header */}
           <div className="mb-8">
-            <h1 className="text-3xl font-bold text-slate-950 dark:text-slate-200 mb-2">
+            <h1 className="text-2xl md:text-3xl font-bold text-slate-950 dark:text-slate-200 mb-2">
               {t('title')}
             </h1>
             <p className="text-slate-600 dark:text-slate-400">
@@ -276,7 +276,7 @@ export default function AdminResumePaymentsPage() {
                   key={request._id}
                   className="bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 p-6 hover:shadow-lg transition-shadow"
                 >
-                  <div className="flex items-start justify-between">
+                  <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
                     <div className="flex items-start gap-4 flex-1">
                       {/* User Icon */}
                       <div className="flex-shrink-0">
@@ -324,7 +324,7 @@ export default function AdminResumePaymentsPage() {
                     </div>
 
                     {/* Actions */}
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 self-start sm:self-center">
                       <Button
                         variant="outline"
                         size="sm"
@@ -342,7 +342,7 @@ export default function AdminResumePaymentsPage() {
 
           {/* View Payment Proof Dialog */}
           <Dialog open={isViewDialogOpen} onOpenChange={setIsViewDialogOpen}>
-            <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+            <DialogContent className="w-[95vw] sm:max-w-2xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>{t('detailsTitle')}</DialogTitle>
             </DialogHeader>
@@ -353,25 +353,25 @@ export default function AdminResumePaymentsPage() {
                 <div>
                   <h3 className="font-semibold mb-3">{t('studentInfo')}</h3>
                   <div className="space-y-2 text-sm">
-                    <div className="flex justify-between">
+                    <div className="flex flex-wrap justify-between gap-1">
                       <span className="text-slate-600">{t('name')}:</span>
                       <span className="font-medium">{selectedRequest.name}</span>
                     </div>
-                    <div className="flex justify-between">
+                    <div className="flex flex-wrap justify-between gap-1">
                       <span className="text-slate-600">{t('email')}:</span>
                       <span className="font-medium">{selectedRequest.email}</span>
                     </div>
-                    <div className="flex justify-between">
+                    <div className="flex flex-wrap justify-between gap-1">
                       <span className="text-slate-600">{t('phone')}:</span>
                       <span className="font-medium">{selectedRequest.phone}</span>
                     </div>
                     {selectedRequest.targetRole && (
-                      <div className="flex justify-between">
+                      <div className="flex flex-wrap justify-between gap-1">
                         <span className="text-slate-600">{t('targetRole')}:</span>
                         <span className="font-medium">{selectedRequest.targetRole}</span>
                       </div>
                     )}
-                    <div className="flex justify-between">
+                    <div className="flex flex-wrap justify-between gap-1">
                       <span className="text-slate-600">{t('status')}:</span>
                       <Badge className={getStatusColor(selectedRequest.paymentStatus)}>
                         {selectedRequest.paymentStatus}
@@ -386,7 +386,7 @@ export default function AdminResumePaymentsPage() {
                 <div>
                   <h3 className="font-semibold mb-3">{t('paymentInfo')}</h3>
                   <div className="space-y-2 text-sm">
-                    <div className="flex justify-between">
+                    <div className="flex flex-wrap justify-between gap-1">
                       <span className="text-slate-600">{t('amount')}:</span>
                       <span className="font-medium">{selectedRequest.price} TND</span>
                     </div>
@@ -449,7 +449,7 @@ export default function AdminResumePaymentsPage() {
                 {selectedRequest.paymentStatus === "pending" && (
                   <>
                     <Separator />
-                    <div className="flex gap-3 justify-end">
+                    <div className="flex flex-wrap gap-3 justify-end">
                       <Button
                         variant="outline"
                         onClick={() => setIsViewDialogOpen(false)}

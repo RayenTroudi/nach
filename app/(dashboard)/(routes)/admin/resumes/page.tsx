@@ -258,10 +258,10 @@ export default function AdminResumesPage() {
     <div className="flex gap-6 min-h-screen bg-slate-50 dark:bg-slate-950">
       <LeftSideBar />
       
-      <div className="flex-1 p-8 max-w-7xl mx-auto w-full">
+      <div className="flex-1 p-4 pt-16 md:pt-8 md:p-8 max-w-7xl mx-auto w-full">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-100 mb-2">
+          <h1 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-slate-100 mb-2">
             Resume Requests Management
           </h1>
           <p className="text-slate-600 dark:text-slate-400">
@@ -351,7 +351,7 @@ export default function AdminResumesPage() {
                 key={request._id}
                 className="bg-white dark:bg-slate-900 rounded-lg p-6 border border-slate-200 dark:border-slate-800 hover:shadow-lg transition-shadow"
               >
-                <div className="flex items-start justify-between">
+                <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
                   <div className="flex-1">
                     <div className="flex items-center gap-3 mb-3">
                       <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
@@ -365,7 +365,7 @@ export default function AdminResumesPage() {
                       </Badge>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-4 text-sm">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
                       <div className="flex items-center gap-2 text-slate-600 dark:text-slate-400">
                         <Mail className="w-4 h-4" />
                         {request.email}
@@ -401,7 +401,7 @@ export default function AdminResumesPage() {
 
         {/* View/Edit Dialog */}
         <Dialog open={isViewDialogOpen} onOpenChange={setIsViewDialogOpen}>
-          <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+          <DialogContent className="w-[95vw] sm:max-w-3xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle className="flex items-center gap-2">
                 <FileText className="w-5 h-5" />
@@ -426,7 +426,7 @@ export default function AdminResumesPage() {
                 {/* Contact Information */}
                 <div>
                   <h3 className="font-semibold mb-3">Contact Information</h3>
-                  <div className="grid grid-cols-2 gap-4 bg-slate-50 dark:bg-slate-800 p-4 rounded-lg">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-slate-50 dark:bg-slate-800 p-4 rounded-lg">
                     <div>
                       <p className="text-sm text-slate-600 dark:text-slate-400">Name</p>
                       <p className="font-medium">{selectedRequest.name}</p>

@@ -2102,7 +2102,8 @@
     "page": "Seite",
     "of": "von",
     "loadingPDF": "PDF wird geladen...",
-    "errorLoadingPDF": "Fehler beim Laden des PDF. Bitte versuchen Sie, es in einem neuen Tab zu öffnen."
+    "errorLoadingPDF": "Fehler beim Laden des PDF. Bitte versuchen Sie, es in einem neuen Tab zu öffnen.",
+    "download": "Herunterladen"
   },
   "teacherDocumentBundles": {
     "title": "Dokumentenpakete",

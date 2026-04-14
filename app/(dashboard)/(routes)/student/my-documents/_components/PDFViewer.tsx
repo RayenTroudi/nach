@@ -1,7 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface PDFViewerProps {
   fileUrl: string;
@@ -20,15 +20,14 @@ export default function PDFViewer({
 }: PDFViewerProps) {
   const t = useTranslations("documentViewer");
   const [loading, setLoading] = useState(true);
-  const [isMobile, setIsMobile] = useState(false);
   const [height, setHeight] = useState(850);
+  const hideTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     const update = () => {
       const vw = window.innerWidth;
       const vh = window.innerHeight;
       const mobile = vw < 768;
-      setIsMobile(mobile);
 
       if (mobile) {
         setHeight(Math.min(vh * 0.75, vh - 180));
@@ -55,14 +54,23 @@ export default function PDFViewer({
     setLoading(true);
   }, [fileUrl, pageNumber]);
 
-  const handleLoad = () => setLoading(false);
+  // onLoad fires when the iframe shell is ready, not when the PDF pixels appear.
+  // A short extra delay keeps the spinner visible until the browser has painted the PDF.
+  const handleLoad = () => {
+    if (hideTimerRef.current) clearTimeout(hideTimerRef.current);
+    hideTimerRef.current = setTimeout(() => setLoading(false), 800);
+  };
 
-  // Mobile browsers (especially iOS Safari) cannot render PDFs inline via iframe.
-  // Google Docs Viewer proxies and renders the PDF as HTML, working on all mobile browsers.
-  // Desktop browsers use the native PDF viewer via direct URL.
-  const src = isMobile
-    ? `https://docs.google.com/viewer?url=${encodeURIComponent(fileUrl)}&embedded=true`
-    : `${fileUrl}#page=${pageNumber}&toolbar=0&navpanes=0`;
+  useEffect(() => {
+    return () => {
+      if (hideTimerRef.current) clearTimeout(hideTimerRef.current);
+    };
+  }, []);
+
+  // Modern mobile browsers (iOS Safari 13+, Android Chrome) support native PDF rendering in iframes.
+  // Google Docs Viewer has a ~25MB limit and causes "too large to preview" errors.
+  // Use direct URL on all devices to avoid this limitation.
+  const src = `${fileUrl}#page=${pageNumber}&toolbar=0&navpanes=0`;
 
   return (
     <div className="relative flex items-center justify-center w-full">
@@ -80,7 +88,7 @@ export default function PDFViewer({
         </div>
       )}
       <iframe
-        key={`${fileUrl}-${pageNumber}-${isMobile}`}
+        key={`${fileUrl}-${pageNumber}`}
         src={src}
         title={fileName}
         className="border-0 rounded-lg"

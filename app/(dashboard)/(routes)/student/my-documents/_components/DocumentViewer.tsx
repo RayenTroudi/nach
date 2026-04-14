@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { X, RotateCw, Printer } from "lucide-react";
+import { X, RotateCw, Printer, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import {
@@ -192,9 +192,25 @@ export default function DocumentViewer({
             <div className="flex items-center gap-1 sm:gap-1.5 md:gap-2 flex-shrink-0">
               {isPDF && (
                 <>
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
+                  <a
+                    href={fileUrl}
+                    download={fileName}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      title={t("download")}
+                      className="text-brand-red-500 hover:text-brand-red-600 h-8 w-8 p-0 md:w-auto md:px-3"
+                    >
+                      <Download className="w-4 h-4 md:ltr:mr-1 md:rtl:ml-1" />
+                      <span className="hidden md:inline">{t("download")}</span>
+                    </Button>
+                  </a>
+                  <Button
+                    variant="outline"
+                    size="sm"
                     onClick={handlePrint}
                     title={t("print")}
                     className="text-brand-red-500 hover:text-brand-red-600 h-8 w-8 p-0 md:w-auto md:px-3"

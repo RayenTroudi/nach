@@ -2098,7 +2098,8 @@
     "page": "صفحة",
     "of": "من",
     "loadingPDF": "جاري تحميل PDF...",
-    "errorLoadingPDF": "خطأ في تحميل PDF. يرجى محاولة فتحه في علامة تبويب جديدة."
+    "errorLoadingPDF": "خطأ في تحميل PDF. يرجى محاولة فتحه في علامة تبويب جديدة.",
+    "download": "تحميل"
   },
   "teacherDocumentBundles": {
     "title": "حزم المستندات",

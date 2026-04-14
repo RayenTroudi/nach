@@ -2111,7 +2111,8 @@
     "page": "Page",
     "of": "of",
     "loadingPDF": "Loading PDF...",
-    "errorLoadingPDF": "Error loading PDF. Please try opening in a new tab."
+    "errorLoadingPDF": "Error loading PDF. Please try opening in a new tab.",
+    "download": "Download"
   },
   "teacherDocumentBundles": {
     "title": "Document Bundles",

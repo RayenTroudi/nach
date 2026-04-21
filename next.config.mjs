@@ -37,12 +37,10 @@ const nextConfig = {
     ],
   },
   webpack: (config, { isServer }) => {
-    // Handle canvas for react-pdf
     if (isServer) {
       config.resolve.alias.canvas = false;
     }
 
-    // Add fallback for pdfjs-dist
     config.resolve.fallback = {
       ...config.resolve.fallback,
       canvas: false,

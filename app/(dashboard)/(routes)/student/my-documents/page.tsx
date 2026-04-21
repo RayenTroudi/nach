@@ -22,7 +22,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Container, LeftSideBar } from "@/components/shared";
+import { LeftSideBar } from "@/components/shared";
 import Loader from "@/components/shared/Loader";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
@@ -519,8 +519,8 @@ export default function MyDocumentsPage() {
   return (
     <div className="flex min-h-screen">
       <LeftSideBar />
-      <div className="flex-1 min-h-screen bg-gradient-to-b from-slate-50 to-white dark:from-slate-900 dark:to-slate-950 py-12">
-        <Container>
+      <div className="flex-1 min-w-0 min-h-screen bg-gradient-to-b from-slate-50 to-white dark:from-slate-900 dark:to-slate-950 py-8 md:py-12">
+        <div className="w-full max-w-screen-xl mx-auto px-4 sm:px-6">
           {/* Header */}
           <div className="mb-8">
             <h1 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-slate-50 mb-2">
@@ -583,13 +583,13 @@ export default function MyDocumentsPage() {
                 </CardContent>
               </Card>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6">
                 {getCurrentItems().map(renderPurchaseCard)}
               </div>
             )}
           </>
         )}
-      </Container>
+        </div>
       </div>
 
       {/* Document Viewer Modal */}

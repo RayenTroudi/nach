@@ -24,7 +24,7 @@ const Navbar = ({ isUserAdmin }: { isUserAdmin: boolean }) => {
   return (
     <div className={`flex items-center ${isRTL ? 'gap-x-reverse gap-2 sm:gap-3 flex-row-reverse' : 'gap-2 sm:gap-3'}`}>
       {isTeacher || isSection || isAdmin ? (
-        <div className={`flex items-center ${isRTL ? 'gap-x-reverse gap-x-2 sm:gap-x-3 flex-row-reverse' : 'gap-x-2 sm:gap-x-3'}`}>
+        <div className={`hidden md:flex items-center ${isRTL ? 'gap-x-reverse gap-x-2 sm:gap-x-3 flex-row-reverse' : 'gap-x-2 sm:gap-x-3'}`}>
           <Link
             href="/"
             className="text-slate-950 dark:text-slate-200 font-bold text-xs sm:text-sm hover:text-brand-red-500 ease-in-out duration-100 whitespace-nowrap touch-manipulation py-3 px-4"

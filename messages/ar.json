@@ -72,7 +72,8 @@
     "myDocuments": "مستنداتي",
     "documentBundles": "حزم المستندات",
     "documentPurchases": "مشتريات المستندات",
-    "storefront": "المتجر"
+    "storefront": "المتجر",
+    "switchToStudent": "عرض الطالب"
   },
   "auth": {
     "signIn": "تسجيل الدخول",
@@ -698,7 +699,7 @@
     "successStories": "قصص النجاح",
     "partnerInstitutions": "المؤسسات الشريكة",
     "resources": "الموارد",
-    "contactSupport": "اتصل بالدعم",
+    "contactSupport": "تواصل مع فريق الدعم لدينا لأي أسئلة أو مساعدة",
     "germanyFAQs": "الأسئلة الشائعة عن ألمانيا",
     "communityForum": "منتدى المجتمع",
     "legal": "قانوني",
@@ -717,8 +718,7 @@
     "copyright": "© 2022. TDS. جميع الحقوق محفوظة.",
     "termsConditions": "الشروط والأحكام",
     "cookies": "ملفات تعريف الارتباط",
-    "needHelp": "تحتاج مساعدة؟",
-    "contactSupport": "تواصل مع فريق الدعم لدينا لأي أسئلة أو مساعدة"
+    "needHelp": "تحتاج مساعدة؟"
   },
   "errors": {
     "404": "الصفحة غير موجودة",
@@ -1949,7 +1949,7 @@
     },
     "showing": "عرض {count} من {total} عنصر",
     "documentsCount": "{count} مستندات",
-    "bundlesCount": "{count} حزم",
+    "bundlesCount": "حزم",
     "sortOptions": {
       "newest": "الأحدث أولاً",
       "priceLow": "السعر: من الأقل إلى الأعلى",
@@ -2005,7 +2005,6 @@
     "filesPreview": "معاينة الملفات",
     "moreFiles": "ملفات إضافية",
     "totalFiles": "إجمالي الملفات",
-    "bundlesCount": "حزم",
     "purchaseBundle": "شراء الحزمة",
     "bundleCreator": "منشئ الحزمة",
     "instructorInfo": "معلومات المدرب",

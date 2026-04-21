@@ -4,7 +4,7 @@ import { usePathname } from "next/navigation";
 import { SideBarItem } from "./";
 import SignoutButton from "./SignoutButton";
 import { adminRoutes, studentRoutes, teacherRoutes } from "@/lib/data";
-import { Menu } from "lucide-react";
+import { GraduationCap, Menu } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import Link from "next/link";
 import { useLocale, useTranslations } from "next-intl";
@@ -41,6 +41,21 @@ function LeftSideBar() {
           {routes.map((route, index) => (
             <SideBarItem key={index} {...route} />
           ))}
+
+          {pathname?.startsWith("/admin") && (
+            <Link
+              href={getFinalHref("/")}
+              className="group w-full px-2 py-6 rounded-sm flex items-center justify-center lg:justify-start gap-4 h-[30px] hover:bg-brand-red-500 duration-300 ease-in-out border border-brand-red-300 dark:border-brand-red-700"
+            >
+              <GraduationCap
+                size={20}
+                className="text-brand-red-500 group-hover:text-slate-50"
+              />
+              <p className="text-[15px] text-brand-red-500 dark:text-brand-red-400 font-semibold group-hover:text-slate-200 hidden lg:block">
+                {t("navigation.switchToStudent")}
+              </p>
+            </Link>
+          )}
 
           <SignoutButton isSheetOpen={false} />
         </div>
@@ -79,6 +94,16 @@ function LeftSideBar() {
                   </Link>
                 );
               })}
+              {pathname?.startsWith("/admin") && (
+                <Link
+                  href={getFinalHref("/")}
+                  onClick={() => setOpen(false)}
+                  className="w-full px-4 py-3 rounded-md flex items-center gap-4 border border-brand-red-300 dark:border-brand-red-700 text-brand-red-500 hover:bg-brand-red-500 hover:text-white duration-300 ease-in-out"
+                >
+                  <GraduationCap size={20} className="text-brand-red-500 group-hover:text-white" />
+                  <span className="font-semibold text-[15px]">{t("navigation.switchToStudent")}</span>
+                </Link>
+              )}
               <div className="mt-2">
                 <SignoutButton isSheetOpen={true} />
               </div>

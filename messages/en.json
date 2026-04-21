@@ -72,7 +72,8 @@
     "myDocuments": "My Documents",
     "documentBundles": "Document Bundles",
     "documentPurchases": "Document Purchases",
-    "storefront": "Storefront"
+    "storefront": "Storefront",
+    "switchToStudent": "Student View"
   },
   "auth": {
     "signIn": "Sign In",
@@ -698,7 +699,7 @@
     "successStories": "Success Stories",
     "partnerInstitutions": "Partner Institutions",
     "resources": "Resources",
-    "contactSupport": "Contact Support",
+    "contactSupport": "Contact our support team for any questions or assistance",
     "germanyFAQs": "Germany FAQs",
     "communityForum": "Community Forum",
     "legal": "Legal",
@@ -717,8 +718,7 @@
     "copyright": "© 2022. TDS. All rights reserved.",
     "termsConditions": "Terms & Conditions",
     "cookies": "Cookies",
-    "needHelp": "Need Help?",
-    "contactSupport": "Contact our support team for any questions or assistance"
+    "needHelp": "Need Help?"
   },
   "errors": {
     "404": "Page Not Found",
@@ -1790,19 +1790,6 @@
     },
     "replyForm": {
       "answerPlaceholder": "Enter your answer..."
-    },
-    "editor": {
-      "copiedToClipboard": "Copied to clipboard"
-    },
-    "combobox": {
-      "searchPlaceholder": "Search framework..."
-    },
-    "comments": {
-      "detailsPlaceholder": "Enter more details...",
-      "searchPlaceholder": "Search questions..."
-    },
-    "feedbackForm": {
-      "feedbackPlaceholder": "Please provide us with a detailed feedback about the course here ..."
     }
   },
   "coursesPage": {
@@ -1962,7 +1949,7 @@
     },
     "showing": "Showing {count} of {total} items",
     "documentsCount": "{count} documents",
-    "bundlesCount": "{count} bundles",
+    "bundlesCount": "bundles",
     "sortOptions": {
       "newest": "Newest First",
       "priceLow": "Price: Low to High",
@@ -2018,7 +2005,6 @@
     "filesPreview": "Files Preview",
     "moreFiles": "more files",
     "totalFiles": "Total Files",
-    "bundlesCount": "bundles",
     "purchaseBundle": "Purchase Bundle",
     "bundleCreator": "Bundle Creator",
     "instructorInfo": "Instructor Information",

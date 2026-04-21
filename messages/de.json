@@ -72,7 +72,8 @@
     "myDocuments": "Meine Dokumente",
     "documentBundles": "Dokumentenpakete",
     "documentPurchases": "Dokumentenkäufe",
-    "storefront": "Storefront"
+    "storefront": "Storefront",
+    "switchToStudent": "Studentenansicht"
   },
   "auth": {
     "signIn": "Anmelden",
@@ -698,7 +699,7 @@
     "successStories": "Erfolgsgeschichten",
     "partnerInstitutions": "Partnerinstitutionen",
     "resources": "Ressourcen",
-    "contactSupport": "Support kontaktieren",
+    "contactSupport": "Kontaktieren Sie unser Support-Team für Fragen oder Unterstützung",
     "germanyFAQs": "Deutschland FAQs",
     "communityForum": "Community-Forum",
     "legal": "Rechtliches",
@@ -717,8 +718,7 @@
     "copyright": "© 2022. TDS. Alle Rechte vorbehalten.",
     "termsConditions": "Allgemeine Geschäftsbedingungen",
     "cookies": "Cookies",
-    "needHelp": "Brauchen Sie Hilfe?",
-    "contactSupport": "Kontaktieren Sie unser Support-Team für Fragen oder Unterstützung"
+    "needHelp": "Brauchen Sie Hilfe?"
   },
   "errors": {
     "404": "Seite nicht gefunden",
@@ -1714,18 +1714,14 @@
       "slots": "Zeitfenster"
     },
     "comments": {
-      "emailPlaceholder": "max@beispiel.de",
-      "newsletterTitle": "Abonnieren Sie unseren Newsletter"
+      "detailsPlaceholder": "Weitere Details eingeben...",
+      "searchPlaceholder": "Fragen durchsuchen..."
     },
     "editor": {
       "copiedToClipboard": "In Zwischenablage kopiert"
     },
     "combobox": {
       "searchPlaceholder": "Framework suchen..."
-    },
-    "comments": {
-      "detailsPlaceholder": "Weitere Details eingeben...",
-      "searchPlaceholder": "Fragen durchsuchen..."
     },
     "feedbackForm": {
       "feedbackPlaceholder": "Bitte geben Sie uns ein detailliertes Feedback zum Kurs..."
@@ -1953,7 +1949,7 @@
     },
     "showing": "Zeige {count} von {total} Artikeln",
     "documentsCount": "{count} Dokumente",
-    "bundlesCount": "{count} Pakete",
+    "bundlesCount": "Pakete",
     "sortOptions": {
       "newest": "Neueste zuerst",
       "priceLow": "Preis: Niedrig bis Hoch",
@@ -2009,7 +2005,6 @@
     "filesPreview": "Dateivorschau",
     "moreFiles": "weitere Dateien",
     "totalFiles": "Gesamtdateien",
-    "bundlesCount": "Pakete",
     "purchaseBundle": "Paket kaufen",
     "bundleCreator": "Paketersteller",
     "instructorInfo": "Ausbilder-Informationen",
